@@ -1,0 +1,9 @@
+# General
+.DS_Store
+
+# Files that might appear in the root of a volume
+.Trashes
+.fsventsd
+.TemporaryItems
+
+simple-server.py
