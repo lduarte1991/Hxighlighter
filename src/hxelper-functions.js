@@ -1,31 +1,4 @@
 /**
- * Helper functions that can be/are reused in other Hx projects.
- */
-
-
-/**
- * Publishes events to trigger subscribers to perform something
- *
- * @param      {string}  eventName   The event name
- * @param      {string}  instanceID  The instance id
- * @param      {list}  list        The list
- */
-function hxPublish(eventName, instanceID, list) {
-    jQuery.publish(eventName + '.' + instanceID, list);
-}
-
-/**
- * Subscribes to events triggered above and performs a callback
- *
- * @param      {string}  eventName   The event name
- * @param      {string}  instanceID  The instance id
- * @param      {function}  callBack    The callback
- */
-function hxSubscribe(eventName, instanceID, callback) {
-    jQuery.subscribe(eventName + '.' + instanceID, callback);
-}
-
-/**
  * Gets the current top/left position for an event (in particular your mouse pointer)
  *
  * @param      {Object}  event   The event
