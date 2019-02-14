@@ -26,23 +26,6 @@ function mouseFixedPosition(event) {
     };
 }
 
-function trim(s) {
-    if (typeof String.prototype.trim === 'function') {
-        return String.prototype.trim.call(s);
-    } else {
-        return s.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
-    }
-}
-
-function watchForChange(selector, callback) {
-    var observer = new MutationObserver(callback);
-    observer.observe(jQuery(selector)[0], {
-        'subtree': true,
-        'childList': true
-    });
-    return observer;
-}
-
 function getQuoteFromHighlights(ranges) {
     var text = [];
     var exactText = [];
@@ -60,14 +43,3 @@ function getQuoteFromHighlights(ranges) {
     };
 }
 
-function exists(obj) {
-    return typeof(obj) !== 'undefined';
-}
-
-function pauseEvent(e){
-    if(e.stopPropagation) e.stopPropagation();
-    if(e.preventDefault) e.preventDefault();
-    e.cancelBubble=true;
-    e.returnValue=false;
-    return false;
-}
