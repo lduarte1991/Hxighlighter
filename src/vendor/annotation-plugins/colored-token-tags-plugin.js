@@ -125,7 +125,7 @@
     $.ColoredTokenTags.prototype.annotationListeners = function() {
         var self = this;
 
-        hxSubscribe('editorToBeHidden', self.instanceID, function(){
+        Hxighlighter.subscribeEvent('editorToBeHidden', self.instanceID, function(){
             self.destroy();
             self.obs.disconnect();
         }.bind(this));

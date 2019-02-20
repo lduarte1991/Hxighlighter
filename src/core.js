@@ -31,7 +31,7 @@
 
     $.Core.prototype.setUpListeners = function() {
         var self = this;
-        hxSubscribe('targetLoaded', self.instance_id, function(_, element) {
+        Hxighlighter.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
             // store element that contains target for easy retrieval
             self.element = element;
             jQuery.each(self.viewers, function(_, viewer) {
@@ -40,34 +40,34 @@
 
             if (self.options.should_highlight) {
                 self.initHighlighter();
-                hxSubscribe('shouldHighlight', self.instance_id, function(_, annotation) {
+                Hxighlighter.subscribeEvent('shouldHighlight', self.instance_id, function(_, annotation) {
                     self.highlighter.draw(annotation);
                     self.annotationDrawn(annotation);
                 });
 
-                hxSubscribe('shouldUpdateHighlight', self.instance_id, function(_, annotation) {
+                Hxighlighter.subscribeEvent('shouldUpdateHighlight', self.instance_id, function(_, annotation) {
                     self.highlighter.redraw(annotation);
                     self.annotationDrawn(annotation);
                 });
 
-                hxSubscribe('shouldDeleteHighlight', self.instance_id, function(_, annotation) {
+                Hxighlighter.subscribeEvent('shouldDeleteHighlight', self.instance_id, function(_, annotation) {
                     self.highlighter.undraw(annotation);
                     self.annotationRemoved(annotation);
                 });
 
-                hxPublish('finishedHighlighterSetup', self.instance_id, []);
+                Hxighlighter.publishEvent('finishedHighlighterSetup', self.instance_id, []);
             }
         });
 
-        hxSubscribe('selectAnnotation', self.instance_id, function(_, annotation) {
+        Hxighlighter.subscribeEvent('selectAnnotation', self.instance_id, function(_, annotation) {
             self.selectedAnnotation = annotation;
         });
 
-        hxSubscribe('editorShown', self.instance_id, function(_, editor, annotation) {
+        Hxighlighter.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
             self.editorShown(annotation, editor);
         });
 
-        hxSubscribe('saveAnnotation', self.instance_id, function(_, annotation, text, isNew) {
+        Hxighlighter.subscribeEvent('saveAnnotation', self.instance_id, function(_, annotation, text, isNew) {
             var updatedAnnotation = annotation;
             
             // all plugins have a chance to update the annotation before saving
@@ -79,17 +79,17 @@
                 st.saveAnnotation(updatedAnnotation, self.element);
             });
 
-            hxPublish('shouldUpdateHighlight', self.instance_id, [updatedAnnotation]);
+            Hxighlighter.publishEvent('shouldUpdateHighlight', self.instance_id, [updatedAnnotation]);
         });
 
-        hxSubscribe('viewerShown', self.instance_id, function(_, viewer) {
+        Hxighlighter.subscribeEvent('viewerShown', self.instance_id, function(_, viewer) {
             self.viewerShown(viewer);
         });
 
-        hxSubscribe('deleteAnnotationById', self.instance_id, function(_, ann_id) {
+        Hxighlighter.subscribeEvent('deleteAnnotationById', self.instance_id, function(_, ann_id) {
             var found = self.getAnnotationById(ann_id);
             if (found) {
-                hxPublish('shouldDeleteHighlight', self.instance_id, [found.annotation]);
+                Hxighlighter.publishEvent('shouldDeleteHighlight', self.instance_id, [found.annotation]);
                 jQuery.each(self.storage, function(_, st) {
                     st.deleteAnnotation(found, self.element);
                 });
@@ -126,12 +126,12 @@
             self.storage.push(new Hxighlighter.Local(self.options, self.instance_id));
         }
 
-        hxSubscribe('finishedHighlighterSetup', self.instance_id, function(_) {
+        Hxighlighter.subscribeEvent('finishedHighlighterSetup', self.instance_id, function(_) {
             var all_annotations = [];
             jQuery.each(self.storage, function(_, store) {
                 var anns = store.onLoad() || [];
                 jQuery.each(anns, function(_, ann) {
-                    hxPublish('shouldHighlight', self.instance_id, [ann]);
+                    Hxighlighter.publishEvent('shouldHighlight', self.instance_id, [ann]);
                 });
                 all_annotations = all_annotations.concat(anns);
             });
@@ -239,7 +239,7 @@
         jQuery.each(highlightTogglers, function(eventType, value) {
             self.element.on(eventType, '.annotator-hl', function(event) {
                 var annotations = self.getAnnotationsFromElement(event);
-                hxPublish('toggleViewer', self.instance_id, [event, value, annotations]);
+                Hxighlighter.publishEvent('toggleViewer', self.instance_id, [event, value, annotations]);
             });
         });
     };

@@ -69,7 +69,7 @@
     $.Sidebar.prototype.setUpListeners = function() {
         var self = this;
         if (!self.element) {
-            hxSubscribe('targetLoaded', self.instance_id, function(_, element) {
+            Hxighlighter.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
                 self.element = element;
                 self.setUpSidebar();
                 
@@ -78,7 +78,7 @@
             self.setUpSidebar();
         }
 
-        hxSubscribe('selectionMade', self.instance_id, function(_, element, ranges, event){
+        Hxighlighter.subscribeEvent('selectionMade', self.instance_id, function(_, element, ranges, event){
             if (self.annotation_tool.editing) {
                 return;
             }
@@ -121,7 +121,7 @@
             buttons: {
                 confirm: function() {
                     var annotation_id = this.$target[0].id.replace('delete-', '');
-                    hxPublish('deleteAnnotationById', self.instance_id, [annotation_id]);
+                    Hxighlighter.publishEvent('deleteAnnotationById', self.instance_id, [annotation_id]);
                     if (self.annotation_tool.viewer) {
                         jQuery('.annotation-viewer').remove();
                         delete self.annotation_tool.viewer;
@@ -154,7 +154,7 @@
         var self = this;
         self.element.on('click', '#create-annotation-side', function(event) {
             if (self.currentSelection) {
-                hxPublish('shouldHighlight', self.instance_id, [self.currentSelection]);
+                Hxighlighter.publishEvent('shouldHighlight', self.instance_id, [self.currentSelection]);
                 // clears the selection of the text
                 if (window.getSelection) {
                   if (window.getSelection().empty) {  // Chrome
@@ -205,11 +205,11 @@
         self.annotation_tool.editor.find('.save').click(function () {
             var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
 
-            hxPublish('saveAnnotation', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
+            Hxighlighter.publishEvent('saveAnnotation', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
             self.hideEditor(annotation, false, false);
         });
 
-        hxPublish('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
+        Hxighlighter.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
     };
 
     $.Sidebar.prototype.hideEditor = function(annotation, redraw, should_erase) {
@@ -219,9 +219,9 @@
         }
         self.annotation_tool.editing = false;
         if (redraw) {
-            hxPublish('shouldUpdateHighlight', self.instance_id, [annotation]);
+            Hxighlighter.publishEvent('shouldUpdateHighlight', self.instance_id, [annotation]);
         } else if(!self.annotation_tool.updating && should_erase) {
-            hxPublish('shouldDeleteHighlight', self.instance_id, [annotation]);
+            Hxighlighter.publishEvent('shouldDeleteHighlight', self.instance_id, [annotation]);
             self.annotation_tool.updating = false;
         } else if (!self.annotation_tool.updating && !should_erase) {
             self.annotation_tool.updating = false;

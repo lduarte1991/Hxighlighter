@@ -35,7 +35,7 @@
                     // if pserson clicks on the adder
                     onCreate: function(annotation) {
                         // the annotation is drawn to the page
-                        hxPublish('shouldHighlight', self.instance_id, [annotation]);
+                        Hxighlighter.publishEvent('shouldHighlight', self.instance_id, [annotation]);
 
                         // clears the selection of the text
                         if (window.getSelection) {
@@ -49,7 +49,7 @@
                         }
 
                         // signals that the editor should be shown
-                        hxPublish('showEditor', self.instance_id, [annotation, self.annotation_tool.interactionPoint, false]);
+                        Hxighlighter.publishEvent('showEditor', self.instance_id, [annotation, self.annotation_tool.interactionPoint, false]);
                     }
                 });
 
@@ -96,7 +96,7 @@
     $.FloatingViewer.prototype.setUpListeners = function() {
         var self = this;
 
-        hxSubscribe('selectionMade', self.instance_id, function(_, element, ranges, event) {
+        Hxighlighter.subscribeEvent('selectionMade', self.instance_id, function(_, element, ranges, event) {
             if (self.annotation_tool.editing || (self.annotation_tool.viewer && self.annotation_tool.viewer.hasClass('static'))) {
                 return;
             }
@@ -112,16 +112,16 @@
             self.annotation_tool.adder.load(annotation, self.annotation_tool.interactionPoint);
             self.annotation_tool.adder.checkOrientation();
 
-            hxPublish('selectAnnotation', self.instance_id, [annotation]);
+            Hxighlighter.publishEvent('selectAnnotation', self.instance_id, [annotation]);
         });
 
-        hxSubscribe('rangesEmpty', self.instance_id, function(_) {
+        Hxighlighter.subscribeEvent('rangesEmpty', self.instance_id, function(_) {
             if (self.annotation_tool && self.annotation_tool.adder) {
                 self.annotation_tool.adder.hide();
             }
         });
 
-        hxSubscribe('showEditor', self.instance_id, function(_, annotation, interactionPoint, updating) {
+        Hxighlighter.subscribeEvent('showEditor', self.instance_id, function(_, annotation, interactionPoint, updating) {
             // set editing mode
             self.annotation_tool.editing = true;
             self.annotation_tool.updating = updating;
@@ -141,32 +141,32 @@
 
             // closes the editor tool and does not save annotation
             self.annotation_tool.editor.find('.cancel').click(function () {
-                hxPublish('hideEditor', self.instance_id, [annotation, false, true]);
+                Hxighlighter.publishEvent('hideEditor', self.instance_id, [annotation, false, true]);
             });
 
             // closes the editor and does save annotations
             self.annotation_tool.editor.find('.save').click(function () {
                 var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
 
-                hxPublish('saveAnnotation', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
-                hxPublish('hideEditor', self.instance_id, [annotation, false, false]);
+                Hxighlighter.publishEvent('saveAnnotation', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
+                Hxighlighter.publishEvent('hideEditor', self.instance_id, [annotation, false, false]);
             });
 
             self.checkOrientation(self.annotation_tool.editor);
 
-            hxPublish('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
+            Hxighlighter.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
         });
 
         // handles when the editor should be hidden
-        hxSubscribe('hideEditor', self.instance_id, function (_, annotation, redraw, should_erase) {
+        Hxighlighter.subscribeEvent('hideEditor', self.instance_id, function (_, annotation, redraw, should_erase) {
             if (self.annotation_tool.editor) {
                 self.annotation_tool.editor.remove();
             }
             self.annotation_tool.editing = false;
             if (redraw) {
-                hxPublish('shouldUpdateHighlight', self.instance_id, [annotation]);
+                Hxighlighter.publishEvent('shouldUpdateHighlight', self.instance_id, [annotation]);
             } else if(!self.annotation_tool.updating && should_erase) {
-                hxPublish('shouldDeleteHighlight', self.instance_id, [annotation]);
+                Hxighlighter.publishEvent('shouldDeleteHighlight', self.instance_id, [annotation]);
                 self.annotation_tool.updating = false;
             } else if (!self.annotation_tool.updating && !should_erase) {
                 self.annotation_tool.updating = false;
@@ -175,7 +175,7 @@
             jQuery('body').css('overflow', 'inherit');
         });
 
-        hxSubscribe('toggleViewer', self.instance_id, function(_, event, status, annotations) {
+        Hxighlighter.subscribeEvent('toggleViewer', self.instance_id, function(_, event, status, annotations) {
             self.toggleViewer(event, status, annotations);
         });
     };
@@ -361,7 +361,7 @@
                     jQuery('.annotation-viewer').remove();
                     delete self.annotation_tool.viewer;
                 }
-                hxPublish('toggleViewer',self.instance_id, [event1, 'hide', annotations]);
+                Hxighlighter.publishEvent('toggleViewer',self.instance_id, [event1, 'hide', annotations]);
             });
 
             self.checkOrientation(self.annotation_tool.viewer);
@@ -380,7 +380,7 @@
                 clearTimeout(self.hideTimer);
                 // if they leave the viewer, but they've locked it open, ignore it
                 if (!self.annotation_tool.viewer.hasClass('static')) {
-                    hxPublish('toggleViewer', self.instance_id, [event1, 'hide', annotations]);
+                    Hxighlighter.publishEvent('toggleViewer', self.instance_id, [event1, 'hide', annotations]);
                 }
 
                 // once the mouse leaves the viewer area then allow the parent window to scroll
@@ -393,7 +393,7 @@
                 buttons: {
                     confirm: function() {
                         var annotation_id = this.$target[0].id.replace('delete-', '');
-                        hxPublish('deleteAnnotationById', self.instance_id, [annotation_id]);
+                        Hxighlighter.publishEvent('deleteAnnotationById', self.instance_id, [annotation_id]);
                         if (self.annotation_tool.viewer) {
                             jQuery('.annotation-viewer').remove();
                             delete self.annotation_tool.viewer;
@@ -418,10 +418,10 @@
                     delete self.annotation_tool.viewer;
                 }
                 self.toggleViewer(event, 'hide', annotations);
-                hxPublish('showEditor', self.instance_id, [found, self.annotation_tool.interactionPoint, true]);
+                Hxighlighter.publishEvent('showEditor', self.instance_id, [found, self.annotation_tool.interactionPoint, true]);
             });
 
-            hxPublish('viewerShown', self.instance_id, [self.annotation_tool.viewer]);
+            Hxighlighter.publishEvent('viewerShown', self.instance_id, [self.annotation_tool.viewer]);
         } else if (!self.annotation_tool.editing && status === "hide") {
             if (self.annotation_tool.viewer && self.annotation_tool.viewer.hasClass('static')) {return;}
             self.hideTimer = setTimeout(function () {

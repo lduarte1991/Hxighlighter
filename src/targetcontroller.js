@@ -44,7 +44,7 @@
         // adds it to the page and turns on the wrapper
         jQuery(selector).append(slot);
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');        
-        hxPublish('targetLoaded', instance_id, [jQuery('#' + guid)]);
+        Hxighlighter.publishEvent('targetLoaded', instance_id, [jQuery('#' + guid)]);
     };
 
      $.Target.prototype.makeQuery = function(url, callback, selector) {
@@ -72,9 +72,9 @@
                     // checks to make sure event comes from the correct target object being selected
                     if(commonAncestor.closest('.annotator-wrapper').parent().attr('id') === element.id) {
                         if (ranges.length > 0) {
-                            hxPublish('selectionMade', self.instance_id, [element, ranges, event]);
+                            Hxighlighter.publishEvent('selectionMade', self.instance_id, [element, ranges, event]);
                         } else {
-                            hxPublish('rangesEmpty', self.instance_id, []);
+                            Hxighlighter.publishEvent('rangesEmpty', self.instance_id, []);
                         }
                     }
                 }
@@ -84,7 +84,7 @@
 
     $.Target.prototype.setUpListeners = function() {
         var self = this;
-        hxSubscribe('targetLoaded', self.instance_id, function(_, element) {
+        Hxighlighter.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
             //annotation element gets data that may be needed later
             self.element = element;
             self.element.data('source_type', self.options.object_source);
