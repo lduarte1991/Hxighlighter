@@ -32,7 +32,7 @@ function getQuoteFromHighlights(ranges) {
     for (var i = 0, len = ranges.length; i < len; i++) {
         text = [];
         var r = ranges[i];
-        text.push(trim(r.text()));
+        text.push(Hxighlighter.trim(r.text()));
 
         var exact = text.join(' / ').replace(/[\n\r]/g, '<br>') ;
         exactText.push(exact);

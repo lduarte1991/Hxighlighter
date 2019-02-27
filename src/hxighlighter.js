@@ -143,4 +143,4 @@ Hxighlighter.trim = function(s) {
     } else {
         return s.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
     }
-}
+};
