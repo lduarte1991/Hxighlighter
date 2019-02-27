@@ -11,17 +11,17 @@
 }
 
 .annotator-adder.annotator-invert-y{
-	margin-top: 8px;
-	background-position: right bottom;
+    margin-top: 8px;
+    background-position: right bottom;
 }
 
 .annotator-adder.annotator-invert-y:hover{
-	background-position: center bottom;
+    background-position: center bottom;
 }
 
 .annotator-adder.annotator-invert-y:active{
-	margin-top: 8px;
-	background-position: left bottom;
+    margin-top: 8px;
+    background-position: left bottom;
 }
 
 .annotation-editor.annotator-invert-y {
@@ -29,27 +29,27 @@
 }
 
 .annotation-viewer.annotator-invert-y  {
-	margin-top: -235px;
+    margin-top: -235px;
 }
 
 .annotation-editor.annotator-invert-x, .annotation-viewer.annotator-invert-x {
-	margin-left: -210px;
+    margin-left: -210px;
 }
 
 .annotation-dashboard {
-	width: 300px;
-	height: 100%;
-	height: calc(100% - 50px);
-	margin-top: 50px;
-	position: fixed;
-	top: 0;
-	right: 0;
-	z-index: 999999;
+    width: 300px;
+    height: 100%;
+    height: calc(100% - 50px);
+    margin-top: 50px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 999999;
     background: var
 }
 
 .annotation-item {
-	background: white;
+    background: white;
     background: var(--back-color);
     min-height: 100px;
     text-align: center;
@@ -60,7 +60,7 @@
 }
 
 .unfilter-button {
-	background: darkblue;
+    background: darkblue;
     color: white;
     font-family: Arial;
     text-align: center;
@@ -71,48 +71,48 @@
 }
 
 .token-input-input-token input {
-	width: 100%!important;
+    width: 100%!important;
 }
 
 .annotation-editor .action-button {
-	width: 49.5%;
-	border-radius: 0px;
-	margin: 0;
-	font-weight: bolder;
+    width: 49.5%;
+    border-radius: 0px;
+    margin: 0;
+    font-weight: bolder;
 }
 
 .annotation-editor .action-button.save {
-	background: #333;
+    background: #333;
 }
 
 .annotation-editor .action-button.cancel {
-	background: #eee;
+    background: #eee;
 }
 
 .token-input-list {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 #navigation_bar {
-	position: fixed;
-	height: 50px;
-	background: black;
-	top: 0;
-	display: block;
-	width: 100%;
-	z-index:999;
-	overflow:hidden;
+    position: fixed;
+    height: 50px;
+    background: black;
+    top: 0;
+    display: block;
+    width: 100%;
+    z-index:999;
+    overflow:hidden;
 }
 
 .annotation-editor, .annotation-viewer {
-	position: fixed;
-	width: 400px;
-	min-height: 200px;
-	border: 1px solid black;
-	background: white;
-	/*border-radius: 10px;*/
-	box-shadow: 5px 5px 3px #888;
-	z-index: 9999;
+    position: fixed;
+    width: 400px;
+    min-height: 200px;
+    border: 1px solid black;
+    background: white;
+    /*border-radius: 10px;*/
+    box-shadow: 5px 5px 3px #888;
+    z-index: 9999;
 }
 
 .annotation-editor {
@@ -120,20 +120,20 @@
 }
 
 .note-toolbar.btn-toolbar {
-	cursor: move;
+    cursor: move;
 }
 
 .annotation-editor textarea#annotation-text-field {
-	width: 100%;
-	min-height: 165px;
-	margin: 0;
+    width: 100%;
+    min-height: 165px;
+    margin: 0;
 }
 
 .annotation-editor .annotation-editor-nav-bar, .annotation-viewer .annotation-viewer-nav-bar {
-	height: 25px;
-	position: relative;
-	background: #333;
-	text-align: right;
+    height: 25px;
+    position: relative;
+    background: #333;
+    text-align: right;
 }
 
 .annotation-editor .annotation-editor-nav-bar, .annotation-viewer.static .annotation-viewer-nav-bar {
@@ -141,7 +141,7 @@
 }
 
 .backup-removelater {
-	background: rgb(39, 86, 126); /* For browsers that do not support gradients */
+    background: rgb(39, 86, 126); /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Firefox 3.6 to 15 */
@@ -149,10 +149,10 @@
 }
 
 .annotation-editor .annotation-editor-nav-bar button, .annotation-viewer .annotation-viewer-nav-bar button{
-	display: inline;
-	background-color: #333;
-	border: 0;
-	color: white;
+    display: inline;
+    background-color: #333;
+    border: 0;
+    color: white;
 }
 
 .annotation-viewer .delete, .annotation-viewer .edit {
@@ -172,13 +172,13 @@
 }
 
 #sidebar_button, #accessibility_button {
-	float: right;
-	margin-top: 5px;
-	margin-right: 20px;
-	border-style: none;
-	background: black;
-	color: white;
-	font-size: 18pt;
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
+    border-style: none;
+    background: black;
+    color: white;
+    font-size: 18pt;
 }
 
 #sidebar_button:hover, #accessibility_button:hover {
@@ -186,52 +186,52 @@
 }
 
 .annotation-text-field {
-	padding: 15px;
-	overflow-y: scroll;
-	max-height: 200px;
+    padding: 15px;
+    overflow-y: scroll;
+    max-height: 200px;
 
 }
 
 .annotation-text-field .annotation-username {
-	font-weight: bold;
-	border-top: 1px solid black;
-	padding-top: 10px;
-	margin-top: -10px;
+    font-weight: bold;
+    border-top: 1px solid black;
+    padding-top: 10px;
+    margin-top: -10px;
 }
 
 .annotation-text-field .annotation-date {
-	font-size: 8pt;
-	color: #333;
+    font-size: 8pt;
+    color: #333;
 }
 
 .annotation-text-field .annotation-date:before{
-	content: "(";
+    content: "(";
 }
 
 .annotation-text-field .annotation-date:after{
-	content: ")";
+    content: ")";
 }
 
 .annotation-text-field .annotation-quote {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-left: 20px;
-	padding-left: 10px;
-	padding-right: 20px;
-	color: #555;
-	border-left: 2px solid #333;
-	font-size: 8pt;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+    color: #555;
+    border-left: 2px solid #333;
+    font-size: 8pt;
 }
 
 .annotation-text-field .annotation-text {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .annotation-text-field .annotation-tag {
-	padding: 5px;
-	border: 1px solid black;
-	border-radius: 5px;
-	display: inline-block;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: inline-block;
 }
 
 .annotation-tags {
@@ -239,7 +239,7 @@
 }
 
 .annotator-hl {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .annotation-slot {
@@ -281,18 +281,28 @@
 ********/
 /* Side Dashboard */
 
+.handle-button {
+    position: absolute;
+    float: right;
+    top: 5px;
+    right: 15px;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+}
+
 .annotationSection.side{
-	position: fixed;
-	top: 50px;
-	right: 0;
-	left: auto;
-	width: 300px;
-	min-width: 150px;
-	height: 100%;
+    position: fixed;
+    top: 50px;
+    right: 0;
+    left: auto;
+    width: 300px;
+    min-width: 150px;
+    height: 100%;
     height: calc(100% - 50px);
-	padding: 5px;
-	overflow-x: hidden;
-	overflow-y: auto; /* let the browser control when to show/hide the scrollbar based on the content */
+    padding: 5px;
+    overflow-x: hidden;
+    overflow-y: auto; /* let the browser control when to show/hide the scrollbar based on the content */
     -moz-box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
     -webkit-box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
     box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
@@ -302,10 +312,10 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=270, Color='rgba(0,0,0,0.3)')";
 }
 .annotationSection.side > .annotationsHolder.side {
-	background-color:white;
-	border: 1px solid #999;
-	padding: 3px;
-	margin-top:50px;
+    background-color:white;
+    border: 1px solid #999;
+    padding: 3px;
+    margin-top:50px;
 }
 
 .annotationItem.side {
@@ -361,16 +371,16 @@
 }
 
 .annotationItem.side:hover {
-	background-color: #ddf;
+    background-color: #ddf;
 }
 
 .resize-handle.side {
-	width: 8px;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	cursor:	col-resize;
-	overflow:visible;
+    width: 8px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+    overflow:visible;
     z-index: 999;
 }
 
@@ -413,7 +423,7 @@
 }
 
 .annotationSection.side > .annotation-filter-buttons {
-	text-align: center;	
+    text-align: center; 
 }
 
 .annotationSection.side .btn.user-filter {
@@ -431,39 +441,39 @@
 }
 
 .annotationSection.side > .filter-options.side {
-	text-align: center;
-	margin-top: 20px;
-	min-width: 300px;
+    text-align: center;
+    margin-top: 20px;
+    min-width: 300px;
 }
 
 .annotationSection.side > .search-bar.side {
-	text-align: center;
-	margin-top: 20px;
-	margin-left: 10px;
-	margin-right: 10px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .annotationSection.side > .separator-solid.side {
-	margin: 10px;
-	height: 5px;
-	color: #999;
-	border: 2px solid #999;
+    margin: 10px;
+    height: 5px;
+    color: #999;
+    border: 2px solid #999;
 }
 
 .annotationSection.side > .filter-options.side > button#users-filter {
-	border-top-right-radius: 0px;
+    border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
 .annotationSection.side > .filter-options.side > button#annotationtext-filter {
-	border-radius:0px;
+    border-radius:0px;
 }
 .annotationSection.side > .filter-options.side > button#tag-filter {
-	border-top-left-radius: 0px;
+    border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
 
 .annotationItem.side:not(:first-child) {
-	padding-top:10px;
+    padding-top:10px;
 }
 
 .annotationItem .annotatedBy.side {
@@ -522,11 +532,11 @@
 }
 
 .annotationItem .idAnnotation{
-	display:none;
+    display:none;
 }
 
 .annotationItem .uri {
-	display:none;
+    display:none;
 }
 
 .annotationItem .tag.side {
@@ -539,14 +549,14 @@
 }
 
 .search-label {
-	color: #ccc;
+    color: #ccc;
 }
 
 .annotationModal {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
     height: 100%;
     background-color: white;
     z-index: 1000;
@@ -556,32 +566,32 @@ the scrollbar doesn't overlap the content of the annotationModal */
 .annotationModal .parentAnnotation,
 .annotationModal .addReply,
 .annotationModal .repliesList .replyItem {
-	padding-right: 20px;
+    padding-right: 20px;
 }
 
 .modal-navigation {
-	width: inherit;
-	height: 45px;
-	position: fixed;
-	z-index: 1001;	
-	background-color: #bbb;
-	padding: 5px;
+    width: inherit;
+    height: 45px;
+    position: fixed;
+    z-index: 1001;  
+    background-color: #bbb;
+    padding: 5px;
 }
 .parentAnnotation, .addReply, .repliesList {
-	position: relative;
-	top: 45px;
+    position: relative;
+    top: 45px;
 }
 
 button#closeModal {
-	
+    
 }
 
 button#hideParent {
-	float: right;
+    float: right;
 }
 
 .annotationModal .idAnnotation {
-	display: none;
+    display: none;
 }
 
 /* TOCHECK */
@@ -598,13 +608,13 @@ button#hideParent {
 }
 
 .parentAnnotation {
-	background-color: #333;
-	width: 100%;
-	padding: 10px;
-	border-bottom: 2px solid #bbb;
-	-webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
-	box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+    background-color: #333;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 2px solid #bbb;
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
 }
 
 .parentAnnotation .annotatedBy.side {
@@ -635,7 +645,7 @@ button#hideParent {
     font-family: Times New Roman;
     font-size: 10pt;
     cursor:pointer;
-	clear:both;
+    clear:both;
 }
 
 .parentAnnotation .zoomToImageBounds {
@@ -657,13 +667,13 @@ button#hideParent {
     font-size: 13pt;
     margin-top: 20px;
     color: #fff;
-	clear:both;
+    clear:both;
 }
 
 .addReply {
     width: 100%;
-	padding: 10px;
-	background-color: #fff;
+    padding: 10px;
+    background-color: #fff;
 }
 .addReply button.btn.btn-primary.replybutton {
     width: 100%;
@@ -703,7 +713,7 @@ button#hideParent {
 }
 
 .editgroup, .savegroup{
-	margin: 10px 0;
+    margin: 10px 0;
 }
 
 .replyeditgroup{
