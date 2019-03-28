@@ -8,6 +8,11 @@ module.exports = {
         text: ['./src/text-index.js']
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            "jquery": 'jquery',
+            "$": 'jquery',
+            'jQuery': 'jquery'
+        }),
         new MiniCssExtractPlugin({
             filename: 'dist/hxighlighter_[name].css',
             chunkFilename: "[id].css"
