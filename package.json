@@ -1,0 +1,35 @@
+{
+  "name": "hxighlighter",
+  "version": "0.0.1",
+  "description": "JavaScript annotation tool suite",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webp": "webpack -p",
+    "start": "cd dist && http-server",
+    "all": "webpack -p && cd dist && http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lduarte1991/Hxighlighter.git"
+  },
+  "keywords": [
+    "annotations"
+  ],
+  "private": true,
+  "author": "lduarte1991",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/lduarte1991/Hxighlighter/issues"
+  },
+  "homepage": "https://github.com/lduarte1991/Hxighlighter#readme",
+  "dependencies": {
+    "bootstrap": "^3.4.1",
+    "webpack": "^4.29.6"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "jquery": "^3.3.1",
+    "webpack-cli": "^3.3.0"
+  }
+}

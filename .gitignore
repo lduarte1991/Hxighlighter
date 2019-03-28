@@ -6,4 +6,7 @@
 .fsventsd
 .TemporaryItems
 
+node_modules
+*.tgz
+*.zip
 simple-server.py
