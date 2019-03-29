@@ -7,4 +7,7 @@ require('bootstrap/dist/js/bootstrap.min.js');
 require('jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js');
 
 // common Hxighlighter object
-require('./js/Hxighlighter.js')
+require('./js/hxighlighter.js');
+require('./js/hxelper-functions.js');
+require('./js/core.js');
+require('./js/texttargetcontroller.js');
