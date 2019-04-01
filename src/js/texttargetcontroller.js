@@ -5,6 +5,7 @@
 require('./selectors/keyboard-selector.js');
 require('./selectors/mouse-selector.js');
 require('./drawers/xpath-drawer.js');
+require('./viewers/floatingviewer.js');
 
 (function($) {
 
@@ -164,7 +165,6 @@ require('./drawers/xpath-drawer.js');
     $.TextTarget.prototype.setUpViewers = function(element) {
         var self = this;
         self.viewers = [];
-        console.log(self.options);
         jQuery.each(Hxighlighter.viewers, function(_, viewer) {
             self.viewers.push(new viewer({
                 element: element,
@@ -200,7 +200,8 @@ require('./drawers/xpath-drawer.js');
      *
      * @class      TargetSelectionMade (name)
      */
-    $.TextTarget.prototype.TargetSelectionMade = function(range) {
+    $.TextTarget.prototype.TargetSelectionMade = function(range, event) {
+        var range = Array.isArray(range) ? range[0] : range;
         var self = this;
 
         var annotation = {
@@ -210,9 +211,8 @@ require('./drawers/xpath-drawer.js');
             exact: $.getQuoteFromHighlights([range]).exact,
             mediaType: "text"
         };
-
         jQuery.each(self.viewers, function(_, viewer) {
-            viewer.TargetSelectionMade(annotation);
+            viewer.TargetSelectionMade(annotation, event);
         });
         jQuery.each(self.drawers, function(_, drawer) {
             drawer.draw(annotation);
@@ -256,6 +256,9 @@ require('./drawers/xpath-drawer.js');
      * @class      ViewerEditorClose (name)
      */
     $.TextTarget.prototype.ViewerEditorClose = function(annotation) {
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.ViewerEditorClose(annotation, event);
+        });
         return annotation;
     };
 

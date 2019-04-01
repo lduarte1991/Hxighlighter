@@ -11,7 +11,6 @@ module.exports = {
     entry: {
         text: ['./src/text-index.js']
     },
-    devtool: 'source-map',
     plugins: [
         new webpack.ProvidePlugin({
             "jquery": require.resolve('jquery'),
@@ -54,6 +53,10 @@ module.exports = {
             {
                 test: /annotator\.ui\.js/,
                 use: ["imports-loader?$=jquery&window.jQuery=jquery"]
+            },
+            {
+                test: /\.html$/,
+                use: ['underscore-template-loader']
             }
         ]
     },

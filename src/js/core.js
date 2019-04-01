@@ -65,13 +65,19 @@
 
     $.Core.prototype.TargetSelectionMade = function(message) {
         var self = this;
-        self.callFuncInList(this.targets, 'TargetSelectionMade', message[1]);
+        self.callFuncInList(this.targets, 'TargetSelectionMade', [message[1], message[2]]);
     };
 
     $.Core.prototype.ViewerEditorOpen = function(message) {
         var self = this;
         self.callFuncInList(this.viewers, 'ViewerEditorOpen', message[1]);
-    }
+    };
+
+    $.Core.prototype.ViewerEditorClose = function(message) {
+        var self = this;
+        console.log(message);
+        //self.callFuncInList(this.viewers, 'ViewerEditorClose', message[1]);
+    };
 
     // Util functions
 
