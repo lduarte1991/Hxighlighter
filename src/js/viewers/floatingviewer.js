@@ -98,7 +98,7 @@ import './css/floatingviewer.css';
             var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
 
             $.publishEvent('saveAnnotation', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
-            $.publishEvent('hideEditor', self.instance_id, [annotation, false, false]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, false]);
         });
 
         //self.checkOrientation(self.annotation_tool.editor);
@@ -107,7 +107,12 @@ import './css/floatingviewer.css';
     };
 
     $.FloatingViewer.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
-
+        var self = this;
+        if (self.annotation_tool.editor) {
+            self.annotation_tool.editor.remove();
+        }
+        delete self.annotation_tool.editor;
+        self.annotation_tool.editing = false;
     }
 
     $.viewers.push($.FloatingViewer);

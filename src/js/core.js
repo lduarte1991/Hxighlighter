@@ -70,13 +70,17 @@
 
     $.Core.prototype.ViewerEditorOpen = function(message) {
         var self = this;
-        self.callFuncInList(this.viewers, 'ViewerEditorOpen', message[1]);
+        self.callFuncInList(this.targets, 'ViewerEditorOpen', message[1]);
     };
 
     $.Core.prototype.ViewerEditorClose = function(message) {
         var self = this;
-        console.log(message);
-        //self.callFuncInList(this.viewers, 'ViewerEditorClose', message[1]);
+        self.callFuncInList(this.targets, 'ViewerEditorClose', message);
+    };
+
+    $.Core.prototype.StorageAnnotationSave = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'StorageAnnotationSave', message);
     };
 
     // Util functions

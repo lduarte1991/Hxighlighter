@@ -214,9 +214,7 @@ require('./viewers/floatingviewer.js');
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.TargetSelectionMade(annotation, event);
         });
-        jQuery.each(self.drawers, function(_, drawer) {
-            drawer.draw(annotation);
-        });
+        self.TargetAnnotationDraw(annotation);
 
         // jQuery('.annotator-wrapper')[0].focus();
 
@@ -228,8 +226,11 @@ require('./viewers/floatingviewer.js');
      *
      * @class      TargetAnnotationDraw (name)
      */
-    $.TextTarget.prototype.TargetAnnotationDraw = function() {
-
+    $.TextTarget.prototype.TargetAnnotationDraw = function(annotation) {
+        var self = this;
+        jQuery.each(self.drawers, function(_, drawer) {
+            drawer.draw(annotation);
+        });
     };
 
     /**
@@ -237,8 +238,11 @@ require('./viewers/floatingviewer.js');
      *
      * @class      TargetAnnotationUndraw (name)
      */
-    $.TextTarget.prototype.TargetAnnotationUndraw = function() {
-
+    $.TextTarget.prototype.TargetAnnotationUndraw = function(annotation) {
+        var self = this;
+        jQuery.each(self.drawers, function(_, drawer) {
+            drawer.undraw(annotation);
+        });
     };
 
     /**
@@ -255,10 +259,22 @@ require('./viewers/floatingviewer.js');
      *
      * @class      ViewerEditorClose (name)
      */
-    $.TextTarget.prototype.ViewerEditorClose = function(annotation) {
+    $.TextTarget.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
+        var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation, event);
         });
+
+        if (should_erase) {
+            self.TargetAnnotationUndraw(annotation);
+        }
+
+        if (redraw) {
+            jQuery.each(self.drawers, function(_, drawer) {
+                drawer.redraw(annotation);
+            });
+        }
+
         return annotation;
     };
 
