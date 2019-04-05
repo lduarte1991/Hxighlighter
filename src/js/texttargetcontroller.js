@@ -129,10 +129,6 @@ require('./viewers/floatingviewer.js');
             // finish setting up viewers (which contain displays and editors)
             self.setUpViewers(self.element[0]);
         });
-
-        jQuery(self.element).on('mouseover', '.' + self.annotation_selector, function() {
-
-        });
     };
 
 
@@ -283,8 +279,12 @@ require('./viewers/floatingviewer.js');
      *
      * @class      ViewerDisplayOpen (name)
      */
-    $.TextTarget.prototype.ViewerDisplayOpen = function(annotation) {
-        return annotation;
+    $.TextTarget.prototype.ViewerDisplayOpen = function(annotations) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.ViewerDisplayOpen(annotations, event);
+        });
+        return annotations;
     };
 
     /**
@@ -292,8 +292,12 @@ require('./viewers/floatingviewer.js');
      *
      * @class      ViewerDisplayClose (name)
      */
-    $.TextTarget.prototype.ViewerDisplayClose = function(annotation) {
-        return annotation;
+    $.TextTarget.prototype.ViewerDisplayClose = function(annotations) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.ViewerDisplayClose(annotations, event);
+        });
+        return annotations;
     };
     
     /**

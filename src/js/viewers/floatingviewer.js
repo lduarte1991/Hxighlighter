@@ -1,6 +1,7 @@
 /**
  * 
  */
+ var annotator = annotator ? annotator : require('annotator');
 
 import './css/floatingviewer.css';
 
@@ -30,11 +31,24 @@ import './css/floatingviewer.css';
             viewer: null
         };
         this.element = jQuery(this.options.element);
+        this.hideTimer = null;
         this.init();
     };
 
     $.FloatingViewer.prototype.init = function() {
-        this.setUpTemplates(this.options.template_suffix);
+        var self = this;
+        self.setUpTemplates(self.options.template_suffix);
+
+        // make sure the viewer doesn't disappear when the person moves their mouse over it
+        self.element.on('mouseover', '.annotation-viewer', function (event1) {
+            clearTimeout(self.hideTimer);
+        });
+
+        // once they leave the viewer hide it
+        self.element.on('mouseleave', '.annotation-viewer', function (event1) {
+            clearTimeout(self.hideTimer);
+            self.ViewerDisplayClose();
+        });
     };
 
     $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
@@ -64,7 +78,6 @@ import './css/floatingviewer.css';
     };
 
     $.FloatingViewer.prototype.TargetSelectionMade = function(annotation, event) {
-        console.log(annotation);
         this.ViewerEditorOpen(annotation, false, $.mouseFixedPosition(event));
     };
 
@@ -96,8 +109,8 @@ import './css/floatingviewer.css';
         // closes the editor and does save annotations
         self.annotation_tool.editor.find('.save').click(function () {
             var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
-
-            $.publishEvent('saveAnnotation', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
+            annotation.annotationText.push(text);
+            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, false]);
         });
 
@@ -113,7 +126,50 @@ import './css/floatingviewer.css';
         }
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
-    }
+    };
+
+    $.FloatingViewer.prototype.ViewerDisplayOpen = function(annotations) {
+        var self = this;
+
+        // if the timer is set for the tool to be hidden, this intercepts it
+        if (self.hideTimer !== undefined) {
+            clearTimeout(self.hideTimer);
+        }
+        
+        self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
+            'viewerid': self.instance_id.replace(/:/g, '-'),
+            'annotations': annotations,
+        });
+
+        // add the viewer to the DOM
+        self.element.find('.annotator-wrapper').append(self.annotation_tool.viewerTemplate);
+        // collect the object for manipulation and coordinates of where it should appear
+        if (self.annotation_tool.viewer) {
+            self.annotation_tool.viewer.remove();
+        }
+        self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/:/g, '-'));
+        self.annotation_tool.viewer.css({
+            'top': annotator.util.mousePosition(event).top - jQuery(window).scrollTop(),
+            'left': annotator.util.mousePosition(event).left + 30
+        });
+
+        self.annotation_tool.viewer.data('annotations', annotations);
+
+        self.annotation_tool.viewer.find('.cancel').click(function (event1) {
+            $.publishEvent('ViewerDisplayClose', self.instance_id, [event1, annotations]);
+        });
+
+    };
+
+    $.FloatingViewer.prototype.ViewerDisplayClose = function(annotations) {
+        var self = this;
+        self.hideTimer = setTimeout(function () {
+            if (self.annotation_tool.viewer) {
+                self.annotation_tool.viewer.remove();
+                delete self.annotation_tool.viewer;
+            }
+        }, 250);
+    };
 
     $.viewers.push($.FloatingViewer);
 

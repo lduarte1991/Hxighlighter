@@ -16,11 +16,13 @@ module.exports = {
             "jquery": require.resolve('jquery'),
             "$": require.resolve('jquery'),
             'jQuery': require.resolve('jquery'),
+            _: require.resolve('lodash')
         }),
         new MiniCssExtractPlugin({
             filename: 'dist/hxighlighter_[name].css',
             chunkFilename: "[id].css"
         }),
+
     ],
     output: {
         path: __dirname,
@@ -55,7 +57,7 @@ module.exports = {
                 use: ["imports-loader?$=jquery&window.jQuery=jquery"]
             },
             {
-                test: /\.html$/,
+                test: /v2\.html$/,
                 use: ['underscore-template-loader']
             }
         ]

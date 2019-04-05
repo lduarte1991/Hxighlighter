@@ -73,14 +73,24 @@
         self.callFuncInList(this.targets, 'ViewerEditorOpen', message[1]);
     };
 
+    $.Core.prototype.ViewerDisplayOpen = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'ViewerDisplayOpen', [message[1]]);
+    };
+
     $.Core.prototype.ViewerEditorClose = function(message) {
         var self = this;
         self.callFuncInList(this.targets, 'ViewerEditorClose', message);
     };
 
+    $.Core.prototype.ViewerDisplayClose = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'ViewerDisplayClose', message);
+    };
+
     $.Core.prototype.StorageAnnotationSave = function(message) {
         var self = this;
-        self.callFuncInList(this.targets, 'StorageAnnotationSave', message);
+        self.callFuncInList(this.storage, 'StorageAnnotationSave', message);
     };
 
     // Util functions

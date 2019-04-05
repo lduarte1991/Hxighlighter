@@ -13,6 +13,15 @@ var annotator = annotator ? annotator : require('annotator');
         this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
             highlightClass: (self.h_class + ' annotator-hl')
         });
+
+        jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
+            var annotations = self.getAnnotationsFromElement(event);
+            Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
+        });
+
+        jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {
+            Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
+        });
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {
@@ -36,6 +45,12 @@ var annotator = annotator ? annotator : require('annotator');
     $.XPathDrawer.prototype.redraw = function(annotation) {
         this.highlighter.redraw(annotation);
         $.publishEvent('annotationRedrawn', [annotation]);
+    };
+
+    $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {
+        return jQuery(event.target).parents('.annotator-hl').addBack().map(function(_, elem) {
+            return jQuery(elem).data('annotation');
+        }).toArray();
     };
 
     $.drawers.push($.XPathDrawer);
