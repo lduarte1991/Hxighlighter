@@ -49,6 +49,11 @@ import './css/floatingviewer.css';
             clearTimeout(self.hideTimer);
             self.ViewerDisplayClose();
         });
+
+        Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function() {
+            clearTimeout(self.hideTimer);
+            self.annotation_tool.viewer.addClass('static');
+        });
     };
 
     $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
@@ -78,7 +83,9 @@ import './css/floatingviewer.css';
     };
 
     $.FloatingViewer.prototype.TargetSelectionMade = function(annotation, event) {
-        this.ViewerEditorOpen(annotation, false, $.mouseFixedPosition(event));
+        if (event && typeof(event) === "MouseEvent") {
+            this.ViewerEditorOpen(annotation, false, $.mouseFixedPosition(event, annotation));
+        }
     };
 
     $.FloatingViewer.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {

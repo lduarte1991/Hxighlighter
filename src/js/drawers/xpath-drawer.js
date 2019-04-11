@@ -22,6 +22,10 @@ var annotator = annotator ? annotator : require('annotator');
         jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {
             Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
         });
+
+        jQuery(self.element).on('click', '.' + self.h_class, function(event) {
+            Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event]);
+        });
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {
