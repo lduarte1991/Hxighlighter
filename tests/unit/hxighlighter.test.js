@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import Hxighlighter from '../src/js/hxighlighter.js';
-import '../src/js/core.js';
-import '../src/js/hxelper-functions.js';
+import Hxighlighter from '../../src/js/hxighlighter.js';
+import '../../src/js/core.js';
+import '../../src/js/hxelper-functions.js';
 
 describe('Hxighlighter', function() {
     it('should return a defined Hxighlighter object', function () {
