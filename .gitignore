@@ -10,3 +10,6 @@ node_modules
 *.tgz
 *.zip
 simple-server.py
+
+# Testing
+.nyc_output

@@ -3,7 +3,9 @@
  * It will allow users to set up targets to annotate and then ways to annotate
  */
 
-window.Hxighlighter = window.Hxighlighter || function(options) {
+/* istanbul ignore next */
+var root = global || window;
+root.Hxighlighter = root.Hxighlighter || function(options) {
 
     if (!options) {
         return;
@@ -18,8 +20,8 @@ window.Hxighlighter = window.Hxighlighter || function(options) {
     // create a unique id for this instance
     var inst_id = options.inst_id;
     if (!Hxighlighter.exists(inst_id)) {
-        if (Hxighlighter.exists(options.commonInfo.context_id) ||
-            Hxighlighter.exists(options.commonInfo.collection_id) ||
+        if (Hxighlighter.exists(options.commonInfo.context_id) &&
+            Hxighlighter.exists(options.commonInfo.collection_id) &&
             Hxighlighter.exists(options.commonInfo.object_id)) {
             inst_id = options.commonInfo.context_id + ':' + options.commonInfo.collection_id + ':' + options.commonInfo.object_id
         } else {
