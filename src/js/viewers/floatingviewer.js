@@ -83,7 +83,7 @@ import './css/floatingviewer.css';
     };
 
     $.FloatingViewer.prototype.TargetSelectionMade = function(annotation, event) {
-        if (event && typeof(event) === "MouseEvent") {
+        if (event && event instanceof MouseEvent) {
             this.ViewerEditorOpen(annotation, false, $.mouseFixedPosition(event, annotation));
         }
     };
@@ -175,7 +175,7 @@ import './css/floatingviewer.css';
                 self.annotation_tool.viewer.remove();
                 delete self.annotation_tool.viewer;
             }
-        }, 250);
+        }, 500);
     };
 
     $.viewers.push($.FloatingViewer);
