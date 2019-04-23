@@ -96,8 +96,7 @@ import './css/floatingviewer.css';
 
     $.FloatingViewer.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
         var self = this;
-
-        if (self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic) {
+        if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
             // there's already an open editor window for this instance so don't do anything
             return;
         }
@@ -128,10 +127,16 @@ import './css/floatingviewer.css';
         // closes the editor and does save annotations
         self.annotation_tool.editor.find('.save').click(function () {
             var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
+            if (updating) {
+                annotation.annotationText.pop();
+                self.annotation_tool.viewer.find('.annotation-text').html(text);
+            }
             annotation.annotationText.push(text);
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, false]);
         });
+
+        self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
 
         //self.checkOrientation(self.annotation_tool.editor);
 
@@ -151,7 +156,7 @@ import './css/floatingviewer.css';
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(annotations) {
         var self = this;
 
-         if (self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.static) {
+        if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
             // there's already an open editor window for this instance so don't do anything
             return;
         }
@@ -173,9 +178,11 @@ import './css/floatingviewer.css';
             self.annotation_tool.viewer.remove();
         }
         self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/:/g, '-'));
+        var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop();
+        var newLeft = annotator.util.mousePosition(event).left + 30
         self.annotation_tool.viewer.css({
-            'top': annotator.util.mousePosition(event).top - jQuery(window).scrollTop(),
-            'left': annotator.util.mousePosition(event).left + 30
+            'top': newTop,
+            'left': newLeft
         });
 
         self.annotation_tool.viewer.data('annotations', annotations);
@@ -186,6 +193,15 @@ import './css/floatingviewer.css';
             delete self.annotation_tool.viewer;
         });
 
+        self.annotation_tool.viewer.find('.edit').click(function (event1) {
+            var annotation_id = jQuery(this).attr('id').replace('edit-', '');
+            var filtered_annotation = annotations.find(function(ann) { if (ann.id === annotation_id) return ann; });
+            console.log(self.annotation_tool.viewer.css('top'), self.annotation_tool.viewer.css('left'));
+            self.ViewerEditorOpen(filtered_annotation, true, {
+                top: parseInt(self.annotation_tool.viewer.css('top'), 10),
+                left: parseInt(self.annotation_tool.viewer.css('left'), 10)
+            });
+        });
     };
 
     $.FloatingViewer.prototype.ViewerDisplayClose = function(annotations) {
@@ -218,11 +234,6 @@ import './css/floatingviewer.css';
         // handles moving the editor by clicking and dragging
         jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event){
             self.prepareToMove(true, event);
-        });
-
-        // handles moving the editor by clicking and dragging
-        jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event){
-            self.prepareToMove(false, event);
         });
 
         jQuery('body').on('mousemove', function (event){
