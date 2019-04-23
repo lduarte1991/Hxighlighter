@@ -30,6 +30,13 @@ describe('Text Annotation Target Area', function() {
         expect(wrapper).to.exist;
     });
     
+    it('should have an id associated with it', async function() {
+        const text = await page.evaluate(async() => {
+            return document.getElementsByClassName('annotation-slot')[0].getAttribute('id');
+        });
+        expect(text).to.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i);
+    });
+
     it('should contain text content', async function() {
         const text = await page.evaluate(async() => {
             return document.getElementsByClassName('annotator-wrapper')[0].innerHTML;
@@ -40,10 +47,14 @@ describe('Text Annotation Target Area', function() {
         expect(text.length).to.be.above(0);
     });
 
-    it('should have an id associated with it', async function() {
+    it('should contain the CORRECT text content', async function() {
         const text = await page.evaluate(async() => {
-            return document.getElementsByClassName('annotation-slot')[0].getAttribute('id');
+            return document.getElementsByClassName('annotator-wrapper')[0].innerHTML;
         });
-        expect(text).to.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i);
+
+        expect(text).to.have.string('upon a midnight dreary,');
+        expect(text).to.have.string('I betook myself to linking');
+        expect(text).to.have.string('lies floating on the floor');
+        expect(text).to.not.have.string('Nemo me impune lacessit');
     });
 });

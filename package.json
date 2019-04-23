@@ -4,10 +4,9 @@
   "description": "JavaScript annotation tool suite",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'make sure you run `node server.js` before tests' && nyc mocha --require @babel/register --require ignore-styles --recursive tests",
+    "test": "./test_server.sh",
     "webp": "webpack -p",
     "start": "cd dist && http-server",
-    "stop": "pkill --signal SIGINT node",
     "all": "webpack -p && cd dist && http-server"
   },
   "repository": {

@@ -23,9 +23,9 @@
                 "targets": [{
                     'mediaType': "text",
                     'method': 'url',
-                    'object_source': 'http://localhost:9000/sample_targets/raven.txt',
+                    'object_source': location.protocol + '//' + location.host + '/sample_targets/raven.txt',
                     'target_selector': '.hxighlighter-container',
-                    "template_urls": 'http://localhost:9000/src/js/viewers/templates/',
+                    "template_urls": location.protocol + '//' + location.host + '/src/js/viewers/templates/',
                 }],
             };
             Hxighlighter(hxighlighter_object1);
