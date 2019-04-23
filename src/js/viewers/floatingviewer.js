@@ -46,6 +46,9 @@ import './css/floatingviewer.css';
 
         // once they leave the viewer hide it
         self.element.on('mouseleave', '.annotation-viewer', function (event1) {
+            if (self.annotation_tool.isStatic) {
+                return;
+            }
             clearTimeout(self.hideTimer);
             self.ViewerDisplayClose();
         });
@@ -53,6 +56,7 @@ import './css/floatingviewer.css';
         Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function() {
             clearTimeout(self.hideTimer);
             self.annotation_tool.viewer.addClass('static');
+            self.annotation_tool.isStatic = true;
         });
 
         this.setUpPinAndMove();
@@ -93,7 +97,7 @@ import './css/floatingviewer.css';
     $.FloatingViewer.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
         var self = this;
 
-        if (self.annotation_tool.editing || self.annotation_tool.updating) {
+        if (self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic) {
             // there's already an open editor window for this instance so don't do anything
             return;
         }
@@ -141,12 +145,13 @@ import './css/floatingviewer.css';
         }
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
+        jQuery('body').css('overflow', 'inherit');
     };
 
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(annotations) {
         var self = this;
 
-         if (self.annotation_tool.editing || self.annotation_tool.updating) {
+         if (self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.static) {
             // there's already an open editor window for this instance so don't do anything
             return;
         }
@@ -176,13 +181,20 @@ import './css/floatingviewer.css';
         self.annotation_tool.viewer.data('annotations', annotations);
 
         self.annotation_tool.viewer.find('.cancel').click(function (event1) {
-            $.publishEvent('ViewerDisplayClose', self.instance_id, [event1, annotations]);
+            self.annotation_tool.isStatic = false;
+            self.annotation_tool.viewer.remove();
+            delete self.annotation_tool.viewer;
         });
 
     };
 
     $.FloatingViewer.prototype.ViewerDisplayClose = function(annotations) {
         var self = this;
+
+        if (self.annotation_tool.isStatic) {
+            return;
+        }
+
         self.hideTimer = setTimeout(function () {
             if (self.annotation_tool.viewer) {
                 self.annotation_tool.viewer.remove();
