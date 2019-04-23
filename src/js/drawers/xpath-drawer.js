@@ -31,7 +31,7 @@ var annotator = annotator ? annotator : require('annotator');
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
         this.highlighter.draw(annotation);
-        $.publishEvent('annotationDrawn', [annotation]);
+        $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
         
         // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
         // jQuery.each(annotation._local.highlights, function(_, high) {
@@ -43,12 +43,12 @@ var annotator = annotator ? annotator : require('annotator');
 
     $.XPathDrawer.prototype.undraw = function(annotation) {
         this.highlighter.undraw(annotation);
-        $.publishEvent('annotationUndrawn', [annotation]);
+        $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
     };
 
     $.XPathDrawer.prototype.redraw = function(annotation) {
         this.highlighter.redraw(annotation);
-        $.publishEvent('annotationRedrawn', [annotation]);
+        $.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
     };
 
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {

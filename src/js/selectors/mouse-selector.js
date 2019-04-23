@@ -72,10 +72,12 @@ var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : anno
     };
 
     $.MouseSelector.prototype.confirm = function(range, event) {
+        if (jQuery('.annotation-editor-nav-bar').length > 0) {
+            return;
+        }
         this.interactionPoint = $.mouseFixedPosition(event);
         this.adder.load(range, this.interactionPoint);
         this.adder.checkOrientation();
-        console.log(this.adder);
     }
 
     $.selectors.push($.MouseSelector);

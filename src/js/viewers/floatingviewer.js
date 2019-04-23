@@ -54,6 +54,8 @@ import './css/floatingviewer.css';
             clearTimeout(self.hideTimer);
             self.annotation_tool.viewer.addClass('static');
         });
+
+        this.setUpPinAndMove();
     };
 
     $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
@@ -90,6 +92,12 @@ import './css/floatingviewer.css';
 
     $.FloatingViewer.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
         var self = this;
+
+        if (self.annotation_tool.editing || self.annotation_tool.updating) {
+            // there's already an open editor window for this instance so don't do anything
+            return;
+        }
+
         // set editing mode
         self.annotation_tool.editing = true;
         self.annotation_tool.updating = updating;
@@ -138,6 +146,11 @@ import './css/floatingviewer.css';
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(annotations) {
         var self = this;
 
+         if (self.annotation_tool.editing || self.annotation_tool.updating) {
+            // there's already an open editor window for this instance so don't do anything
+            return;
+        }
+
         // if the timer is set for the tool to be hidden, this intercepts it
         if (self.hideTimer !== undefined) {
             clearTimeout(self.hideTimer);
@@ -176,6 +189,113 @@ import './css/floatingviewer.css';
                 delete self.annotation_tool.viewer;
             }
         }, 500);
+    };
+
+     $.FloatingViewer.prototype.setUpPinAndMove = function() {
+        var self = this;
+        // keeps track of when mouse button is pressed
+        jQuery('body').on('mousedown', function (event) {
+            self.buttonDown = true;
+        });
+
+        // keeps track of when mouse button is let go
+        jQuery('body').on('mouseup', function (event) {
+            self.buttonDown = false;
+        });
+
+        // handles moving the editor by clicking and dragging
+        jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event){
+            self.prepareToMove(true, event);
+        });
+
+        // handles moving the editor by clicking and dragging
+        jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event){
+            self.prepareToMove(false, event);
+        });
+
+        jQuery('body').on('mousemove', function (event){
+            self.moving(event);
+        });
+
+        jQuery('body').on('mouseup', function (event){
+           self.finishedMoving(event);
+        });
+
+        jQuery('body').on('mouseover', '.annotation-editor', function(event) {
+            jQuery('body').css('overflow', 'hidden');
+        });
+
+        jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
+            jQuery('body').css('overflow', 'inherit');
+        });
+
+    };
+
+     $.FloatingViewer.prototype.prepareToMove = function(isEditor, event) {
+        var self = this;
+        self.itemMoving = isEditor ? self.annotation_tool.editor : self.annotation_tool.viewer;
+
+        if (self.itemMoving) {
+            $.pauseEvent(event);
+
+            //turns on moving mode
+            self.itemMoving.moving = true;
+
+            // set initial mouse position offset by where on the editor the user clicked
+            var move = annotator.util.mousePosition(event);
+            var editorTop = parseInt(self.itemMoving.css('top'), 10);
+            var editorLeft = parseInt(self.itemMoving.css('left'), 10);
+            self.itemMoving.offsetTopBy = move.top - editorTop;
+            self.itemMoving.offsetLeftBy = move.left - editorLeft;
+        }
+    };
+
+    $.FloatingViewer.prototype.moving = function(event) {
+        var self = this;
+        if (self.itemMoving && self.itemMoving.moving) {
+            $.pauseEvent(event);
+
+            // gets the userlocation (where they've dragged to)
+            var move = annotator.util.mousePosition(event);
+            var newTop = move.top - self.itemMoving.offsetTopBy;
+            var newLeft = move.left - self.itemMoving.offsetLeftBy;
+            
+
+            var borderBox = self.element[0].getBoundingClientRect();
+            if (newTop < borderBox.y) {
+                newTop = borderBox.y;
+            }
+            if (newLeft < borderBox.x) {
+                newLeft = borderBox.x;
+            }
+
+            /* TODO: Set boundaries for far right and far down */
+
+            // sets the editor to that location (fixing offset)
+            self.itemMoving.css({
+                top: newTop,
+                left: newLeft
+            });
+
+        } else if(self.buttonDown && self.annotation_tool.viewer && !self.annotation_tool.viewer.hasClass('static')) {
+            self.annotation_tool.viewer.remove();
+        }
+    };
+
+    $.FloatingViewer.prototype.finishedMoving = function(event) {
+        var self = this;
+        if (self.itemMoving) {
+            $.pauseEvent(event);
+
+            //turns on moving mode
+            self.itemMoving.moving = false;
+
+            var move = annotator.util.mousePosition(event);
+            self.annotation_tool.interactionPoint = {
+                top: move.top - self.itemMoving.offsetTopBy,
+                left: move.left - self.itemMoving.offsetLeftBy
+            };
+        }
     };
 
     $.viewers.push($.FloatingViewer);

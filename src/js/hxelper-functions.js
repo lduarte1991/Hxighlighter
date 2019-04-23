@@ -12,7 +12,7 @@
         if (jQuery(body).css('position') !== "static") {
             offset = $(body).offset();
         }
-        console.log(event, annotation);
+
         try {
             var top = event.pageY - offset.top;
             var left = event.pageX - offset.left;
@@ -32,7 +32,6 @@
     }
 
     $$.mouseFixedPositionFromRange = function(range) {
-        console.log(range);
         try {
             var boundingBox = range.end.parentElement.getBoundingClientRect();
         } catch(e) {
@@ -146,5 +145,13 @@
             jQuery.subscribe(eventName + '.' + instanceID, callBack);
         }
     };
+
+    $$.pauseEvent = function(e){
+        if(e.stopPropagation) e.stopPropagation();
+        if(e.preventDefault) e.preventDefault();
+        e.cancelBubble=true;
+        e.returnValue=false;
+        return false;
+    }
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));
