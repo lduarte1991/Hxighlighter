@@ -17,14 +17,19 @@ var annotator = annotator ? annotator : require('annotator');
         jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
+            // console.log('mouseover-', event);
         });
 
         jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {
             Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
+            // console.log('mouseleave-', event);
         });
 
         jQuery(self.element).on('click', '.' + self.h_class, function(event) {
-            Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event]);
+            // console.log('mouseclick-', event);
+            var annotations = self.getAnnotationsFromElement(event);
+            Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event, annotations]);
+
         });
 
         Hxighlighter.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation) {

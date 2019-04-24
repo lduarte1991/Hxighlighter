@@ -55,10 +55,16 @@ import 'jquery-confirm/css/jquery-confirm.css'
             self.ViewerDisplayClose();
         });
 
-        Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function() {
+        Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
             clearTimeout(self.hideTimer);
-            self.annotation_tool.viewer.addClass('static');
-            self.annotation_tool.isStatic = true;
+            try {
+                self.annotation_tool.viewer.addClass('static');
+                self.annotation_tool.isStatic = true;
+            } catch(e) {
+                self.ViewerDisplayOpen(annotations);
+                self.annotation_tool.viewer.addClass('static');
+                self.annotation_tool.isStatic = true;
+            }
         });
 
         this.setUpPinAndMove();
@@ -91,9 +97,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
     };
 
     $.FloatingViewer.prototype.TargetSelectionMade = function(annotation, event) {
-        if (event && event instanceof MouseEvent) {
+        // if (event && event instanceof MouseEvent) {
             this.ViewerEditorOpen(annotation, false, $.mouseFixedPosition(event, annotation));
-        }
+        // }
     };
 
     $.FloatingViewer.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
@@ -101,6 +107,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
         if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
             // there's already an open editor window for this instance so don't do anything
             return;
+        }
+
+        if (self.annotation_tool.viewer) {
+            jQuery('.annotation-viewer').remove();
+            delete self.annotation_tool.viewer;
+            self.annotation_tool.isStatic = false;
+            self.annotation_tool.updating = false;
+            self.annotation_tool.editing = false;
         }
 
         // set editing mode
@@ -139,6 +153,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
+        setTimeout(function() {self.annotation_tool.editor.find('#annotation-text-field')[0].focus();}, 250);
 
         //self.checkOrientation(self.annotation_tool.editor);
 
@@ -157,16 +172,17 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(annotations) {
         var self = this;
-
-        if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
-            // there's already an open editor window for this instance so don't do anything
-            return;
-        }
-
         // if the timer is set for the tool to be hidden, this intercepts it
         if (self.hideTimer !== undefined) {
             clearTimeout(self.hideTimer);
         }
+
+        if (self.annotation_tool.editing || self.annotation_tool.updating || (self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer))) {
+            // there's already an open editor window for this instance so don't do anything
+            return;
+        }
+
+        
         
         self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
             'viewerid': self.instance_id.replace(/:/g, '-'),
@@ -178,6 +194,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         // collect the object for manipulation and coordinates of where it should appear
         if (self.annotation_tool.viewer) {
             self.annotation_tool.viewer.remove();
+            delete self.annotation_tool.viewer
         }
         self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/:/g, '-'));
         var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop();
@@ -198,7 +215,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
             var annotation_id = jQuery(this).attr('id').replace('edit-', '');
             var filtered_annotation = annotations.find(function(ann) { if (ann.id === annotation_id) return ann; });
-            console.log(self.annotation_tool.viewer.css('top'), self.annotation_tool.viewer.css('left'));
             self.ViewerEditorOpen(filtered_annotation, true, {
                 top: parseInt(self.annotation_tool.viewer.css('top'), 10),
                 left: parseInt(self.annotation_tool.viewer.css('left'), 10)
@@ -215,13 +231,13 @@ import 'jquery-confirm/css/jquery-confirm.css'
                     var annotation_id = this.$target[0].id.replace('delete-', '');
                     var filtered_annotation = annotations.find(function(ann) { if (ann.id === annotation_id) return ann; });
                     $.publishEvent('StorageAnnotationDelete', self.instance_id, [filtered_annotation]);
+                    self.ViewerDisplayClose();
                     if (self.annotation_tool.viewer) {
                         jQuery('.annotation-viewer').remove();
                         delete self.annotation_tool.viewer;
-                    }
-
-                    if (annotations.length == 1) {
-                        self.ViewerDisplayClose();
+                        self.annotation_tool.isStatic = false;
+                        self.annotation_tool.updating = false;
+                        self.annotation_tool.editing = false;
                     }
                 },
                 cancel: function () {
@@ -242,6 +258,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 self.annotation_tool.viewer.remove();
                 delete self.annotation_tool.viewer;
             }
+            self.annotation_tool.isStatic = false;
+            self.annotation_tool.updating = false;
+            self.annotation_tool.editing = false;
         }, 500);
     };
 
@@ -334,6 +353,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         } else if(self.buttonDown && self.annotation_tool.viewer && !self.annotation_tool.viewer.hasClass('static')) {
             self.annotation_tool.viewer.remove();
+            delete self.annotation_tool.viewer;
         }
     };
 
