@@ -4,6 +4,8 @@
  var annotator = annotator ? annotator : require('annotator');
 
 import './css/floatingviewer.css';
+import 'jquery-confirm';
+import 'jquery-confirm/css/jquery-confirm.css'
 
  (function($) {
     $.FloatingViewer = function(options, inst_id) {
@@ -107,7 +109,7 @@ import './css/floatingviewer.css';
 
         // actually set up and draw the Editor
         var wrapperElement = self.element.find('.annotator-wrapper');
-        wrapperElement.append(self.annotation_tool.editorTemplate);
+        wrapperElement.after(self.annotation_tool.editorTemplate);
 
         // save the element to call upon later
         self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/:/g, '-'));
@@ -172,7 +174,7 @@ import './css/floatingviewer.css';
         });
 
         // add the viewer to the DOM
-        self.element.find('.annotator-wrapper').append(self.annotation_tool.viewerTemplate);
+        self.element.find('.annotator-wrapper').after(self.annotation_tool.viewerTemplate);
         // collect the object for manipulation and coordinates of where it should appear
         if (self.annotation_tool.viewer) {
             self.annotation_tool.viewer.remove();
@@ -201,6 +203,30 @@ import './css/floatingviewer.css';
                 top: parseInt(self.annotation_tool.viewer.css('top'), 10),
                 left: parseInt(self.annotation_tool.viewer.css('left'), 10)
             });
+
+            //StorageAnnotationSave
+        });
+
+        self.annotation_tool.viewer.find('.delete').confirm({
+            title: 'Delete Annotation?',
+            content: 'Would you like to delete your annotation? This is permanent.',
+            buttons: {
+                confirm: function() {
+                    var annotation_id = this.$target[0].id.replace('delete-', '');
+                    var filtered_annotation = annotations.find(function(ann) { if (ann.id === annotation_id) return ann; });
+                    $.publishEvent('StorageAnnotationDelete', self.instance_id, [filtered_annotation]);
+                    if (self.annotation_tool.viewer) {
+                        jQuery('.annotation-viewer').remove();
+                        delete self.annotation_tool.viewer;
+                    }
+
+                    if (annotations.length == 1) {
+                        self.ViewerDisplayClose();
+                    }
+                },
+                cancel: function () {
+                }
+            }
         });
     };
 
@@ -235,6 +261,12 @@ import './css/floatingviewer.css';
         jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event){
             self.prepareToMove(true, event);
         });
+
+        // handles moving the viewer by clicking and dragging
+        jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event){
+            self.prepareToMove(false, event);
+        });
+
 
         jQuery('body').on('mousemove', function (event){
             self.moving(event);

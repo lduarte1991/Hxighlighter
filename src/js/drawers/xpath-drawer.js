@@ -26,6 +26,10 @@ var annotator = annotator ? annotator : require('annotator');
         jQuery(self.element).on('click', '.' + self.h_class, function(event) {
             Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event]);
         });
+
+        Hxighlighter.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation) {
+            self.undraw(annotation);
+        });
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {

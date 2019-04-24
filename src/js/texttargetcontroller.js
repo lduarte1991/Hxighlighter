@@ -333,7 +333,7 @@ require('./viewers/floatingviewer.js');
      * @class      StorageAnnotationDelete (name)
      */
     $.TextTarget.prototype.StorageAnnotationDelete = function() {
-
+        console.log('reach here');
     };
 
     /**
