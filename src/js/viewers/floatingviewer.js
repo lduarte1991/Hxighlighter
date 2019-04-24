@@ -145,7 +145,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
             var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
             if (updating) {
                 annotation.annotationText.pop();
-                self.annotation_tool.viewer.find('.annotation-text').html(text);
             }
             annotation.annotationText.push(text);
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
@@ -156,7 +155,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
         setTimeout(function() {self.annotation_tool.editor.find('#annotation-text-field')[0].focus();}, 250);
 
         //self.checkOrientation(self.annotation_tool.editor);
-
         $.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
     };
 
@@ -167,6 +165,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
+        self.annotation_tool.updating = false;
         jQuery('body').css('overflow', 'inherit');
     };
 
