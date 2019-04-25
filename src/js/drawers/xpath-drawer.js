@@ -17,7 +17,7 @@ var annotator = annotator ? annotator : require('annotator');
         jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
-            // console.log('mouseover-', event);
+            console.log('mouseover-', event);
         });
 
         jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {

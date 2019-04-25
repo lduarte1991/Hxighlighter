@@ -137,7 +137,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // closes the editor tool and does not save annotation
         self.annotation_tool.editor.find('.cancel').click(function () {
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, true]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, !updating]);
         });
 
         // closes the editor and does save annotations

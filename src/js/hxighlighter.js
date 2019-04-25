@@ -3,6 +3,8 @@
  * It will allow users to set up targets to annotate and then ways to annotate
  */
 
+import '../css/common.css';
+
 /* istanbul ignore next */
 var root = global || window;
 root.Hxighlighter = root.Hxighlighter || function(options) {

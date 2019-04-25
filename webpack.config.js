@@ -24,7 +24,6 @@ module.exports = {
         }),
 
     ],
-    devtool: 'source-map',
     output: {
         path: __dirname,
         filename: 'dist/hxighlighter_[name].js'

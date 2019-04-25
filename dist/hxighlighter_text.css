@@ -43,6 +43,10 @@
     border-radius: 5px;
     background-color: #333;
 }
+.hxighlighter-container {
+    background-color: rgba(222,225,255,0.3);
+}
+
 :root {
     --accent-color: #333;
     --back-color: #fff;
@@ -1484,5 +1488,3 @@ body[class*=jconfirm-no-scroll-] {
     transform: scale(1);
 }
 
-
-/*# sourceMappingURL=hxighlighter_text.css.map*/
