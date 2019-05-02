@@ -11,6 +11,10 @@ Hxighlighter is a new standalone version of the JS code contained in the [HxAT p
 ## Usage
 Not intended to have full functionality without also using the HxAT. It should be possible (and even encouraged) to use this as a "lite" mode of the functionality above.
 
+## Demo
+
+[Netlify Link](https://gracious-noether-988002.netlify.com/)
+
 ## HTML needed
 TODO
 
