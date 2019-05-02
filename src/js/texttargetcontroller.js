@@ -191,12 +191,9 @@ require('./plugins/hx-dropdowntags-plugin.js');
     $.TextTarget.prototype.setUpPlugins = function(element) {
         var self = this;
         self.plugins = [];
-        console.log(self.options);
         jQuery.each(Hxighlighter.plugins, function(_, plugin) {
             var optionsForPlugin;
             try {
-                console.log(plugin.name);
-                console.log(self.options, self.options[plugin.name]);
                 optionsForPlugin = self.options[plugin.name] || {};
             } catch (e) {
                 optionsForPlugin = {};
