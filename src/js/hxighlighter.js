@@ -80,6 +80,7 @@ Hxighlighter.requiredEvents = [
 Hxighlighter.selectors = [];
 Hxighlighter.drawers = [];
 Hxighlighter.viewers = [];
+Hxighlighter.plugins = [];
 
 // comment out following line when not webpacking
 export default Hxighlighter;

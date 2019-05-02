@@ -142,7 +142,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // closes the editor and does save annotations
         self.annotation_tool.editor.find('.save').click(function () {
-            var text = annotator.util.escapeHtml(self.annotation_tool.editor.find('#annotation-text-field').val());
+            var text = self.annotation_tool.editor.find('#annotation-text-field').val();
             if (updating) {
                 annotation.annotationText.pop();
             }

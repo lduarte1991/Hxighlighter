@@ -11,6 +11,7 @@ module.exports = {
     entry: {
         text: ['./src/text-index.js']
     },
+    devtool: 'source-map',
     plugins: [
         new webpack.ProvidePlugin({
             "jquery": require.resolve('jquery'),
@@ -22,7 +23,10 @@ module.exports = {
             filename: 'dist/hxighlighter_[name].css',
             chunkFilename: "[id].css"
         }),
-
+        new webpack.DefinePlugin({
+          'require.specified': 'require.resolve'
+        }),
+        new webpack.IgnorePlugin(/^codemirror$/),
     ],
     output: {
         path: __dirname,
@@ -32,6 +36,7 @@ module.exports = {
         extensions: ['.js'],
         alias: {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
+            'CodeMirror': 'codemirror',
         }
     },
     module: {

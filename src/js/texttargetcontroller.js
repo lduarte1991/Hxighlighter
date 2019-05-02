@@ -2,10 +2,14 @@
  * 
  */
 
+//during deployment, this is what decides what gets instantiated, should be moved elsewhere
 require('./selectors/keyboard-selector.js');
 require('./selectors/mouse-selector.js');
 require('./drawers/xpath-drawer.js');
 require('./viewers/floatingviewer.js');
+require('./plugins/hx-summernote-plugin.js');
+require('./plugins/hx-simpletags-plugin.js');
+require('./plugins/hx-dropdowntags-plugin.js');
 
 (function($) {
 
@@ -128,6 +132,21 @@ require('./viewers/floatingviewer.js');
 
             // finish setting up viewers (which contain displays and editors)
             self.setUpViewers(self.element[0]);
+
+            // finish setting up extra plugins
+            self.setUpPlugins(self.element[0]);
+        });
+
+        Hxighlighter.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
+            jQuery.each(self.plugins, function(_, plugin) {
+                plugin.editorShown(editor, annotation);
+            });
+        });
+
+        Hxighlighter.subscribeEvent('displayShown', self.instance_id, function(_, display, annotations) {
+            jQuery.each(self.plugins, function(_, plugin) {
+                plugin.displayShown(display, annotations);
+            });
         });
     };
 
@@ -166,6 +185,24 @@ require('./viewers/floatingviewer.js');
                 element: element,
                 template_urls: self.options.template_urls
             }, self.instance_id));
+        });
+    };
+
+    $.TextTarget.prototype.setUpPlugins = function(element) {
+        var self = this;
+        self.plugins = [];
+        console.log(self.options);
+        jQuery.each(Hxighlighter.plugins, function(_, plugin) {
+            var optionsForPlugin;
+            try {
+                console.log(plugin.name);
+                console.log(self.options, self.options[plugin.name]);
+                optionsForPlugin = self.options[plugin.name] || {};
+            } catch (e) {
+                optionsForPlugin = {};
+            }
+
+            self.plugins.push(new plugin( optionsForPlugin, self.instance_id));
         });
     };
 
@@ -257,13 +294,16 @@ require('./viewers/floatingviewer.js');
      */
     $.TextTarget.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
         var self = this;
+        
+        if (should_erase) {
+            self.TargetAnnotationUndraw(annotation);
+        } else {
+            annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+        }
+
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation, event);
         });
-
-        if (should_erase) {
-            self.TargetAnnotationUndraw(annotation);
-        }
 
         if (redraw) {
             jQuery.each(self.drawers, function(_, drawer) {
@@ -305,8 +345,8 @@ require('./viewers/floatingviewer.js');
      *
      * @class      StorageAnnotationSave (name)
      */
-    $.TextTarget.prototype.StorageAnnotationSave = function() {
-
+    $.TextTarget.prototype.StorageAnnotationSave = function(annotations) {
+        console.log('StorageAnnotationSave');
     };
 
     /**

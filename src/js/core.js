@@ -90,6 +90,7 @@
 
     $.Core.prototype.StorageAnnotationSave = function(message) {
         var self = this;
+        console.log(message, this.storage);
         self.callFuncInList(this.storage, 'StorageAnnotationSave', message);
     };
 
