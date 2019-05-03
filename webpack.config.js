@@ -62,7 +62,7 @@ module.exports = {
                 use: ["imports-loader?$=jquery&window.jQuery=jquery"]
             },
             {
-                test: /v2\.html$/,
+                test: /(floating|sidebar)\.html$/,
                 use: ['underscore-template-loader']
             }
         ]

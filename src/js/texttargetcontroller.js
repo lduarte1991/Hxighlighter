@@ -6,6 +6,7 @@
 require('./selectors/keyboard-selector.js');
 require('./selectors/mouse-selector.js');
 require('./drawers/xpath-drawer.js');
+require('./viewers/sidebar.js');
 require('./viewers/floatingviewer.js');
 require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
@@ -235,11 +236,11 @@ require('./plugins/hx-dropdowntags-plugin.js');
         var self = this;
 
         var annotation = {
-            annotationText: [],
+            annotationText: [""],
             ranges: [range],
             id: $.getUniqueId(),
             exact: $.getQuoteFromHighlights([range]).exact,
-            mediaType: "text"
+            media: "text"
         };
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.TargetSelectionMade(annotation, event);
@@ -296,6 +297,7 @@ require('./plugins/hx-dropdowntags-plugin.js');
             self.TargetAnnotationUndraw(annotation);
         } else {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
@@ -343,7 +345,9 @@ require('./plugins/hx-dropdowntags-plugin.js');
      * @class      StorageAnnotationSave (name)
      */
     $.TextTarget.prototype.StorageAnnotationSave = function(annotations) {
-        console.log('StorageAnnotationSave');
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.StorageAnnotationSave(annotations, event);
+        });
     };
 
     /**
