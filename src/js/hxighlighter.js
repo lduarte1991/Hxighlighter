@@ -81,6 +81,7 @@ Hxighlighter.selectors = [];
 Hxighlighter.drawers = [];
 Hxighlighter.viewers = [];
 Hxighlighter.plugins = [];
+Hxighlighter.storage = [];
 
 // comment out following line when not webpacking
 export default Hxighlighter;

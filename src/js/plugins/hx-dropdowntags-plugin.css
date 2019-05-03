@@ -1,3 +1,6 @@
 .token-input-dropdown, .token-input-dropdown-mac, .token-input-dropdown-facebook {
     z-index: 999999999999!important;
 }
+.token-input-list-facebook {
+    width: 398px!important;
+}

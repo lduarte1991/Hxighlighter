@@ -17,10 +17,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 "viewer",
             ],
             TEMPLATES: {
-                editor: require('./templates/editor-v2.html'),
-                viewer: require('./templates/viewer-v2.html')
+                editor: require('./templates/editor-floating.html'),
+                viewer: require('./templates/viewer-floating.html')
             },
-            template_suffix: "v2",
+            template_suffix: "floating",
             template_urls: ""
         };
         this.options = jQuery.extend({}, defaultOptions, options);
@@ -147,8 +147,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
-            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, text, !self.annotation_tool.updating]);
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, false]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, updating, false]);
         });
 
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
@@ -263,6 +262,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }, 500);
     };
 
+    $.FloatingViewer.prototype.StorageAnnotationSave = function(annotations) {
+
+    };
+
      $.FloatingViewer.prototype.setUpPinAndMove = function() {
         var self = this;
         // keeps track of when mouse button is pressed
@@ -374,4 +377,5 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.viewers.push($.FloatingViewer);
 
- }(Hxighlighter));
+
+}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

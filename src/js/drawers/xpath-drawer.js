@@ -17,16 +17,13 @@ var annotator = annotator ? annotator : require('annotator');
         jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
-            console.log('mouseover-', event);
         });
 
         jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {
             Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
-            // console.log('mouseleave-', event);
         });
 
         jQuery(self.element).on('click', '.' + self.h_class, function(event) {
-            // console.log('mouseclick-', event);
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event, annotations]);
 
@@ -41,6 +38,7 @@ var annotator = annotator ? annotator : require('annotator');
         var self = this;
         this.highlighter.draw(annotation);
         $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
+        console.log('Drew: ', annotation);
         
         // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
         // jQuery.each(annotation._local.highlights, function(_, high) {
@@ -53,11 +51,13 @@ var annotator = annotator ? annotator : require('annotator');
     $.XPathDrawer.prototype.undraw = function(annotation) {
         this.highlighter.undraw(annotation);
         $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
+        console.log('Undrew:', annotation);
     };
 
     $.XPathDrawer.prototype.redraw = function(annotation) {
         this.highlighter.redraw(annotation);
         $.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
+        console.log("Redrew: ", annotation);
     };
 
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {

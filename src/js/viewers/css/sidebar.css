@@ -1,0 +1,236 @@
+:root {
+    --accent-color: #333;
+    --back-color: #fff;
+    --light-font-folor: #fff;
+    --accent-font-color: #888;
+    --dark-font-color: #000;
+
+    --nav-bar-offset: 0px;
+
+    --sidebar-width: 300px;
+    --sidebar-background: #fff;
+    --sidebar-border: 2px solid darkgray;
+    --sidebar-button-back: #fff;
+    --sidebar-button-back-accent: #fff;
+    --sidebar-button-color: #000;
+    --sidebar-button-color-accent: #666;
+
+}
+
+.annotationSection.side {
+    position: fixed;
+    top: var(--nav-bar-offset);
+    right: 0;
+    left: auto;
+    width: 300px;
+    width: var(--sidebar-width);
+    min-width: 150px;
+    height: 100%;
+    height: calc(100% - var(--nav-bar-offset));
+    padding: 5px;
+    overflow-x: hidden;
+    background: var(--sidebar-background);
+    overflow-y: auto; /* let the browser control when to show/hide the scrollbar based on the content */
+    -moz-box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
+    -webkit-box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
+    box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
+    padding-top: 60px;
+    /* For videojs */
+    z-index: 999;
+    /* For IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=270, Color='rgba(0,0,0,0.3)')";
+}
+
+.annotationSection .annotation-viewer-side .delete, .annotation-viewer-side .edit {
+    background: var(--sidebar-button-back);
+    outline: 0;
+    border: 0;
+    color: var(--sidebar-button-color);
+}
+
+.annotationSection .annotation-viewer-side .delete:hover, .annotation-viewer-side .edit:hover {
+    background: var(--sidebar-button-back-accent);
+    color: var(--sidebar-button-color-accent);
+}
+
+.annotationSection .annotationsHolder {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.annotationSection .annotationsHolder .annotation-viewer-side {
+    height: 100%;
+}
+
+.annotationSection .annotationsHolder .annotation-viewer-side .annotation-text-field {
+    max-height: 100%!important;
+}
+
+.annotationSection .annotationsHolder .annotationItem {
+    border: 2px solid rgba(88, 88, 88, 0.2);
+    padding: 10px;
+    margin-top: 17px;
+}
+
+.annotationSection .annotationsHolder .annotationItem .annotatedBy{
+    font-weight: bold;
+    font-size: 11pt;
+}
+
+.annotationSection .annotationsHolder .annotationItem .quote{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+    color: var(--accent-font-color);
+    border-left: 2px solid var(--accent-color);
+    font-size: 8pt;
+}
+
+.annotationSection .annotationsHolder .annotationItem .body {
+    margin-bottom: 10px;
+}
+
+.annotationSection .annotationsHolder .annotationItem .annotation-tag{
+    padding: 5px;
+    border: 1px solid var(--dark-font-color);
+    display: inline-block;
+}
+
+button.sidebar-button {
+    position: absolute;
+    background: black;
+    width: 149px;
+    color: white;
+    top: 0;
+    border: 0;
+}
+
+button.sidebar-button#create-annotation-side{
+    left: 0px;   
+}
+
+button.sidebar-button#search {
+    left: 0px;
+}
+
+button.sidebar-button#hide_label {
+    left: 150.5px;
+}
+
+.two-button-version button#hide_label {
+    display: none;
+}
+.two-button-version button#create-annotation-side {
+    width: 151.5px;
+}
+.two-button-version button#search {
+    width: 151.5px;
+    left: 153px;
+}
+
+.annotation-filter-buttons.btn-group {
+    position: absolute;
+    top: 24px;
+    left: 0;
+}
+
+.btn.user-filter {
+    border-radius: 0;
+    background: white;
+    border: 1px solid rgb(160, 216, 242);
+    width: 101px;
+    color: rgb(17, 118, 178);
+    position: absolute;
+}
+
+.btn.user-filter.selected {
+    background: rgb(17, 118, 178);
+    color: white;
+    font-weight: bold;
+}
+
+.btn.user-filter#mynotes {
+    left: 0px;
+}
+
+.btn.user-filter#instructor {
+    left: 103px;
+}
+
+.btn.user-filter#public {
+    left: 204.5px;
+}
+
+/* plugins */
+.token-input-input-token input {
+    width: 100%!important;
+}
+
+.popover, .tooltip {
+    z-index: 99999;
+}
+
+.btn.btn-primary.save.action-button, .btn.btn-default.cancel.action-button {
+    width: 197px;
+    border-radius: 0;
+}
+
+.note-btn.btn {
+    background: white;
+}
+
+.note-popover .popover-content .dropdown-menu, .card-header.note-toolbar .dropdown-menu {
+    min-width: 152px!important;
+}
+
+.search-bar .input-group .input-group-btn {
+    width: 120px;
+}
+
+#search-submit, #search-clear {
+    width: 50%;
+    border-radius: 0;
+}
+
+#tag-search-alert {
+    padding: 10px;
+    font-size: 8pt;
+    border: 1px dashed black;
+    cursor: pointer;
+    background: rgba(88,88,88,0.1);
+}
+
+.handle-button {
+    position: absolute;
+    float: right;
+    top: 5px;
+    right: 15px;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* misc */
+div[class^="reply-list"] {
+    cursor: pointer;
+}
+
+.reply-row:nth-child(odd) {
+    background: rgb(240, 240, 240);
+}
+
+button[id^="replies-close"], div[id^="create-reply"] button {
+    width: 100%;
+    margin-top: 5px;
+    /* margin-bottom: 5px; */
+    background: darkred;
+    color: white;
+    margin-bottom: 5px;
+}
+
+div[id^="create-reply"] button {
+    background: darkblue;
+}

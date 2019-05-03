@@ -77,6 +77,7 @@ require('./hx-dropdowntags-plugin.css');
      * @param      {HTMLElement}  editor      The editor element
      */
     $.DropdownTags.prototype.editorShown = function(editor, annotation) {
+        console.log('DropdownTags editorShown');
         var self = this;
         editor.find('#tag-list').addClass('token-tag-field');
         self.field = editor.find('.token-tag-field');
@@ -90,7 +91,14 @@ require('./hx-dropdowntags-plugin.css');
             })
         });
         self.field.tokenInput(preDTags, {'theme': 'facebook'});
-        console.log(editor.find('#tag-list').val());
+        if (annotation.tags && annotation.tags.length > 0) {
+            annotation.tags.forEach(function(tag) {
+                self.field.tokenInput('add', {
+                    'name': tag,
+                    'value': tag,
+                });
+            });
+        }
     };
 
     Object.defineProperty($.DropdownTags, 'name', {
