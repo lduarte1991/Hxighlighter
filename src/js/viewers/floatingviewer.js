@@ -269,6 +269,15 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     };
 
+    $.FloatingViewer.prototype.StorageAnnotationDelete = function(annotation) {
+        var self = this;
+        jQuery('.annotation-viewer').remove();
+        delete self.annotation_tool.viewer;
+        self.annotation_tool.isStatic = false;
+        self.annotation_tool.updating = false;
+        self.annotation_tool.editing = false;
+    }
+
      $.FloatingViewer.prototype.setUpPinAndMove = function() {
         var self = this;
         // keeps track of when mouse button is pressed

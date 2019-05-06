@@ -350,6 +350,7 @@ require('./plugins/hx-colortags-plugin.js');
      * @class      StorageAnnotationSave (name)
      */
     $.TextTarget.prototype.StorageAnnotationSave = function(annotations) {
+        var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.StorageAnnotationSave(annotations, event);
         });
@@ -379,7 +380,10 @@ require('./plugins/hx-colortags-plugin.js');
      * @class      StorageAnnotationDelete (name)
      */
     $.TextTarget.prototype.StorageAnnotationDelete = function() {
-        console.log('reach here');
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.StorageAnnotationDelete();
+        });
     };
 
     /**

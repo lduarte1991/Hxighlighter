@@ -91,7 +91,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.element.on('mouseleave', '.annotationsHolder', function(event) {
             jQuery('body').css('overflow', 'inherit');
         });
-        console.log('self1:', self);
     }
 
     $.Sidebar.prototype.setUpListeners = function() {
@@ -105,8 +104,27 @@ import 'jquery-confirm/css/jquery-confirm.css'
             else {
                 jQuery('.annotationsHolder').prepend(annHTML);
             }
-            $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
+            jQuery('.item-' + ann.id).find('.delete').confirm({
+                title: 'Delete Annotation?',
+                content: 'Would you like to delete your annotation? This is permanent.',
+                buttons: {
+                    confirm: function() {
+                        $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
+                    },
+                    cancel: function () {
+                    }
+                }
+            });
 
+            $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
+            jQuery('#empty-alert').css('display', 'none');
+        });
+
+        $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
+            jQuery('.item-' + annotation.id).remove();
+            if (jQuery('.annotation-item').length == 0) {
+                jQuery('#empty-alert').css('display', 'block');
+            } 
         });
     };
 
@@ -128,6 +146,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
     };
 
     $.Sidebar.prototype.ViewerDisplayClose = function(annotations) {
+
+    };
+
+    $.Sidebar.prototype.StorageAnnotationSave = function(annotations) {
+
+    };
+    
+    $.Sidebar.prototype.StorageAnnotationDelete = function(annotations) {
 
     };
 
