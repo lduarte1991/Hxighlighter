@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const PATHS = {
     vendor: path.join(__dirname, 'src/js/vendors/'),
+    modules: path.join(__dirname, 'node_modules/')
 }
 
 module.exports = {
@@ -37,6 +38,7 @@ module.exports = {
         alias: {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
             'CodeMirror': 'codemirror',
+            'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/'
         }
     },
     module: {

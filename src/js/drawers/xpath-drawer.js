@@ -32,13 +32,21 @@ var annotator = annotator ? annotator : require('annotator');
         Hxighlighter.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation) {
             self.undraw(annotation);
         });
+
+        Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function(_, annotation, color) {
+            console.log('changeDrawnColor', color, annotation._local.highlights);
+            if (annotation._local) {
+                jQuery.each(annotation._local.highlights, function(_, hl) {
+                    setTimeout(function() {jQuery(hl).css('background-color', color);}, 250);
+                });
+            }
+        });
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
         this.highlighter.draw(annotation);
         $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
-        console.log('Drew: ', annotation);
         
         // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
         // jQuery.each(annotation._local.highlights, function(_, high) {
@@ -51,13 +59,11 @@ var annotator = annotator ? annotator : require('annotator');
     $.XPathDrawer.prototype.undraw = function(annotation) {
         this.highlighter.undraw(annotation);
         $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
-        console.log('Undrew:', annotation);
     };
 
     $.XPathDrawer.prototype.redraw = function(annotation) {
         this.highlighter.redraw(annotation);
         $.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
-        console.log("Redrew: ", annotation);
     };
 
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {

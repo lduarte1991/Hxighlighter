@@ -27,7 +27,7 @@
     "bootstrap": "^3.4.1",
     "codemirror": "^5.46.0",
     "jquery-confirm": "^3.3.4",
-    "jquery-tokeninput": "^1.6.0",
+    "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
     "webpack": "^4.29.6"
   },
   "devDependencies": {

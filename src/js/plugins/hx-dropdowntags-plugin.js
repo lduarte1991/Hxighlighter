@@ -7,8 +7,8 @@
 
 require('./hx-simpletags-plugin.js');
 require('./hx-simpletags-plugin.css');
-require('jquery-tokeninput/dist/css/token-input-facebook.min.css');
-require('jquery-tokeninput');
+require('jquery-tokeninput/styles/token-input-facebook.css');
+require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 require('./hx-dropdowntags-plugin.css');
 
 (function($){
@@ -87,15 +87,21 @@ require('./hx-dropdowntags-plugin.css');
         tags.forEach(function(tag) {
             preDTags.push({
                 name: tag,
-                value: tag
+                id: tag
             })
         });
-        self.field.tokenInput(preDTags, {'theme': 'facebook'});
+        self.field.tokenInput(preDTags, {
+            theme: 'facebook',
+            preventDuplicates: true,
+            allowTabOut: true,
+            allowFreeTagging: true,
+            noResultsText: "Not Found. Hit ENTER to add a personal tag.",
+        });
         if (annotation.tags && annotation.tags.length > 0) {
             annotation.tags.forEach(function(tag) {
                 self.field.tokenInput('add', {
                     'name': tag,
-                    'value': tag,
+                    'id': tag,
                 });
             });
         }

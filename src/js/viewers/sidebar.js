@@ -98,7 +98,15 @@ import 'jquery-confirm/css/jquery-confirm.css'
         var self = this;
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
             var ann = jQuery.extend({}, annotation, {'index': 0});
-            jQuery('.annotationsHolder').prepend(self.options.TEMPLATES.annotationItem(ann));
+            var annHTML = self.options.TEMPLATES.annotationItem(ann)
+            if (updating) {
+                jQuery('.item-' + ann.id).html(jQuery(annHTML).html())
+            }
+            else {
+                jQuery('.annotationsHolder').prepend(annHTML);
+            }
+            $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
+
         });
     };
 

@@ -242,6 +242,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 }
             }
         });
+
+        $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
+
     };
 
     $.FloatingViewer.prototype.ViewerDisplayClose = function(annotations) {

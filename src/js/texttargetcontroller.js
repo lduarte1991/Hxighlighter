@@ -11,6 +11,7 @@ require('./viewers/floatingviewer.js');
 require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
+require('./plugins/hx-colortags-plugin.js');
 
 (function($) {
 
@@ -140,13 +141,17 @@ require('./plugins/hx-dropdowntags-plugin.js');
 
         Hxighlighter.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
             jQuery.each(self.plugins, function(_, plugin) {
-                plugin.editorShown(editor, annotation);
+                if (typeof(plugin.editorShown) === "function") {
+                    plugin.editorShown(editor, annotation);
+                }
             });
         });
 
         Hxighlighter.subscribeEvent('displayShown', self.instance_id, function(_, display, annotations) {
             jQuery.each(self.plugins, function(_, plugin) {
-                plugin.displayShown(display, annotations);
+                if (typeof(plugin.displayShown) === "function") {
+                    plugin.displayShown(display, annotations);
+                }
             });
         });
     };
