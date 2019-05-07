@@ -12,6 +12,7 @@ require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
+require('./storage/catchpy.js');
 
 (function($) {
 
@@ -49,7 +50,7 @@ require('./plugins/hx-colortags-plugin.js');
             this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector)
         } else if (this.options.method == "inline") {
             // if the text is already in the DOM, this sets up what is left
-            this.createTextSlotFromSelector(this.options.object_source, this.target_selector);
+            this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
         }
     };
 
@@ -84,7 +85,9 @@ require('./plugins/hx-colortags-plugin.js');
         
         // each annotation target will be enclosed in a "slot" with a temporary unique id
         this.guid = Hxighlighter.getUniqueId();
-        var slot = jQuery(selector).addClass('annotation-slot');
+        var slot = jQuery(selector);
+        slot.addClass('annotation-slot');
+        slot.attr('id', this.guid);
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen
@@ -163,6 +166,7 @@ require('./plugins/hx-colortags-plugin.js');
      * @param      {<type>}  element  The element
      */
     $.TextTarget.prototype.setUpSelectors = function(element) {
+        console.log(element);
         var self = this;
         self.selectors = [];
         jQuery.each(Hxighlighter.selectors, function(_, selector) {
