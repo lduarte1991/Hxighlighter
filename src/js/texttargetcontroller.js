@@ -140,6 +140,9 @@ require('./storage/catchpy.js');
 
             // finish setting up extra plugins
             self.setUpPlugins(self.element[0]);
+
+            // finish setting up the storage containers
+            self.setUpStorage(self.element[0]);
         });
 
         Hxighlighter.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
@@ -210,6 +213,21 @@ require('./storage/catchpy.js');
             }
 
             self.plugins.push(new plugin( optionsForPlugin, self.instance_id));
+        });
+    };
+
+    $.TextTarget.prototype.setUpStorage = function(element, options) {
+        var self = this;
+        self.storage = [];
+        jQuery.each(Hxighlighter.storage, function(idx, storage) {
+            var optionsForStorage;
+            try {
+                optionsForStorage = jQuery.extend({}, self.options, self.options[storage.name]) || {};
+            } catch (e) {
+                optionsForStorage = {};
+            }
+            self.storage.push(new storage(optionsForStorage, self.instance_id));
+            self.storage[idx].onLoad(element, options);
         });
     };
 

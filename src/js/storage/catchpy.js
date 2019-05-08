@@ -2,6 +2,7 @@ var annotator = annotator ? annotator : require('annotator');
 (function($) {
     $.CatchPy = function(options, inst_id) {
         this.options = options;
+        console.log(options);
         this.instance_id = inst_id;
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;

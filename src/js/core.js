@@ -54,7 +54,7 @@
         for (var i = 0; i < targets.length; i++) {
             var mediaType = $.Core._capitalizeMedia(targets[i].mediaType) + "Target";
             if (typeof Hxighlighter[mediaType] === "function") {
-                this.targets.push(new Hxighlighter[mediaType](targets[i], this.instance_id));
+                this.targets.push(new Hxighlighter[mediaType](jQuery.extend({}, targets[i], this.options.commonInfo), this.instance_id));
             }
         }
     };
