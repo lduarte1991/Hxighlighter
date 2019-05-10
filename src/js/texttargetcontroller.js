@@ -324,6 +324,9 @@ require('./storage/catchpy.js');
             self.TargetAnnotationUndraw(annotation);
         } else {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+            jQuery.each(self.storage, function(_, store) {
+                store.saveAnnotation(annotation, self.element);
+            });
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
 

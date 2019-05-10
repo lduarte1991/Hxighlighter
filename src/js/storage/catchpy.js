@@ -32,7 +32,7 @@ var annotator = annotator ? annotator : require('annotator');
             collection_id: self.options.collection_id,
         }, options);
         jQuery.ajax({
-            url: self.url_base + '/search?resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
+            url: self.url_base,
             method: 'GET',
             data: data,
             headers: {
@@ -53,8 +53,9 @@ var annotator = annotator ? annotator : require('annotator');
         var self = this;
         console.log(elem);
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.content'));
+        console.log(self.url_base);
         jQuery.ajax({
-            url: self.url_base + '/create?resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
+            url: self.url_base + save_ann['@id'] + '/',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),
@@ -365,9 +366,9 @@ var annotator = annotator ? annotator : require('annotator');
             text = [];
             var r = ranges[i];
             if (r.text !== undefined) {
-                text.push(trim(r.text()));
+                text.push(Hxighlighter.trim(r.text()));
             } else {
-                text.push(trim(self.text(r)));
+                text.push(Hxighlighter.trim(self.text(r)));
             }
             try {
                 previous = ranges[i]['start']['previousSibling'] ? ranges[i]['start']['previousSibling'].textContent : '';
