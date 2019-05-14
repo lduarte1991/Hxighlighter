@@ -91,6 +91,23 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.element.on('mouseleave', '.annotationsHolder', function(event) {
             jQuery('body').css('overflow', 'inherit');
         });
+
+        // toggle search
+        jQuery('#search').click(function() {
+            jQuery('.search-bar.search-toggle').toggle();
+            jQuery('.annotationsHolder').toggleClass('search-opened');
+        });
+
+        jQuery('#search-clear').click(function() {
+            jQuery('#srch-term').val('');
+            jQuery('.annotationsHolder .annotationItem').show();
+        });
+
+        jQuery('#search-submit').click(function() {
+            var searchValue = jQuery('#srch-term').val().trim();
+            var searchType = jQuery('.search-bar select').val();
+            self.filterByType(searchValue, searchType);
+        });
     }
 
     $.Sidebar.prototype.setUpListeners = function() {
@@ -126,6 +143,45 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 jQuery('#empty-alert').css('display', 'block');
             } 
         });
+    };
+
+    $.Sidebar.prototype.filterByType= function(searchValue, type) {
+        if (searchValue === "") {
+            jQuery('.annotationsHolder .annotationItem').show();
+            return;
+        }
+        if (type === "User") {
+            jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
+                if (jQuery(item).find('.annotatedBy').html().trim().toLowerCase() !== searchValue.trim().toLowerCase()) {
+                    jQuery(item).hide();
+                } else {
+                    jQuery(item).show();
+                }
+            });
+        } else if (type === "Annotation") {
+            jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
+                if (jQuery(item).find('.body').html().toLowerCase().indexOf(searchValue.trim().toLowerCase()) === -1) {
+                    jQuery(item).hide();
+                } else {
+                    jQuery(item).show();
+                }
+            });
+        } else if (type === "Tag") {
+            jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
+                var tags = jQuery(item).find('.annotation-tag');
+                if (tags.length === 0) {
+                    jQuery(item).hide();
+                } else {
+                    var found = false;
+                    jQuery.each(tags, function(_, tag) {
+                        if (jQuery(tag).html().trim().toLowerCase().indexOf(searchValue.trim().toLowerCase()) > -1 && jQuery(tag).html().trim().length !== 0) {
+                            found = true
+                        }
+                    });
+                    found ? jQuery(item).show() : jQuery(item).hide();
+                }
+            });
+        }
     };
 
     $.Sidebar.prototype.TargetSelectionMade = function(annotation, event) {

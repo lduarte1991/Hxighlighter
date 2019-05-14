@@ -44,7 +44,7 @@
     background-color: #333;
 }
 body {
-    background-color: rgba(222,225,255,0.3);
+    background-color: rgba(0,0,0,0.05);
 }
 
 :root {
@@ -64,6 +64,7 @@ body {
     --sidebar-button-color: #000;
     --sidebar-button-color-accent: #666;
 
+    --sidebar-search-bar-height-open: 73px;
 }
 
 .annotationSection.side {
@@ -105,6 +106,10 @@ body {
 .annotationSection .annotationsHolder {
     height: 100%;
     overflow-y: scroll;
+}
+
+.annotationSection .annotationsHolder.search-opened {
+    height: calc(100% - var(--sidebar-search-bar-height-open));
 }
 
 .annotationSection .annotationsHolder .annotation-viewer-side {
@@ -236,6 +241,11 @@ button.sidebar-button#hide_label {
 
 .search-bar .input-group .input-group-btn {
     width: 120px;
+}
+
+.search-bar {
+    margin-bottom: 5px;
+    height: var(--sidebar-search-bar-height);
 }
 
 #search-submit, #search-clear {

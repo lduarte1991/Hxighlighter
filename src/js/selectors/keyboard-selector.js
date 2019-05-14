@@ -58,7 +58,9 @@
         jQuery(document).on('keyup', function(event){
             if (event.key == 'a') {
                 //move this to external button
-                self.turnSelectionModeOn();
+                if(!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')){
+                    self.turnSelectionModeOn();
+                }
             } else if (event.key == 'Escape') {
                 self.turnSelectionModeOff();
             }

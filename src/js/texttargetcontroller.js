@@ -12,7 +12,7 @@ require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
-require('./storage/catchpy.js');
+// require('./storage/catchpy.js');
 
 (function($) {
 

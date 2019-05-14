@@ -55,7 +55,7 @@ var annotator = annotator ? annotator : require('annotator');
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.content'));
         console.log(self.url_base);
         jQuery.ajax({
-            url: self.url_base + save_ann['@id'] + '/',
+            url: self.url_base, //+ save_ann['id'] + '/',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),
@@ -173,7 +173,7 @@ var annotator = annotator ? annotator : require('annotator');
             "@context": "http://catch-dev.harvardx.harvard.edu/catch-context.jsonld",
             'type': 'Annotation',
             'schema_version': '1.1.0',
-            '@id': annotation['id'],
+            'id': annotation['id'],
             'creator':  {
                 'id': self.options.user_id,
                 'name': this.options.username,
