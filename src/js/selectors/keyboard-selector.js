@@ -152,7 +152,7 @@
         // publish selection made
         Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [r]]);
         this.element.blur();
-        this.element.focus();
+        // this.element.focus();
     };
 
     $.KeyboardSelector.prototype.startComesAfter = function(start, end) {

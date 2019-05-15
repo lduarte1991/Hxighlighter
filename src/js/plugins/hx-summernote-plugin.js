@@ -60,6 +60,8 @@ require('bs4-summernote');
         // removes summernote's ability to tab within the editor so users can tab through items
         delete jQuery.summernote.options.keyMap.pc.TAB;
         delete jQuery.summernote.options.keyMap.mac.TAB;
+
+        element.find('.note-editable').trigger('focus');
     };
 
     /**

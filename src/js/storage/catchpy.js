@@ -141,11 +141,11 @@ var annotator = annotator ? annotator : require('annotator');
                         'type': 'Choice',
                         'items': [{
                                 'type': 'RangeSelector',
-                                'start': {
+                                'startSelector': {
                                     'type': 'XPathSelector',
                                     'value': range.start
                                 },
-                                'end': {
+                                'endSelector': {
                                     'type': 'XPathSelector',
                                     'value': range.end,
                                 },
@@ -170,7 +170,7 @@ var annotator = annotator ? annotator : require('annotator');
         }
 
         var webAnnotationVersion = {
-            "@context": "http://catch-dev.harvardx.harvard.edu/catch-context.jsonld",
+            "@context": "http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json",
             'type': 'Annotation',
             'schema_version': '1.1.0',
             'id': annotation['id'],
@@ -253,9 +253,9 @@ var annotator = annotator ? annotator : require('annotator');
                 if (!('parent' in targetItem)) {
                     if (targetItem['type'] == "RangeSelector") {
                         ranges.push({
-                            start: targetItem['oa:start'].value,
+                            start: targetItem['startSelector'].value,
                             startOffset: targetItem['refinedBy'][0].start,
-                            end: targetItem['oa:end'].value,
+                            end: targetItem['endSelector'].value,
                             endOffset: targetItem['refinedBy'][0].end
                         });
                     }

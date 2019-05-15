@@ -153,7 +153,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
         setTimeout(function() {self.annotation_tool.editor.find('#annotation-text-field')[0].focus();}, 250);
 
-        //self.checkOrientation(self.annotation_tool.editor);
+        self.checkOrientation(self.annotation_tool.editor);
         $.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
     };
 
@@ -242,9 +242,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 }
             }
         });
-
+        
         $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
-
+        self.checkOrientation(self.annotation_tool.viewer);
     };
 
     $.FloatingViewer.prototype.ViewerDisplayClose = function(annotations) {
@@ -317,6 +317,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
             jQuery('body').css('overflow', 'inherit');
         });
 
+        jQuery('body').on('mouseleave', function(event) {
+            self.finishedMoving();
+        })
+
     };
 
      $.FloatingViewer.prototype.prepareToMove = function(isEditor, event) {
@@ -349,12 +353,18 @@ import 'jquery-confirm/css/jquery-confirm.css'
             var newLeft = move.left - self.itemMoving.offsetLeftBy;
             
 
-            var borderBox = self.element[0].getBoundingClientRect();
-            if (newTop < borderBox.y) {
-                newTop = borderBox.y;
+            // var borderBox = self.element[0].getBoundingClientRect();
+            if (newTop < 0) {
+                newTop = 0;
             }
-            if (newLeft < borderBox.x) {
-                newLeft = borderBox.x;
+            if (newLeft < 0) {
+                newLeft = 0;
+            }
+            if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
+                newTop = window.innerHeight - self.itemMoving.outerHeight();
+            }
+            if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
+                newLeft = window.innerWidth - self.itemMoving.outerWidth();
             }
 
             /* TODO: Set boundaries for far right and far down */
@@ -385,6 +395,30 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 left: move.left - self.itemMoving.offsetLeftBy
             };
         }
+    };
+
+    $.FloatingViewer.prototype.checkOrientation = function(viewerElement) {
+        var self = this;
+        var newTop = parseInt(jQuery(viewerElement).css('top'), 10);
+        var newLeft = parseInt(jQuery(viewerElement).css('left'), 10);
+        var elWidth = parseInt(jQuery(viewerElement).outerWidth());
+        var elHeight = parseInt(jQuery(viewerElement).outerHeight());
+
+        if (newTop < 0) {
+            newTop = 0;
+        }
+        if (newLeft < 0) {
+            newLeft = 0;
+        }
+        if (newTop + elHeight > window.innerHeight) {
+            newTop = window.innerHeight - elHeight - 34; // 34 is the height of the save/cancel buttons that get cut off
+        }
+        if (newLeft + elWidth > window.innerWidth) {
+            newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
+        }
+
+        jQuery(viewerElement).css('top', newTop);
+        jQuery(viewerElement).css('left', newLeft);
     };
 
     $.viewers.push($.FloatingViewer);

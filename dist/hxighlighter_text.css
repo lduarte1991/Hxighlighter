@@ -27,7 +27,7 @@
 }
 
 .hxighlighter-container {
-    padding: 50px 70px;
+    padding: 10px 10px;
     height: 100%;
 }
 
@@ -70,8 +70,7 @@ body {
 .annotationSection.side {
     position: fixed;
     top: var(--nav-bar-offset);
-    right: 0;
-    left: auto;
+    left: 0;
     width: 300px;
     width: var(--sidebar-width);
     min-width: 150px;
@@ -89,6 +88,10 @@ body {
     z-index: 999;
     /* For IE 8 */
     -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=270, Color='rgba(0,0,0,0.3)')";
+}
+
+.annotation-slot {
+    margin-left: var(--sidebar-width);
 }
 
 .annotationSection .annotation-viewer-side .delete, .annotation-viewer-side .edit {
