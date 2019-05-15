@@ -1,4 +1,4 @@
-<div class="annotationItem item-<%= id %> side" role="listitem" aria-label="Annotation #<%=index%>">
+<div class="ann-item annotationItem item-<%= id %> side" role="listitem" aria-label="Annotation #<%=index%>">
     <div style="overflow:auto;">
     <span class="idAnnotation" style="display:none;"><%= id %></span>
     <% if (typeof(creator) !== 'undefined') { %>
@@ -56,14 +56,18 @@
         </div>
     <% } %>
 
-    <div class="annotation-plugin-area-bottom"></div>
-
+    <div class="plugin-area-bottom"></div>
+        <!-- <% if (typeof(totalReplies) == "undefined" || totalReplies === 0) { %>
+            <button class='create-reply'>Reply to Annotation</button>
+        <% } else { %>
+            <button class='view-replies'>View <%= totalReplies %> Replies</button>
+        <% } %> -->
     <!-- <div class="totalreplies field side clicking_allowed" tabindex="0" role="button" aria-label="Make or view replies Annotation #<%=index %>">
         <span class="glyphicon glyphicon-comment"></span>
-        <% if (typeof(replyCount) == "undefined") { %>
+        <% if (typeof(totalReplies) == "undefined") { %>
         <span class="replyNum"> 0 </span>
         <% } else { %>
-        <span class="replyNum"> <%= replyCount %> </span>
+        <span class="replyNum"> <%= totalReplies %> </span>
         <% } %>
     </div> -->
     <script>

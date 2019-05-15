@@ -6,7 +6,7 @@
     </div>
     <div class="annotation-text-field">
         <% _.each(annotations, function(ann){ %>
-            <div class="ann-item" id="annotation-<%= ann.id %>">
+            <div class="ann-item item-<%= ann.id %>" id="annotation-<%= ann.id %>">
                 <div class="annotation-username">lduarte1991</div>
                 <div class="annotation-date">last updated 2 hours ago</div>
                 <button class="edit" id="edit-<%= ann.id %>" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fa fa-pencil"></i></button>
@@ -22,9 +22,9 @@
                         <% }); %>
                     </div>
                 <% } %>
+                <div class="plugin-area-bottom">
+                </div>
             </div>
         <% }); %>
-    </div>
-    <div class="plugin-area-bottom">
     </div>
 </div>

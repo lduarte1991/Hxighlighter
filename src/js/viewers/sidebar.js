@@ -113,28 +113,30 @@ import 'jquery-confirm/css/jquery-confirm.css'
     $.Sidebar.prototype.setUpListeners = function() {
         var self = this;
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
-            var ann = jQuery.extend({}, annotation, {'index': 0});
-            var annHTML = self.options.TEMPLATES.annotationItem(ann)
-            if (updating) {
-                jQuery('.item-' + ann.id).html(jQuery(annHTML).html())
-            }
-            else {
-                jQuery('.annotationsHolder').prepend(annHTML);
-            }
-            jQuery('.item-' + ann.id).find('.delete').confirm({
-                title: 'Delete Annotation?',
-                content: 'Would you like to delete your annotation? This is permanent.',
-                buttons: {
-                    confirm: function() {
-                        $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
-                    },
-                    cancel: function () {
-                    }
+            if (annotation.media !== "comment") {
+                var ann = jQuery.extend({}, annotation, {'index': 0});
+                var annHTML = self.options.TEMPLATES.annotationItem(ann)
+                if (updating) {
+                    jQuery('.item-' + ann.id).html(jQuery(annHTML).html())
                 }
-            });
+                else {
+                    jQuery('.annotationsHolder').prepend(annHTML);
+                }
+                jQuery('.item-' + ann.id).find('.delete').confirm({
+                    title: 'Delete Annotation?',
+                    content: 'Would you like to delete your annotation? This is permanent.',
+                    buttons: {
+                        confirm: function() {
+                            $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
+                        },
+                        cancel: function () {
+                        }
+                    }
+                });
 
-            $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
-            jQuery('#empty-alert').css('display', 'none');
+                $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
+                jQuery('#empty-alert').css('display', 'none');
+            }
         });
 
         $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {

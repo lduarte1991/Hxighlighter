@@ -119,6 +119,7 @@ require('bs4-summernote');
         } catch(e) {
             console.log('plugin was never started');
         }
+        self.destroy();
         return annotation;
     };
 

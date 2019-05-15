@@ -177,19 +177,6 @@ button.sidebar-button#hide_label {
     z-index: 99999;
 }
 
-.btn.btn-primary.save.action-button, .btn.btn-default.cancel.action-button {
-    width: 197px;
-    border-radius: 0;
-}
-
-.note-btn.btn {
-    background: white;
-}
-
-.note-popover .popover-content .dropdown-menu, .card-header.note-toolbar .dropdown-menu {
-    min-width: 152px!important;
-}
-
 .search-bar .input-group .input-group-btn {
     width: 120px;
 }
@@ -232,15 +219,15 @@ div[class^="reply-list"] {
     background: rgb(240, 240, 240);
 }
 
-button[id^="replies-close"], div[id^="create-reply"] button {
+/*button[id^="replies-close"], div[id^="create-reply"] button {
     width: 100%;
     margin-top: 5px;
-    /* margin-bottom: 5px; */
+    /* margin-bottom: 5px;
     background: darkred;
     color: white;
     margin-bottom: 5px;
-}
+}*/
 
-div[id^="create-reply"] button {
+/*div[id^="create-reply"] button {
     background: darkblue;
-}
+}*/

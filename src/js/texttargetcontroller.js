@@ -12,6 +12,7 @@ require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
+require('./plugins/hx-reply.js');
 // require('./storage/catchpy.js');
 
 (function($) {
@@ -267,7 +268,8 @@ require('./plugins/hx-colortags-plugin.js');
             ranges: [range],
             id: $.getUniqueId(),
             exact: $.getQuoteFromHighlights([range]).exact,
-            media: "text"
+            media: "text",
+            totalReplies: 0
         };
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.TargetSelectionMade(annotation, event);
