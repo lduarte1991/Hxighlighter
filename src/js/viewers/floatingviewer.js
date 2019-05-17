@@ -321,6 +321,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
             jQuery('body').css('overflow', 'inherit');
         });
 
+        jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
+            jQuery('body').css('overflow', 'hidden');
+        });
+
+        jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
+            jQuery('body').css('overflow', 'inherit');
+        });
+
         jQuery('body').on('mouseleave', function(event) {
             self.finishedMoving(event);
         })
