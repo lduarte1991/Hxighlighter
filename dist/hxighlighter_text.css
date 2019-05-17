@@ -160,7 +160,7 @@ body {
 button.sidebar-button {
     position: absolute;
     background: black;
-    width: 149px;
+    width: 100%;
     color: white;
     top: 0;
     border: 0;
@@ -175,7 +175,7 @@ button.sidebar-button#search {
 }
 
 button.sidebar-button#hide_label {
-    left: 150.5px;
+    left: 0px;
 }
 
 .two-button-version button#hide_label {
@@ -193,15 +193,17 @@ button.sidebar-button#hide_label {
     position: absolute;
     top: 24px;
     left: 0;
+    width: 100%;
 }
 
 .btn.user-filter {
     border-radius: 0;
     background: white;
     border: 1px solid rgb(160, 216, 242);
-    width: 101px;
+    width: 25%;
     color: rgb(17, 118, 178);
     position: absolute;
+    padding: 6px 6px;
 }
 
 .btn.user-filter.selected {
@@ -211,15 +213,15 @@ button.sidebar-button#hide_label {
 }
 
 .btn.user-filter#mynotes {
-    left: 0px;
+    left: 25%;
 }
 
 .btn.user-filter#instructor {
-    left: 103px;
+    left: 50%;
 }
 
 .btn.user-filter#public {
-    left: 204.5px;
+    left: 75%;
 }
 
 /* plugins */
