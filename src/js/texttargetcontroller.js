@@ -197,7 +197,8 @@ require('./storage/catchpy.js');
         jQuery.each(Hxighlighter.viewers, function(_, viewer) {
             self.viewers.push(new viewer({
                 element: element,
-                template_urls: self.options.template_urls
+                template_urls: self.options.template_urls,
+                viewer_options: self.options.viewerOptions,
             }, self.instance_id));
         });
     };

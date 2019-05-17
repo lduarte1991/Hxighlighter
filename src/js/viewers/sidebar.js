@@ -26,6 +26,7 @@ import 'timeago';
             template_suffix: "sidebar",
             template_urls: ""
         };
+        console.log("what i get from target", options);
         this.options = jQuery.extend({}, defaultOptions, options);
         this.instance_id = inst_id;
         this.annotation_tool = {
@@ -75,11 +76,11 @@ import 'timeago';
 
     $.Sidebar.prototype.setUpSidebar = function() {
         var self = this;
+        console.log('setting up sidebar', self.options);
         var sidebarOptions = jQuery.extend({
-            'show_mynotes_tab': "True",
-            'show_instructor_tab': "True",
-            'show_public_tab': "True"
-        }, self.options.sidebar_options, {annotationItems: []});
+            'tabsAvailable': ['search', 'mine', 'instructor', 'all'],
+        }, self.options.viewer_options, {annotationItems: []});
+        console.log('what the sidebar actually gets', sidebarOptions);
         self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
 
         self.sidebar = self.element.find('.annotationSection');
@@ -108,6 +109,20 @@ import 'timeago';
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
             self.filterByType(searchValue, searchType);
+        });
+
+        // trigger new filter tab
+        jQuery('.btn.user-filter').click(function() {
+            jQuery('.btn.user-filter').removeClass('active');
+            jQuery(this).addClass('active');
+            jQuery('.annotationsHolder').removeClass('search-opened');
+                jQuery('.search-bar.search-toggle').hide();
+            if (this.id === "search") {
+                jQuery('.annotationsHolder').addClass('search-opened');
+                jQuery('.search-bar.search-toggle').show();
+            } else {
+                
+            }
         });
     }
 

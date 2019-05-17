@@ -176,6 +176,7 @@ button.sidebar-button#search {
 
 button.sidebar-button#hide_label {
     left: 0px;
+    text-align: right;
 }
 
 .two-button-version button#hide_label {
@@ -196,6 +197,18 @@ button.sidebar-button#hide_label {
     width: 100%;
 }
 
+.annotation-filter-buttons.btn-group .btn {
+    background-color: rgba(35, 35, 35, 0.3);
+    color: white;
+}
+
+.annotation-filter-buttons.btn-group .btn.active {
+    background-color: white;
+    border-bottom: 0px solid white;
+    color: rgb(17, 118, 178);
+    cursor: default;
+}
+
 .btn.user-filter {
     border-radius: 0;
     background: white;
@@ -210,18 +223,6 @@ button.sidebar-button#hide_label {
     background: rgb(17, 118, 178);
     color: white;
     font-weight: bold;
-}
-
-.btn.user-filter#mynotes {
-    left: 25%;
-}
-
-.btn.user-filter#instructor {
-    left: 50%;
-}
-
-.btn.user-filter#public {
-    left: 75%;
 }
 
 /* plugins */
@@ -273,6 +274,62 @@ div[class^="reply-list"] {
 
 .reply-row:nth-child(odd) {
     background: rgb(240, 240, 240);
+}
+
+.buttons-4 .btn{
+    width: 25%;
+}
+
+.buttons-4 .btn:nth-child(1) {
+    left: 0;
+}
+
+.buttons-4 .btn:nth-child(2) {
+    left: 25%;
+}
+
+.buttons-4 .btn:nth-child(3) {
+    left: 50%;
+}
+
+.buttons-4 .btn:nth-child(4) {
+    left: 75%;
+}
+
+.buttons-3 .btn{
+    width: 33.3333%;
+}
+
+.buttons-3 .btn:nth-child(1) {
+    left: 0;
+}
+
+.buttons-3 .btn:nth-child(2) {
+    left: 33.3333%;
+}
+
+.buttons-3 .btn:nth-child(3) {
+    left: 66.6666%;
+}
+
+.buttons-2 .btn{
+    width: 50%;
+}
+
+.buttons-2 .btn:nth-child(1) {
+    left: 0;
+}
+
+.buttons-2 .btn:nth-child(2) {
+    left: 50%;
+}
+
+.buttons-1 .btn{
+    width: 100%;
+}
+
+.buttons-1 .btn:nth-child(1) {
+    left: 0;
 }
 
 /*button[id^="replies-close"], div[id^="create-reply"] button {
