@@ -94,7 +94,7 @@ require('./hx-dropdowntags-plugin.css');
             theme: 'facebook',
             preventDuplicates: true,
             allowTabOut: true,
-            allowFreeTagging: true,
+            allowFreeTagging: ('folksonomy' in self.options) ? self.options.folksonomy : false,
             noResultsText: "Not Found. Hit ENTER to add a personal tag.",
         });
         if (annotation.tags && annotation.tags.length > 0) {

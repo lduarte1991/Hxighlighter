@@ -31,9 +31,9 @@
     overflow-x: hidden;
     background: var(--sidebar-background);
     overflow-y: auto; /* let the browser control when to show/hide the scrollbar based on the content */
-    -moz-box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
-    -webkit-box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
-    box-shadow: -4px 0px 4px rgba(0,0,0,0.3);
+    -moz-box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
+    box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
     padding-top: 60px;
     /* For videojs */
     z-index: 999;
@@ -60,6 +60,7 @@
 .annotationSection .annotationsHolder {
     height: 100%;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .annotationSection .annotationsHolder.search-opened {
@@ -78,6 +79,7 @@
     border: 2px solid rgba(88, 88, 88, 0.2);
     padding: 10px;
     margin-top: 17px;
+    width: calc(100% - 5px);
 }
 
 .annotationSection .annotationsHolder .annotationItem .annotatedBy{

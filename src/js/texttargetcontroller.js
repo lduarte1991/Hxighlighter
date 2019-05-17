@@ -13,7 +13,7 @@ require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
-// require('./storage/catchpy.js');
+require('./storage/catchpy.js');
 
 (function($) {
 
@@ -228,6 +228,7 @@ require('./plugins/hx-reply.js');
                 optionsForStorage = {};
             }
             self.storage.push(new storage(optionsForStorage, self.instance_id));
+            console.log(element);
             self.storage[idx].onLoad(element, options);
         });
     };
@@ -262,7 +263,7 @@ require('./plugins/hx-reply.js');
     $.TextTarget.prototype.TargetSelectionMade = function(range, event) {
         var range = Array.isArray(range) ? range[0] : range;
         var self = this;
-
+        console.log(range);
         var annotation = {
             annotationText: [""],
             ranges: [range],
@@ -290,6 +291,16 @@ require('./plugins/hx-reply.js');
         var self = this;
         jQuery.each(self.drawers, function(_, drawer) {
             drawer.draw(annotation);
+        });
+        jQuery.each(self.viewers, function(_, viewer) {
+            if ($.exists(viewer.TargetAnnotationDraw)) {
+                viewer.TargetAnnotationDraw(annotation);
+            }
+        });
+        jQuery.each(self.plugins, function(_, plugin) {
+            if ($.exists(plugin.TargetAnnotationDraw)) {
+                plugin.TargetAnnotationDraw(annotation);
+            }
         });
     };
 
@@ -327,7 +338,7 @@ require('./plugins/hx-reply.js');
         } else {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
             jQuery.each(self.storage, function(_, store) {
-                store.saveAnnotation(annotation, self.element);
+                store.StorageAnnotationSave(annotation, self.element);
             });
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
@@ -335,10 +346,12 @@ require('./plugins/hx-reply.js');
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation, event);
         });
-
+        console.log('should redraw', annotation, redraw, should_erase);
         if (redraw) {
             jQuery.each(self.drawers, function(_, drawer) {
-                drawer.redraw(annotation);
+                self.TargetAnnotationUndraw(annotation);
+                $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+                //drawer.redraw(annotation);
             });
         }
 
@@ -406,10 +419,13 @@ require('./plugins/hx-reply.js');
      *
      * @class      StorageAnnotationDelete (name)
      */
-    $.TextTarget.prototype.StorageAnnotationDelete = function() {
+    $.TextTarget.prototype.StorageAnnotationDelete = function(annotation) {
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.StorageAnnotationDelete();
+        });
+        jQuery.each(self.storage, function(_, store) {
+            store.StorageAnnotationDelete(annotation);
         });
     };
 

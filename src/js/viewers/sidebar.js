@@ -6,6 +6,7 @@
 import './css/sidebar.css';
 import 'jquery-confirm';
 import 'jquery-confirm/css/jquery-confirm.css'
+import 'timeago';
 
  (function($) {
     $.Sidebar = function(options, inst_id) {
@@ -112,39 +113,48 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.Sidebar.prototype.setUpListeners = function() {
         var self = this;
-        $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
-            if (annotation.media !== "comment") {
-                var ann = jQuery.extend({}, annotation, {'index': 0});
-                var annHTML = self.options.TEMPLATES.annotationItem(ann)
-                if (updating) {
-                    jQuery('.item-' + ann.id).html(jQuery(annHTML).html())
-                }
-                else {
-                    jQuery('.annotationsHolder').prepend(annHTML);
-                }
-                jQuery('.item-' + ann.id).find('.delete').confirm({
-                    title: 'Delete Annotation?',
-                    content: 'Would you like to delete your annotation? This is permanent.',
-                    buttons: {
-                        confirm: function() {
-                            $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
-                        },
-                        cancel: function () {
-                        }
-                    }
-                });
 
-                $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
-                jQuery('#empty-alert').css('display', 'none');
-            }
+        $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
+            self.addAnnotation(annotation, updating);
         });
 
         $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
             jQuery('.item-' + annotation.id).remove();
-            if (jQuery('.annotation-item').length == 0) {
+            if (jQuery('.annotationItem').length == 0) {
                 jQuery('#empty-alert').css('display', 'block');
             } 
         });
+
+        $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
+            self.addAnnotation(annotation, false);
+        });
+    };
+
+    $.Sidebar.prototype.addAnnotation = function(annotation, updating) {
+        var self = this;
+        if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
+            var ann = jQuery.extend({}, annotation, {'index': 0});
+            var annHTML = self.options.TEMPLATES.annotationItem(ann)
+            if (jQuery('.side.item-' + ann.id).length > 0) {
+                jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
+            }  else {
+                jQuery('.annotationsHolder').prepend(annHTML);
+            }
+            jQuery('.item-' + ann.id).find('.delete').confirm({
+                title: 'Delete Annotation?',
+                content: 'Would you like to delete your annotation? This is permanent.',
+                buttons: {
+                    confirm: function() {
+                        $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
+                    },
+                    cancel: function () {
+                    }
+                }
+            });
+
+            $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
+            jQuery('#empty-alert').css('display', 'none');
+        }
     };
 
     $.Sidebar.prototype.filterByType= function(searchValue, type) {
@@ -189,6 +199,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
     $.Sidebar.prototype.TargetSelectionMade = function(annotation, event) {
         var self = this;
         self.currentSelection = annotation;
+    };
+
+    $.Sidebar.prototype.TargetAnnotationDraw = function(annotation) {
+
     };
 
     $.Sidebar.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {

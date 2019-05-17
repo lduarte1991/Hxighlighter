@@ -173,6 +173,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         // if the timer is set for the tool to be hidden, this intercepts it
         if (self.hideTimer !== undefined) {
             clearTimeout(self.hideTimer);
+            
         }
 
         if (self.annotation_tool.editing || self.annotation_tool.updating || (self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer))) {
@@ -253,16 +254,19 @@ import 'jquery-confirm/css/jquery-confirm.css'
         if (self.annotation_tool.isStatic) {
             return;
         }
-
+        clearTimeout(self.hideTimer);
         self.hideTimer = setTimeout(function () {
-            if (self.annotation_tool.viewer) {
-                self.annotation_tool.viewer.remove();
-                delete self.annotation_tool.viewer;
+            if (self.hideTimer) {
+                if (self.annotation_tool.viewer) {
+                    self.annotation_tool.viewer.remove();
+                    delete self.annotation_tool.viewer;
+                }
+                self.annotation_tool.isStatic = false;
+                self.annotation_tool.updating = false;
+                self.annotation_tool.editing = false;
             }
-            self.annotation_tool.isStatic = false;
-            self.annotation_tool.updating = false;
-            self.annotation_tool.editing = false;
         }, 500);
+        
     };
 
     $.FloatingViewer.prototype.StorageAnnotationSave = function(annotations) {
@@ -318,7 +322,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         jQuery('body').on('mouseleave', function(event) {
-            self.finishedMoving();
+            self.finishedMoving(event);
         })
 
     };

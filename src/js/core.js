@@ -68,6 +68,11 @@
         self.callFuncInList(this.targets, 'TargetSelectionMade', [message[1], message[2]]);
     };
 
+    $.Core.prototype.TargetAnnotationDraw = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'TargetAnnotationDraw', message);
+    };
+
     $.Core.prototype.ViewerEditorOpen = function(message) {
         var self = this;
         self.callFuncInList(this.targets, 'ViewerEditorOpen', message[1]);

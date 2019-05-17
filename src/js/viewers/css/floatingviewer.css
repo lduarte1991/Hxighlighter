@@ -297,3 +297,13 @@
         transform:rotate(360deg);
     }
 }
+
+.annotation-viewer.static nav.annotation-viewer-nav-bar:before {
+    content: "\f08d";
+    left: 5px;
+    position: absolute;
+    top: 5px;
+    font: normal normal normal 14px/1 FontAwesome;
+    color: white;
+    transform: rotate(-35deg);
+}

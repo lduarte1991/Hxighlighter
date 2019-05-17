@@ -1,4 +1,4 @@
-var annotator = annotator ? annotator : require('annotator');
+var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 (function($) {
     $.CatchPy = function(options, inst_id) {
         this.options = options;
@@ -6,6 +6,7 @@ var annotator = annotator ? annotator : require('annotator');
         this.instance_id = inst_id;
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;
+        console.log(this.url_base);
     };
 
 
@@ -13,9 +14,11 @@ var annotator = annotator ? annotator : require('annotator');
         var self = this;
         var callB = function(result) {
             jQuery.each(result.rows, function(_, ann) {
-                var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.content'));
+                var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
+                console.log(waAnnotation);
                 setTimeout(function() {
-                    hxPublish('shouldUpdateHighlight', self.instance_id, [waAnnotation, false])
+                    $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
+                    $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
                 }, 250);
             });
         }
@@ -49,11 +52,10 @@ var annotator = annotator ? annotator : require('annotator');
 
     }
 
-    $.CatchPy.prototype.saveAnnotation = function(ann_to_save, elem) {
+    $.CatchPy.prototype.StorageAnnotationSave = function(ann_to_save, elem) {
         var self = this;
         console.log(elem);
-        var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.content'));
-        console.log(self.url_base);
+        var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
             url: self.url_base, //+ save_ann['id'] + '/',
             method: 'POST',
@@ -71,10 +73,10 @@ var annotator = annotator ? annotator : require('annotator');
         });
     };
 
-    $.CatchPy.prototype.deleteAnnotation = function(ann_to_delete, elem) {
+    $.CatchPy.prototype.StorageAnnotationDelete = function(ann_to_delete, elem) {
         var self = this;
         jQuery.ajax({
-            url: self.url_base + '/delete/'+ann_to_delete.annotation['id']+'?catchpy=true&resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
+            url: self.url_base + ann_to_delete['id']+'?catchpy=true&resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
             method: 'DELETE',
             headers: {
                 'x-annotator-auth-token': self.options.storageOptions.token,
@@ -87,7 +89,7 @@ var annotator = annotator ? annotator : require('annotator');
 
     $.CatchPy.prototype.updateAnnotation = function(ann_to_update, elem) {
         var self = this;
-        var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.content'));
+        var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
             url: self.url_base + '/update/'+ann_to_update.id+'?resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
             method: 'PUT',
@@ -130,7 +132,7 @@ var annotator = annotator ? annotator : require('annotator');
 
             purpose = 'replying';
         } else {
-            console.log(annotation.ranges);
+            console.log('convert2wa', annotation.ranges, elem);
             var serializedRanges = self.serializeRanges(annotation.ranges, elem);
             var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
             jQuery.each(serializedRanges.serial, function(index, range){
@@ -210,6 +212,7 @@ var annotator = annotator ? annotator : require('annotator');
 
     $.CatchPy.prototype.convertFromWebAnnotation = function(webAnn, element) {
         var self = this;
+        console.log('element', element);
         var annotation = {
             annotationText: self.getAnnotationText(webAnn),
             created: self.getAnnotationCreated(webAnn),
@@ -267,8 +270,10 @@ var annotator = annotator ? annotator : require('annotator');
                 return ranges;
             }
             console.log('getAnnotationTarget', ranges, element);
-            return self.normalizeRanges(ranges, element);
+            return self.normalizeRanges(ranges, element[0]);
         } catch(e) {
+            console.log(JSON.stringify(window.document), window.document);
+            return self.normalizeRanges(ranges, window.document);
             console.log(e);
             return []
         }
@@ -276,10 +281,10 @@ var annotator = annotator ? annotator : require('annotator');
 
     $.CatchPy.prototype.getAnnotationText = function(webAnn) {
         try {
-            var found = "";
+            var found = [];
             jQuery.each(webAnn['body']['items'], function(_, bodyItem) {
                 if (bodyItem.purpose == "commenting") {
-                    found = bodyItem.value;
+                    found.push(bodyItem.value);
                 }
             });
             return found;
@@ -389,7 +394,12 @@ var annotator = annotator ? annotator : require('annotator');
             };
 
             extraRanges.push(fullTextRange);
-            serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
+            try {
+                serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
+            } catch(e) {
+                serializedRanges.push(xpathrange.fromRange(r, contextEl));
+            }
+            console.log("SERIALIZED", serializedRanges, contextEl);
         }
         return {
             serial: serializedRanges,
@@ -403,9 +413,10 @@ var annotator = annotator ? annotator : require('annotator');
         var normalizedRanges = [];
 
         jQuery.each(ranges, function(_, range) {
-            var foundRange = annotator.range.sniff(range);
-            console.log(foundRange.normalize, JSON.stringify(elem));
-            normalizedRanges.push(foundRange.normalize(elem[0]));
+            console.log(elem);
+            var foundRange = xpathrange.toRange(range.start, range.startOffset, range.end, range.endOffset, elem);
+            console.log(foundRange);
+            normalizedRanges.push(foundRange);
         });
 
         return normalizedRanges;
