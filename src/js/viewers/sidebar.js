@@ -121,10 +121,30 @@ import 'timeago';
                 jQuery('.annotationsHolder').addClass('search-opened');
                 jQuery('.search-bar.search-toggle').show();
             } else {
-                
+
             }
         });
-    }
+
+        jQuery('.sidebar-button#hide_label').click(function() {
+            jQuery(':root').css('--sidebar-width', '0px');
+            jQuery('.annotationSection').hide();
+
+            self.showSidebarTab(self.options.viewer_options.sidebarversion);
+        });
+    };
+
+    $.Sidebar.prototype.showSidebarTab = function(type) {
+        // if (type === "smalltab") {
+            jQuery(':root').css('--sidebar-width', '55px');
+            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar"><i class="fa fa-arrow-right"></i></div>');
+        // }
+
+        jQuery('.open-sidebar').click(function() {
+            jQuery('.open-sidebar').remove();
+            jQuery('.annotationSection').show();
+            jQuery(':root').css('--sidebar-width', '300px');
+        });
+    };
 
     $.Sidebar.prototype.setUpListeners = function() {
         var self = this;
