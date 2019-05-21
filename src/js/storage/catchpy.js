@@ -13,7 +13,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
     $.CatchPy.prototype.onLoad = function(element, opts) {
         var self = this;
         var callB = function(result) {
-            jQuery.each(result.rows, function(_, ann) {
+            jQuery.each(result.rows.reverse(), function(_, ann) {
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
                 console.log(waAnnotation);
                 setTimeout(function() {
@@ -52,9 +52,12 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
     }
 
-    $.CatchPy.prototype.StorageAnnotationSave = function(ann_to_save, elem) {
+    $.CatchPy.prototype.StorageAnnotationSave = function(ann_to_save, elem, updating) {
         var self = this;
-        console.log(elem);
+        if (updating) {
+            self.StorageAnnotationUpdate(ann_to_save, elem);
+            return;
+        }
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
             url: self.url_base, //+ save_ann['id'] + '/',
@@ -87,11 +90,11 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         })
     };
 
-    $.CatchPy.prototype.updateAnnotation = function(ann_to_update, elem) {
+    $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem) {
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
-            url: self.url_base + '/update/'+ann_to_update.id+'?resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
+            url: self.url_base + ann_to_update.id + '/',
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),
@@ -222,7 +225,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             media: self.getMediaType(webAnn),
             tags: self.getAnnotationTags(webAnn),
             ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
-            replyCount: webAnn.totalReplies,
+            totalReplies: webAnn.totalReplies,
         }
         console.log(annotation);
         return annotation;
@@ -305,7 +308,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         try {
             return webAnn['creator'];
         } catch(e) {
-            return {username:'Unknown', id:'error'};
+            return {name:'Unknown', id:'error'};
         }
     };
 

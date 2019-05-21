@@ -45,7 +45,7 @@
     margin-left: var(--sidebar-width);
 }
 
-.annotationSection .annotation-viewer-side .delete, .annotation-viewer-side .edit {
+.annotationSection .delete, .edit {
     background: var(--sidebar-button-back);
     outline: 0;
     border: 0;

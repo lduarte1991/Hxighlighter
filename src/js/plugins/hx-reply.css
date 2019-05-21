@@ -1,0 +1,48 @@
+.create-reply-area button[id^="other-"] {
+    width: 166px;
+}
+
+.create-reply-area button[id^="other-save-reply"] {
+    background: #333;
+    color: white;
+}
+
+.create-reply-area button[id^="other-cancel-reply"] {
+    background: #eee;
+}
+
+.create-reply-area button[id^="sidebar-"] {
+    width: 50%;
+}
+
+.create-reply-area button[id^="sidebar-save-reply"] {
+    background: #333;
+    color: white;
+}
+
+.create-reply-area button[id^="sidebar-cancel-reply"] {
+    background: #eee;
+}
+
+.plugin-area-bottom button.create-reply, .plugin-area-bottom button.view-replies {
+    background: #333;
+    color: white;
+    width: 100%;
+}
+
+.plugin-area-bottom div[class$='reply-list'] {
+    border-top: 1px dashed black;
+    padding-top: 10px;
+}
+
+.plugin-area-bottom div[class$='reply-list'] .reply {
+    padding: 5px 15px 1px 15px;
+}
+
+.plugin-area-bottom div[class$='reply-list'] .reply:nth-child(even) {
+    background-color: rgba(136, 136, 136, 0.2);
+}
+
+.plugin-area-bottom {
+    margin-top: 10px;
+}

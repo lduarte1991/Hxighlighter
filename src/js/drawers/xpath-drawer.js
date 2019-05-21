@@ -67,6 +67,7 @@ var annotator = annotator ? annotator : require('annotator');
     };
 
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {
+        console.log(event.target, jQuery(event.target), jQuery(event.target).parents('.annotator-hl'));
         return jQuery(event.target).parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
         }).toArray();

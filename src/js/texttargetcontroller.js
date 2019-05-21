@@ -9,10 +9,10 @@ require('./drawers/xpath-drawer.js');
 require('./viewers/sidebar.js');
 require('./viewers/floatingviewer.js');
 require('./plugins/hx-summernote-plugin.js');
-require('./plugins/hx-simpletags-plugin.js');
-require('./plugins/hx-dropdowntags-plugin.js');
-require('./plugins/hx-colortags-plugin.js');
-require('./plugins/hx-reply.js');
+//require('./plugins/hx-simpletags-plugin.js');
+//require('./plugins/hx-dropdowntags-plugin.js');
+//require('./plugins/hx-colortags-plugin.js');
+//require('./plugins/hx-reply.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -209,7 +209,7 @@ require('./storage/catchpy.js');
         jQuery.each(Hxighlighter.plugins, function(_, plugin) {
             var optionsForPlugin;
             try {
-                optionsForPlugin = self.options[plugin.name] || {};
+                optionsForPlugin = jQuery.extend({}, self.options, self.options[plugin.name]) || {};
             } catch (e) {
                 optionsForPlugin = {};
             }
@@ -271,7 +271,11 @@ require('./storage/catchpy.js');
             id: $.getUniqueId(),
             exact: $.getQuoteFromHighlights([range]).exact,
             media: "text",
-            totalReplies: 0
+            totalReplies: 0,
+            creator: {
+                name: self.options.username,
+                id: self.options.user_id
+            }
         };
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.TargetSelectionMade(annotation, event);
@@ -339,7 +343,7 @@ require('./storage/catchpy.js');
         } else {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
             jQuery.each(self.storage, function(_, store) {
-                store.StorageAnnotationSave(annotation, self.element);
+                store.StorageAnnotationSave(annotation, self.element, redraw);
             });
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
@@ -352,6 +356,10 @@ require('./storage/catchpy.js');
             jQuery.each(self.drawers, function(_, drawer) {
                 self.TargetAnnotationUndraw(annotation);
                 $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+                // jQuery.each(self.storage, function(_, store) {
+                //     store.StorageAnnotationUpdate(annotation, self.element);
+                // })
+                // $.publishEvent('StorageAnnotationUpdate', self.instance_id, [annotation, redraw]);
                 //drawer.redraw(annotation);
             });
         }
