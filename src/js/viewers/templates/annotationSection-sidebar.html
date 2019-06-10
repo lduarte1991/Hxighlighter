@@ -9,16 +9,16 @@
     <div class="group-wrap">
         <div class="annotation-filter-buttons btn-group buttons-<%= filterTabCount %>">
             <% if (tabsAvailable.indexOf('search') > -1) {%>
-            <button type="button" class="btn user-filter <% if (defaultTab == 'search') {%>active<% } %>" id="search" id="sidebar-search"><i class="fa fa-search"></i></button>
+            <button type="button" class="btn btn-default user-filter <% if (defaultTab == 'search') {%>active<% } %>" id="search" id="sidebar-search"><i class="fa fa-search"></i></button>
             <% } %>
             <% if (tabsAvailable.indexOf('mine') > -1) {%>
-        	<button type="button" class="btn user-filter <% if (defaultTab == 'mine') {%>active<% } %>" id='mynotes' aria-label="View only my annotations" role="button">Mine</button>
+        	<button type="button" class="btn btn-default user-filter <% if (defaultTab == 'mine') {%>active<% } %>" id='mynotes' aria-label="View only my annotations" role="button">Mine</button>
             <% } %>
             <% if (tabsAvailable.indexOf('instructor') > -1) {%>
-            	<button type="button" class="btn user-filter <% if (defaultTab == 'instructor') {%>active<% } %>" id='instructor' aria-label="View only instructor annotations" role="button">Instructor</button>
+            	<button type="button" class="btn btn-default user-filter <% if (defaultTab == 'instructor') {%>active<% } %>" id='instructor' aria-label="View only instructor annotations" role="button">Instructor</button>
             <% } %>
             <% if (tabsAvailable.indexOf('all') > -1) {%>
-        	<button type="button" class="btn user-filter <% if (defaultTab == 'all') {%>active<% } %>" id='public' aria-label="View everybody's annotations" role="button">All</button>
+        	<button type="button" class="btn btn-default user-filter <% if (defaultTab == 'all') {%>active<% } %>" id='public' aria-label="View everybody's annotations" role="button">All</button>
             <% } %>
         </div>
     </div>

@@ -149,8 +149,8 @@ button.sidebar-button#hide_label {
 }
 
 .annotation-filter-buttons.btn-group .btn {
-    background-color: var(--sidebar-button-color-accent);
-    color: var(--light-font-color);
+    /*background-color: var(--sidebar-button-color-accent);
+    color: var(--light-font-color);*/
 }
 
 .annotation-filter-buttons.btn-group .btn.active {
@@ -162,10 +162,10 @@ button.sidebar-button#hide_label {
 
 .btn.user-filter {
     border-radius: 0;
-    background: white;
+    /*background: white;*/
     border: 1px solid rgb(160, 216, 242);
     width: 25%;
-    color: rgb(17, 118, 178);
+    /*color: rgb(17, 118, 178);*/
     position: absolute;
     padding: 6px 6px;
     box-shadow: 
@@ -176,6 +176,7 @@ button.sidebar-button#hide_label {
 
 .btn.user-filter.active {
     box-shadow: none;
+    color: rgb(17, 118, 178);
 }
 
 /*.btn.user-filter.selected {
