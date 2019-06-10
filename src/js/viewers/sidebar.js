@@ -26,7 +26,6 @@ import 'timeago';
             template_suffix: "sidebar",
             template_urls: ""
         };
-        console.log("what i get from target", options);
         this.options = jQuery.extend({}, defaultOptions, options);
         this.instance_id = inst_id;
         this.annotation_tool = {
@@ -76,11 +75,9 @@ import 'timeago';
 
     $.Sidebar.prototype.setUpSidebar = function() {
         var self = this;
-        console.log('setting up sidebar', self.options);
         var sidebarOptions = jQuery.extend({
             'tabsAvailable': ['search', 'mine', 'instructor', 'all'],
         }, self.options.viewer_options, {annotationItems: []});
-        console.log('what the sidebar actually gets', sidebarOptions);
         self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
 
         self.sidebar = self.element.find('.annotationSection');

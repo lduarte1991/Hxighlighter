@@ -2,11 +2,11 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 (function($) {
     $.CatchPy = function(options, inst_id) {
         this.options = options;
-        console.log(options);
+        //console.log(options);
         this.instance_id = inst_id;
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;
-        console.log(this.url_base);
+        //console.log(this.url_base);
     };
 
 
@@ -15,7 +15,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         var callB = function(result) {
             jQuery.each(result.rows.reverse(), function(_, ann) {
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
-                console.log(waAnnotation);
+                //console.log(waAnnotation);
                 setTimeout(function() {
                     $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
                     $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
@@ -60,7 +60,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         }
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
-            url: self.url_base, //+ save_ann['id'] + '/',
+            url: self.url_base + save_ann['id'] + '/',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),
@@ -68,7 +68,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log(result);
+                console.log('ANNOTATION SAVED', result);
             },
             error: function(xhr, status, error) {
                 console.log(xhr, status, error);
@@ -85,7 +85,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log(result)
+                console.log('ANNOTATION_DELETED', result)
             }
         })
     };
@@ -102,7 +102,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log(result)
+                console.log('ANNOTATION_UPDATED', result)
             }
         })
     };
@@ -135,7 +135,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
             purpose = 'replying';
         } else {
-            console.log('convert2wa', annotation.ranges, elem);
+            // console.log('convert2wa', annotation.ranges, elem);
             var serializedRanges = self.serializeRanges(annotation.ranges, elem);
             var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
             jQuery.each(serializedRanges.serial, function(index, range){
@@ -215,7 +215,6 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
     $.CatchPy.prototype.convertFromWebAnnotation = function(webAnn, element) {
         var self = this;
-        console.log('element', element);
         var annotation = {
             annotationText: self.getAnnotationText(webAnn),
             created: self.getAnnotationCreated(webAnn),
@@ -227,7 +226,6 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
             totalReplies: webAnn.totalReplies,
         }
-        console.log(annotation);
         return annotation;
     };
 
@@ -237,12 +235,12 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
-            console.log("reached getAnnotationTargetItems", webAnn);
+            // console.log("reached getAnnotationTargetItems", webAnn);
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
-                console.log([{'parent':webAnn['target']['items'][0]['source']}]);
+                // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
             }
-            console.log("nope, something went wrong");
+            // console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
         } catch(e) {
             console.log(e);
@@ -255,7 +253,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         try {
             var ranges = []
             jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
-                console.log('targetItem', targetItem);
+                // console.log('targetItem', targetItem);
                 if (!('parent' in targetItem)) {
                     if (targetItem['type'] == "RangeSelector") {
                         ranges.push({
@@ -272,11 +270,13 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;
             }
-            console.log('getAnnotationTarget', ranges, element);
+            // console.log('getAnnotationTarget', ranges, element);
             return self.normalizeRanges(ranges, element[0]);
         } catch(e) {
-            console.log(JSON.stringify(window.document), window.document);
-            return self.normalizeRanges(ranges, window.document);
+            console.log(ranges, element[0]);
+                throw(e);
+            console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
+            //return self.normalizeRanges(ranges, window.document);
             console.log(e);
             return []
         }
@@ -398,11 +398,15 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
             extraRanges.push(fullTextRange);
             try {
+                // console.log("Used annotator way to serialize");
                 serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
             } catch(e) {
-                serializedRanges.push(xpathrange.fromRange(r, contextEl));
+                console.log(r, contextEl);
+                throw(e);
+                // console.log("Used new xpathrange way to serialize");
+                serializedRanges.push(xpathrange.Range.sniff(r).serialize(contextEl, '.annotator-hl'));
             }
-            console.log("SERIALIZED", serializedRanges, contextEl);
+            // console.log("SERIALIZED", serializedRanges, contextEl);
         }
         return {
             serial: serializedRanges,
@@ -414,11 +418,18 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         var self = this;
 
         var normalizedRanges = [];
-
+        var foundRange;
         jQuery.each(ranges, function(_, range) {
-            console.log(elem);
-            var foundRange = xpathrange.toRange(range.start, range.startOffset, range.end, range.endOffset, elem);
-            console.log(foundRange);
+            // try {
+                foundRange = xpathrange.Range.sniff(range);
+                foundRange = foundRange.normalize(elem);
+            // } catch(e) {
+            //     console.log("trying toRange");
+            //     var foundRange = xpathrange.toRange(range.start, range.startOffset, range.end, range.endOffset, elem);
+            // }
+            // console.log(elem);
+           
+            // console.log(foundRange);
             normalizedRanges.push(foundRange);
         });
 

@@ -30,7 +30,7 @@
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
     "timeago": "^1.6.7",
     "webpack": "^4.29.6",
-    "xpath-range": "^1.1.1"
+    "xpath-range": "0.0.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",

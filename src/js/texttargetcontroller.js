@@ -9,10 +9,10 @@ require('./drawers/xpath-drawer.js');
 require('./viewers/sidebar.js');
 require('./viewers/floatingviewer.js');
 require('./plugins/hx-summernote-plugin.js');
-//require('./plugins/hx-simpletags-plugin.js');
-//require('./plugins/hx-dropdowntags-plugin.js');
-//require('./plugins/hx-colortags-plugin.js');
-//require('./plugins/hx-reply.js');
+require('./plugins/hx-simpletags-plugin.js');
+require('./plugins/hx-dropdowntags-plugin.js');
+require('./plugins/hx-colortags-plugin.js');
+require('./plugins/hx-reply.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -170,7 +170,6 @@ require('./storage/catchpy.js');
      * @param      {<type>}  element  The element
      */
     $.TextTarget.prototype.setUpSelectors = function(element) {
-        console.log(element);
         var self = this;
         self.selectors = [];
         jQuery.each(Hxighlighter.selectors, function(_, selector) {
@@ -229,7 +228,6 @@ require('./storage/catchpy.js');
                 optionsForStorage = {};
             }
             self.storage.push(new storage(optionsForStorage, self.instance_id));
-            console.log(element);
             self.storage[idx].onLoad(element, options);
         });
     };
@@ -264,7 +262,6 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.TargetSelectionMade = function(range, event) {
         var range = Array.isArray(range) ? range[0] : range;
         var self = this;
-        console.log(range);
         var annotation = {
             annotationText: [""],
             ranges: [range],
@@ -351,7 +348,6 @@ require('./storage/catchpy.js');
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation, event);
         });
-        console.log('should redraw', annotation, redraw, should_erase);
         if (redraw) {
             jQuery.each(self.drawers, function(_, drawer) {
                 self.TargetAnnotationUndraw(annotation);
