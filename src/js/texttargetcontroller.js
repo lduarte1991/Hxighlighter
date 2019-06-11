@@ -193,11 +193,14 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpViewers = function(element) {
         var self = this;
         self.viewers = [];
+        console.log(self.options);
         jQuery.each(Hxighlighter.viewers, function(_, viewer) {
             self.viewers.push(new viewer({
                 element: element,
                 template_urls: self.options.template_urls,
                 viewer_options: self.options.viewerOptions,
+                username: self.options.username,
+                instructors: self.options.instructors
             }, self.instance_id));
         });
     };
