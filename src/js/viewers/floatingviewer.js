@@ -209,6 +209,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             self.annotation_tool.isStatic = false;
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer;
+            jQuery('body').css('overflow', 'inherit');
         });
 
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
@@ -237,6 +238,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                         self.annotation_tool.isStatic = false;
                         self.annotation_tool.updating = false;
                         self.annotation_tool.editing = false;
+                        jQuery('body').css('overflow', 'inherit');
                     }
                 },
                 cancel: function () {
@@ -264,6 +266,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 self.annotation_tool.isStatic = false;
                 self.annotation_tool.updating = false;
                 self.annotation_tool.editing = false;
+                jQuery('body').css('overflow', 'inherit');
             }
         }, 500);
         
