@@ -42,7 +42,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                callBack(result);
+                callBack(result, self.convertFromWebAnnotation.bind(self));
             },
             error: function(xhr, status, error) {
                 console.log(xhr, status, error);
@@ -124,14 +124,13 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         var targetList = [];
         var source_id = this.options.object_id;
         var purpose = 'commenting';
-        if (annotation.media === "Annotation") {
-            jQuery.each(annotation.ranges, function(_, range){
-                targetList.push({
-                    'type': 'Annotation',
-                    'source': range.parent
-                })
-                source_id = range.parent;
-            });
+        if (annotation.media === "comment") {
+            targetList.push(annotation.ranges);
+            source_id = annotation.ranges.source;
+            // jQuery.each(annotation.ranges, function(_, range){
+            //     targetList.push(range)
+            //     source_id = range.parent;
+            // });
 
             purpose = 'replying';
         } else {
@@ -235,9 +234,9 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
-            // console.log("reached getAnnotationTargetItems", webAnn);
+            console.log("reached getAnnotationTargetItems", webAnn);
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
-                // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
+                console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
             }
             // console.log("nope, something went wrong");
@@ -286,7 +285,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         try {
             var found = [];
             jQuery.each(webAnn['body']['items'], function(_, bodyItem) {
-                if (bodyItem.purpose == "commenting") {
+                if (bodyItem.purpose == "commenting" || bodyItem.purpose == "replying") {
                     found.push(bodyItem.value);
                 }
             });

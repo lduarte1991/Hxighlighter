@@ -33,6 +33,14 @@ var annotator = annotator ? annotator : require('annotator');
             self.undraw(annotation);
         });
 
+        Hxighlighter.subscribeEvent('GetAnnotationsData', self.instance_id, function(_, callback) {
+            callback(self.getAnnotationsData());
+        });
+
+        Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback){
+            callback(self.getSpecificAnnotationData(annotation_id));
+        });
+
         Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function(_, annotation, color) {
             console.log('changeDrawnColor', color, annotation._local.highlights);
             if (annotation._local) {
@@ -67,11 +75,29 @@ var annotator = annotator ? annotator : require('annotator');
     };
 
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {
-        console.log(event.target, jQuery(event.target), jQuery(event.target).parents('.annotator-hl'));
         return jQuery(event.target).parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
         }).toArray();
     };
+
+    $.XPathDrawer.prototype.getAnnotationsData = function() {
+        return jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function(_, elem) {
+            return jQuery(elem).data('annotation');
+        }).toArray();
+    };
+
+    $.XPathDrawer.prototype.getSpecificAnnotationData = function(annotation_id) {
+        var self = this;
+        var currentAnnotations = self.getAnnotationsData();
+        console.log('beforeSearch', annotation_id)
+        var foundAnnotation = currentAnnotations.find(function(ann) {
+            console.log('duringSearch', ann.id);
+            if (ann.id === annotation_id) {
+                return ann;
+            }
+        });
+        return foundAnnotation
+    }
 
     $.drawers.push($.XPathDrawer);
 

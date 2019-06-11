@@ -117,7 +117,7 @@ require('./hx-reply.css');
         var self = this;
         if (Array.isArray(annotations)) {
             jQuery.each(annotations, function(_, annotation) {
-                console.log(annotation);
+                var ann_display = viewer.find('.item-'+annotation.id);
                 self.annotationShown(viewer.find('.item-'+annotation.id), annotation, false);
             });
         } else {
@@ -128,11 +128,7 @@ require('./hx-reply.css');
     $.Reply.prototype.annotationShown = function(viewer, annotation,isSidebar) {
         var self = this;
         var prefix = isSidebar ? "sidebar-" : "other-";
-        // if (!('totalReplies' in annotation) || annotation.totalReplies === 0) {
-        //     jQuery(viewer).find('.plugin-area-bottom').append('<div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button>');
-        // } else {
-        //     jQuery(viewer).find('.plugin-area-bottom').append('<div class="'+prefix+'reply-list" style="display:none;"><div>Replies:</div></div><button class="view-replies" id="' + prefix + 'replies-'+annotation.id+'">View ' + annotation.totalReplies + ' replies</button><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button>');
-        // }
+        
         jQuery(viewer).find('.plugin-area-bottom').append('<div class="reply-area-'+annotation.id+'"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-'+annotation.id+'">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button></div>');
         if (('totalReplies' in annotation) && annotation.totalReplies > 0) {
             jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
@@ -151,12 +147,10 @@ require('./hx-reply.css');
             jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").hide();
             jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").show();
             jQuery(viewer).find('.' + prefix + 'reply-list').html('');
-            if (annotation.totalReplies > 0) {
-                annotation.replies.forEach(function(rep) {
-                    self.addReplyToViewer(viewer, annotation, rep, prefix);
-                });
-            }
-            jQuery(viewer).find('.' + prefix + 'reply-list').show();
+            $.publishEvent('GetSpecificAnnotationData', self.instanceID, [annotation.id, function(ann) {
+                self.viewRepliesToAnnotation(ann, viewer, prefix);
+            }]);
+            
         });
 
         jQuery('#' + prefix + 'cancel-reply-' + annotation.id).click(function() {
@@ -188,13 +182,13 @@ require('./hx-reply.css');
                     }
                 }
 
-                $.publishEvent('StorageAnnotationSave', self.instance_id, [reply, false]);
+                $.publishEvent('StorageAnnotationSave', self.instanceID, [reply, false]);
                 annotation.totalReplies++;
                 (typeof(annotation.replies) == "undefined")  ? annotation.replies = [reply] : annotation.replies.push(reply);
                 annotation._local.highlights.forEach(function(high) {
                     jQuery(high).data('annotation', annotation);
                 });
-                self.addReplyToViewer(viewer, annotation, reply, prefix);
+                self.addReplyToViewer(viewer, reply, prefix);
                 self.destroy();
                 if (prefix === "other-") {
                     if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
@@ -218,8 +212,45 @@ require('./hx-reply.css');
             });
     };
 
-    $.Reply.prototype.addReplyToViewer = function(viewer, annotation, reply, prefix) {
+    $.Reply.prototype.viewRepliesToAnnotation = function(annotation, viewer, prefix) {
         var self = this;
+        if (annotation.totalReplies > 0) {
+            if (annotation.replies && annotation.totalReplies == annotation.replies.length) {
+                annotation.replies.forEach(function(rep) {
+                    self.addReplyToViewer(viewer, rep, prefix);
+                });
+            } else {
+                console.log(annotation._local, annotation.totalReplies, annotation.replies);
+                self.retrieveRepliesForAnnotation(annotation, viewer, prefix);
+            }
+        }
+        jQuery(viewer).find('.' + prefix + 'reply-list').show();
+    };
+
+    $.Reply.prototype.retrieveRepliesForAnnotation = function(annotation, viewer, prefix) {
+        var self = this;
+        $.publishEvent('StorageAnnotationGetReplies', self.instanceID, [{
+            'source_id': annotation.id,
+            'media': 'Annotation'
+        }, function(results, converter) {
+            results.rows.forEach(function(reply) {
+                var rep = converter(reply)
+                self.addReplyToViewer(viewer, rep, prefix);
+                annotation.replies ? (annotation.replies.push(rep)) : (annotation.replies = [rep])
+            });
+            if (annotation.totalReplies !== results.rows.length) {
+                annotation.totalReplies = results.rows.length;
+            }
+            console.log("LOOK HERE", annotation);
+            annotation._local.highlights.forEach(function(high) {
+                jQuery(high).data('annotation', annotation);
+            });
+        }])
+    };
+
+    $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix) {
+        var self = this;
+        console.log(reply);
         jQuery(viewer).find('.plugin-area-bottom div[class$=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + "<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
                 
         // check to see if viewer is open or sidebar has annotation and add it there too

@@ -342,9 +342,9 @@ require('./storage/catchpy.js');
             self.TargetAnnotationUndraw(annotation);
         } else {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
-            jQuery.each(self.storage, function(_, store) {
-                store.StorageAnnotationSave(annotation, self.element, redraw);
-            });
+            // jQuery.each(self.storage, function(_, store) {
+            //     store.StorageAnnotationSave(annotation, self.element, redraw);
+            // });
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
 
@@ -397,8 +397,12 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationSave (name)
      */
-    $.TextTarget.prototype.StorageAnnotationSave = function(annotations) {
+    $.TextTarget.prototype.StorageAnnotationSave = function(annotations, redraw) {
         var self = this;
+        console.log(annotations, redraw);
+        jQuery.each(self.storage, function(_, store) {
+            store.StorageAnnotationSave(annotations, self.element, redraw);
+        });
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.StorageAnnotationSave(annotations, event);
         });
@@ -442,7 +446,10 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationGetReplies (name)
      */
-    $.TextTarget.prototype.StorageAnnotationGetReplies = function() {
-
+    $.TextTarget.prototype.StorageAnnotationGetReplies = function(search_options, callback) {
+        var self = this;
+        jQuery.each(self.storage, function(_, store) {
+            store.search(search_options, callback);
+        });
     };
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

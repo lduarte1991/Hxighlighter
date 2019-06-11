@@ -103,6 +103,11 @@
         self.callFuncInList(this.targets, 'StorageAnnotationDelete', message);
     };
 
+    $.Core.prototype.StorageAnnotationGetReplies = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'StorageAnnotationGetReplies', message);
+    }
+
     // Util functions
 
     $.Core.prototype.callFuncInList = function(objectList, funcName, params) {

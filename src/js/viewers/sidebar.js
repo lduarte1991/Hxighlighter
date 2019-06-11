@@ -121,16 +121,14 @@ import 'timeago';
                 console.log(self.options);
                 jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
                     if (jQuery(item).find('.annotatedBy').html().trim().toLowerCase() !== self.options.username.trim().toLowerCase()) {
-                        
                         jQuery(item).hide();
                     } else {
-                        console.log('found, not hiding');
                         jQuery(item).show();
                     }
                 });
             } else if (this.id === "instructor") {
                 jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                    if (!(jQuery(item).find('.annotatedBy').html().trim().toLowerCase() in self.options.instructors)) {
+                    if (!self.options.instructors.includes(jQuery(item).find('.annotatedBy').html().trim())) {
                         jQuery(item).hide();
                     } else {
                         jQuery(item).show();
