@@ -200,7 +200,8 @@ require('./storage/catchpy.js');
                 template_urls: self.options.template_urls,
                 viewer_options: self.options.viewerOptions,
                 username: self.options.username,
-                instructors: self.options.instructors
+                instructors: self.options.instructors,
+                mediaType: self.media,
             }, self.instance_id));
         });
     };
@@ -413,8 +414,26 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationLoad (name)
      */
-    $.TextTarget.prototype.StorageAnnotationLoad = function() {
+    $.TextTarget.prototype.StorageAnnotationLoad = function(annotations, converter) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            if (typeof(viewer.StorageAnnotationLoad) === "function") {
+                viewer.StorageAnnotationLoad(annotations);
+            }
+        });
+        $.publishEvent('GetAnnotationsData', self.instance_id, [function(anns) {
+            anns.forEach(function(ann) {
+                self.TargetAnnotationUndraw(ann);
+            });
+        }]);
 
+        annotations.forEach(function(ann) {
+            console.log(self.element, jQuery(self.element).find('.annotator-wrapper'));
+            var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
+            self.TargetAnnotationDraw(converted_ann);
+            $.publishEvent('annotationLoaded', self.instance_id, [converted_ann])
+            
+        });
     };
 
     /**
@@ -446,8 +465,9 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationGetReplies (name)
      */
-    $.TextTarget.prototype.StorageAnnotationGetReplies = function(search_options, callback) {
+    $.TextTarget.prototype.StorageAnnotationSearch = function(search_options, callback) {
         var self = this;
+        console.log(search_options, 'received event');
         jQuery.each(self.storage, function(_, store) {
             store.search(search_options, callback);
         });

@@ -27,7 +27,7 @@ require('./hx-colortags-plugin.css');
     $.ColorTags.prototype.init = function() {
         var self = this;
         self.name = 'ColorTags';
-
+        self.annotationListeners()
     };
 
 
@@ -47,6 +47,16 @@ require('./hx-colortags-plugin.css');
      */
     $.ColorTags.prototype.annotationListeners = function() {
         var self = this;
+
+        $.subscribeEvent('annotationLoaded', self.instanceID, function(_, ann) {
+            console.log('hello', ann.tags);
+            if (typeof(ann.tags) !== 'undefined' && ann.tags.length > 0) {
+                var color = self.getColorFromValue(ann.tags[ann.tags.length - 1]);
+                if (typeof(color) !== "undefined") {
+                    setTimeout(function() {$.publishEvent('changeDrawnColor', self.instanceID, [ann, color]);}, 250);
+                }
+            }
+        })
     };
 
     $.ColorTags.prototype.getColorFromValue = function(value) {

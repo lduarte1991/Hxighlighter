@@ -70,7 +70,7 @@ Hxighlighter.requiredEvents = [
 
     // though replies are not mandatory, they are annotations and should be treated similarly
     // the line below can be commented out should it not be relevant to your usecase.
-    "StorageAnnotationGetReplies",
+    "StorageAnnotationSearch",
 ];
 
 /**

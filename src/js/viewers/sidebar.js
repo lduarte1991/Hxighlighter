@@ -99,12 +99,18 @@ import 'timeago';
 
         jQuery('#search-clear').click(function() {
             jQuery('#srch-term').val('');
-            jQuery('.annotationsHolder .annotationItem').show();
+            $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
+                type: self.options.mediaType,
+            }, function(results, converter) {
+                console.log(results.rows);
+                $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+            }])
         });
 
         jQuery('#search-submit').click(function() {
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
+            console.log(searchValue, searchType);
             self.filterByType(searchValue, searchType);
         });
 
@@ -114,31 +120,19 @@ import 'timeago';
             jQuery(this).addClass('active');
             jQuery('.annotationsHolder').removeClass('search-opened');
                 jQuery('.search-bar.search-toggle').hide();
+            var search_options = {
+                type: self.media
+            }
             if (this.id === "search") {
                 jQuery('.annotationsHolder').addClass('search-opened');
                 jQuery('.search-bar.search-toggle').show();
+                return;
             } else if(this.id === 'mynotes') {
-                console.log(self.options);
-                jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                    if (jQuery(item).find('.annotatedBy').html().trim().toLowerCase() !== self.options.username.trim().toLowerCase()) {
-                        jQuery(item).hide();
-                    } else {
-                        jQuery(item).show();
-                    }
-                });
+                search_options['username'] = self.options.username;
             } else if (this.id === "instructor") {
-                jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                    if (!self.options.instructors.includes(jQuery(item).find('.annotatedBy').html().trim())) {
-                        jQuery(item).hide();
-                    } else {
-                        jQuery(item).show();
-                    }
-                });
-            } else {
-                jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                    jQuery(item).show();
-                });
+                search_options['username'] = self.options.instructors;
             }
+            self.search(search_options)
         });
 
         jQuery('.sidebar-button#hide_label').click(function() {
@@ -202,6 +196,9 @@ import 'timeago';
                     }
                 }
             });
+            jQuery('.side.item-' + ann.id).find('.edit').click(function() {
+                self.ViewerEditorOpen(ann, true);
+            });
 
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
             jQuery('#empty-alert').css('display', 'none');
@@ -209,43 +206,30 @@ import 'timeago';
     };
 
     $.Sidebar.prototype.filterByType= function(searchValue, type) {
+        var self = this;
+        searchValue = searchValue.trim();
+        var options = {
+            'type': self.options.mediaType
+        }
         if (searchValue === "") {
             jQuery('.annotationsHolder .annotationItem').show();
             return;
         }
         if (type === "User") {
-            jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                if (jQuery(item).find('.annotatedBy').html().trim().toLowerCase() !== searchValue.trim().toLowerCase()) {
-                    jQuery(item).hide();
-                } else {
-                    jQuery(item).show();
-                }
-            });
+            options['username'] = searchValue;
         } else if (type === "Annotation") {
-            jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                if (jQuery(item).find('.body').html().toLowerCase().indexOf(searchValue.trim().toLowerCase()) === -1) {
-                    jQuery(item).hide();
-                } else {
-                    jQuery(item).show();
-                }
-            });
+            options['text'] = searchValue;
         } else if (type === "Tag") {
-            jQuery.each(jQuery('.annotationsHolder .annotationItem'), function(_, item) {
-                var tags = jQuery(item).find('.annotation-tag');
-                if (tags.length === 0) {
-                    jQuery(item).hide();
-                } else {
-                    var found = false;
-                    jQuery.each(tags, function(_, tag) {
-                        if (jQuery(tag).html().trim().toLowerCase().indexOf(searchValue.trim().toLowerCase()) > -1 && jQuery(tag).html().trim().length !== 0) {
-                            found = true
-                        }
-                    });
-                    found ? jQuery(item).show() : jQuery(item).hide();
-                }
-            });
+            options['tag'] = searchValue;
         }
+        self.search(options);
     };
+
+    $.Sidebar.prototype.search = function(options) {
+        $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
+            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+        }]);
+    }
 
     $.Sidebar.prototype.TargetSelectionMade = function(annotation, event) {
         var self = this;
@@ -257,11 +241,36 @@ import 'timeago';
     };
 
     $.Sidebar.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
-        
+        var editor = jQuery('.side.item-' + annotation.id);
+        console.log('should reach here', annotation, updating);
+        editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
+        editor.find('.body').hide();
+
+        // closes the editor tool and does not save annotation
+        editor.find('.cancel').click(function () {
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, !updating]);
+            self.ViewerEditorClose(annotation, true, false, editor);
+        });
+
+        // closes the editor and does save annotations
+        editor.find('.save').click(function () {
+            var text = self.annotation_tool.editor.find('#annotation-text-field').val();
+            if (updating) {
+                annotation.annotationText.pop();
+            }
+            annotation.annotationText.push(text);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, updating, false]);
+            self.ViewerEditorClose(annotation, true, false, editor);
+        });
+
+        $.publishEvent('editorShown', self.instance_id, [editor, annotation]);
     };
 
-    $.Sidebar.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
-      
+    $.Sidebar.prototype.ViewerEditorClose = function(annotation, redraw, should_erase, editor) {
+      jQuery('.editor-area side').remove();
+      if (editor) {
+         editor.find('.body').show();
+      }
     };
 
     $.Sidebar.prototype.ViewerDisplayOpen = function(annotations) {
@@ -278,6 +287,10 @@ import 'timeago';
     
     $.Sidebar.prototype.StorageAnnotationDelete = function(annotations) {
 
+    };
+
+    $.Sidebar.prototype.StorageAnnotationLoad = function(annotations) {
+            jQuery('.annotationsHolder.side').html('');
     };
 
     $.viewers.push($.Sidebar);

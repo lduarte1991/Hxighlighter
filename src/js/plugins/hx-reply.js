@@ -129,7 +129,7 @@ require('./hx-reply.css');
         var self = this;
         var prefix = isSidebar ? "sidebar-" : "other-";
         
-        jQuery(viewer).find('.plugin-area-bottom').append('<div class="reply-area-'+annotation.id+'"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-'+annotation.id+'">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button></div>');
+        jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button class="close-list-reply"><span class="fa fa-close"></span></button><button class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-'+annotation.id+'"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-'+annotation.id+'">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button></div>');
         if (('totalReplies' in annotation) && annotation.totalReplies > 0) {
             jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
             jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
@@ -150,7 +150,17 @@ require('./hx-reply.css');
             $.publishEvent('GetSpecificAnnotationData', self.instanceID, [annotation.id, function(ann) {
                 self.viewRepliesToAnnotation(ann, viewer, prefix);
             }]);
-            
+        });
+
+        jQuery(viewer).find('.plugin-area-bottom .reply-menu-' + annotation.id + ' .close-list-reply').click(function() {
+            jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
+            jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
+            jQuery(viewer).find('.'+prefix+'reply-list').hide();
+            jQuery(viewer).find('.reply-menu').hide();
+        });
+
+        jQuery(viewer).find('.plugin-area-bottom .reply-menu-' + annotation.id + ' .sort-list-reply').click(function() {
+            jQuery(viewer).find('.plugin-area-bottom .reply-area-' + annotation.id + ' div[class*=reply-list]').toggleClass('reversed');
         });
 
         jQuery('#' + prefix + 'cancel-reply-' + annotation.id).click(function() {
@@ -195,20 +205,23 @@ require('./hx-reply.css');
                         jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
                         jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').hide();
                         jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').show();
-                        jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class$=reply-list]').hide();
+                        jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+                        jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
                     }
                 } else {
                     if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
                         jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
                         jQuery('.floating.ann-item.item-'+annotation.id+' .create-reply').hide();
                         jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').show();
-                        jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class$=reply-list]').hide();
+                        jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+                        jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
                     }
                 }
                 jQuery('#'+prefix+'create-reply-area-' + annotation.id).hide();
                 jQuery(viewer).find('.create-reply').show();
-                jQuery(viewer).find('.plugin-area-bottom div[class$=reply-list]').show();
-                //jQuery('.ann-item.item-'+annotation.id+' div[class$=reply-list]').show();
+                jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').show();
+                jQuery(viewer).find('.plugin-area-bottom .reply-menu').show();
+                //jQuery('.ann-item.item-'+annotation.id+' div[class*=reply-list]').show();
             });
     };
 
@@ -225,15 +238,16 @@ require('./hx-reply.css');
             }
         }
         jQuery(viewer).find('.' + prefix + 'reply-list').show();
+        jQuery(viewer).find('.reply-menu').show();
     };
 
     $.Reply.prototype.retrieveRepliesForAnnotation = function(annotation, viewer, prefix) {
         var self = this;
-        $.publishEvent('StorageAnnotationGetReplies', self.instanceID, [{
+        $.publishEvent('StorageAnnotationSearch', self.instanceID, [{
             'source_id': annotation.id,
             'media': 'Annotation'
         }, function(results, converter) {
-            results.rows.forEach(function(reply) {
+            results.rows.reverse().forEach(function(reply) {
                 var rep = converter(reply)
                 self.addReplyToViewer(viewer, rep, prefix);
                 annotation.replies ? (annotation.replies.push(rep)) : (annotation.replies = [rep])
@@ -251,7 +265,7 @@ require('./hx-reply.css');
     $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix) {
         var self = this;
         console.log(reply);
-        jQuery(viewer).find('.plugin-area-bottom div[class$=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + "<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + "<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
                 
         // check to see if viewer is open or sidebar has annotation and add it there too
     };

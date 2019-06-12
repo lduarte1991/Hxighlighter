@@ -55,6 +55,7 @@ require('bs4-summernote');
 
         // adds the summernote WYSIWIG to the editor to the selector's location
         this.elementObj = element.find(selector);
+        this.options.width = this.elementObj.parent().width();
         this.elementObj.summernote(this.options);
 
         // removes summernote's ability to tab within the editor so users can tab through items

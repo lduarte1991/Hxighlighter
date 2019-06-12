@@ -89,9 +89,7 @@ var annotator = annotator ? annotator : require('annotator');
     $.XPathDrawer.prototype.getSpecificAnnotationData = function(annotation_id) {
         var self = this;
         var currentAnnotations = self.getAnnotationsData();
-        console.log('beforeSearch', annotation_id)
         var foundAnnotation = currentAnnotations.find(function(ann) {
-            console.log('duringSearch', ann.id);
             if (ann.id === annotation_id) {
                 return ann;
             }

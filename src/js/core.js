@@ -103,9 +103,20 @@
         self.callFuncInList(this.targets, 'StorageAnnotationDelete', message);
     };
 
-    $.Core.prototype.StorageAnnotationGetReplies = function(message) {
+    $.Core.prototype.StorageAnnotationLoad = function(message) {
         var self = this;
-        self.callFuncInList(this.targets, 'StorageAnnotationGetReplies', message);
+        self.callFuncInList(this.targets, 'StorageAnnotationLoad', message);
+    };
+
+    // $.Core.prototype.StorageAnnotationGetReplies = function(message) {
+    //     var self = this;
+    //     self.callFuncInList(this.targets, 'StorageAnnotationGetReplies', message);
+    // };
+
+    $.Core.prototype.StorageAnnotationSearch = function(message) {
+        var self = this;
+        console.log('Received here');
+        self.callFuncInList(this.targets, 'StorageAnnotationSearch', message);
     }
 
     // Util functions

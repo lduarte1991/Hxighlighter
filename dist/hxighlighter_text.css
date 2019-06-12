@@ -2005,21 +2005,55 @@ div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-faceb
     width: 100%;
 }
 
-.plugin-area-bottom div[class$='reply-list'] {
+.plugin-area-bottom div[class*='reply-list'] {
     border-top: 1px dashed black;
     padding-top: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
-.plugin-area-bottom div[class$='reply-list'] .reply {
+.plugin-area-bottom div[class*='reply-list'].reversed {
+    flex-direction: column-reverse;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply {
     padding: 5px 15px 1px 15px;
 }
 
-.plugin-area-bottom div[class$='reply-list'] .reply:nth-child(even) {
+.plugin-area-bottom div[class*='reply-list'] .reply:nth-child(even) {
     background-color: rgba(136, 136, 136, 0.2);
 }
 
 .plugin-area-bottom {
     margin-top: 10px;
+}
+
+.reply-menu {
+    height: 10px;
+    background: #333;
+    transition: all .2s ease-in-out;
+    overflow: hidden;
+}
+
+.reply-menu:hover {
+    height: 30px;
+}
+
+.reply-menu button {
+    margin-top: 10px;
+    background: none;
+    border: 0;
+    color: white;
+    transition: all .2s ease-in-out;
+}
+
+.reply-menu:hover button {
+    margin-top: 4px;
+}
+
+.reply-menu button:focus {
+    outline: 0;
+    color: #20a9ff;
 }
 
 /*# sourceMappingURL=hxighlighter_text.css.map*/

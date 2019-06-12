@@ -17,6 +17,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
                 //console.log(waAnnotation);
                 setTimeout(function() {
+                    console.log('definitely getting to here');
                     $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
                     $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
                 }, 250);
