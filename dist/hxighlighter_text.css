@@ -19,7 +19,7 @@
 
 .annotation-slot {
     background: white;
-    padding: 15px;
+    padding: 30px 50px;
     border: 1px solid #888;
     -webkit-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
     -moz-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
@@ -370,6 +370,34 @@ div[class^="reply-list"] {
     cursor: pointer;
     padding-left: 10px;
     background: black;
+}
+
+.side .action-button.save {
+    background: #333;
+}
+
+.side .action-button.cancel {
+    background: #eee;
+}
+
+.side .action-button {
+    width: 50%;
+    border-radius: 0px;
+    margin: 0;
+    font-weight: bolder;
+}
+
+.load-more {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    background: #333;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    border-top: 1px solid white;
+    cursor: pointer;
 }
 
 /*button[id^="replies-close"], div[id^="create-reply"] button {
@@ -1967,6 +1995,11 @@ div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-faceb
 .token-input-list-facebook {
     width: 398px!important;
 }
+
+.side .token-input-list-facebook {
+    width: 249px!important;
+}
+
 .token-input-dropdown, .token-input-dropdown-mac, .token-input-dropdown-facebook {
     z-index: 999999999999!important;
 }
@@ -2018,6 +2051,10 @@ div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-faceb
 
 .plugin-area-bottom div[class*='reply-list'] .reply {
     padding: 5px 15px 1px 15px;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply .delete-reply{
+    cursor: pointer;
 }
 
 .plugin-area-bottom div[class*='reply-list'] .reply:nth-child(even) {

@@ -6,6 +6,8 @@
 require('bs4-summernote/dist/summernote-bs4.css')
 require('bs4-summernote');
 require('./hx-reply.css');
+import 'jquery-confirm';
+import 'jquery-confirm/css/jquery-confirm.css'
 
 (function($){
 
@@ -166,7 +168,7 @@ require('./hx-reply.css');
         jQuery('#' + prefix + 'cancel-reply-' + annotation.id).click(function() {
                 self.destroy();
                 jQuery('#'+prefix+'create-reply-area-' + annotation.id).hide();
-                jQuery('.create-reply').show();
+                jQuery('#'+prefix+'reply-' + annotation.id).show();
             });
             jQuery('#' + prefix + 'save-reply-' + annotation.id).click(function() {
                 var result = self.elementObj.summernote('code');
@@ -198,7 +200,7 @@ require('./hx-reply.css');
                 annotation._local.highlights.forEach(function(high) {
                     jQuery(high).data('annotation', annotation);
                 });
-                self.addReplyToViewer(viewer, reply, prefix);
+                self.addReplyToViewer(viewer, reply, prefix, annotation);
                 self.destroy();
                 if (prefix === "other-") {
                     if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
@@ -230,10 +232,9 @@ require('./hx-reply.css');
         if (annotation.totalReplies > 0) {
             if (annotation.replies && annotation.totalReplies == annotation.replies.length) {
                 annotation.replies.forEach(function(rep) {
-                    self.addReplyToViewer(viewer, rep, prefix);
+                    self.addReplyToViewer(viewer, rep, prefix, annotation);
                 });
             } else {
-                console.log(annotation._local, annotation.totalReplies, annotation.replies);
                 self.retrieveRepliesForAnnotation(annotation, viewer, prefix);
             }
         }
@@ -249,25 +250,52 @@ require('./hx-reply.css');
         }, function(results, converter) {
             results.rows.reverse().forEach(function(reply) {
                 var rep = converter(reply)
-                self.addReplyToViewer(viewer, rep, prefix);
+                self.addReplyToViewer(viewer, rep, prefix, annotation);
                 annotation.replies ? (annotation.replies.push(rep)) : (annotation.replies = [rep])
             });
             if (annotation.totalReplies !== results.rows.length) {
                 annotation.totalReplies = results.rows.length;
             }
-            console.log("LOOK HERE", annotation);
             annotation._local.highlights.forEach(function(high) {
                 jQuery(high).data('annotation', annotation);
             });
         }])
     };
 
-    $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix) {
+    $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix, annotation) {
         var self = this;
-        console.log(reply);
-        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + "<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
-                
-        // check to see if viewer is open or sidebar has annotation and add it there too
+        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'><div class='delete-reply'><span class='fa fa-close'></span></div><strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+        jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
+            'title': 'Delete Reply?',
+            'content': 'Would you like to delete your reply? This is permanent.',
+            'buttons': {
+                confirm: function() {
+                    $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
+                    annotation.replies = annotation.replies.filter(function(ann) {
+                        if (ann.id !== reply.id) {
+                            return ann;
+                        }
+                    });
+                    annotation.totalReplies--;
+                    annotation._local.highlights.forEach(function(high) {
+                        jQuery(high).data('annotation', annotation);
+                    });
+                    jQuery('.reply.reply-item-' + reply.id).remove();
+                    jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+                    if (annotation.totalReplies == 0) {
+                        jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').show();
+                        jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').hide();
+                    } else {
+                        jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').hide();
+                        jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').show();
+                    }
+                    jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+                    jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
+                },
+                cancel: function() {
+                }
+            } 
+        });
     };
 
     $.Reply.prototype.pluralize = function(num, singular, plural) {

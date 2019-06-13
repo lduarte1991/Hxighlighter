@@ -245,7 +245,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 }
             }
         });
-        console.log(annotations);        
+        // console.log(annotations);        
         $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
         self.checkOrientation(self.annotation_tool.viewer);
     };

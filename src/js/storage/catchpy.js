@@ -17,7 +17,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
                 //console.log(waAnnotation);
                 setTimeout(function() {
-                    console.log('definitely getting to here');
+                    // console.log('definitely getting to here');
                     $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
                     $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
                 }, 250);
@@ -29,7 +29,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
     $.CatchPy.prototype.search = function(options, callBack) {
         var self = this;
         var data = jQuery.extend({}, {
-            limit: -1,
+            limit: 20,
             offset: 0,
             source_id: self.options.object_id,
             context_id: self.options.context_id,
@@ -43,6 +43,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
+                $.totalAnnotations = result.total;
                 callBack(result, self.convertFromWebAnnotation.bind(self));
             },
             error: function(xhr, status, error) {
@@ -235,15 +236,15 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
-            console.log("reached getAnnotationTargetItems", webAnn);
+            // console.log("reached getAnnotationTargetItems", webAnn);
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
-                console.log([{'parent':webAnn['target']['items'][0]['source']}]);
+                // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
             }
             // console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
         } catch(e) {
-            console.log(e);
+            // console.log(e);
             return [];
         }
     };
@@ -273,11 +274,11 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             // console.log('getAnnotationTarget', ranges, element);
             return self.normalizeRanges(ranges, element[0]);
         } catch(e) {
-            console.log(ranges, element[0]);
+            // console.log(ranges, element[0]);
                 throw(e);
-            console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
+            // console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
             //return self.normalizeRanges(ranges, window.document);
-            console.log(e);
+            // console.log(e);
             return []
         }
     };
@@ -401,7 +402,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 // console.log("Used annotator way to serialize");
                 serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
             } catch(e) {
-                console.log(r, contextEl);
+                // console.log(r, contextEl);
                 throw(e);
                 // console.log("Used new xpathrange way to serialize");
                 serializedRanges.push(xpathrange.Range.sniff(r).serialize(contextEl, '.annotator-hl'));

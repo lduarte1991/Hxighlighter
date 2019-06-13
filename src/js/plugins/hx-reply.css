@@ -45,6 +45,10 @@
     padding: 5px 15px 1px 15px;
 }
 
+.plugin-area-bottom div[class*='reply-list'] .reply .delete-reply{
+    cursor: pointer;
+}
+
 .plugin-area-bottom div[class*='reply-list'] .reply:nth-child(even) {
     background-color: rgba(136, 136, 136, 0.2);
 }

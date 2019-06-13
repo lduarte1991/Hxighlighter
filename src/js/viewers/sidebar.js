@@ -102,7 +102,6 @@ import 'timeago';
             $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
                 type: self.options.mediaType,
             }, function(results, converter) {
-                console.log(results.rows);
                 $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
             }])
         });
@@ -110,7 +109,6 @@ import 'timeago';
         jQuery('#search-submit').click(function() {
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
-            console.log(searchValue, searchType);
             self.filterByType(searchValue, searchType);
         });
 
@@ -140,6 +138,26 @@ import 'timeago';
             jQuery('.annotationSection').hide();
 
             self.showSidebarTab(self.options.viewer_options.sidebarversion);
+        });
+        jQuery('.side.annotationsHolder').on('scroll', function() {
+            if(jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight) {
+                var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
+                if (total_left > 0 && jQuery('.load-more').length == 0) {
+                    jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
+                    jQuery('.side.annotationsHolder').after('<div class="load-more side">Load All ' + $.totalAnnotations + ' Annotations</div>');
+                    jQuery('.side.load-more').click(function() {
+                        $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
+                            type: self.options.mediaType,
+                            limit: -1,
+                        }, function(results, converter) {
+                            jQuery('.side.load-more').remove();
+                            jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
+                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+                        }]);
+
+                    });
+                }
+            }
         });
     };
 
@@ -178,7 +196,8 @@ import 'timeago';
     $.Sidebar.prototype.addAnnotation = function(annotation, updating) {
         var self = this;
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
-            var ann = jQuery.extend({}, annotation, {'index': 0});
+            var ann = annotation;
+            ann.index = 0;
             var annHTML = self.options.TEMPLATES.annotationItem(ann)
             if (jQuery('.side.item-' + ann.id).length > 0) {
                 jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
@@ -241,25 +260,25 @@ import 'timeago';
     };
 
     $.Sidebar.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
+        var self = this;
         var editor = jQuery('.side.item-' + annotation.id);
-        console.log('should reach here', annotation, updating);
-        editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
+        editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><div class="plugin-area"></div><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
         editor.find('.body').hide();
+        editor.find('.tagList').hide();
 
         // closes the editor tool and does not save annotation
         editor.find('.cancel').click(function () {
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, !updating]);
             self.ViewerEditorClose(annotation, true, false, editor);
         });
 
         // closes the editor and does save annotations
         editor.find('.save').click(function () {
-            var text = self.annotation_tool.editor.find('#annotation-text-field').val();
+            var text = editor.find('#annotation-text-field').val();
             if (updating) {
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, updating, false]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, true, false]);
             self.ViewerEditorClose(annotation, true, false, editor);
         });
 
@@ -267,9 +286,10 @@ import 'timeago';
     };
 
     $.Sidebar.prototype.ViewerEditorClose = function(annotation, redraw, should_erase, editor) {
-      jQuery('.editor-area side').remove();
+      jQuery('.editor-area.side').remove();
       if (editor) {
-         editor.find('.body').show();
+         editor.find('.side.body').show();
+         editor.find('.tagList.side').show();
       }
     };
 

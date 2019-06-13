@@ -4,3 +4,7 @@
 .token-input-list-facebook {
     width: 398px!important;
 }
+
+.side .token-input-list-facebook {
+    width: 249px!important;
+}

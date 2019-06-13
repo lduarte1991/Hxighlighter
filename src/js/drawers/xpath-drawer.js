@@ -15,6 +15,7 @@ var annotator = annotator ? annotator : require('annotator');
         });
 
         jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
+            $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
@@ -42,7 +43,6 @@ var annotator = annotator ? annotator : require('annotator');
         });
 
         Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function(_, annotation, color) {
-            console.log('changeDrawnColor', color, annotation._local.highlights);
             if (annotation._local) {
                 jQuery.each(annotation._local.highlights, function(_, hl) {
                     setTimeout(function() {jQuery(hl).css('background-color', color);}, 250);
