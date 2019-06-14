@@ -264,7 +264,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix, annotation) {
         var self = this;
-        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'><div class='delete-reply'><span class='fa fa-close'></span></div><strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'><div class='delete-reply'><span class='fa fa-trash'></span></div><strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
         jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
             'title': 'Delete Reply?',
             'content': 'Would you like to delete your reply? This is permanent.',
