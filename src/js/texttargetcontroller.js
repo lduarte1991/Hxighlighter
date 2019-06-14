@@ -13,6 +13,7 @@ require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
+require('./plugins/hx-toggle-annotations.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -212,9 +213,9 @@ require('./storage/catchpy.js');
         jQuery.each(Hxighlighter.plugins, function(_, plugin) {
             var optionsForPlugin;
             try {
-                optionsForPlugin = jQuery.extend({}, self.options, self.options[plugin.name]) || {};
+                optionsForPlugin = jQuery.extend({'slot': element}, self.options, self.options[plugin.name]) || {'slot': element};
             } catch (e) {
-                optionsForPlugin = {};
+                optionsForPlugin = {'slot': element};
             }
 
             self.plugins.push(new plugin( optionsForPlugin, self.instance_id));

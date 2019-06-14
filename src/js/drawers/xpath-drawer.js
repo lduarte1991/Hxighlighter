@@ -49,6 +49,21 @@ var annotator = annotator ? annotator : require('annotator');
                 });
             }
         });
+
+        Hxighlighter.subscribeEvent('undrawAll', self.instance_id, function(_, callBack) {
+            var annotations = self.getAnnotationsData();
+            annotations.forEach(function(ann) {
+                self.highlighter.undraw(ann);
+            });
+            callBack(annotations);
+        });
+
+        Hxighlighter.subscribeEvent('drawList', self.instance_id, function(_, annotations, callBack) {
+            annotations.forEach(function(ann) {
+                self.highlighter.draw(ann);
+            });
+            callBack(annotations);
+        })
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {
@@ -80,10 +95,27 @@ var annotator = annotator ? annotator : require('annotator');
         }).toArray();
     };
 
+    // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
+    $.XPathDrawer.prototype.getUnique = function(arr, comp) {
+        const unique = arr
+       .map(e => e[comp])
+
+         // store the keys of the unique objects
+        .map((e, i, final) => final.indexOf(e) === i && i)
+
+        // eliminate the dead keys & store unique objects
+        .filter(e => arr[e]).map(e => arr[e]);
+
+       return unique;
+    }
+
     $.XPathDrawer.prototype.getAnnotationsData = function() {
-        return jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function(_, elem) {
+        var self = this;
+        var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
-        }).toArray();
+        }).toArray(), 'id');
+        console.log(all);
+        return all;
     };
 
     $.XPathDrawer.prototype.getSpecificAnnotationData = function(annotation_id) {

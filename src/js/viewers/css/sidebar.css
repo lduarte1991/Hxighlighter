@@ -80,6 +80,9 @@
     padding: 10px;
     margin-top: 17px;
     width: calc(100% - 5px);
+    -webkit-box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.75);
+    box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.75);
 }
 
 .annotationSection .annotationsHolder .annotationItem .annotatedBy{
@@ -345,6 +348,147 @@ div[class^="reply-list"] {
     text-align: center;
     border-top: 1px solid white;
     cursor: pointer;
+}
+
+.make-jiggle {
+    -webkit-animation-name: jiggle;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-iteration-count: 3;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: jiggle;
+    -moz-animation-duration: 3s;
+    -moz-animation-iteration-count: 3;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: jiggle;
+    -ms-animation-duration: 3s;
+    -ms-animation-iteration-count: 3;
+    -ms-animation-timing-function: linear;
+
+    animation-name: jiggle;
+    animation-duration: 0.4s;
+    animation-iteration-count: 3;
+    animation-timing-function: linear;
+}
+
+@-ms-keyframes jiggle {
+    0% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+    25% {
+        transform: rotate(1deg);
+        bottom: 3px;
+    } 50% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    } 75% {
+        transform: rotate(-1deg);
+        bottom: 3px;
+    } 100% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+}
+
+@-moz-keyframes jiggle {
+    0% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+    25% {
+        transform: rotate(1deg);
+        bottom: 3px;
+    } 50% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    } 75% {
+        transform: rotate(-1deg);
+        bottom: 3px;
+    } 100% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+}
+
+@-webkit-keyframes jiggle {
+    0% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+    25% {
+        transform: rotate(1deg);
+        bottom: 3px;
+    } 50% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    } 75% {
+        transform: rotate(-1deg);
+        bottom: 3px;
+    } 100% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+}
+
+@keyframes jiggle {
+    0% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+    25% {
+        transform: rotate(1deg);
+        bottom: 3px;
+    } 50% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    } 75% {
+        transform: rotate(-1deg);
+        bottom: 3px;
+    } 100% {
+        transform: rotate(0deg);
+        bottom: 0px;
+    }
+}
+
+.make-spin {
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 4000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 4000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 4000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    
+    animation-name: spin;
+    animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@-ms-keyframes spin {
+    from { -ms-transform: rotate(0deg); }
+    to { -ms-transform: rotate(360deg); }
+}
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
 }
 
 /*button[id^="replies-close"], div[id^="create-reply"] button {

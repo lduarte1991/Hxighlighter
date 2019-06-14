@@ -144,8 +144,9 @@ import 'timeago';
                 var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
                 if (total_left > 0 && jQuery('.load-more').length == 0) {
                     jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
-                    jQuery('.side.annotationsHolder').after('<div class="load-more side">Load All ' + $.totalAnnotations + ' Annotations</div>');
+                    jQuery('.side.annotationsHolder').after('<div class="load-more side make-jiggle">Load All ' + $.totalAnnotations + ' Annotations</div>');
                     jQuery('.side.load-more').click(function() {
+                        jQuery(this).html('<span class="fa fa-spinner make-spin"></span>')
                         $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
                             type: self.options.mediaType,
                             limit: -1,
@@ -245,8 +246,13 @@ import 'timeago';
     };
 
     $.Sidebar.prototype.search = function(options) {
+        jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
             $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+            jQuery('.loading-obj').remove();
+            if (results.rows.length == 0) {
+                jQuery('.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>')
+            }
         }]);
     }
 

@@ -1,0 +1,7 @@
+button.hx-toggle-annotations.btn.btn-default:before {
+    content: "Hide Annotations";
+}
+
+button.hx-toggle-annotations.btn.btn-default.should-show:before {
+    content: "Show Annotations";
+}

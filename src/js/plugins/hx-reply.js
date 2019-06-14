@@ -148,7 +148,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
         jQuery(viewer).find('.plugin-area-bottom .reply-area-' + annotation.id + ' .view-replies').click(function() {
             jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").hide();
             jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").show();
-            jQuery(viewer).find('.' + prefix + 'reply-list').html('');
+            jQuery(viewer).find('.' + prefix + 'reply-list').html('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
+
             $.publishEvent('GetSpecificAnnotationData', self.instanceID, [annotation.id, function(ann) {
                 self.viewRepliesToAnnotation(ann, viewer, prefix);
             }]);
@@ -248,6 +249,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             'source_id': annotation.id,
             'media': 'Annotation'
         }, function(results, converter) {
+            jQuery('.loading-obj').remove();
             results.rows.reverse().forEach(function(reply) {
                 var rep = converter(reply)
                 self.addReplyToViewer(viewer, rep, prefix, annotation);

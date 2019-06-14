@@ -168,8 +168,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
         jQuery('body').css('overflow', 'inherit');
     };
 
-    $.FloatingViewer.prototype.ViewerDisplayOpen = function(annotations) {
+    $.FloatingViewer.prototype.ViewerDisplayOpen = function(anns) {
         var self = this;
+        var annotations = anns.reverse();
         // if the timer is set for the tool to be hidden, this intercepts it
         if (self.hideTimer !== undefined) {
             clearTimeout(self.hideTimer);

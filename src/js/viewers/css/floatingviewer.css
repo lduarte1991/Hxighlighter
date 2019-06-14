@@ -57,6 +57,7 @@
     margin-top: 5px;
     border-radius: 10px;
     border: 3px solid black;
+    padding-bottom: 25px;
 }
 
 .unfilter-button {
@@ -190,6 +191,10 @@
     overflow-y: scroll;
     max-height: 200px;
 
+}
+
+.annotation-text-field .ann-item {
+    padding-bottom: 25px;
 }
 
 .annotation-text-field .annotation-username {
