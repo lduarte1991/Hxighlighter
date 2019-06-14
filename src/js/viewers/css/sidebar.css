@@ -41,6 +41,12 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=270, Color='rgba(0,0,0,0.3)')";
 }
 
+.annotationSection img, .annotationSection iframe {
+    max-width: calc(var(--sidebar-width) - 53px);
+    max-height: 100px;
+    width: auto!important;
+}
+
 .annotation-slot {
     margin-left: var(--sidebar-width);
 }

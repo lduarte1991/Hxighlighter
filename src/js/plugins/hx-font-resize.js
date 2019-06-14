@@ -47,7 +47,7 @@
         var self = this;
         step = isNaN(Number(step)) ? 0 : Number(step);
 
-        var $content = jQuery(self.options.slot);
+        var $content = jQuery(self.options.slot).find('.annotator-wrapper');
         var $label = jQuery("#annotations-text-size-label");
         var nodes = [], curnode, stylesize, styleunit, computed;
         var minsize = 8;

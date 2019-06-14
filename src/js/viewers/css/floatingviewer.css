@@ -217,6 +217,11 @@
     content: ")";
 }
 
+.annotation-text-field img, .annotation-text-field iframe {
+    max-width: 100%;
+    width: auto!important;
+}
+
 .annotation-text-field .annotation-quote {
     margin-top: 10px;
     margin-bottom: 10px;

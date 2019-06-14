@@ -19,6 +19,7 @@ require('bs4-summernote');
             focus: true,
             width: 398,
             placeholder: "Add annotation text...",
+            maximumImageFileSize: 262144,
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],

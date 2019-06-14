@@ -1,0 +1,37 @@
+.instructions-container {
+    background-color: #EDEDED;
+    position: relative;
+    padding: .5em 1em;
+    border: 1px solid #c8c8c8;
+    border-radius: 0.5em;
+    margin: 15px 0 10px 0;
+}
+
+.toggle-instructions {
+    font-weight: normal;
+    position: absolute;
+    right: 0;
+    margin: 2px 1em 2px 0;
+    color: darkblue;
+    cursor: pointer;
+}
+
+.instructions-title {
+    font-weight: bold;
+}
+
+.instructions-body {
+    border-top: 1px solid #c8c8c8;
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+}
+
+.target-object-controls {
+    padding: 10px 0;
+    margin: 10px 0 0 0;
+}
+.target-object-control {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 18pt;
+}
