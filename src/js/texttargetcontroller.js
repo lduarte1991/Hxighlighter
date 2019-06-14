@@ -13,6 +13,7 @@ require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
+require('./plugins/hx-font-resize.js');
 require('./plugins/hx-toggle-annotations.js');
 require('./storage/catchpy.js');
 
