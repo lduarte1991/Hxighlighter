@@ -4,7 +4,7 @@
  *
  */
 
-// require('./FontResize.css');
+require('./hx-font-resize.css');
 
 (function($){
 

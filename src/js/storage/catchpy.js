@@ -23,10 +23,12 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 }, 250);
             });
         }
-        self.search(opts, callB);
+        self.search(opts, callB, function(errs) {
+            console.log("Error", errs);
+        });
     };
 
-    $.CatchPy.prototype.search = function(options, callBack) {
+    $.CatchPy.prototype.search = function(options, callBack, errfun) {
         var self = this;
         var data = jQuery.extend({}, {
             limit: 20,
@@ -47,8 +49,14 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 callBack(result, self.convertFromWebAnnotation.bind(self));
             },
             error: function(xhr, status, error) {
-                console.log(xhr, status, error);
-                callBack([xhr, status, error]);
+                if (xhr.status === 401) {
+                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                } else if (xhr.status === 500) {
+                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                } else {
+                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                }
+                errfun([xhr, status, error]);
             }
         });
 
@@ -74,6 +82,13 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             },
             error: function(xhr, status, error) {
                 console.log(xhr, status, error);
+                if (xhr.status === 401) {
+                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                } else if (xhr.status === 500) {
+                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                } else {
+                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                }
             }
         });
     };
@@ -88,6 +103,15 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             },
             success: function(result) {
                 console.log('ANNOTATION_DELETED', result)
+            },
+            error: function(xhr, status, error) {
+                if (xhr.status === 401) {
+                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                } else if (xhr.status === 500) {
+                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                } else {
+                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                }
             }
         })
     };
@@ -105,6 +129,15 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             },
             success: function(result) {
                 console.log('ANNOTATION_UPDATED', result)
+            },
+            error: function(xhr, status, error) {
+                if (xhr.status === 401) {
+                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                } else if (xhr.status === 500) {
+                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                } else {
+                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                }
             }
         })
     };
@@ -226,6 +259,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             tags: self.getAnnotationTags(webAnn),
             ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
             totalReplies: webAnn.totalReplies,
+            permissions: webAnn.permissions,
         }
         return annotation;
     };
@@ -403,7 +437,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
             } catch(e) {
                 // console.log(r, contextEl);
-                throw(e);
+                // throw(e);
                 // console.log("Used new xpathrange way to serialize");
                 serializedRanges.push(xpathrange.Range.sniff(r).serialize(contextEl, '.annotator-hl'));
             }

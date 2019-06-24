@@ -2,33 +2,31 @@
  * 
  */
 
+:root {
+    --text-background: #FFFFFF;
+    --text-accent-color: #687864;
+    --accent-color: #333;
+    --light-font-color: #fff;
+    --accent-font-color: #888;
+    --dark-font-color: #000;
+    --pop-color: #31708E;
+    --lighter-background: #ededed;
+}
+
 .annotation-slot {
     background: white;
+    background: var(--text-background);
     padding: 30px 50px;
     border: 1px solid #888;
+    border-color: var(--text-accent-color);
     -webkit-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
     -moz-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
     box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    min-width: 733px;
+    min-width: calc(733px - var(--sidebar-width));
 }
 
-.hxighlighter-container {
-    padding: 10px 10px;
-    height: 100%;
-}
-
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: #ddd;
-}
- 
-::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background-color: #555;
-    box-shadow: 
-        inset 0 2px 3px rgba(255,255,255,0.3),
-        inset 0 -2px 3px rgba(0,0,0,0.3),
-        0 1px 1px rgba(255,255,255,0.9);
+.btn-default {
+    background: #ededed;
+    background: var(--lighter-background);
 }

@@ -37,6 +37,7 @@ import 'timeago';
         };
         this.element = jQuery(this.options.element);
         this.hideTimer = null;
+        this.load_more_open = false;
         this.init();
     };
 
@@ -103,6 +104,8 @@ import 'timeago';
                 type: self.options.mediaType,
             }, function(results, converter) {
                 $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+            }, function() {
+
             }])
         });
 
@@ -144,20 +147,36 @@ import 'timeago';
                 var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
                 if (total_left > 0 && jQuery('.load-more').length == 0) {
                     jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
-                    jQuery('.side.annotationsHolder').after('<div class="load-more side make-jiggle">Load All ' + $.totalAnnotations + ' Annotations</div>');
+                    jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load All ' + $.totalAnnotations + ' Annotations</div>');
+                    self.load_more_open = true;
                     jQuery('.side.load-more').click(function() {
-                        jQuery(this).html('<span class="fa fa-spinner make-spin"></span>')
-                        $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
+                        var options = {
                             type: self.options.mediaType,
                             limit: -1,
-                        }, function(results, converter) {
+                        }
+                        var selectedTab = jQuery('.btn.user-filter.active').html().trim();
+                        if (selectedTab === "Mine") {
+                            options['username'] = self.options.username;
+                        } else if (selectedTab === "instructor") {
+                            options['username'] = self.options.instructors
+                        }
+                        jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
+                        console.log(options);
+                        $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
                             jQuery('.side.load-more').remove();
                             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
                             $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+                        }, function() {
+                            
                         }]);
 
                     });
                 }
+            } else if(self.load_more_open && jQuery(this).scrollTop() + jQuery(this).innerHeight() <= jQuery(this)[0].scrollHeight - 50) {
+                console.log('should remove it');
+                self.load_more_open = false;
+                jQuery('.side.load-more').remove();
+                jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
             }
         });
     };
@@ -165,7 +184,7 @@ import 'timeago';
     $.Sidebar.prototype.showSidebarTab = function(type) {
         // if (type === "smalltab") {
             jQuery(':root').css('--sidebar-width', '55px');
-            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar"><i class="fa fa-arrow-right"></i></div>');
+            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button"><i class="fa fa-arrow-right"></i></div>');
         // }
 
         jQuery('.open-sidebar').click(function() {
@@ -187,6 +206,14 @@ import 'timeago';
             if (jQuery('.annotationItem').length == 0) {
                 jQuery('#empty-alert').css('display', 'block');
             } 
+        });
+
+        $.subscribeEvent('searchTag', self.instance_id, function(_, tag) {
+            var options = {
+                'type': self.options.mediaType,
+                'tag': tag
+            };
+            self.search(options);
         });
 
         $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
@@ -220,6 +247,19 @@ import 'timeago';
                 self.ViewerEditorOpen(ann, true);
             });
 
+            jQuery('.side.item-' + ann.id).find('.quoteText').click(function() {
+                if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
+                    var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
+                    jQuery('html, body').animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top - parseInt(nav_offset, 10) - 20)});
+                    //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
+                    setTimeout(function() {
+                        ann._local.highlights.forEach(function(hl) {
+                            jQuery(hl).css({border: '0 solid black'}).animate({borderWidth: 2}, 200).animate({borderWidth: 0}, 200);
+                        });
+                    }, 350);
+                }
+            });
+
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
             jQuery('#empty-alert').css('display', 'none');
         }
@@ -250,9 +290,15 @@ import 'timeago';
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
             $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
             jQuery('.loading-obj').remove();
+            jQuery('.side.annotationsHolder').scrollTop(0);
+            self.load_more_open = false;
+            jQuery('.side.load-more').remove();
+            jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
             if (results.rows.length == 0) {
-                jQuery('.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>')
+                jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>')
             }
+        }, function(err) {
+            jQuery('.loading-obj').remove();
         }]);
     }
 

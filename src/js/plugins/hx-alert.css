@@ -1,0 +1,42 @@
+.hx-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgb(0, 0, 0, 0.2);
+    z-index: 99999999999999;
+}
+
+.hx-notify {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 0px;
+    z-index: 999999999999999;
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    overflow-y: hidden;
+    max-height: 0px; /* approximate max height */
+    transition-property: all;
+    transition-duration: .5s;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.hx-notify.opened {
+    max-height: 500px;
+    min-height: 50px;
+}
+
+.hx-notify button {
+    color: var(--accent-color);
+}
+
+.hx-notify button.hx-close {
+    background: transparent;
+    color: white;
+    outline: 0;
+    border: 0;
+}

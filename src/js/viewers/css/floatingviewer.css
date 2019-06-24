@@ -1,9 +1,3 @@
-:root {
-    --accent-color: #333;
-    --back-color: #fff;
-    --light-font-folor: #fff;
-    --dark-font-color: #000;
-};
 
 @supports (not(--value: 0)) {
   /* CSS variables not supported */
@@ -50,7 +44,7 @@
 
 .annotation-item {
     background: white;
-    background: var(--back-color);
+    background: var(--text-background);
     min-height: 100px;
     text-align: center;
     padding: 5px;
@@ -190,7 +184,7 @@
     padding: 15px;
     overflow-y: scroll;
     max-height: 200px;
-
+    min-height: 170px;
 }
 
 .annotation-text-field .ann-item {

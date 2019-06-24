@@ -63,11 +63,26 @@
                 }
             } else if (event.key == 'Escape') {
                 self.turnSelectionModeOff();
+            } else if (event.key == ' ') {
+                console.log(event.target);
+                event.preventDefault();
+                return false;
             }
         });
+        jQuery(document).on('keyup', '*[role="button"]', function(evt) {
+            if (evt.key == 'Enter' || evt.key == ' ') {
+                console.log("should have been triggered");
+                jQuery(evt.currentTarget).click();
+                return $.pauseEvent(evt);;
+            }
+        }); 
     };
 
     $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
+        var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
+        if (!toggleButton.hasClass('should-show')) {
+            toggleButton.click();
+        }
         jQuery(this.element).attr('contenteditable', 'true');
         jQuery(this.element).attr('role', 'textbox');
         jQuery(this.element).attr('tabindex', "0");
@@ -79,6 +94,10 @@
     };
 
     $.KeyboardSelector.prototype.turnSelectionModeOff = function() {
+        var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
+        if (toggleButton.hasClass('should-show')) {
+            toggleButton.click();
+        }
         jQuery(this.element).off('keydown');
         jQuery(this.element).off('keyup');
         jQuery(this.element).attr('contenteditable', 'false');
@@ -145,13 +164,15 @@
     };
 
     $.KeyboardSelector.prototype.processSelection = function(start, end) {
+        var self = this;
         const s = getSelection();
+        console.log("LOOK HERE", start, end);
         const r = this.removeMarkers(start, end);
-        this.start = undefined;
+        self.start = undefined;
 
         // publish selection made
         Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [r]]);
-        this.element.blur();
+        self.element.blur();
         // this.element.focus();
     };
 
@@ -166,6 +187,7 @@
         }
         // TODO: Handle other use cases (i.e. starting several nodes instead of within the same one)
         var commonAncestor = this.getCommonAncestor(start.anchorNode, end.anchorNode);
+        console.log(commonAncestor);
         var children = jQuery(commonAncestor).children();
         console.log('Common Ancestor', commonAncestor);
         console.log('Children', children);

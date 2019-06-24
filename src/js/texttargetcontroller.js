@@ -16,6 +16,10 @@ require('./plugins/hx-reply.js');
 require('./plugins/hx-instruction-panel.js');
 require('./plugins/hx-font-resize.js');
 require('./plugins/hx-toggle-annotations.js');
+require('./plugins/hx-display-resize.js');
+require('./plugins/hx-sidebar-tag-tokens.js');
+require('./plugins/hx-permissions.js');
+require('./plugins/hx-alert.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -73,6 +77,7 @@ require('./storage/catchpy.js');
         
         // adds it to the page and turns on the wrapper
         jQuery(selector).append(slot);
+        jQuery('.annotations-section').prop('tabindex', '0')
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');        
         
         // lets Core know that the target has finished loading on screen
@@ -92,6 +97,7 @@ require('./storage/catchpy.js');
         var slot = jQuery(selector);
         slot.addClass('annotation-slot');
         slot.attr('id', this.guid);
+        jQuery('.annotations-section').prop('tabindex', '0')
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen
@@ -196,7 +202,6 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpViewers = function(element) {
         var self = this;
         self.viewers = [];
-        console.log(self.options);
         jQuery.each(Hxighlighter.viewers, function(_, viewer) {
             self.viewers.push(new viewer({
                 element: element,
@@ -235,6 +240,16 @@ require('./storage/catchpy.js');
                 optionsForStorage = {};
             }
             self.storage.push(new storage(optionsForStorage, self.instance_id));
+            if (self.options.viewerOptions.defaultTab === "mine") {
+                options = {
+                    'username': self.options.username
+                }
+            } else if (self.options.viewerOptions.defaultTab === "instructor") {
+                options = {
+                    'username': self.options.instructors
+                }
+            }
+
             self.storage[idx].onLoad(element, options);
         });
     };
@@ -431,7 +446,6 @@ require('./storage/catchpy.js');
         }]);
 
         annotations.forEach(function(ann) {
-            console.log(self.element, jQuery(self.element).find('.annotator-wrapper'));
             var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
             self.TargetAnnotationDraw(converted_ann);
             $.publishEvent('annotationLoaded', self.instance_id, [converted_ann])
@@ -468,11 +482,10 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationGetReplies (name)
      */
-    $.TextTarget.prototype.StorageAnnotationSearch = function(search_options, callback) {
+    $.TextTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun) {
         var self = this;
-        console.log(search_options, 'received event');
         jQuery.each(self.storage, function(_, store) {
-            store.search(search_options, callback);
+            store.search(search_options, callback, errfun);
         });
     };
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

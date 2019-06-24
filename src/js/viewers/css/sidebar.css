@@ -1,25 +1,17 @@
 :root {
-    --accent-color: #333;
-    --back-color: #fff;
-    --light-font-color: #fff;
-    --accent-font-color: #888;
-    --dark-font-color: #000;
-
-    --nav-bar-offset: 0px;
-
     --sidebar-width: 300px;
     --sidebar-background: #fff;
     --sidebar-border: 2px solid darkgray;
     --sidebar-button-back: #fff;
-    --sidebar-button-back-accent: #fff;
-    --sidebar-button-color: #000;
-    --sidebar-button-color-accent: #666;
-
-    --sidebar-search-bar-height-open: 73px;
+    --sidebar-button-back-accent: #333;
+    --sidebar-button-color: #333;
+    --sidebar-button-color-accent: #ededed;
+    --sidebar-search-bar-height-open: 0px;
 }
 
 .annotationSection.side {
     position: fixed;
+    top: 0px;
     top: var(--nav-bar-offset);
     left: 0;
     width: 300px;
@@ -29,6 +21,7 @@
     height: calc(100% - var(--nav-bar-offset));
     padding: 5px;
     overflow-x: hidden;
+    background: white;
     background: var(--sidebar-background);
     overflow-y: auto; /* let the browser control when to show/hide the scrollbar based on the content */
     -moz-box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
@@ -42,25 +35,29 @@
 }
 
 .annotationSection img, .annotationSection iframe {
+    max-width: 247px;
     max-width: calc(var(--sidebar-width) - 53px);
-    max-height: 100px;
+    max-height: 150px;
     width: auto!important;
 }
 
 .annotation-slot {
+    margin-left: 300px;
     margin-left: var(--sidebar-width);
 }
 
 .annotationSection .delete, .edit {
+    background: #fff;
     background: var(--sidebar-button-back);
     outline: 0;
     border: 0;
+    color: #888;
     color: var(--sidebar-button-color);
 }
 
-.annotationSection .annotation-viewer-side .delete:hover, .annotation-viewer-side .edit:hover {
-    background: var(--sidebar-button-back-accent);
-    color: var(--sidebar-button-color-accent);
+.annotationSection .delete:hover, .annotationSection .delete:focus, .annotationSection .edit:hover, .annotationSection .edit:focus, #hide_label:hover, #hide_label:focus, .open-sidebar:hover, .open-sidebar:focus {
+    color: #888;
+    color: var(--pop-color);
 }
 
 .annotationSection .annotationsHolder {
@@ -70,6 +67,7 @@
 }
 
 .annotationSection .annotationsHolder.search-opened {
+    height: calc(100% - 73px);
     height: calc(100% - var(--sidebar-search-bar-height-open));
 }
 
@@ -83,6 +81,9 @@
 
 .annotationSection .annotationsHolder .annotationItem {
     border: 2px solid rgba(88, 88, 88, 0.2);
+    border-color: var(--accent-font-color);
+    background: white;
+    background: var(--text-background);
     padding: 10px;
     margin-top: 17px;
     width: calc(100% - 5px);
@@ -105,6 +106,7 @@
     color: var(--accent-font-color);
     border-left: 2px solid var(--accent-color);
     font-size: 8pt;
+    cursor: pointer;
 }
 
 .annotationSection .annotationsHolder .annotationItem .body {
@@ -120,6 +122,7 @@
 button.sidebar-button {
     position: absolute;
     background: black;
+    background: var(--accent-color);
     width: 100%;
     color: white;
     top: 0;
@@ -158,34 +161,42 @@ button.sidebar-button#hide_label {
 }
 
 .annotation-filter-buttons.btn-group .btn {
-    /*background-color: var(--sidebar-button-color-accent);
-    color: var(--light-font-color);*/
+    background: var(--sidebar-button-color-accent);
+    color: var(--dark-font-color);
 }
 
 .annotation-filter-buttons.btn-group .btn.active {
     background-color: white;
+    background-color: var(--sidebar-background);
     border-bottom: 0px solid white;
+    border-bottom-color: var(--sidebar-background);
     color: rgb(17, 118, 178);
+    color: var(--pop-color);
+    font-weight: bold;
+    font-size: 0.9em;
     cursor: default;
+    padding-top: 10px;
 }
 
 .btn.user-filter {
     border-radius: 0;
     /*background: white;*/
     border: 1px solid rgb(160, 216, 242);
+    border-color: var(--accent-font-color);
     width: 25%;
     /*color: rgb(17, 118, 178);*/
     position: absolute;
     padding: 6px 6px;
-    box-shadow: 
+    /*box-shadow: 
         inset 0 2px 3px rgba(255,255,255,0.4),
         inset 0 -2px 3px rgba(0,0,0,0.1),
-        0 1px 1px rgba(255,255,255,0.9);
+        0 1px 1px rgba(255,255,255,0.9);*/
 }
 
 .btn.user-filter.active {
     box-shadow: none;
     color: rgb(17, 118, 178);
+    color: var(--accent-color);
 }
 
 /*.btn.user-filter.selected {
@@ -210,6 +221,7 @@ button.sidebar-button#hide_label {
 
 .search-bar {
     margin-bottom: 5px;
+    height: 73px;
     height: var(--sidebar-search-bar-height);
 }
 
@@ -248,22 +260,40 @@ div[class^="reply-list"] {
 
 .buttons-4 .btn{
     width: 25%;
+    width: calc(25% + 1px);
 }
 
 .buttons-4 .btn:nth-child(1) {
     left: 0;
 }
 
+.buttons-4 .btn:nth-child(1).active {
+    width: calc(25% + 1px);
+}
+
 .buttons-4 .btn:nth-child(2) {
     left: 25%;
+}
+
+.buttons-4 .btn:nth-child(2).active {
+    width: calc(25% + 2px);
 }
 
 .buttons-4 .btn:nth-child(3) {
     left: 50%;
 }
 
+.buttons-4 .btn:nth-child(3).active {
+    left: calc(50% - 1px);
+    width: calc(25% + 3px);
+}
+
 .buttons-4 .btn:nth-child(4) {
     left: 75%;
+}
+
+.buttons-4 .btn:nth-child(4).active {
+    left: calc(75% - 2px);
 }
 
 .buttons-3 .btn{
@@ -326,14 +356,17 @@ div[class^="reply-list"] {
     cursor: pointer;
     padding-left: 10px;
     background: black;
+    background: var(--accent-color);
 }
 
 .side .action-button.save {
     background: #333;
+    background: var(--accent-color);
 }
 
 .side .action-button.cancel {
     background: #eee;
+    background: var(--accent-font-color);
 }
 
 .side .action-button {
@@ -347,12 +380,15 @@ div[class^="reply-list"] {
     position: absolute;
     bottom: 0;
     left: 0;
+    width: 300px;
     width: var(--sidebar-width);
     background: #333;
+    background: var(--accent-color);
     color: white;
     padding: 5px;
     text-align: center;
     border-top: 1px solid white;
+    border-top-color: var(--sidebar-background);
     cursor: pointer;
 }
 

@@ -26,6 +26,7 @@
 
 .plugin-area-bottom button.create-reply, .plugin-area-bottom button.view-replies {
     background: #333;
+    background: var(--accent-color);
     color: white;
     width: 100%;
 }
@@ -62,6 +63,10 @@
     background: #333;
     transition: all .2s ease-in-out;
     overflow: hidden;
+}
+
+.reply-menu:focus-within {
+    height: 30px;
 }
 
 .reply-menu:hover {

@@ -277,6 +277,18 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     };
 
+    $.FloatingViewer.prototype.StorageAnnotationLoad = function(first_argument) {
+        var self = this;
+        if (self.annotation_tool.viewer) {
+            self.annotation_tool.viewer.remove();
+            delete self.annotation_tool.viewer;
+        }
+        self.annotation_tool.isStatic = false;
+        self.annotation_tool.updating = false;
+        self.annotation_tool.editing = false;
+        jQuery('body').css('overflow', 'inherit');
+    };
+
     $.FloatingViewer.prototype.StorageAnnotationDelete = function(annotation) {
         var self = this;
         jQuery('.annotation-viewer').remove();

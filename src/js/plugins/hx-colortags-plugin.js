@@ -49,7 +49,7 @@ require('./hx-colortags-plugin.css');
         var self = this;
 
         $.subscribeEvent('annotationLoaded', self.instanceID, function(_, ann) {
-            console.log('hello', ann.tags);
+            // console.log('hello', ann.tags);
             if (typeof(ann.tags) !== 'undefined' && ann.tags.length > 0) {
                 var color = self.getColorFromValue(ann.tags[ann.tags.length - 1]);
                 if (typeof(color) !== "undefined") {
@@ -118,7 +118,7 @@ require('./hx-colortags-plugin.css');
      */
     $.ColorTags.prototype.editorShown = function(editor, annotation) {
         var self = this;
-        console.log('ColorTags editorShown');
+        // console.log('ColorTags editorShown');
         var listNode = editor.find('.token-input-list-facebook')[0];
         if (listNode.addEventListener) {
             listNode.addEventListener('DOMNodeInserted', function(event) {
