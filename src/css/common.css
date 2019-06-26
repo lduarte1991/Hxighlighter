@@ -1,6 +1,6 @@
 /* Common Root Variables */
 :root {
-    --nav-bar-offset: 0px;
+    --nav-bar-offset: 50px;
     --main-background: #F7F9FB;
 };
 
@@ -35,4 +35,53 @@ body {
     height: 100%;
     height: calc(100% - var(--nav-bar-offset));
     margin-top: var(--nav-bar-offset);
+}
+
+#navigationBar {
+    position: fixed;
+    height: 50px;
+    background: black;
+    top: 0;
+    display: block;
+    width: 100%;
+    z-index:999;
+    overflow:hidden;
+}
+
+.pagination {
+    width: 300px;
+    overflow: auto;
+    margin-top: 0px;
+}
+
+#navigationBar #home {
+    float: left;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+    margin-top: 7px;
+    margin-left: 15px;
+}
+
+a#prev_target_object {
+    float: left;
+    margin: 8px;
+    position: relative;
+    margin-left: 20px;
+}
+
+.pagination .pages {
+    float: left;
+    font-size: 1.5em;
+    color: white;
+    font-family: Arial;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+a#next_target_object {
+    float: left;
+    margin: 8px;
+    position: relative;
 }

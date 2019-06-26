@@ -58,6 +58,7 @@ require('./storage/catchpy.js');
             this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector)
         } else if (this.options.method == "inline") {
             // if the text is already in the DOM, this sets up what is left
+            console.log('Loading Target via Inline');
             this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
         }
     };
@@ -70,7 +71,7 @@ require('./storage/catchpy.js');
      * @param      {<type>}  instance_id  The instance identifier
      */
     $.TextTarget.prototype.createTextSlotFromURL = function(content, selector, instance_id) {
-        this.guid = Hxighlighter.getUniqueId();
+        this.guid = $.getUniqueId();
 
         // each annotation target will be enclosed in a "slot"
         var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
@@ -81,7 +82,7 @@ require('./storage/catchpy.js');
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');        
         
         // lets Core know that the target has finished loading on screen
-        Hxighlighter.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
+        $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
     };
 
     /**
@@ -93,7 +94,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.createTextSlotFromSelector = function(selector, instance_id) {
         
         // each annotation target will be enclosed in a "slot" with a temporary unique id
-        this.guid = Hxighlighter.getUniqueId();
+        this.guid = $.getUniqueId();
         var slot = jQuery(selector);
         slot.addClass('annotation-slot');
         slot.attr('id', this.guid);
@@ -101,7 +102,8 @@ require('./storage/catchpy.js');
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen
-        Hxighlighter.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
+        console.log("Publishing TargetLoaded");
+        $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
     };
 
     /**
@@ -135,7 +137,8 @@ require('./storage/catchpy.js');
         var self = this;
         
         // once the target has been loaded, the selector can be instantiated
-        Hxighlighter.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
+        $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
+            console.log("LOADING TARGET");
             //annotation element gets data that may be needed later
             self.element = element;
             self.element.data('source_type', self.options.object_source);
@@ -155,7 +158,7 @@ require('./storage/catchpy.js');
             self.setUpStorage(self.element[0]);
         });
 
-        Hxighlighter.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
+        $.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
             jQuery.each(self.plugins, function(_, plugin) {
                 if (typeof(plugin.editorShown) === "function") {
                     plugin.editorShown(editor, annotation);
@@ -163,7 +166,7 @@ require('./storage/catchpy.js');
             });
         });
 
-        Hxighlighter.subscribeEvent('displayShown', self.instance_id, function(_, display, annotations) {
+        $.subscribeEvent('displayShown', self.instance_id, function(_, display, annotations) {
             jQuery.each(self.plugins, function(_, plugin) {
                 if (typeof(plugin.displayShown) === "function") {
                     plugin.displayShown(display, annotations);
@@ -181,7 +184,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpSelectors = function(element) {
         var self = this;
         self.selectors = [];
-        jQuery.each(Hxighlighter.selectors, function(_, selector) {
+        jQuery.each($.selectors, function(_, selector) {
             self.selectors.push(new selector(element, self.instance_id, {'confirm': true}));
         });
     }
@@ -194,7 +197,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpDrawers = function(element) {
         var self = this;
         self.drawers = [];
-        jQuery.each(Hxighlighter.drawers, function(_, drawer) {
+        jQuery.each($.drawers, function(_, drawer) {
             self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector));
         });
     }
@@ -202,7 +205,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpViewers = function(element) {
         var self = this;
         self.viewers = [];
-        jQuery.each(Hxighlighter.viewers, function(_, viewer) {
+        jQuery.each($.viewers, function(_, viewer) {
             self.viewers.push(new viewer({
                 element: element,
                 template_urls: self.options.template_urls,
@@ -217,7 +220,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpPlugins = function(element) {
         var self = this;
         self.plugins = [];
-        jQuery.each(Hxighlighter.plugins, function(_, plugin) {
+        jQuery.each($.plugins, function(_, plugin) {
             var optionsForPlugin;
             try {
                 optionsForPlugin = jQuery.extend({'slot': element}, self.options, self.options[plugin.name]) || {'slot': element};
@@ -232,7 +235,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.setUpStorage = function(element, options) {
         var self = this;
         self.storage = [];
-        jQuery.each(Hxighlighter.storage, function(idx, storage) {
+        jQuery.each($.storage, function(idx, storage) {
             var optionsForStorage;
             try {
                 optionsForStorage = jQuery.extend({}, self.options, self.options[storage.name]) || {};
