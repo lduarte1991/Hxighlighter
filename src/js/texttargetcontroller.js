@@ -78,7 +78,6 @@ require('./storage/catchpy.js');
         
         // adds it to the page and turns on the wrapper
         jQuery(selector).append(slot);
-        jQuery('.annotations-section').prop('tabindex', '0')
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');        
         
         // lets Core know that the target has finished loading on screen
@@ -98,7 +97,6 @@ require('./storage/catchpy.js');
         var slot = jQuery(selector);
         slot.addClass('annotation-slot');
         slot.attr('id', this.guid);
-        jQuery('.annotations-section').prop('tabindex', '0')
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen

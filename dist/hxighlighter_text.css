@@ -1,4 +1,5 @@
-/*!
+/** [AIV_SHORT]  Version: 0.0.1 - Thursday, June 27th, 2019, 2:13:37 PM  **/ 
+ /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -26,6 +27,10 @@
     --dark-font-color: #000;
     --pop-color: #31708E;
     --lighter-background: #ededed;
+}
+
+body {
+    overflow-y: scroll;
 }
 
 .annotation-slot {
@@ -135,7 +140,7 @@ a#next_target_object {
 :root {
     --sidebar-width: 300px;
     --sidebar-background: #fff;
-    --sidebar-border: 2px solid darkgray;
+    --sidebar-border: 1px solid #888;
     --sidebar-button-back: #fff;
     --sidebar-button-back-accent: #333;
     --sidebar-button-color: #333;
@@ -153,6 +158,8 @@ a#next_target_object {
     min-width: 150px;
     height: 100%;
     height: calc(100% - var(--nav-bar-offset));
+    border: 1px solid #888;
+    border: var(--sidebar-border);
     padding: 5px;
     overflow-x: hidden;
     background: white;
@@ -502,7 +509,6 @@ div[class^="reply-list"] {
 
 .side .action-button.cancel {
     background: #eee;
-    background: var(--accent-font-color);
 }
 
 .side .action-button {
@@ -2270,7 +2276,7 @@ div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-faceb
 }
 
 .side .token-input-list-facebook {
-    width: 249px!important;
+    width: 244px!important;
 }
 
 .token-input-dropdown, .token-input-dropdown-mac, .token-input-dropdown-facebook {
@@ -2504,4 +2510,4 @@ button.hx-toggle-annotations.btn.btn-default.should-show:before {
     border: 0;
 }
 
-/*# sourceMappingURL=hxighlighter_text.css.map*/
+/*# sourceMappingURL=hxighlighter_text.css.map*/ 

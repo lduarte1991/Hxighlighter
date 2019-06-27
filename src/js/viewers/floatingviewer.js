@@ -165,7 +165,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
         self.annotation_tool.updating = false;
-        jQuery('body').css('overflow', 'inherit');
+        jQuery('body').css('position', 'inherit');
     };
 
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(anns) {
@@ -210,7 +210,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             self.annotation_tool.isStatic = false;
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer;
-            jQuery('body').css('overflow', 'inherit');
+            jQuery('body').css('position', 'inherit');
         });
 
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
@@ -239,7 +239,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                         self.annotation_tool.isStatic = false;
                         self.annotation_tool.updating = false;
                         self.annotation_tool.editing = false;
-                        jQuery('body').css('overflow', 'inherit');
+                        jQuery('body').css('position', 'inherit');
                     }
                 },
                 cancel: function () {
@@ -267,7 +267,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 self.annotation_tool.isStatic = false;
                 self.annotation_tool.updating = false;
                 self.annotation_tool.editing = false;
-                jQuery('body').css('overflow', 'inherit');
+                jQuery('body').css('position', 'inherit');
             }
         }, 500);
         
@@ -286,7 +286,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.isStatic = false;
         self.annotation_tool.updating = false;
         self.annotation_tool.editing = false;
-        jQuery('body').css('overflow', 'inherit');
+        jQuery('body').css('position', 'inherit');
     };
 
     $.FloatingViewer.prototype.StorageAnnotationDelete = function(annotation) {
@@ -330,19 +330,19 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         jQuery('body').on('mouseover', '.annotation-editor', function(event) {
-            jQuery('body').css('overflow', 'hidden');
+            jQuery('body').css('position', 'fixed');
         });
 
         jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
-            jQuery('body').css('overflow', 'inherit');
+            jQuery('body').css('position', 'inherit');
         });
 
         jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
-            jQuery('body').css('overflow', 'hidden');
+            jQuery('body').css('position', 'fixed');
         });
 
         jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
-            jQuery('body').css('overflow', 'inherit');
+            jQuery('body').css('position', 'inherit');
         });
 
         jQuery('body').on('mouseleave', function(event) {

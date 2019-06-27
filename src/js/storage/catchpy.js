@@ -36,9 +36,11 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
             source_id: self.options.object_id,
             context_id: self.options.context_id,
             collection_id: self.options.collection_id,
+            resource_link_id: self.options.storageOptions.database_params.resource_link_id,
+            utm_source: self.options.storageOptions.database_params.utm_source
         }, options);
         jQuery.ajax({
-            url: self.url_base,
+            url: self.url_base + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
             method: 'GET',
             data: data,
             headers: {
@@ -70,7 +72,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         }
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
-            url: self.url_base + save_ann['id'] + '/',
+            url: self.url_base + save_ann['id'] + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),
@@ -120,7 +122,7 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
         jQuery.ajax({
-            url: self.url_base + ann_to_update.id + '/',
+            url: self.url_base + ann_to_update.id + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),

@@ -85,11 +85,11 @@ import 'timeago';
         self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
 
         self.element.on('mouseover', '.annotationsHolder', function(event) {
-            jQuery('body').css('overflow', 'hidden');
+            jQuery('body').css('position', 'fixed');
         });
 
         self.element.on('mouseleave', '.annotationsHolder', function(event) {
-            jQuery('body').css('overflow', 'inherit');
+            jQuery('body').css('position', 'inherit');
         });
 
         // toggle search
@@ -131,7 +131,7 @@ import 'timeago';
             } else if(this.id === 'mynotes') {
                 search_options['username'] = self.options.username;
             } else if (this.id === "instructor") {
-                search_options['username'] = self.options.instructors;
+                search_options['user_id'] = self.options.instructors;
             }
             self.search(search_options)
         });
@@ -158,7 +158,7 @@ import 'timeago';
                         if (selectedTab === "Mine") {
                             options['username'] = self.options.username;
                         } else if (selectedTab === "instructor") {
-                            options['username'] = self.options.instructors
+                            options['user_id'] = self.options.instructors
                         }
                         jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
                         console.log(options);

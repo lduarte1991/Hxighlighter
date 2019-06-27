@@ -1,7 +1,7 @@
 :root {
     --sidebar-width: 300px;
     --sidebar-background: #fff;
-    --sidebar-border: 2px solid darkgray;
+    --sidebar-border: 1px solid #888;
     --sidebar-button-back: #fff;
     --sidebar-button-back-accent: #333;
     --sidebar-button-color: #333;
@@ -19,6 +19,8 @@
     min-width: 150px;
     height: 100%;
     height: calc(100% - var(--nav-bar-offset));
+    border: 1px solid #888;
+    border: var(--sidebar-border);
     padding: 5px;
     overflow-x: hidden;
     background: white;
@@ -368,7 +370,6 @@ div[class^="reply-list"] {
 
 .side .action-button.cancel {
     background: #eee;
-    background: var(--accent-font-color);
 }
 
 .side .action-button {
