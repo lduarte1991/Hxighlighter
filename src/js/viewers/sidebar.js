@@ -243,8 +243,8 @@ import 'timeago';
                     }
                 }
             });
-            jQuery('.side.item-' + ann.id).find('.edit').click(function() {
-                self.ViewerEditorOpen(ann, true);
+            jQuery('.side.item-' + ann.id).find('.edit').click(function(event) {
+                self.ViewerEditorOpen(event, ann, true);
             });
 
             jQuery('.side.item-' + ann.id).find('.quoteText').click(function() {
@@ -311,7 +311,7 @@ import 'timeago';
 
     };
 
-    $.Sidebar.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
+    $.Sidebar.prototype.ViewerEditorOpen = function(event, annotation, updating, interactionPoint) {
         var self = this;
         var editor = jQuery('.side.item-' + annotation.id);
         editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><div class="plugin-area"></div><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
@@ -345,7 +345,7 @@ import 'timeago';
       }
     };
 
-    $.Sidebar.prototype.ViewerDisplayOpen = function(annotations) {
+    $.Sidebar.prototype.ViewerDisplayOpen = function(event, annotations) {
         
     };
 

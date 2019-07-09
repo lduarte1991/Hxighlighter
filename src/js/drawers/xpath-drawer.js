@@ -1,18 +1,19 @@
-var annotator = annotator ? annotator : require('annotator');
+var hrange = require('../h-range.js');
 
 (function($){
     $.XPathDrawer = function(element, inst_id, hClass) {
         this.element = element;
         this.instance_id = inst_id;
-        this.h_class = hClass;
+        this.h_class = hClass + 'annotator-hl';
         this.init();
+        this.drawnAnnotations = [];
     };
 
     $.XPathDrawer.prototype.init = function() {
         var self = this;
-        this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
-            highlightClass: (self.h_class + ' annotator-hl')
-        });
+        // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
+        //     highlightClass: (self.h_class + ' annotator-hl')
+        // });
 
         jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
             $.pauseEvent(event);
@@ -53,14 +54,14 @@ var annotator = annotator ? annotator : require('annotator');
         Hxighlighter.subscribeEvent('undrawAll', self.instance_id, function(_, callBack) {
             var annotations = self.getAnnotationsData();
             annotations.forEach(function(ann) {
-                self.highlighter.undraw(ann);
+                self.undraw(ann);
             });
             callBack(annotations);
         });
 
         Hxighlighter.subscribeEvent('drawList', self.instance_id, function(_, annotations, callBack) {
             annotations.forEach(function(ann) {
-                self.highlighter.draw(ann);
+                self.draw(ann);
             });
             callBack(annotations);
         })
@@ -68,9 +69,31 @@ var annotator = annotator ? annotator : require('annotator');
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
-        this.highlighter.draw(annotation);
+        console.log("Annotation Being Drawn", annotation);
+        // the process for drawing is divided into 4 parts
+        // 1. Retrieve all discrete text nodes associated with annotation
+        var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
+        // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+        var spans = [];
+        textNodes.forEach(function(node) {
+            //console.log(node, jQuery(node));
+            jQuery(node).wrap('<span class="annotator-hl"></span>');
+            spans.push(jQuery(node).parent()[0]);
+        });
+        // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
+        annotation['_local'] = {
+            'highlights': spans
+        };
+        // 3. Store in each span tag the value of the annotation post-saving _local.highlights
+        spans.forEach(function(span) {
+            jQuery(span).data('annotation', annotation);
+        });
+        console.log(annotation);
         $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
         
+
+        // the annotation is then saved to the current list
+        self.drawnAnnotations.push(annotation);
         // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
         // jQuery.each(annotation._local.highlights, function(_, high) {
         //     jQuery(high).on('mouseover', function() {
@@ -80,13 +103,15 @@ var annotator = annotator ? annotator : require('annotator');
     };
 
     $.XPathDrawer.prototype.undraw = function(annotation) {
-        this.highlighter.undraw(annotation);
+        //this.highlighter.undraw(annotation);
         $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
     };
 
     $.XPathDrawer.prototype.redraw = function(annotation) {
-        this.highlighter.redraw(annotation);
-        $.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
+        var self = this;
+        self.draw(annotation);
+        //this.highlighter.redraw(annotation);
+        //$.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
     };
 
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {

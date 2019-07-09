@@ -1,4 +1,5 @@
-var xpathrange = xpathrange ? xpathrange : require('xpath-range');
+//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
+var hrange = require('../h-range.js');
 (function($) {
     $.CatchPy = function(options, inst_id) {
         this.options = options;
@@ -433,15 +434,25 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
                 suffix: next.substring(0, 20).replace('*', '')
             };
 
-            extraRanges.push(fullTextRange);
+            
             try {
-                // console.log("Used annotator way to serialize");
+                // This is the annotatorjs way to serialize");
                 serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
+                extraRanges.push(fullTextRange);
             } catch(e) {
-                // console.log(r, contextEl);
-                // throw(e);
-                // console.log("Used new xpathrange way to serialize");
-                serializedRanges.push(xpathrange.Range.sniff(r).serialize(contextEl, '.annotator-hl'));
+                // For the keyboard made annotations
+                // we are borrowing the xpath range library from annotatorjs
+                // to keep them consistent
+                console.log("LOOK HERE:",r, hrange.serializeRange(r, contextEl, 'annotator-hl'));
+                serializedRange = hrange.serializeRange(r, contextEl, 'annotator-hl');
+                serializedRanges.push(serializedRange.xpath);
+                extraRanges.push({
+                    startOffset: serializedRange.position.globalStartOffset,
+                    endOffset: serializedRange.position.globalEndOffset,
+                    prefix: serializedRange.text.prefix,
+                    exact: serializedRange.text.exact,
+                    suffix: serializedRange.text.suffix
+                })
             }
             // console.log("SERIALIZED", serializedRanges, contextEl);
         }
@@ -458,11 +469,12 @@ var xpathrange = xpathrange ? xpathrange : require('xpath-range');
         var foundRange;
         jQuery.each(ranges, function(_, range) {
             // try {
-                foundRange = xpathrange.Range.sniff(range);
-                foundRange = foundRange.normalize(elem);
+            //    console.log(xpathrange.toRange, elem.ownerDocument, range);
+            //    foundRange = xpathrange.toRange(elem, range);
             // } catch(e) {
             //     console.log("trying toRange");
-            //     var foundRange = xpathrange.toRange(range.start, range.startOffset, range.end, range.endOffset, elem);
+            console.log(elem, range.start, range.startOffset, range.end, range.endOffset);
+            var foundRange = hrange.normalizeRange(range, elem, 'annotator-hl');
             // }
             // console.log(elem);
            

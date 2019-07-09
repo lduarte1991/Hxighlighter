@@ -85,3 +85,38 @@ a#next_target_object {
     margin: 8px;
     position: relative;
 }
+
+.hx-confirm-button {
+    position: absolute; font-size: 10px; line-height: 1; z-index:9999;
+    width: 36px;
+    height: 36px;
+    margin-left: -18px;
+    margin-top: -41px;
+}
+
+.hx-confirm-button button {
+    width: 36px;
+    height: 36px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    background: #333;
+    outline: white;
+    -webkit-box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);
+    -moz-box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);
+    border-radius: .4em;
+}
+
+/*.hx-confirm-button button:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: #00aabb;
+    border-bottom: 0;
+    margin-left: -20px;
+    margin-bottom: -20px;
+}*/

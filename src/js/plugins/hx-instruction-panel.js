@@ -16,7 +16,7 @@ require('./hx-instruction-panel.css');
     $.InstructionPanel = function(options, instanceID) {
         this.options = jQuery.extend({}, options);
         this.instanceID = instanceID;
-        console.log("INSTRUCTION PANEL CREATED");
+        // console.log("INSTRUCTION PANEL CREATED");
         this.init();
         return this;
     };
@@ -31,7 +31,7 @@ require('./hx-instruction-panel.css');
 
     $.InstructionPanel.prototype.setUpInstructions = function() {
         var self = this;
-        console.log(self.options.instructions, typeof(self.options.instructions));
+        // console.log(self.options.instructions, typeof(self.options.instructions));
         var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span href="#" class="toggle-instructions" role="button" data-toggle="collapse" data-target=".instructions-body" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse in" aria-expanded="true" aria-live="polite" id="annotation-instructions">'+self.options.instructions+'</section></div>'
         jQuery(self.options.slot).prepend(container);
          // toggles the label for toggling instructions

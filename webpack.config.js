@@ -13,7 +13,6 @@ module.exports = {
     entry: {
         text: ['./src/text-index.js']
     },
-    devtool: 'source-map',
     plugins: [
         new webpack.ProvidePlugin({
             "jquery": require.resolve('jquery'),
@@ -53,6 +52,9 @@ module.exports = {
             'CodeMirror': 'codemirror',
             'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/'
         }
+    },
+    optimization: {
+        minimize: false
     },
     module: {
         rules: [

@@ -1,3 +1,4 @@
+var hrange = require('../h-range.js');
 (function($) {
     $.KeyboardSelector = function(element, inst_id) {
         this.element = element;
@@ -55,30 +56,38 @@
 
     $.KeyboardSelector.prototype.setUpButton = function() {
         var self = this;
-        jQuery(document).on('keyup', function(event){
-            if (event.key == 'a') {
+        jQuery(document).on('keydown', function(event){
+            if ((event.key == 'å' || event.key == 'a') && event.altKey && event.ctrlKey) {
                 //move this to external button
                 if(!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')){
                     self.turnSelectionModeOn();
                 }
             } else if (event.key == 'Escape') {
                 self.turnSelectionModeOff();
-            } else if (event.key == ' ') {
-                console.log(event.target);
-                event.preventDefault();
-                return false;
+            // } else if (event.key == ' ') {
+            //     event.preventDefault();
+            //     return false;
             }
         });
         jQuery(document).on('keyup', '*[role="button"]', function(evt) {
             if (evt.key == 'Enter' || evt.key == ' ') {
-                console.log("should have been triggered");
                 jQuery(evt.currentTarget).click();
                 return $.pauseEvent(evt);;
             }
-        }); 
+        });
+        jQuery(document).on('click', 'button[class*="keyboard-toggle"]', function(evt) {
+            if (jQuery(this).hasClass('selection-mode-on')) {
+                self.turnSelectionModeOff();
+                jQuery(this).removeClass('selection-mode-on');
+            } else {
+                self.turnSelectionModeOn();
+                jQuery(this).addClass('selection-mode-on');
+            }
+        });
     };
 
     $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
+        this.saveHTML = this.element.innerHTML;
         var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
         if (!toggleButton.hasClass('should-show')) {
             toggleButton.click();
@@ -88,8 +97,12 @@
         jQuery(this.element).attr('tabindex', "0");
         jQuery(this.element).attr('aria-multiline', 'true');
         jQuery(this.element).attr('accesskey', 't');
+        jQuery('.hx-selector-img').remove();
         jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
         jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
+        this.start = undefined;
+        this.currentSelection = undefined;
+        this.element.innerHTML = this.saveHTML;
         this.element.focus();
     };
 
@@ -105,6 +118,9 @@
         jQuery(this.element).attr('tabindex', '');
         jQuery(this.element).attr('aria-multiline', 'false');
         jQuery(this.element).attr('outline', '0px');
+        jQuery('.hx-selector-img').remove();
+        this.start = undefined;
+        this.currentSelection = undefined;
         this.element.focus();
     };
 
@@ -116,6 +132,7 @@
         const key = keyPressed.key;
         switch (key) {
             case self.delimiter:
+                return false;
             case "ArrowUp":
             case "ArrowDown":
             case "ArrowLeft":
@@ -139,28 +156,77 @@
         const key = keyPressed.key;
         switch (key) {
             case self.delimiter:
-                if (!(self.start)) {
+                if (!(self.start) || typeof(self.start) == "undefined") {
                     self.start = self.copySelection(getSelection());
-                    console.log("Found start", self.start);
+                    console.log($.mouseFixedPositionFromRange(self.start), self.start.getBoundingClientRect(), jQuery(window).scrollTop());
+                    jQuery('body').append('<div class="hx-selector-img"></div>');
+                    jQuery('.hx-selector-img').css({
+                        top: self.start.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
+                        left: self.start.getBoundingClientRect().left - 5
+                    });
                 } else {
                     var end = self.copySelection(getSelection());
-                    var startComesAfter = self.startComesAfter(self.start, end);
-                    console.log("Found other", startComesAfter);
-                    self.start = startComesAfter[0];
-                    self.processSelection(startComesAfter[0], startComesAfter[1]);
+                    jQuery('.hx-selector-img').remove();
+                    console.log("Found end", end);
+                    if (self.currentSelection) {
+                        console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
+                        
+                    } else {
+                        var end = self.copySelection(getSelection())
+                        var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
+                        var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl')
+                        self.currentSelection = document.createRange();
+                        if(posStart.startOffset < posEnd.startOffset) {
+                            self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
+                            self.currentSelection.setEnd(end.startContainer, end.startOffset);
+                        } else {
+                            self.currentSelection.setStart(end.startContainer, end.startOffset);
+                            self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
+                        }
+                    }
+                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl')]]);
+                    self.element.blur();
+                    self.turnSelectionModeOff();
+                    // var startComesAfter = self.startComesAfter(self.start, end);
+                    // console.log("Found other", startComesAfter);
+                    // self.start = startComesAfter[0];
+                    // self.processSelection(startComesAfter[0], startComesAfter[1]);
+                }
+                break;
+            case "ArrowUp":
+            case "ArrowDown":
+            case "ArrowLeft":
+            case "ArrowRight":
+                if (self.start) {
+                    var end = self.copySelection(getSelection())
+                    var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
+                    var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl')
+                    self.currentSelection = document.createRange();
+                    if(posStart.startOffset < posEnd.startOffset) {
+                        self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
+                        self.currentSelection.setEnd(end.startContainer, end.startOffset);
+                    } else {
+                        self.currentSelection.setStart(end.startContainer, end.startOffset);
+                        self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
+                    }
+                    // console.log(self.start, end);
+                    // console.log(self.currentSelection, self.currentSelection.toString());
+                    // var sel = window.getSelection();
+                    // sel.removeAllRanges();
+                    // sel.addRange(self.currentSelection);
                 }
         }
     };
 
     $.KeyboardSelector.prototype.copySelection = function(selection) {
-        const sel = {
-            anchorNode: selection.anchorNode,
-            anchorOffset: selection.anchorOffset,
-            focusNode: selection.focusNode,
-            focusOffset: selection.focusOffset,
-            parentElement: selection.anchorNode.parentElement
-        };
-        return sel;
+        // const sel = {
+        //     anchorNode: selection.anchorNode,
+        //     anchorOffset: selection.anchorOffset,
+        //     focusNode: selection.focusNode,
+        //     focusOffset: selection.focusOffset,
+        //     parentElement: selection.anchorNode.parentElement
+        // };
+        return selection.getRangeAt(0);
     };
 
     $.KeyboardSelector.prototype.processSelection = function(start, end) {
@@ -169,10 +235,12 @@
         console.log("LOOK HERE", start, end);
         const r = this.removeMarkers(start, end);
         self.start = undefined;
+        console.log("R!", r);
 
         // publish selection made
-        Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [r]]);
+        Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')]]);
         self.element.blur();
+        self.turnSelectionModeOff();
         // this.element.focus();
     };
 
@@ -187,10 +255,7 @@
         }
         // TODO: Handle other use cases (i.e. starting several nodes instead of within the same one)
         var commonAncestor = this.getCommonAncestor(start.anchorNode, end.anchorNode);
-        console.log(commonAncestor);
         var children = jQuery(commonAncestor).children();
-        console.log('Common Ancestor', commonAncestor);
-        console.log('Children', children);
         var startCounter = 0;
         jQuery.each(children, function(_, el) {
             if (el == start.parentElement) {  
@@ -249,10 +314,12 @@
     };
 
     $.KeyboardSelector.prototype.removeMarkers = function(start, end) {
+        var self = this;
         const _start = start.anchorNode;
         const _startOffset = start.anchorOffset - 1;
         const _end = end.anchorNode;
         const _endOffset = end.anchorOffset - 1;
+        console.log(_start, _startOffset, _end, _endOffset);
 
         const t2 = this.removeCharacter(_end.textContent, _endOffset);
         _end.textContent = t2;
@@ -260,20 +327,39 @@
         const t1 = this.removeCharacter(_start.textContent, _startOffset);
         _start.textContent = t1;
 
-        const r = new Range();
+        const r = document.createRange();
         r.setStart(_start, _startOffset);
-        if (start.parentElement === end.parentElement) {
-            r.setEnd(_end, _endOffset - 1);
-        } else {
-            r.setEnd(_end, _endOffset);
+
+        var realRange = {
+            startContainer: _start,
+            startOffset: _startOffset,
+            endContainer: _end,
         }
+        
+        if (start.anchorNode === end.anchorNode) {
+            realRange['endOffset'] = _endOffset - 1;
+            r.setEnd(_start, _endOffset - 1);
+        } else {
+            realRange['endOffset'] = _endOffset;
+            r.setEnd(_start, _endOffset);
+        }
+        // getting common ancestors
+        // lonesomeday @ https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
+        realRange['commonAncestorContainer'] = jQuery(_start).parents().has(_end).first()[0];
+        realRange['exact'] = [r.toString()];
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(r);
+        // convert to xpath and then back to a range
+        // var sR = hrange.serializeRange(r, self.element, 'annotator-hl');
+        //var nR = hrange.normalizeRange(sR, self.element, 'annotator-hl');
+        // console.log(sR, nR);
         return r;
     };
 
     $.KeyboardSelector.prototype.removeCharacter = function(s, offset) {
         if (offset === 0) {
             s = s.slice(1);
-        } else if (offset === s.length-1) {
+        } else if (offset === s.length-1) { 
             s = s.slice(0, -1);
         } else {
             s = s.slice(0, offset) + s.slice(offset+1);

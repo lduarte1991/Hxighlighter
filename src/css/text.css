@@ -15,6 +15,7 @@
 
 body {
     overflow-y: scroll;
+    width: 100%;
 }
 
 .annotation-slot {
@@ -33,4 +34,13 @@ body {
 .btn-default {
     background: #ededed;
     background: var(--lighter-background);
+}
+
+.hx-selector-img {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid red;
 }

@@ -77,7 +77,7 @@ require('./hx-dropdowntags-plugin.css');
      * @param      {HTMLElement}  editor      The editor element
      */
     $.DropdownTags.prototype.editorShown = function(editor, annotation) {
-        console.log('DropdownTags editorShown');
+        // console.log('DropdownTags editorShown');
         var self = this;
         editor.find('#tag-list').addClass('token-tag-field');
         self.field = editor.find('.token-tag-field');

@@ -75,12 +75,12 @@
 
     $.Core.prototype.ViewerEditorOpen = function(message) {
         var self = this;
-        self.callFuncInList(this.targets, 'ViewerEditorOpen', message[1]);
+        self.callFuncInList(this.targets, 'ViewerEditorOpen', message);
     };
 
     $.Core.prototype.ViewerDisplayOpen = function(message) {
         var self = this;
-        self.callFuncInList(this.targets, 'ViewerDisplayOpen', [message[1]]);
+        self.callFuncInList(this.targets, 'ViewerDisplayOpen', message);
     };
 
     $.Core.prototype.ViewerEditorClose = function(message) {

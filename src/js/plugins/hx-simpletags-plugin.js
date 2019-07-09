@@ -74,7 +74,7 @@ require('./hx-simpletags-plugin.css');
      * @param      {HTMLElement}  editor      The editor element
      */
     $.SimpleTags.prototype.editorShown = function(editor, annotation) {
-        console.log('Simple editorShown');
+        // console.log('Simple editorShown');
         var self = this;
         editor.find('.plugin-area').append(self.editorElement);
         if (annotation.tags && annotation.tags.length > 0) {

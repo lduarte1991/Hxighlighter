@@ -20,7 +20,7 @@ require('./plugins/hx-display-resize.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
-require('./storage/catchpy.js');
+//require('./storage/catchpy.js');
 
 (function($) {
 
@@ -58,7 +58,7 @@ require('./storage/catchpy.js');
             this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector)
         } else if (this.options.method == "inline") {
             // if the text is already in the DOM, this sets up what is left
-            console.log('Loading Target via Inline');
+            // console.log('Loading Target via Inline');
             this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
         }
     };
@@ -100,7 +100,7 @@ require('./storage/catchpy.js');
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen
-        console.log("Publishing TargetLoaded");
+        // console.log("Publishing TargetLoaded");
         $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
     };
 
@@ -136,7 +136,7 @@ require('./storage/catchpy.js');
         
         // once the target has been loaded, the selector can be instantiated
         $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
-            console.log("LOADING TARGET");
+            // console.log("LOADING TARGET");
             //annotation element gets data that may be needed later
             self.element = element;
             self.element.data('source_type', self.options.object_source);
@@ -283,13 +283,13 @@ require('./storage/catchpy.js');
      * @class      TargetSelectionMade (name)
      */
     $.TextTarget.prototype.TargetSelectionMade = function(range, event) {
-        var range = Array.isArray(range) ? range[0] : range;
+        var range = Array.isArray(range) ? range : [range];
         var self = this;
         var annotation = {
             annotationText: [""],
-            ranges: [range],
+            ranges: range,
             id: $.getUniqueId(),
-            exact: $.getQuoteFromHighlights([range]).exact,
+            exact: range.map(function(r) { return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/    /g, '&nbsp;') }),
             media: "text",
             totalReplies: 0,
             creator: {
@@ -300,7 +300,7 @@ require('./storage/catchpy.js');
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.TargetSelectionMade(annotation, event);
         });
-        self.TargetAnnotationDraw(annotation);
+        //self.TargetAnnotationDraw(annotation);
 
         // jQuery('.annotator-wrapper')[0].focus();
 
@@ -346,7 +346,7 @@ require('./storage/catchpy.js');
      *
      * @class      ViewerEditorOpen (name)
      */
-    $.TextTarget.prototype.ViewerEditorOpen = function(annotation) {
+    $.TextTarget.prototype.ViewerEditorOpen = function(event, annotation) {
         return annotation;
     };
 
@@ -362,6 +362,7 @@ require('./storage/catchpy.js');
             self.TargetAnnotationUndraw(annotation);
         } else {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+            self.TargetAnnotationDraw(annotation);
             // jQuery.each(self.storage, function(_, store) {
             //     store.StorageAnnotationSave(annotation, self.element, redraw);
             // });
@@ -369,7 +370,7 @@ require('./storage/catchpy.js');
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
-            viewer.ViewerEditorClose(annotation, event);
+            viewer.ViewerEditorClose(annotation);
         });
         if (redraw) {
             jQuery.each(self.drawers, function(_, drawer) {
@@ -391,10 +392,10 @@ require('./storage/catchpy.js');
      *
      * @class      ViewerDisplayOpen (name)
      */
-    $.TextTarget.prototype.ViewerDisplayOpen = function(annotations) {
+    $.TextTarget.prototype.ViewerDisplayOpen = function(event, annotations) {
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
-            viewer.ViewerDisplayOpen(annotations, event);
+            viewer.ViewerDisplayOpen(event, annotations);
         });
         return annotations;
     };
@@ -407,7 +408,7 @@ require('./storage/catchpy.js');
     $.TextTarget.prototype.ViewerDisplayClose = function(annotations) {
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
-            viewer.ViewerDisplayClose(annotations, event);
+            viewer.ViewerDisplayClose(annotations);
         });
         return annotations;
     };
@@ -419,12 +420,12 @@ require('./storage/catchpy.js');
      */
     $.TextTarget.prototype.StorageAnnotationSave = function(annotations, redraw) {
         var self = this;
-        console.log(annotations, redraw);
+        // console.log(annotations, redraw);
         jQuery.each(self.storage, function(_, store) {
             store.StorageAnnotationSave(annotations, self.element, redraw);
         });
         jQuery.each(self.viewers, function(_, viewer) {
-            viewer.StorageAnnotationSave(annotations, event);
+            viewer.StorageAnnotationSave(annotations);
         });
     };
 

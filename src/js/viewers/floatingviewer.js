@@ -61,7 +61,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 self.annotation_tool.viewer.addClass('static');
                 self.annotation_tool.isStatic = true;
             } catch(e) {
-                self.ViewerDisplayOpen(annotations);
+                self.ViewerDisplayOpen(event1, annotations);
                 self.annotation_tool.viewer.addClass('static');
                 self.annotation_tool.isStatic = true;
             }
@@ -98,11 +98,11 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.FloatingViewer.prototype.TargetSelectionMade = function(annotation, event) {
         // if (event && event instanceof MouseEvent) {
-            this.ViewerEditorOpen(annotation, false, $.mouseFixedPosition(event, annotation));
+            this.ViewerEditorOpen(event, annotation, false, $.mouseFixedPosition(event, annotation));
         // }
     };
 
-    $.FloatingViewer.prototype.ViewerEditorOpen = function(annotation, updating, interactionPoint) {
+    $.FloatingViewer.prototype.ViewerEditorOpen = function(event, annotation, updating, interactionPoint) {
         var self = this;
         if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
             // there's already an open editor window for this instance so don't do anything
@@ -168,7 +168,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         jQuery('body').css('position', 'inherit');
     };
 
-    $.FloatingViewer.prototype.ViewerDisplayOpen = function(anns) {
+    $.FloatingViewer.prototype.ViewerDisplayOpen = function(event, anns) {
         var self = this;
         var annotations = anns.reverse();
         // if the timer is set for the tool to be hidden, this intercepts it
@@ -216,7 +216,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
             var annotation_id = jQuery(this).attr('id').replace('edit-', '');
             var filtered_annotation = annotations.find(function(ann) { if (ann.id === annotation_id) return ann; });
-            self.ViewerEditorOpen(filtered_annotation, true, {
+            self.ViewerEditorOpen(event1, filtered_annotation, true, {
                 top: parseInt(self.annotation_tool.viewer.css('top'), 10),
                 left: parseInt(self.annotation_tool.viewer.css('left'), 10)
             });

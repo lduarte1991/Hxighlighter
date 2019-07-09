@@ -25,7 +25,7 @@ require('./hx-sidebar-tag-tokens.css');
      */
     $.SidebarTagTokens.prototype.init = function() {
         var self = this;
-        console.log(this);
+        // console.log(this);
         var search_button = jQuery('.btn.user-filter#search');
         if (search_button.hasClass('active')) {
             self.setUpTokens();
