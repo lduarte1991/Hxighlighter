@@ -151,6 +151,38 @@ require('bs4-summernote');
         }
     };
 
+    $.SummernoteRichText.prototype.setUpEditor = function(type) {
+        var type = type.toLowerCase();
+        if (!type || type === "default" || type === "") {
+            return [
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['table', 'link', 'hr']],
+            ];
+        }
+        if (type === "simple") {
+            return [
+                ['font', ['bold', 'italic', 'underline', 'clear']]
+            ]
+        }
+
+        var fullsetup = [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+            ['view', ['codeview']]
+        ];
+
+        if (type === "instructor") {
+            return fullsetup;
+        }
+
+        if (type.indexOf('no-style')) {}
+    }
+
     Object.defineProperty($.SummernoteRichText, 'name', {
         value: "SummernoteRichText"
     });

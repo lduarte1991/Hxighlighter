@@ -4,7 +4,7 @@ var hrange = require('../h-range.js');
     $.XPathDrawer = function(element, inst_id, hClass) {
         this.element = element;
         this.instance_id = inst_id;
-        this.h_class = hClass + 'annotator-hl';
+        this.h_class = (hClass + ' annotator-hl').trim();
         this.init();
         this.drawnAnnotations = [];
     };
@@ -15,17 +15,18 @@ var hrange = require('../h-range.js');
         //     highlightClass: (self.h_class + ' annotator-hl')
         // });
 
-        jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
+        jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function(event) {
             $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
+            console.log("MOUSEOVER", annotations);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
 
-        jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {
+        jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function(event) {
             Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
         });
 
-        jQuery(self.element).on('click', '.' + self.h_class, function(event) {
+        jQuery(self.element).on('click', '.' + self.h_class.replace(' ', '.'), function(event) {
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event, annotations]);
 
@@ -77,7 +78,7 @@ var hrange = require('../h-range.js');
         var spans = [];
         textNodes.forEach(function(node) {
             //console.log(node, jQuery(node));
-            jQuery(node).wrap('<span class="annotator-hl"></span>');
+            jQuery(node).wrap('<span class="'+self.h_class+'"></span>');
             spans.push(jQuery(node).parent()[0]);
         });
         // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
@@ -103,12 +104,27 @@ var hrange = require('../h-range.js');
     };
 
     $.XPathDrawer.prototype.undraw = function(annotation) {
+        var self = this;
         //this.highlighter.undraw(annotation);
+        if (annotation._local) {
+            console.log('Undrawing...', annotation._local.highlights)
+            annotation._local.highlights.forEach(function(hl) {
+                jQuery(hl).contents().unwrap();
+            });
+            annotation._local.highlights = [];
+        }
+        self.drawnAnnotations = self.drawnAnnotations.filter(function(ann) {
+            if (ann.id !== annotation.id) {
+                return ann;
+            }
+        });
+        console.log(self.drawnAnnotations);
         $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
     };
 
     $.XPathDrawer.prototype.redraw = function(annotation) {
         var self = this;
+        self.undraw(annotation);
         self.draw(annotation);
         //this.highlighter.redraw(annotation);
         //$.publishEvent('annotationRedrawn', self.instance_id, [annotation]);

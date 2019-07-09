@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Tuesday, July 9th, 2019, 11:39:39 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Tuesday, July 9th, 2019, 5:21:55 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39939,7 +39939,7 @@ var hrange = __webpack_require__(4);
     $.XPathDrawer = function(element, inst_id, hClass) {
         this.element = element;
         this.instance_id = inst_id;
-        this.h_class = hClass + 'annotator-hl';
+        this.h_class = (hClass + ' annotator-hl').trim();
         this.init();
         this.drawnAnnotations = [];
     };
@@ -39950,17 +39950,18 @@ var hrange = __webpack_require__(4);
         //     highlightClass: (self.h_class + ' annotator-hl')
         // });
 
-        jQuery(self.element).on('mouseover', '.' + self.h_class, function(event) {
+        jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function(event) {
             $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
+            console.log("MOUSEOVER", annotations);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
 
-        jQuery(self.element).on('mouseleave', '.' + self.h_class, function(event) {
+        jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function(event) {
             Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
         });
 
-        jQuery(self.element).on('click', '.' + self.h_class, function(event) {
+        jQuery(self.element).on('click', '.' + self.h_class.replace(' ', '.'), function(event) {
             var annotations = self.getAnnotationsFromElement(event);
             Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event, annotations]);
 
@@ -40012,7 +40013,7 @@ var hrange = __webpack_require__(4);
         var spans = [];
         textNodes.forEach(function(node) {
             //console.log(node, jQuery(node));
-            jQuery(node).wrap('<span class="annotator-hl"></span>');
+            jQuery(node).wrap('<span class="'+self.h_class+'"></span>');
             spans.push(jQuery(node).parent()[0]);
         });
         // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
@@ -40038,12 +40039,27 @@ var hrange = __webpack_require__(4);
     };
 
     $.XPathDrawer.prototype.undraw = function(annotation) {
+        var self = this;
         //this.highlighter.undraw(annotation);
+        if (annotation._local) {
+            console.log('Undrawing...', annotation._local.highlights)
+            annotation._local.highlights.forEach(function(hl) {
+                jQuery(hl).contents().unwrap();
+            });
+            annotation._local.highlights = [];
+        }
+        self.drawnAnnotations = self.drawnAnnotations.filter(function(ann) {
+            if (ann.id !== annotation.id) {
+                return ann;
+            }
+        });
+        console.log(self.drawnAnnotations);
         $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
     };
 
     $.XPathDrawer.prototype.redraw = function(annotation) {
         var self = this;
+        self.undraw(annotation);
         self.draw(annotation);
         //this.highlighter.redraw(annotation);
         //$.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
@@ -40195,11 +40211,11 @@ __webpack_require__.r(__webpack_exports__);
         self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
 
         self.element.on('mouseover', '.annotationsHolder', function(event) {
-            jQuery('body').css('position', 'fixed');
+            jQuery('body').css('overflow-y', 'hidden');
         });
 
         self.element.on('mouseleave', '.annotationsHolder', function(event) {
-            jQuery('body').css('position', 'inherit');
+            jQuery('body').css('overflow-y', 'scroll');
         });
 
         // toggle search
@@ -41176,7 +41192,7 @@ __webpack_require__.r(__webpack_exports__);
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
         self.annotation_tool.updating = false;
-        jQuery('body').css('position', 'inherit');
+        jQuery('body').css('overflow-y', 'scroll');
     };
 
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(event, anns) {
@@ -41221,7 +41237,7 @@ __webpack_require__.r(__webpack_exports__);
             self.annotation_tool.isStatic = false;
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer;
-            jQuery('body').css('position', 'inherit');
+            jQuery('body').css('overflow-y', 'scroll');
         });
 
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
@@ -41250,7 +41266,7 @@ __webpack_require__.r(__webpack_exports__);
                         self.annotation_tool.isStatic = false;
                         self.annotation_tool.updating = false;
                         self.annotation_tool.editing = false;
-                        jQuery('body').css('position', 'inherit');
+                        jQuery('body').css('overflow-y', 'scroll');
                     }
                 },
                 cancel: function () {
@@ -41278,7 +41294,7 @@ __webpack_require__.r(__webpack_exports__);
                 self.annotation_tool.isStatic = false;
                 self.annotation_tool.updating = false;
                 self.annotation_tool.editing = false;
-                jQuery('body').css('position', 'inherit');
+                jQuery('body').css('overflow-y', 'scroll');
             }
         }, 500);
         
@@ -41297,7 +41313,7 @@ __webpack_require__.r(__webpack_exports__);
         self.annotation_tool.isStatic = false;
         self.annotation_tool.updating = false;
         self.annotation_tool.editing = false;
-        jQuery('body').css('position', 'inherit');
+        jQuery('body').css('overflow-y', 'scroll');
     };
 
     $.FloatingViewer.prototype.StorageAnnotationDelete = function(annotation) {
@@ -41341,19 +41357,19 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         jQuery('body').on('mouseover', '.annotation-editor', function(event) {
-            jQuery('body').css('position', 'fixed');
+            jQuery('body').css('overflow-y', 'hidden');
         });
 
         jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
-            jQuery('body').css('position', 'inherit');
+            jQuery('body').css('overflow-y', 'scroll');
         });
 
         jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
-            jQuery('body').css('position', 'fixed');
+            jQuery('body').css('overflow-y', 'hidden');
         });
 
         jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
-            jQuery('body').css('position', 'inherit');
+            jQuery('body').css('overflow-y', 'scroll');
         });
 
         jQuery('body').on('mouseleave', function(event) {
@@ -41483,7 +41499,7 @@ var __t, __p = '';
 with (obj) {
 __p += '<div class="annotation-editor" id="annotation-editor-' +
 ((__t = ( editorid )) == null ? '' : __t) +
-'">\n    <nav class=\'annotation-editor-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close"><i class="fa fa-close"></i></button>\n    </nav>\n    <textarea id="annotation-text-field"></textarea>\n    <div class="plugin-area">\n    </div>\n    <!-- <input type="text" id="annotation-tags-field" placeholder="Add tags..." /> -->\n    <button tabindex="0" class="btn btn-primary save action-button">Save</button>\n    <button tabindex="0" class="btn btn-default cancel action-button">Cancel</button>\n</div>\n';
+'">\n    <nav class=\'annotation-editor-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close"><i class="fas fa-times-circle"></i></button>\n    </nav>\n    <textarea id="annotation-text-field"></textarea>\n    <div class="plugin-area">\n    </div>\n    <!-- <input type="text" id="annotation-tags-field" placeholder="Add tags..." /> -->\n    <button tabindex="0" class="btn btn-primary save action-button">Save</button>\n    <button tabindex="0" class="btn btn-default cancel action-button">Cancel</button>\n</div>\n';
 
 }
 return __p
@@ -41501,7 +41517,7 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class="annotation-viewer" id="annotation-viewer-' +
 ((__t = ( viewerid )) == null ? '' : __t) +
-'">\n    <nav class=\'annotation-viewer-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close Viewer" tile="Close Viewer"><i class="fa fa-close"></i></button>\n    </nav>\n    <div class="plugin-area-top">\n    </div>\n    <div class="annotation-text-field">\n        ';
+'">\n    <nav class=\'annotation-viewer-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close Viewer" tile="Close Viewer"><i class="fas fa-times-circle"></i></button>\n    </nav>\n    <div class="plugin-area-top">\n    </div>\n    <div class="annotation-text-field">\n        ';
  _.each(annotations, function(ann){ ;
 __p += '\n            <div class="ann-item item-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
@@ -41697,6 +41713,38 @@ __webpack_require__(9);
             }
         }
     };
+
+    $.SummernoteRichText.prototype.setUpEditor = function(type) {
+        var type = type.toLowerCase();
+        if (!type || type === "default" || type === "") {
+            return [
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['table', 'link', 'hr']],
+            ];
+        }
+        if (type === "simple") {
+            return [
+                ['font', ['bold', 'italic', 'underline', 'clear']]
+            ]
+        }
+
+        var fullsetup = [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+            ['view', ['codeview']]
+        ];
+
+        if (type === "instructor") {
+            return fullsetup;
+        }
+
+        if (type.indexOf('no-style')) {}
+    }
 
     Object.defineProperty($.SummernoteRichText, 'name', {
         value: "SummernoteRichText"

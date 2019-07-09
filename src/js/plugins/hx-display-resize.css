@@ -6,11 +6,12 @@
     background: #888;
     position:absolute;
     bottom: 0;
+    font-family:"Font Awesome 5 Free";
+    font-weight: 900;
 }
 
 .hx-resize.resize-bar:before {
     content: "\f0c9";
-    font: normal normal normal 8px/1 FontAwesome;
     margin-left: 50%;
     position: relative;
     top: -8px;
