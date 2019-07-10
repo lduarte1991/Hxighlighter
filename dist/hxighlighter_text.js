@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Tuesday, July 9th, 2019, 5:21:55 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 10th, 2019, 11:14:51 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39006,6 +39006,32 @@ __webpack_require__(59);
             // console.log('Loading Target via Inline');
             this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
         }
+
+        function areScrollbarsVisible() {
+            var scrollableElem = document.createElement('div'),
+                innerElem = document.createElement('div');
+            scrollableElem.style.width = '30px';
+            scrollableElem.style.height = '30px';
+            scrollableElem.style.overflow = 'scroll';
+            scrollableElem.style.borderWidth = '0';
+            innerElem.style.width = '30px';
+            innerElem.style.height = '60px';
+            scrollableElem.appendChild(innerElem);
+            document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
+            var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
+            document.body.removeChild(scrollableElem);
+            console.log("scrollbars Visible? ", diff > 0);
+            return diff > 0;
+        }
+
+        window.addEventListener('load', function() {
+            // Show scrollbars if they're hidden.
+            console.log("WINDOW LOADED");
+            if (!areScrollbarsVisible()) {
+                document.body.classList.add('force-show-scrollbars');
+            }
+        });
+
     };
 
     /**
