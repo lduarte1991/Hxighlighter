@@ -43,7 +43,7 @@ var hrange = require('../h-range.js');
                     self.confirm(range, event)
                 } else {
                     //console.log("Sending TargetSelection to Hxighlighter");
-                    console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+                    // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(range, self.element, 'annotator-hl')], event]);
                 }
             } else {
@@ -69,7 +69,7 @@ var hrange = require('../h-range.js');
         self.hideConfirm();
         if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0) {
             self.interactionPoint = $.mouseFixedPosition(event);
-            console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+            // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
             self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event);
             //console.log("Should have loaded button to confirm annotation");
         }
@@ -84,6 +84,7 @@ var hrange = require('../h-range.js');
         var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+iP.top+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
         jQuery('body').append(confirmButtonTemplate);
         jQuery('.hx-confirm-button button').click(function() {
+            $.publishEvent('drawTemp', self.instance_id, [[range]])
             $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event]);
             jQuery('.hx-confirm-button').remove();
         });

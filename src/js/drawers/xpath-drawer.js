@@ -7,6 +7,7 @@ var hrange = require('../h-range.js');
         this.h_class = (hClass + ' annotator-hl').trim();
         this.init();
         this.drawnAnnotations = [];
+        this.tempHighlights = [];
     };
 
     $.XPathDrawer.prototype.init = function() {
@@ -65,12 +66,27 @@ var hrange = require('../h-range.js');
                 self.draw(ann);
             });
             callBack(annotations);
-        })
+        });
+
+        Hxighlighter.subscribeEvent('drawTemp', self.instance_id, function(_, range, callBack) {
+            var textNodes = hrange.getTextNodesFromAnnotationRanges(range, self.element);
+            // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+            var spans = [];
+            textNodes.forEach(function(node) {
+                //console.log(node, jQuery(node));
+                jQuery(node).wrap('<span class="temp-ann '+self.h_class+'"></span>');
+                spans.push(jQuery(node).parent()[0]);
+            });
+            self.tempHighlights = self.tempHighlights.concat(spans);
+        });
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
         console.log("Annotation Being Drawn", annotation);
+        self.tempHighlights.forEach(function(hl) {
+            jQuery(hl).contents().unwrap();
+        });
         // the process for drawing is divided into 4 parts
         // 1. Retrieve all discrete text nodes associated with annotation
         var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
@@ -113,6 +129,11 @@ var hrange = require('../h-range.js');
             });
             annotation._local.highlights = [];
         }
+
+        self.tempHighlights.forEach(function(hl) {
+            jQuery(hl).contents().unwrap();
+        });
+
         self.drawnAnnotations = self.drawnAnnotations.filter(function(ann) {
             if (ann.id !== annotation.id) {
                 return ann;

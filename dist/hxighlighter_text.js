@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 10th, 2019, 11:14:51 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 10th, 2019, 1:03:00 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -38965,7 +38965,7 @@ __webpack_require__(54);
 __webpack_require__(56);
 __webpack_require__(58);
 __webpack_require__(59);
-//require('./storage/catchpy.js');
+// require('./storage/catchpy.js');
 
 (function($) {
 
@@ -39905,7 +39905,7 @@ var hrange = __webpack_require__(4);
                     self.confirm(range, event)
                 } else {
                     //console.log("Sending TargetSelection to Hxighlighter");
-                    console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+                    // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(range, self.element, 'annotator-hl')], event]);
                 }
             } else {
@@ -39931,7 +39931,7 @@ var hrange = __webpack_require__(4);
         self.hideConfirm();
         if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0) {
             self.interactionPoint = $.mouseFixedPosition(event);
-            console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+            // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
             self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event);
             //console.log("Should have loaded button to confirm annotation");
         }
@@ -39946,6 +39946,7 @@ var hrange = __webpack_require__(4);
         var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+iP.top+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
         jQuery('body').append(confirmButtonTemplate);
         jQuery('.hx-confirm-button button').click(function() {
+            $.publishEvent('drawTemp', self.instance_id, [[range]])
             $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event]);
             jQuery('.hx-confirm-button').remove();
         });
@@ -39968,6 +39969,7 @@ var hrange = __webpack_require__(4);
         this.h_class = (hClass + ' annotator-hl').trim();
         this.init();
         this.drawnAnnotations = [];
+        this.tempHighlights = [];
     };
 
     $.XPathDrawer.prototype.init = function() {
@@ -40026,12 +40028,27 @@ var hrange = __webpack_require__(4);
                 self.draw(ann);
             });
             callBack(annotations);
-        })
+        });
+
+        Hxighlighter.subscribeEvent('drawTemp', self.instance_id, function(_, range, callBack) {
+            var textNodes = hrange.getTextNodesFromAnnotationRanges(range, self.element);
+            // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+            var spans = [];
+            textNodes.forEach(function(node) {
+                //console.log(node, jQuery(node));
+                jQuery(node).wrap('<span class="temp-ann '+self.h_class+'"></span>');
+                spans.push(jQuery(node).parent()[0]);
+            });
+            self.tempHighlights = self.tempHighlights.concat(spans);
+        });
     };
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
         console.log("Annotation Being Drawn", annotation);
+        self.tempHighlights.forEach(function(hl) {
+            jQuery(hl).contents().unwrap();
+        });
         // the process for drawing is divided into 4 parts
         // 1. Retrieve all discrete text nodes associated with annotation
         var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
@@ -40074,6 +40091,11 @@ var hrange = __webpack_require__(4);
             });
             annotation._local.highlights = [];
         }
+
+        self.tempHighlights.forEach(function(hl) {
+            jQuery(hl).contents().unwrap();
+        });
+
         self.drawnAnnotations = self.drawnAnnotations.filter(function(ann) {
             if (ann.id !== annotation.id) {
                 return ann;

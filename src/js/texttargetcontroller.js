@@ -20,7 +20,7 @@ require('./plugins/hx-display-resize.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
-//require('./storage/catchpy.js');
+// require('./storage/catchpy.js');
 
 (function($) {
 
