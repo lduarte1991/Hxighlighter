@@ -173,9 +173,9 @@ var hrange = require('../h-range.js');
             purpose = 'replying';
         } else {
             // console.log('convert2wa', annotation.ranges, elem);
-            var serializedRanges = self.serializeRanges(annotation.ranges, elem);
+            var serializedRanges = annotation.ranges;//self.serializeRanges(annotation.ranges, elem);
             var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
-            jQuery.each(serializedRanges.serial, function(index, range){
+            jQuery.each(serializedRanges, function(index, range){
                 targetList.push({
                     'source': 'http://sample.com/fake_content/preview',
                     'type': mediatype,
@@ -185,26 +185,26 @@ var hrange = require('../h-range.js');
                                 'type': 'RangeSelector',
                                 'startSelector': {
                                     'type': 'XPathSelector',
-                                    'value': range.start
+                                    'value': range.xpath.start
                                 },
                                 'endSelector': {
                                     'type': 'XPathSelector',
-                                    'value': range.end,
+                                    'value': range.xpath.end,
                                 },
                                 'refinedBy': {
                                     'type': 'TextPositionSelector',
-                                    'start': range.startOffset,
-                                    'end': range.endOffset,
+                                    'start': range.xpath.startOffset,
+                                    'end': range.xpath.endOffset,
                                 }
                             }, {
                                 'type': 'TextPositionSelector',
-                                'start': serializedRanges.extra[index].startOffset,
-                                'end': serializedRanges.extra[index].endOffset,
+                                'start': range.position.globalStartOffset,
+                                'end': range.position.globalEndOffset,
                             }, {
                                 'type': 'TextQuoteSelector',
-                                'exact': serializedRanges.extra[index].exact,
-                                'prefix': serializedRanges.extra[index].prefix,
-                                'suffix': serializedRanges.extra[index].suffix
+                                'exact': range.text.exact,
+                                'prefix': range.text.prefix,
+                                'suffix': range.text.suffix
                         }],
                     }
                 });
@@ -289,27 +289,50 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element) {
         var self = this;
         try {
-            var ranges = []
+            var ranges = [];
+            var xpathRanges = [];
+            var positionRanges = [];
+            var textRanges = [];
             jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
-                // console.log('targetItem', targetItem);
                 if (!('parent' in targetItem)) {
-                    if (targetItem['type'] == "RangeSelector") {
-                        ranges.push({
+                    if (targetItem['type'] === "RangeSelector") {
+                        xpathRanges.push({
                             start: targetItem['startSelector'].value,
                             startOffset: targetItem['refinedBy'][0].start,
                             end: targetItem['endSelector'].value,
                             endOffset: targetItem['refinedBy'][0].end
                         });
+                    } else if (targetItem['type'] === "TextPositionSelector") {
+                        positionRanges.push({
+                            globalStartOffset: targetItem['start'],
+                            globalEndOffset: targetItem['end'] 
+                        });
+                    } else if (targetItem['type'] === "TextQuoteSelector") {
+                        textRanges.push({
+                            prefix: targetItem['prefix'],
+                            exact: targetItem['exact'],
+                            suffix: targetItem['suffix']
+                        })
                     }
                 } else {
                     return ranges.push(targetItem)
                 }
             });
+            console.log(xpathRanges.length, positionRanges.length, textRanges.length, (xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length));
+            if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
+                for (var i = xpathRanges.length - 1; i >= 0; i--) {
+                    ranges.push({
+                        'xpath': xpathRanges[i],
+                        'position': positionRanges[i],
+                        'text': textRanges[i]
+                    });
+                }
+            }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;
             }
-            // console.log('getAnnotationTarget', ranges, element);
-            return self.normalizeRanges(ranges, element[0]);
+            console.log('getAnnotationTarget', ranges, element);
+            return ranges;
         } catch(e) {
             // console.log(ranges, element[0]);
                 throw(e);
