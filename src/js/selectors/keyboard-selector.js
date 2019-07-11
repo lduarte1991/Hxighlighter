@@ -174,7 +174,8 @@ var hrange = require('../h-range.js');
                     } else {
                         var end = self.copySelection(getSelection())
                         var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
-                        var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl')
+                        var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
+                        var boundingBox = undefined;
                         self.currentSelection = document.createRange();
                         if(posStart.startOffset < posEnd.startOffset) {
                             self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
@@ -184,7 +185,12 @@ var hrange = require('../h-range.js');
                             self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
                         }
                     }
-                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl')]]);
+                    boundingBox = {
+                        top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
+                        left: self.currentSelection.getBoundingClientRect().left - 5
+                    }
+                    console.log(boundingBox)
+                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl')], boundingBox]);
                     self.element.blur();
                     self.turnSelectionModeOff();
                     // var startComesAfter = self.startComesAfter(self.start, end);
@@ -237,8 +243,15 @@ var hrange = require('../h-range.js');
         self.start = undefined;
         console.log("R!", r);
 
+        try {
+            var boundingBox = r.end.parentElement.getBoundingClientRect();
+        } catch(e) {
+            var boundingBox = r.endContainer.parentElement.getBoundingClientRect();
+        }
+        console.log(boundingBox);
+
         // publish selection made
-        Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')]]);
+        Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]);
         self.element.blur();
         self.turnSelectionModeOff();
         // this.element.focus();

@@ -4,36 +4,78 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
     var currentNode = node;
     var xpath = '';
     var totalOffset = offset;
-    while(currentNode !== null && currentNode != root) {
-        if (currentNode.nodeType === Node.TEXT_NODE) {
-            var textNodeCount = 1;
-            var traverseNode = currentNode;
-            // //console.log(traverseNode.parentNode.childNodes);
-            while (traverseNode = traverseNode.previousSibling) {
-                //console.log(traverseNode);
-                totalOffset += traverseNode.textContent.length;
-            }
-        } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
-            if (currentNode.className.indexOf(ignoreSelector) < 0) {
-                var nodeCount = 1;
-                var currentName = currentNode.nodeName;
-                var counterNode = currentNode;
-                while (counterNode = counterNode.previousSibling) {
-                    if (counterNode.nodeName === currentName) {
-                        nodeCount += 1;
+
+    // this is often the case when highlighting images as <img> nodes do not have a text node child
+    if (currentNode === root && root.childNodes[offset].nodeType === Node.TEXT_NODE) {
+        currentNode = root.childNodes[offset];
+    }
+    if (currentNode === root) {
+        //console.log('totally root');
+        var actualNode = root.childNodes[offset];
+        if (actualNode.nodeType === Node.TEXT_NODE) {
+            xpath = "/";
+            var nodeList = root.childNodes;
+
+        } else {
+            var likeNodesList = root.querySelectorAll(actualNode.nodeName.toLowerCase());
+            var likeNodesCounter = 1;
+            var found = false;
+            var BreakException = {};
+            try {
+                likeNodesList.forEach(function(node) {
+                    if (node !== actualNode) {
+                        likeNodesCounter += 1;
+                    } else {
+                        found = true;
+                        throw BreakException;
                     }
-                }
-                xpath = "/" + currentName.toLowerCase() + '[' + nodeCount + ']' + xpath;
-            } else {
-                var traverseNode = currentNode;
-                while (traverseNode = traverseNode.previousSibling) {
-                    totalOffset += traverseNode.textContent.length;
-                }
+                });
+            } catch (e) {
+                if (e !== BreakException) { throw e};
+            }
+            if (found) {
+                xpath = "/" + actualNode.nodeName.toLowerCase() + '[' + likeNodesCounter + ']' + xpath;
+                totalOffset = 0;
             }
         }
-        currentNode = currentNode.parentNode;
+    } else {
+        while(currentNode !== null && currentNode !== root) {
+            if (currentNode.nodeType === Node.TEXT_NODE) {
+                var textNodeCount = 1;
+                var traverseNode = currentNode;
+                // //console.log(traverseNode.parentNode.childNodes);
+                while (traverseNode = traverseNode.previousSibling) {
+                    //console.log(traverseNode);
+                    totalOffset += traverseNode.textContent.length;
+                }
+            } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
+                if (currentNode.className.indexOf(ignoreSelector) < 0) {
+                    var nodeCount = 1;
+                    var currentName = currentNode.nodeName;
+                    var counterNode = currentNode;
+                    while (counterNode = counterNode.previousSibling) {
+                        if (counterNode.nodeName === currentName) {
+                            nodeCount += 1;
+                        }
+                    }
+                    xpath = "/" + currentName.toLowerCase() + '[' + nodeCount + ']' + xpath;
+                } else if (currentNode.nodeName == "IMG") {
+
+                } else {
+                    var traverseNode = currentNode;
+                    while (traverseNode = traverseNode.previousSibling) {
+                        totalOffset += traverseNode.textContent.length;
+                    }
+                }
+            }
+            currentNode = currentNode.parentNode;
+        }
     }
+    
     if (currentNode != null) {
+        if (xpath === "" && totalOffset >= 0) {
+            xpath = '/';
+        }
         return {
             xpath: xpath,
             offset: totalOffset
@@ -47,8 +89,20 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
 function getPrefixAndSuffix(range, root, ignoreSelector) {
     var prefixCounterNode = range.startContainer;
     var suffixCounterNode = range.endContainer;
-    var prefix = prefixCounterNode.textContent.slice(0,range.startOffset);
-    var suffix = suffixCounterNode.textContent.slice(range.endOffset);
+    var prefixOffset = range.startOffset;
+    var suffixOffset = range.endOffset;
+    if (prefixCounterNode === root) {
+        prefixCounterNode = root.childNodes[prefixOffset];
+        prefixOffset = 0;
+    }
+    if (suffixCounterNode === root) {
+        suffixCounterNode = root.childNodes[suffixOffset];
+        suffixOffset = 0;
+    }
+    var prefix = prefixCounterNode.textContent.slice(0,prefixOffset);
+    var suffix = suffixCounterNode.textContent.slice(suffixOffset);
+    
+    console.log(suffixCounterNode, range.endOffset);
     
     while(prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
         prefix = prefixCounterNode.textContent + prefix;
@@ -74,7 +128,11 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
 // general idea came from responses to this question
 // https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
 function getGlobalOffset(range, root, ignoreSelector) {
-    var preRangeRange = new Range(); //range.cloneRange();
+    var preRangeRange = document.createRange(); //range.cloneRange();
+    var root = jQuery(root)[0];
+    if (root.className.indexOf('annotator-wrapper') == -1) {
+        root = root.querySelector('.annotator-wrapper')
+    }
     preRangeRange.selectNodeContents(jQuery(root)[0]);
     preRangeRange.setEnd(range.startContainer, range.startOffset);
     return {
@@ -82,6 +140,53 @@ function getGlobalOffset(range, root, ignoreSelector) {
         endOffset: preRangeRange.toString().length + range.toString().length
     }
 }
+
+function getExactText(range) {
+    var exact = (range.toString() == "[object Object]") ? range.exact : range.toString();
+    var rangeContents = range.cloneContents();
+    var possibleImageList = rangeContents.querySelectorAll('img');
+    var rangeContainsImage = possibleImageList.length;
+    console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
+    if (rangeContainsImage) {
+        possibleImageList.forEach(function(im) {
+            //console.log(rangeContents);
+            var indexOfImage = [].slice.call(rangeContents.childNodes).findIndex(function(el) {
+                return el ===im
+            });
+            if (indexOfImage === 0) {
+                exact = '[Image: ' +im.alt+ ']' + exact; 
+            } else if(indexOfImage === rangeContents.childNodes.length - 1) {
+                exact += '[Image: ' +im.alt+ ']';
+            } else {
+                var prefix = '';
+                var prefixCounter = indexOfImage - 1;
+                while (prefixCounter >= 0) {
+                    prefix = rangeContents.childNodes[prefixCounter].textContent + prefix;
+                    //console.log(prefix)
+                    prefixCounter--;
+                }
+
+                var suffix = '';
+                var suffixCounter = indexOfImage + 1;
+                while(suffixCounter < rangeContents.childNodes.length) {
+                    suffix += rangeContents.childNodes[suffixCounter].textContent;
+                    suffixCounter++;
+                }
+                exact = prefix + ' [Image: ' + im.alt + '] ' + suffix;
+            }
+        });
+    }
+    return exact.trim();
+}
+
+function compareExactText(text1, text2) {
+    function getDiff(string, diffBy){
+        return string.split(diffBy).join('')
+    }
+    const res1 = getDiff(text1, text2);
+    const res2 = getDiff(text2, text1);
+    return text1 !== text2 || res1.trim().length === 0 || res2.trim().length === 0;
+};
 
 function serializeRange(range, root, ignoreSelector) {
     var root = jQuery(root)[0];
@@ -99,7 +204,7 @@ function serializeRange(range, root, ignoreSelector) {
     var prepost = getPrefixAndSuffix(range, root, ignoreSelector);
     var glob = getGlobalOffset(range, root, ignoreSelector);
 
-    var exact = (range.toString() == "[object Object]") ? range.exact : range.toString();
+    var exact = getExactText(range);
 
     return {
         xpath: {
@@ -125,17 +230,24 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
     var goal = goal_offset;
     var currOffset = 0;
     var found = undefined;
-    // //console.log(node_list, goal);
+    if (goal === 0 && node_list.length === 0) {
+        found = {
+            node: root_node,
+            offset: 0
+        }
+    }
+    console.log(node_list, goal);
 
     for (var i = 0; i < node_list.length; i++) {
+        console.log(i, currOffset);
         var node = node_list[i];
         if (node.textContent.length + currOffset >= goal) {
             if (node.nodeType !== Node.TEXT_NODE) {
-                // //console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
+                console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
                 found = recurseGetNodeFromOffset(node, goal - currOffset)
                 break;
             } else {
-                // //console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
+                console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
                 found = {
                     node: node,
                     offset: goal - currOffset
@@ -197,7 +309,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
             traversingDown = foundNodes[counter]
         }
     });
-    // //console.log("TRAVERSINGDOWN", traversingDown);
+    console.log("TRAVERSINGDOWN", traversingDown, offset);
     var found = recurseGetNodeFromOffset(traversingDown, offset);
     ////console.log(found);
     return found
@@ -239,27 +351,29 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
     if (startResult && endResult) {
         var normalizedRange = new Range();
-        //console.log(startResult, endResult);
+        console.log(_start, _startOffset, _end, _endOffset, startResult, endResult);
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
+        console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+
     }
-    //console.log("Xpath Test: ", normalizedRange.toString() === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+    console.log(_start, _startOffset, startResult, endResult);
     //console.log(getPrefixAndSuffix(normalizedRange, root, ignoreSelector))
     // Way #2: if that doesn't match what we have stored as the quote, try global positioning from root
     // This is for the usecase where someone has changed tagnames so xpath cannot be found
-    if (!(startResult && endResult) || (serializedRange.text && normalizedRange.toString() !== serializedRange.text.exact)) {
+    if (!(startResult && endResult) || (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact))) {
         startResult = recurseGetNodeFromOffset(root, serializedRange.position.globalStartOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalStartOffset, ignoreSelector);
         endResult = recurseGetNodeFromOffset(root, serializedRange.position.globalEndOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalEndOffset, ignoreSelector);
         
         normalizedRange = new Range();
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
-        //console.log("Global offset Test: ", normalizedRange.toString() === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+        console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
     }
 
     // Way #3: looks for an exact match of prefix, suffix, and exact
     // This is for the usecase where someone has added text/html before this
-    if (serializedRange.text && normalizedRange.toString() !== serializedRange.text.exact) {
+    if (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
         var possibleCases = getIndicesOf(serializedRange.text.exact, root.textContent, true);
         
         for (var i = 0; i < possibleCases.length; i++) {
@@ -273,7 +387,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
             var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
             if (serializedRange.text.prefix === toCheck.prefix && serializedRange.text.suffix === toCheck.suffix) {
-                //console.log("Exact Wording Test: ", normalizedRange.toString() === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+                console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
                 break;
             }
         }
@@ -289,17 +403,44 @@ function checkNode(currentNode, range) {
     var nodeList = [];
     if (currentNode) {
         if (currentNode.nodeType == Node.TEXT_NODE) {
-            if (currentNode == range.startContainer) {
+            if (currentNode === range.startContainer) {
                 currentNode = currentNode.splitText(range.startOffset)
-                //console.log('Beginning', currentNode);
+                // console.log('Beginning', currentNode);
             }
-            if (currentNode == range.endContainer) {
+            if (currentNode === range.endContainer) {
                 foundEnd = true;
                 currentNode.splitText(range.endOffset);
-                //console.log('Ending', currentNode);
+                // console.log('Ending', currentNode);
             }
-            //console.log('Node', currentNode);
+
+            if ((range.startContainer === range.endContainer && range.startOffset === range.endOffset)) {
+                foundEnd = true;
+            }
+            // console.log('Node', currentNode, foundEnd, range.startContainer === range.endContainer);
             nodeList.push(currentNode);
+        } else if(currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG"){
+            console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
+            if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startContainer.childNodes.length < range.startOffset) {
+                var possibleStartNode = range.startContainer.childNodes[range.startOffset];
+                if (possibleStartNode === currentNode) {
+                    nodeList.push(currentNode);
+                    if (range.startContainer === range.endContainer && range.endOffset - range.startOffset === 1) {
+                        foundEnd = true;
+                    }
+                }
+            } else if(!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
+                console.log("second")
+                var possibleEndNode = range.endContainer.childNodes[range.endOffset]
+                if (possibleEndNode === currentNode) {
+                    foundEnd = true;
+                    nodeList.push(currentNode);
+                }
+            } else {
+                console.log("third", nodeList, currentNode);
+                foundEnd = false;
+                nodeList.push(currentNode);
+            }
+            console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
         } else {
             if (currentNode.firstChild) {
                 var result = recurseFromNodeToNode(currentNode.firstChild, range);
@@ -367,7 +508,7 @@ function getTextNodesFromAnnotationRanges(ranges, root) {
     ranges.forEach(function(range) {
         var normRanged = normalizeRange(range, root, 'annotator-hl')//recurseFromNodeToNode(range.startContainer, range);
         var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged);
-        //console.log(normRanged, nodes);
+        console.log(normRanged, ranges, nodes, normRanged.cloneContents());
         textNodesList = textNodesList.concat(nodes.nodes);
     });
 

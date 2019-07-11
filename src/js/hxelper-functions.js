@@ -27,16 +27,11 @@
                 left: left
             };
         } catch (e) {
-            return $$.mouseFixedPositionFromRange(annotation.ranges[0]);
+            return $$.mouseFixedPositionFromRange(event);
         }
     }
 
-    $$.mouseFixedPositionFromRange = function(range) {
-        try {
-            var boundingBox = range.end.parentElement.getBoundingClientRect();
-        } catch(e) {
-            var boundingBox = range.endContainer.parentElement.getBoundingClientRect();
-        }
+    $$.mouseFixedPositionFromRange = function(boundingBox) {
         return {
             top: boundingBox.top,
             left: boundingBox.left

@@ -26,7 +26,9 @@ var hrange = require('../h-range.js');
         this.element.addEventListener('mouseup', function(event) {
             var selection = window.getSelection();
             var selectionRange = selection.getRangeAt(0);
+            console.log(selectionRange.cloneContents());
             self.onSelection(selectionRange, event);
+
         });
     }
 
@@ -36,14 +38,13 @@ var hrange = require('../h-range.js');
         if (range instanceof Range) {
             //console.log('range is instance of Range', range.toString());
             var result = self.shouldBeAnnotated(range);
-            //console.log(result ? 'commonAncestor falls within wrapper' : 'should not be annotated');
-            if (result && range.toString().length > 0) {
+            if (result && (range.toString().length > 0 || range.cloneContents().querySelectorAll('img').length > 0)) {
                 if (self.mustConfirm) {
                     //console.log("Confirming...")
                     self.confirm(range, event)
                 } else {
                     //console.log("Sending TargetSelection to Hxighlighter");
-                    // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+                    console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(range, self.element, 'annotator-hl')], event]);
                 }
             } else {
@@ -69,7 +70,7 @@ var hrange = require('../h-range.js');
         self.hideConfirm();
         if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0) {
             self.interactionPoint = $.mouseFixedPosition(event);
-            // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+            console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
             self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event);
             //console.log("Should have loaded button to confirm annotation");
         }

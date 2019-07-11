@@ -75,13 +75,11 @@ require('./plugins/hx-alert.js');
             document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
             var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
             document.body.removeChild(scrollableElem);
-            console.log("scrollbars Visible? ", diff > 0);
             return diff > 0;
         }
 
         window.addEventListener('load', function() {
             // Show scrollbars if they're hidden.
-            console.log("WINDOW LOADED");
             if (!areScrollbarsVisible()) {
                 document.body.classList.add('force-show-scrollbars');
             }
