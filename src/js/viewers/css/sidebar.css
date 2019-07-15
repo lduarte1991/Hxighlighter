@@ -70,7 +70,6 @@
 
 .annotationSection .annotationsHolder.search-opened {
     height: calc(100% - 73px);
-    height: calc(100% - var(--sidebar-search-bar-height-open));
 }
 
 .annotationSection .annotationsHolder .annotation-viewer-side {
