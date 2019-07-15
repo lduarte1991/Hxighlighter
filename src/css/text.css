@@ -49,3 +49,7 @@ body {
     border: 3px solid yellow;
     outline: 1px solid black;
 }
+
+.inst .fa-certificate {
+    color: var(--pop-color);
+}

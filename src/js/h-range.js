@@ -23,7 +23,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
             var BreakException = {};
             try {
                 likeNodesList.forEach(function(node) {
-                    if (node !== actualNode) {
+                    if (node !== actualNode && node.className.indexOf(ignoreSelector) === -1) {
                         likeNodesCounter += 1;
                     } else {
                         found = true;
@@ -185,7 +185,7 @@ function compareExactText(text1, text2) {
     }
     const res1 = getDiff(text1, text2);
     const res2 = getDiff(text2, text1);
-    return text1 !== text2 || res1.trim().length === 0 || res2.trim().length === 0;
+    return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
 };
 
 function serializeRange(range, root, ignoreSelector) {
@@ -236,7 +236,7 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
             offset: 0
         }
     }
-    console.log(node_list, goal);
+    console.log(root_node, node_list, goal);
 
     for (var i = 0; i < node_list.length; i++) {
         console.log(i, currOffset);
@@ -300,13 +300,25 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
         var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
 
         var foundNodes = traversingDown.querySelectorAll(selector)
+        foundNodes = [].slice.call(foundNodes).filter(function(node) {
+            return node.className.indexOf(ignoreSelector) == -1;
+        })
         // //console.log(foundNodes, counter);
         if (counter == NaN || counter < 0) {
-            traversingDown = foundNodes[0];
+            counter = 0;
+            traversingDown = foundNodes[counter];
+            while(traversingDown.className.indexOf(ignoreSelector) > -1) {
+                traversingDown = foundNodes[++counter];
+            }
+            console.log('1', traversingDown, traversingDown.className);
         } else if(!foundNodes || foundNodes.length === 0){
             // should account for missing html elements without affecting text
         } else {
-            traversingDown = foundNodes[counter]
+            traversingDown = foundNodes[counter];
+            while(traversingDown.className.indexOf(ignoreSelector) > -1) {
+                traversingDown = foundNodes[++counter];
+            }
+            console.log('2', traversingDown, traversingDown.className);
         }
     });
     console.log("TRAVERSINGDOWN", traversingDown, offset);
@@ -351,9 +363,9 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
     if (startResult && endResult) {
         var normalizedRange = new Range();
-        console.log(_start, _startOffset, _end, _endOffset, startResult, endResult);
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
+        console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
         console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
 
     }
@@ -519,3 +531,4 @@ exports.serializeRange = serializeRange;
 exports.normalizeRange = normalizeRange;
 exports.getGlobalOffset = getGlobalOffset;
 exports.getTextNodesFromAnnotationRanges = getTextNodesFromAnnotationRanges;
+exports.getNodeFromXpath = getNodeFromXpath;

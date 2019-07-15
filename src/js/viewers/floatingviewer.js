@@ -182,11 +182,13 @@ import 'jquery-confirm/css/jquery-confirm.css'
             return;
         }
 
-        
+
         
         self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
             'viewerid': self.instance_id.replace(/:/g, '-'),
             'annotations': annotations,
+            'instructor_ids': self.options.instructors,
+            'common_name': (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name,
         });
 
         // add the viewer to the DOM

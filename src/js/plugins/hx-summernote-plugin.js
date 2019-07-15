@@ -91,6 +91,7 @@ require('bs4-summernote');
      */
     $.SummernoteRichText.prototype.destroy = function(element, selector) {
         this.elementObj.summernote('destroy');
+        jQuery('.tooltip.fade').remove();
     };
 
 

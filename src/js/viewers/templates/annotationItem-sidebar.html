@@ -1,9 +1,9 @@
-<div class="ann-item annotationItem item-<%= id %> side" role="listitem" aria-label="Annotation #<%=index%>">
+<div class="ann-item annotationItem item-<%= id %> side <% if (instructor_ids.indexOf(creator.id) > -1) {%>inst<%}%>" role="listitem" aria-label="Annotation #<%=index%>">
     <div style="overflow:auto;">
     <span class="idAnnotation" style="display:none;"><%= id %></span>
     <% if (typeof(creator) !== 'undefined') { %>
-    <div class= "annotatedBy field side" aria-label="Annotation created by <%= creator.name %>">     
-        <%= creator.name %>
+    <div class= "annotatedBy field side" aria-label="Annotation created by <% if (instructor_ids.indexOf(creator.id) > -1) { print(common_name);} else {print(creator.name);} %>">
+        <% if (instructor_ids.indexOf(creator.id) > -1) { print(common_name);%>&nbsp;<span class="fas fa-certificate"></span><%} else {print(creator.name);} %>     
         <% } else { %>
         <div class= "annotatedBy field side" aria-label="Annotation created by lduarte1991">
         lduarte19911

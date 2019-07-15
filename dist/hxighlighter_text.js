@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Thursday, July 11th, 2019, 3:44:13 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, July 12th, 2019, 4:25:37 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -27914,7 +27914,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
             var BreakException = {};
             try {
                 likeNodesList.forEach(function(node) {
-                    if (node !== actualNode) {
+                    if (node !== actualNode && node.className.indexOf(ignoreSelector) === -1) {
                         likeNodesCounter += 1;
                     } else {
                         found = true;
@@ -28076,7 +28076,7 @@ function compareExactText(text1, text2) {
     }
     const res1 = getDiff(text1, text2);
     const res2 = getDiff(text2, text1);
-    return text1 !== text2 || res1.trim().length === 0 || res2.trim().length === 0;
+    return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
 };
 
 function serializeRange(range, root, ignoreSelector) {
@@ -28127,7 +28127,7 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
             offset: 0
         }
     }
-    console.log(node_list, goal);
+    console.log(root_node, node_list, goal);
 
     for (var i = 0; i < node_list.length; i++) {
         console.log(i, currOffset);
@@ -28191,13 +28191,25 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
         var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
 
         var foundNodes = traversingDown.querySelectorAll(selector)
+        foundNodes = [].slice.call(foundNodes).filter(function(node) {
+            return node.className.indexOf(ignoreSelector) == -1;
+        })
         // //console.log(foundNodes, counter);
         if (counter == NaN || counter < 0) {
-            traversingDown = foundNodes[0];
+            counter = 0;
+            traversingDown = foundNodes[counter];
+            while(traversingDown.className.indexOf(ignoreSelector) > -1) {
+                traversingDown = foundNodes[++counter];
+            }
+            console.log('1', traversingDown, traversingDown.className);
         } else if(!foundNodes || foundNodes.length === 0){
             // should account for missing html elements without affecting text
         } else {
-            traversingDown = foundNodes[counter]
+            traversingDown = foundNodes[counter];
+            while(traversingDown.className.indexOf(ignoreSelector) > -1) {
+                traversingDown = foundNodes[++counter];
+            }
+            console.log('2', traversingDown, traversingDown.className);
         }
     });
     console.log("TRAVERSINGDOWN", traversingDown, offset);
@@ -28242,9 +28254,9 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
     if (startResult && endResult) {
         var normalizedRange = new Range();
-        console.log(_start, _startOffset, _end, _endOffset, startResult, endResult);
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
+        console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
         console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
 
     }
@@ -28410,6 +28422,7 @@ exports.serializeRange = serializeRange;
 exports.normalizeRange = normalizeRange;
 exports.getGlobalOffset = getGlobalOffset;
 exports.getTextNodesFromAnnotationRanges = getTextNodesFromAnnotationRanges;
+exports.getNodeFromXpath = getNodeFromXpath;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
@@ -39314,6 +39327,8 @@ __webpack_require__(61);
                 template_urls: self.options.template_urls,
                 viewer_options: self.options.viewerOptions,
                 username: self.options.username,
+                user_id: self.options.user_id,
+                common_instructor_name: self.options.common_instructor_name,
                 instructors: self.options.instructors,
                 mediaType: self.media,
             }, self.instance_id));
@@ -40399,9 +40414,10 @@ __webpack_require__.r(__webpack_exports__);
     $.Sidebar.prototype.setUpSidebar = function() {
         var self = this;
         var sidebarOptions = jQuery.extend({
-            'tabsAvailable': ['search', 'mine', 'instructor', 'all'],
+            'tabsAvailable': ['search', 'mine', 'instructor', 'peers'],
         }, self.options.viewer_options, {annotationItems: []});
         self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
+
 
         self.sidebar = self.element.find('.annotationSection');
         self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
@@ -40439,22 +40455,56 @@ __webpack_require__.r(__webpack_exports__);
 
         // trigger new filter tab
         jQuery('.btn.user-filter').click(function() {
-            jQuery('.btn.user-filter').removeClass('active');
-            jQuery(this).addClass('active');
+            if (this.id === "search") {
+                jQuery('.btn.user-filter').removeClass('active');
+                jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
+            } else {
+                if (jQuery(this).hasClass('active')) {
+                    if (jQuery('.btn.user-filter.active').length > 1) {
+                        jQuery(this).removeClass('active');
+                        jQuery(this).find('.far').removeClass('fa-check-square').addClass('fa-square');
+                    }
+                } else {
+                //jQuery('.btn.user-filter').removeClass('active');
+                    jQuery(this).addClass('active');
+                    jQuery(this).find('.far').removeClass('fa-square').addClass('fa-check-square');
+                }
+            }
             jQuery('.annotationsHolder').removeClass('search-opened');
                 jQuery('.search-bar.search-toggle').hide();
             var search_options = {
                 type: self.media
             }
+            
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+
             if (this.id === "search") {
                 jQuery('.annotationsHolder').addClass('search-opened');
                 jQuery('.search-bar.search-toggle').show();
                 return;
-            } else if(this.id === 'mynotes') {
-                search_options['username'] = self.options.username;
-            } else if (this.id === "instructor") {
-                search_options['user_id'] = self.options.instructors;
             }
+
+            var possible_exclude = [];
+            var possible_include = [];
+            console.log(filteroptions);
+            if (filteroptions.indexOf('mynotes') > -1 ) {
+                possible_include.push(self.options.user_id);
+            } else {
+                possible_exclude.push(self.options.user_id);
+            }
+            if(filteroptions.indexOf('instructor') > -1 ) {
+                possible_include = possible_include.concat(self.options.instructors);
+            } else {
+                possible_exclude = possible_exclude.concat(self.options.instructors);
+            }
+            if (filteroptions.indexOf('public') > -1) {
+                if (possible_exclude.length > 0) {
+                    search_options['exclude_userid'] = possible_exclude
+                }
+            } else {
+                search_options['userid'] = possible_include;
+            }
+
             self.search(search_options)
         });
 
@@ -40548,6 +40598,8 @@ __webpack_require__.r(__webpack_exports__);
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
             ann.index = 0;
+            ann.instructor_ids = self.options.instructors;
+            ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
             var annHTML = self.options.TEMPLATES.annotationItem(ann)
             if (jQuery('.side.item-' + ann.id).length > 0) {
                 jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
@@ -41038,8 +41090,8 @@ __p += '<div class="resize-handle side">\n    <!--<div class="handle-button" tit
 ((__t = ( filterTabCount )) == null ? '' : __t) +
 '">\n            ';
  if (tabsAvailable.indexOf('search') > -1) {;
-__p += '\n            <button type="button" class="btn btn-default user-filter ';
- if (defaultTab == 'search') {;
+__p += '\n            <button type="button" class="btn btn-default inverted user-filter ';
+ if (defaultTab.indexOf('search') > -1) {;
 __p += 'active';
  } ;
 __p += '" id="search" id="sidebar-search"><i class="fa fa-search"></i></button>\n            ';
@@ -41047,26 +41099,38 @@ __p += '" id="search" id="sidebar-search"><i class="fa fa-search"></i></button>\
 __p += '\n            ';
  if (tabsAvailable.indexOf('mine') > -1) {;
 __p += '\n        	<button type="button" class="btn btn-default user-filter ';
- if (defaultTab == 'mine') {;
+ if (defaultTab.indexOf('mine') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'mynotes\' aria-label="View only my annotations" role="button">Mine</button>\n            ';
+__p += '" id=\'mynotes\' aria-label="View only my annotations" role="button"><span class="far fa-';
+ if (defaultTab.indexOf('mine') > -1) {;
+__p += 'check-';
+ } ;
+__p += 'square"></span>&nbsp;Mine</button>\n            ';
  } ;
 __p += '\n            ';
  if (tabsAvailable.indexOf('instructor') > -1) {;
 __p += '\n            	<button type="button" class="btn btn-default user-filter ';
- if (defaultTab == 'instructor') {;
+ if (defaultTab.indexOf('instructor') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'instructor\' aria-label="View only instructor annotations" role="button">Instructor</button>\n            ';
+__p += '" id=\'instructor\' aria-label="View only instructor annotations" role="button"><span class="far fa-';
+ if (defaultTab.indexOf('instructor') > -1) {;
+__p += 'check-';
+ } ;
+__p += 'square"></span>&nbsp;Instructor</button>\n            ';
  } ;
 __p += '\n            ';
- if (tabsAvailable.indexOf('all') > -1) {;
+ if (tabsAvailable.indexOf('peers') > -1 || tabsAvailable.indexOf('all') > -1) {;
 __p += '\n        	<button type="button" class="btn btn-default user-filter ';
- if (defaultTab == 'all') {;
+ if (defaultTab.indexOf('peers') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'public\' aria-label="View everybody\'s annotations" role="button">All</button>\n            ';
+__p += '" id=\'public\' aria-label="View everybody\'s annotations" role="button"><span class="far fa-';
+ if (defaultTab.indexOf('peers') > -1) {;
+__p += 'check-';
+ } ;
+__p += 'square"></span>&nbsp;Peers</button>\n            ';
  } ;
 __p += '\n        </div>\n    </div>\n    <div class="separator-solid side"></div>\n    <!-- <div class="filter-options side search-toggle" style=\'display:none;\'>\n        <div class="search-label">Search by:</div>\n        <div class="btn-group">\n            <button type="button" class="btn btn-default query-filter" id="users-filter" aria-label="Search by username">Users</button>\n            <button type="button" class="btn btn-default query-filter" id="annotationtext-filter" aria-label="Search by annotation content">Annotation Text</button>\n            <button type="button" class="btn btn-default query-filter" id="tag-filter" aria-label="Search by annotation tag">Tag</button>\n        </div>\n    </div> -->\n    <div class="search-bar side search-toggle" style=\'display:none;\'>\n        <div id="search-info" style="display:none">The following allows you to search annotations. The default filter is to search for a username, but make sure to change filter to annotation text or tag for other types of searches.</div>\n    	<div class="input-group">\n            <label for="srch-term" id="searchlabel" class="hidden">Search annotations:</label>\n            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" aria-describedby="search-info" aria-labeledby="searchlabel">\n            <div class="input-group-btn">\n                <select class="form-control">\n                    <option>User</option>\n                    <option>Annotation</option>\n                    <option>Tag</option>\n                </select>\n            </div>\n        </div>\n        <div class="input-group-btn">\n                <button title="Search" class="btn btn-default" type="submit" id="search-submit" role="button" aria-label="Submit search"><i class="glyphicon glyphicon-search"></i></button>\n                <button title="Clear" class="btn btn-default" type="clear" id="search-clear" role="button" aria-label="Clear search input"><i class="glyphicon glyphicon-ban-circle"></i></button>\n            </div>\n        <div id="timeRangeFilter" style="display:none; color:white; margin-top:15px; margin-bottom:-30px">\n            <label for="startTimeFilter">Start:</label> <input type="text" id="startTimeFilter" style="display:inline; width:20%; color: black;" value="0:00"/>\n            <label for="endTimeFilter">End:</label> <input type="text" id="endTimeFilter" style="display:inline;width:20%; color: black;" value="0:00"/>\n        </div>\n    </div>\n    <div class="handleAnnotations" style="display:none">\n        <div id="printAnnotations"> <i class="fa fa-print"></i>   Print My Notes</div>\n        <div id="exportAnnotations"> <i class="fa fa-cloud-download"></i> Export</div>\n        <div id="importAnnotations"> <i class="fa fa-cloud-upload"></i> Import</div>\n    </div>\n    <div class="annotationsHolder side" role="list" aria-label="Annotations" >\n		';
  _.each(annotationItems, function(item) { ;
@@ -41099,17 +41163,23 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class="ann-item annotationItem item-' +
 ((__t = ( id )) == null ? '' : __t) +
-' side" role="listitem" aria-label="Annotation #' +
+' side ';
+ if (instructor_ids.indexOf(creator.id) > -1) {;
+__p += 'inst';
+};
+__p += '" role="listitem" aria-label="Annotation #' +
 ((__t = (index)) == null ? '' : __t) +
 '">\n    <div style="overflow:auto;">\n    <span class="idAnnotation" style="display:none;">' +
 ((__t = ( id )) == null ? '' : __t) +
 '</span>\n    ';
  if (typeof(creator) !== 'undefined') { ;
-__p += '\n    <div class= "annotatedBy field side" aria-label="Annotation created by ' +
-((__t = ( creator.name )) == null ? '' : __t) +
-'">     \n        ' +
-((__t = ( creator.name )) == null ? '' : __t) +
-'\n        ';
+__p += '\n    <div class= "annotatedBy field side" aria-label="Annotation created by ';
+ if (instructor_ids.indexOf(creator.id) > -1) { print(common_name);} else {print(creator.name);} ;
+__p += '">\n        ';
+ if (instructor_ids.indexOf(creator.id) > -1) { print(common_name);;
+__p += '&nbsp;<span class="fas fa-certificate"></span>';
+} else {print(creator.name);} ;
+__p += '     \n        ';
  } else { ;
 __p += '\n        <div class= "annotatedBy field side" aria-label="Annotation created by lduarte1991">\n        lduarte19911\n        ';
  } ;
@@ -41405,11 +41475,13 @@ __webpack_require__.r(__webpack_exports__);
             return;
         }
 
-        
+
         
         self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
             'viewerid': self.instance_id.replace(/:/g, '-'),
             'annotations': annotations,
+            'instructor_ids': self.options.instructors,
+            'common_name': (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name,
         });
 
         // add the viewer to the DOM
@@ -41717,17 +41789,23 @@ __p += '<div class="annotation-viewer" id="annotation-viewer-' +
  _.each(annotations, function(ann){ ;
 __p += '\n            <div class="ann-item item-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
-' floating" id="annotation-' +
+' floating ';
+ if (instructor_ids.indexOf(ann.creator.id) > -1) {;
+__p += 'inst';
+};
+__p += '" id="annotation-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
-'">\n                <div class="annotation-username">' +
-((__t = ( ann.creator.name )) == null ? '' : __t) +
-'</div>\n                <div class="annotation-date" title="' +
+'">\n                <div class="annotation-username">';
+ if (instructor_ids.indexOf(ann.creator.id) > -1) { print(common_name);;
+__p += '&nbsp;<span class="fas fa-certificate-cap"></span>';
+} else {print(ann.creator.name);} ;
+__p += '</div>\n                <div class="annotation-date" title="' +
 ((__t = ( ann.created )) == null ? '' : __t) +
 '">';
  if (ann.created){print(jQuery.timeago(ann.created));} else {print(jQuery.timeago(new Date()))} ;
 __p += '</div>\n                <button class="edit" id="edit-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
-'" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fa fa-pencil"></i></button>\n                <button class="delete" id="delete-' +
+'" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>\n                <button class="delete" id="delete-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
 '" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>\n                <div class="annotation-quote">' +
 ((__t = ( ann.exact )) == null ? '' : __t) +
@@ -41850,6 +41928,7 @@ __webpack_require__(9);
      */
     $.SummernoteRichText.prototype.destroy = function(element, selector) {
         this.elementObj.summernote('destroy');
+        jQuery('.tooltip.fade').remove();
     };
 
 
@@ -42417,7 +42496,7 @@ __webpack_require__(47);
         var self = this;
         var prefix = isSidebar ? "sidebar-" : "other-";
         
-        jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button class="close-list-reply"><span class="fa fa-close"></span></button><button class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-'+annotation.id+'"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-'+annotation.id+'">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button></div>');
+        jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button class="close-list-reply"><span class="fa fa-times-circle"></span></button><button class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-'+annotation.id+'"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-'+annotation.id+'">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button></div>');
         if (('totalReplies' in annotation) && annotation.totalReplies > 0) {
             jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
             jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
@@ -43590,9 +43669,9 @@ var hrange = __webpack_require__(3);
                 if (!('parent' in targetItem)) {
                     if (targetItem['type'] === "RangeSelector") {
                         xpathRanges.push({
-                            start: targetItem['startSelector'].value,
+                            start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
                             startOffset: targetItem['refinedBy'][0].start,
-                            end: targetItem['endSelector'].value,
+                            end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
                             endOffset: targetItem['refinedBy'][0].end
                         });
                     } else if (targetItem['type'] === "TextPositionSelector") {
@@ -43611,7 +43690,6 @@ var hrange = __webpack_require__(3);
                     return ranges.push(targetItem)
                 }
             });
-            console.log(xpathRanges.length, positionRanges.length, textRanges.length, (xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length));
             if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
                 for (var i = xpathRanges.length - 1; i >= 0; i--) {
                     ranges.push({
@@ -43619,6 +43697,17 @@ var hrange = __webpack_require__(3);
                         'position': positionRanges[i],
                         'text': textRanges[i]
                     });
+                }
+            } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+                var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+                var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+
+                if (startNode && endNode) {
+                    var normalizedRange = new Range();
+                    normalizedRange.setStart(startNode.node, startNode.offset);
+                    normalizedRange.setEnd(endNode.node, endNode.offset);
+                    var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+                    ranges.push(serializedRange);
                 }
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {

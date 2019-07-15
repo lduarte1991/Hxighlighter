@@ -233,6 +233,8 @@ require('./storage/catchpy.js');
                 template_urls: self.options.template_urls,
                 viewer_options: self.options.viewerOptions,
                 username: self.options.username,
+                user_id: self.options.user_id,
+                common_instructor_name: self.options.common_instructor_name,
                 instructors: self.options.instructors,
                 mediaType: self.media,
             }, self.instance_id));

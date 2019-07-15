@@ -168,9 +168,10 @@
                     "context_id": "fake-course-id",
                     "collection_id": "e-a-poe-section",
                     "object_id": "the-raven-id",
-                    "username": "lduarte1991",
-                    "user_id": "fake-anonymous-id",
-                    "instructors": ['FakeDuarte']
+                    "username": "Student",
+                    "user_id": "fake-anonymous-id-student",
+                    "instructors": ['fake-anonymous-id-instructor'],
+                    "common_instructor_name": "HxStaff"
                 },
                 "targets": [{
                     'mediaType': "text",
@@ -193,19 +194,19 @@
                         'tagList': ['test1', 'test2', 'parallelism', 'imagery']
                     },
                     "HxPermissions": {
-                        has_staff_permissions: false
+                        has_staff_permissions: true
                     },
                     viewerOptions: {
                         filterTabCount: 4,
                         defaultTab: 'mine',
-                        tabsAvailable: ['search', 'mine', 'instructor', 'all'],
+                        tabsAvailable: ['search', 'mine', 'instructor', 'peers'],
                         sidebarversion: 'sidemenu'
                     },
                     storageOptions: {
                         external_url: {
-                            catchpy: 'https://demo.catchpy.harvardx.harvard.edu/annos/'
+                            catchpy: 'https://naomi.catchpy.hxtech.org/annos/'
                         },
-                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkIiwiaXNzdWVkQXQiOiIyMDE5LTA3LTExVDAxOjI0OjE2LjE4MTQwOCswMDowMCIsInR0bCI6OTYwMDAsIm92ZXJyaWRlIjpbXX0.qRAGbMws1pp8ehxZLspJuokSmyW12YgLM9XTT7Cq6xg",
+                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6InN1Z2FyLm1vbGVjdWxlcy5pbnRlZmVyZS53aXRoLndhdGVyLmZyZWV6aW5nIiwidXNlcklkIjoiZmFrZS1hbm9ueW1vdXMtaWQtc3R1ZGVudCIsImlzc3VlZEF0IjoiMjAxOS0wNy0xMlQwMToyNDoxNi4xODE0MDgrMDA6MDAiLCJ0dGwiOjk2MDAwLCJvdmVycmlkZSI6W119.N2TTs5EAJ0vgVdVLXkBK6uA34W119M3_eUvnA56VKfI",
                         database_params: {
                             resource_link_id: "",
                             utm_source: ""

@@ -48,6 +48,17 @@
 
 .plugin-area-bottom div[class*='reply-list'] .reply .delete-reply{
     cursor: pointer;
+    background: #fff;
+    background: var(--sidebar-button-back);
+    outline: 0;
+    border: 0;
+    color: #888;
+    color: var(--sidebar-button-color);
+    margin-left: -20px;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply > p {
+    margin-left: 8px;
 }
 
 .plugin-area-bottom div[class*='reply-list'] .reply:nth-child(even) {

@@ -165,6 +165,11 @@ button.sidebar-button#hide_label {
 .annotation-filter-buttons.btn-group .btn {
     background: var(--sidebar-button-color-accent);
     color: var(--dark-font-color);
+    font-size: 0.85em;
+}
+
+.annotation-filter-buttons.btn-group .btn span{
+    font-size: 0.75em;
 }
 
 .annotation-filter-buttons.btn-group .btn.active {
@@ -175,9 +180,9 @@ button.sidebar-button#hide_label {
     color: rgb(17, 118, 178);
     color: var(--pop-color);
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 0.80em;
     cursor: default;
-    padding-top: 10px;
+    padding-top: 7px;
 }
 
 .btn.user-filter {
@@ -199,6 +204,11 @@ button.sidebar-button#hide_label {
     box-shadow: none;
     color: rgb(17, 118, 178);
     color: var(--accent-color);
+}
+
+.btn.user-filter.inverted {
+    background: var(--pop-color);
+    color: var(--sidebar-background);
 }
 
 /*.btn.user-filter.selected {
@@ -269,34 +279,34 @@ div[class^="reply-list"] {
     left: 0;
 }
 
-.buttons-4 .btn:nth-child(1).active {
+/*.buttons-4 .btn:nth-child(1).active {
     width: calc(25% + 1px);
-}
+}*/
 
 .buttons-4 .btn:nth-child(2) {
     left: 25%;
 }
 
-.buttons-4 .btn:nth-child(2).active {
+/*.buttons-4 .btn:nth-child(2).active {
     width: calc(25% + 2px);
-}
+}*/
 
 .buttons-4 .btn:nth-child(3) {
     left: 50%;
 }
 
-.buttons-4 .btn:nth-child(3).active {
+/*.buttons-4 .btn:nth-child(3).active {
     left: calc(50% - 1px);
     width: calc(25% + 3px);
-}
+}*/
 
 .buttons-4 .btn:nth-child(4) {
     left: 75%;
 }
 
-.buttons-4 .btn:nth-child(4).active {
+/*.buttons-4 .btn:nth-child(4).active {
     left: calc(75% - 2px);
-}
+}*/
 
 .buttons-3 .btn{
     width: 33.3333%;

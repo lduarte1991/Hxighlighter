@@ -297,9 +297,9 @@ var hrange = require('../h-range.js');
                 if (!('parent' in targetItem)) {
                     if (targetItem['type'] === "RangeSelector") {
                         xpathRanges.push({
-                            start: targetItem['startSelector'].value,
+                            start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
                             startOffset: targetItem['refinedBy'][0].start,
-                            end: targetItem['endSelector'].value,
+                            end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
                             endOffset: targetItem['refinedBy'][0].end
                         });
                     } else if (targetItem['type'] === "TextPositionSelector") {
@@ -318,7 +318,6 @@ var hrange = require('../h-range.js');
                     return ranges.push(targetItem)
                 }
             });
-            console.log(xpathRanges.length, positionRanges.length, textRanges.length, (xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length));
             if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
                 for (var i = xpathRanges.length - 1; i >= 0; i--) {
                     ranges.push({
@@ -326,6 +325,17 @@ var hrange = require('../h-range.js');
                         'position': positionRanges[i],
                         'text': textRanges[i]
                     });
+                }
+            } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+                var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+                var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+
+                if (startNode && endNode) {
+                    var normalizedRange = new Range();
+                    normalizedRange.setStart(startNode.node, startNode.offset);
+                    normalizedRange.setEnd(endNode.node, endNode.offset);
+                    var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+                    ranges.push(serializedRange);
                 }
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {

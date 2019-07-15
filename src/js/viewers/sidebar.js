@@ -20,7 +20,7 @@ import 'timeago';
             TEMPLATES: {
                 editor: require('./templates/editor-sidebar.html'),
                 viewer: require('./templates/viewer-sidebar.html'),
-                annotationSection: require('./templates/annotationSection-sidebar.html'),
+                annotationSection: require('./templates/annotationSection-multi-sidebar.html'),
                 annotationItem: require('./templates/annotationItem-sidebar.html'),
             },
             template_suffix: "sidebar",
@@ -77,9 +77,10 @@ import 'timeago';
     $.Sidebar.prototype.setUpSidebar = function() {
         var self = this;
         var sidebarOptions = jQuery.extend({
-            'tabsAvailable': ['search', 'mine', 'instructor', 'all'],
+            'tabsAvailable': ['search', 'mine', 'instructor', 'peers'],
         }, self.options.viewer_options, {annotationItems: []});
         self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
+
 
         self.sidebar = self.element.find('.annotationSection');
         self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
@@ -117,22 +118,56 @@ import 'timeago';
 
         // trigger new filter tab
         jQuery('.btn.user-filter').click(function() {
-            jQuery('.btn.user-filter').removeClass('active');
-            jQuery(this).addClass('active');
+            if (this.id === "search") {
+                jQuery('.btn.user-filter').removeClass('active');
+                jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
+            } else {
+                if (jQuery(this).hasClass('active')) {
+                    if (jQuery('.btn.user-filter.active').length > 1) {
+                        jQuery(this).removeClass('active');
+                        jQuery(this).find('.far').removeClass('fa-check-square').addClass('fa-square');
+                    }
+                } else {
+                //jQuery('.btn.user-filter').removeClass('active');
+                    jQuery(this).addClass('active');
+                    jQuery(this).find('.far').removeClass('fa-square').addClass('fa-check-square');
+                }
+            }
             jQuery('.annotationsHolder').removeClass('search-opened');
                 jQuery('.search-bar.search-toggle').hide();
             var search_options = {
                 type: self.media
             }
+            
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+
             if (this.id === "search") {
                 jQuery('.annotationsHolder').addClass('search-opened');
                 jQuery('.search-bar.search-toggle').show();
                 return;
-            } else if(this.id === 'mynotes') {
-                search_options['username'] = self.options.username;
-            } else if (this.id === "instructor") {
-                search_options['user_id'] = self.options.instructors;
             }
+
+            var possible_exclude = [];
+            var possible_include = [];
+            console.log(filteroptions);
+            if (filteroptions.indexOf('mynotes') > -1 ) {
+                possible_include.push(self.options.user_id);
+            } else {
+                possible_exclude.push(self.options.user_id);
+            }
+            if(filteroptions.indexOf('instructor') > -1 ) {
+                possible_include = possible_include.concat(self.options.instructors);
+            } else {
+                possible_exclude = possible_exclude.concat(self.options.instructors);
+            }
+            if (filteroptions.indexOf('public') > -1) {
+                if (possible_exclude.length > 0) {
+                    search_options['exclude_userid'] = possible_exclude
+                }
+            } else {
+                search_options['userid'] = possible_include;
+            }
+
             self.search(search_options)
         });
 
@@ -226,6 +261,8 @@ import 'timeago';
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
             ann.index = 0;
+            ann.instructor_ids = self.options.instructors;
+            ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
             var annHTML = self.options.TEMPLATES.annotationItem(ann)
             if (jQuery('.side.item-' + ann.id).length > 0) {
                 jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
