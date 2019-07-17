@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Monday, July 15th, 2019, 11:18:36 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 17th, 2019, 11:51:21 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39251,6 +39251,18 @@ __webpack_require__(61);
      */
     $.TextTarget.prototype.setUpListeners = function() {
         var self = this;
+
+        jQuery('.toggle-alerts').click(function() {
+            if(jQuery(this).hasClass('on')) {
+                jQuery(this).html('Turn Alerts On');
+                jQuery(this).removeClass('on');
+                jQuery('.sr-alert').attr('aria-live', 'off');
+            } else {
+                jQuery(this).html('Turn Alerts Off');
+                jQuery(this).addClass('on');
+                jQuery('.sr-alert').attr('aria-live', 'polite');
+            }
+        })
         
         // once the target has been loaded, the selector can be instantiated
         $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
@@ -39486,6 +39498,7 @@ __webpack_require__(61);
             // jQuery.each(self.storage, function(_, store) {
             //     store.StorageAnnotationSave(annotation, self.element, redraw);
             // });
+            jQuery('.sr-real-alert').html('Your annotation was saved.');
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
 
@@ -39677,16 +39690,36 @@ __webpack_require__(61);
     $.KeyboardSelector.prototype.setUpButton = function() {
         var self = this;
         jQuery(document).on('keydown', function(event){
-            if ((event.key == 'å' || event.key == 'a') && event.altKey && event.ctrlKey) {
+            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
                 //move this to external button
                 if(!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')){
                     self.turnSelectionModeOn();
                 }
+                return false;
             } else if (event.key == 'Escape') {
+                console.log("hello");
                 self.turnSelectionModeOff();
             // } else if (event.key == ' ') {
             //     event.preventDefault();
             //     return false;
+            }
+
+            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
+                var currentInst = jQuery('.sr-alert').html();
+                if (currentInst.trim() === "") {
+                    currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
+                }
+                jQuery('.sr-alert').html(currentInst);
+            }
+            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+                var currVal = jQuery('.sr-alert').attr('aria-live');
+                var newVal = currVal == "off" ? 'polite' : 'off';
+                jQuery('.sr-alert').attr('aria-live', newVal);
+                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+                jQuery('.sr-real-alert').html(newAlert);
+                event.preventDefault();
             }
         });
         jQuery(document).on('keyup', '*[role="button"]', function(evt) {
@@ -39711,6 +39744,10 @@ __webpack_require__(61);
         var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
         if (!toggleButton.hasClass('should-show')) {
             toggleButton.click();
+        }
+
+        if (window.navigator.platform.indexOf('Mac') !== -1) {
+            jQuery('.sr-alert').html('Enter the text box until editing text (usually VoiceOver Keys + Down Arrow) then move around using arrow keys without VoiceOver keys held down.');
         }
         jQuery(this.element).attr('contenteditable', 'true');
         jQuery(this.element).attr('role', 'textbox');
@@ -39766,6 +39803,26 @@ __webpack_require__(61);
                     self.start = undefined;
                     return true;
                 }
+            case "Escape":
+                self.turnSelectionModeOff();
+                keyPressed.preventDefault();
+                return false;
+            case "2":
+                if (keyPressed.altKey || keyPressed.ctrlKey) {
+                    jQuery('.sr-alert').html(jQuery('.sr-alert').html());
+                }
+                keyPressed.preventDefault();
+                return false;
+            case "3":
+                if (keyPressed.altKey || keyPressed.ctrlKey) {
+                    var currVal = jQuery('.sr-alert').attr('aria-live');
+                    var newVal = currVal == "off" ? 'polite' : 'off';
+                    jQuery('.sr-alert').attr('aria-live', newVal);
+                    var newAlert = currVal == "off" ? 'Alerts are on' : 'Alerts are off';
+                    jQuery('.sr-real-alert').html(newAlert);
+                }
+                keyPressed.preventDefault();
+                return false;
             default: keyPressed.preventDefault();
                 return false;
             } // switch
@@ -39784,6 +39841,7 @@ __webpack_require__(61);
                         top: self.start.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
                         left: self.start.getBoundingClientRect().left - 5
                     });
+                    jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
                     var end = self.copySelection(getSelection());
                     jQuery('.hx-selector-img').remove();
@@ -39809,8 +39867,9 @@ __webpack_require__(61);
                         top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
                         left: self.currentSelection.getBoundingClientRect().left - 5
                     }
-                    console.log(boundingBox)
-                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl')], boundingBox]);
+                    var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+                    jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
                     self.element.blur();
                     self.turnSelectionModeOff();
                     // var startComesAfter = self.startComesAfter(self.start, end);
@@ -41086,7 +41145,7 @@ obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class="resize-handle side">\n    <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->\n</div>\n<div class="annotationSection side">\n    <div>\n        <!-- <button class="sidebar-button" id=\'create-annotation-side\'><i class="fa fa-edit"></i></button> -->\n        <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle"><i class="fa fa-keyboard-o"></i></button>\n        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick=""><i class="fa fa-arrow-left"></i></button>\n    </div>\n    <div class="group-wrap">\n        <div class="annotation-filter-buttons btn-group buttons-' +
+__p += '<div class="resize-handle side">\n    <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->\n</div>\n<section class="annotationSection side" role="region" id="annotationList">\n    <nav role="navigation">\n        <!-- <button class="sidebar-button" id=\'create-annotation-side\'><i class="fa fa-edit"></i></button> -->\n        <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" aria-label="Make annotation using keyboard"><i class="fas fa-keyboard"></i></button>\n        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar"><i class="fa fa-arrow-left"></i></button>\n    </nav>\n    <div class="group-wrap">\n        <div class="annotation-filter-buttons btn-group buttons-' +
 ((__t = ( filterTabCount )) == null ? '' : __t) +
 '">\n            ';
  if (tabsAvailable.indexOf('search') > -1) {;
@@ -41094,7 +41153,7 @@ __p += '\n            <button type="button" class="btn btn-default inverted user
  if (defaultTab.indexOf('search') > -1) {;
 __p += 'active';
  } ;
-__p += '" id="search" id="sidebar-search"><i class="fa fa-search"></i></button>\n            ';
+__p += '" id="search" id="sidebar-search" aria-label="Toggle Search Region"><i class="fa fa-search"></i></button>\n            ';
  } ;
 __p += '\n            ';
  if (tabsAvailable.indexOf('mine') > -1) {;
@@ -41102,7 +41161,7 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
  if (defaultTab.indexOf('mine') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'mynotes\' aria-label="View only my annotations" role="button"><span class="far fa-';
+__p += '" id=\'mynotes\' aria-label="View my annotations" role="button"><span class="far fa-';
  if (defaultTab.indexOf('mine') > -1) {;
 __p += 'check-';
  } ;
@@ -41114,7 +41173,7 @@ __p += '\n            	<button type="button" class="btn btn-default user-filter 
  if (defaultTab.indexOf('instructor') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'instructor\' aria-label="View only instructor annotations" role="button"><span class="far fa-';
+__p += '" id=\'instructor\' aria-label="View instructor annotations" role="button"><span class="far fa-';
  if (defaultTab.indexOf('instructor') > -1) {;
 __p += 'check-';
  } ;
@@ -41126,7 +41185,7 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
  if (defaultTab.indexOf('peers') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'public\' aria-label="View everybody\'s annotations" role="button"><span class="far fa-';
+__p += '" id=\'public\' aria-label="View peers\' annotations" role="button"><span class="far fa-';
  if (defaultTab.indexOf('peers') > -1) {;
 __p += 'check-';
  } ;
@@ -41144,7 +41203,7 @@ __p += '\n            <div id=\'empty-alert\' style="padding:20px;text-align:cen
  } else {;
 __p += '\n             <button type="button" class="btn btn-default loadMoreButton" id="loadMoreButton" aria-label="Load more annotations" style="margin-left:-999999px">Load More Annotations</button>\n        ';
  } ;
-__p += '\n	</div>\n</div>';
+__p += '\n	</div>\n</section>';
 
 }
 return __p
@@ -41851,12 +41910,42 @@ __webpack_require__(9);
      * @params {Object} options - specific options for this plugin
      */
     $.SummernoteRichText = function(options, instanceID) {
+        var maxLength = 1000;
         this.options = jQuery.extend({
             height: 100,
             focus: true,
             width: 398,
             placeholder: "Add annotation text...",
             maximumImageFileSize: 262144,
+            maxTextLength: maxLength,
+            callbacks: {
+                onKeydown:  function (e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.trim().length >= maxLength) {
+                        // delete key
+                        if (e.keyCode != 8){
+                            e.preventDefault();
+                        }
+                    }
+                },
+                onKeyup: function(e) {
+                    var t = e.currentTarget.innerText;
+                    jQuery('#maxContentPost').text(maxLength - t.trim().length);
+                },
+                onPaste: function (e) {
+                    var t = e.currentTarget.innerText;
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            
+                    if (t.length + bufferText.length >= maxLength) {
+                        e.preventDefault();
+                        var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
+                        setTimeout(function() { // wrap in a timer to prevent issues in Firefox
+                            document.execCommand('insertText', false, bufferTextAllowed);
+                            jQuery('#maxContentPost').text(maxLength - t.length);
+                        }, 10)
+                    }
+                }
+            },
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -42140,9 +42229,11 @@ __webpack_require__(43);
             theme: 'facebook',
             preventDuplicates: true,
             allowTabOut: true,
+            hintText: 'Add a tag...',
             allowFreeTagging: ('folksonomy' in self.options) ? self.options.folksonomy : false,
             noResultsText: "Not Found. Hit ENTER to add a personal tag.",
         });
+        jQuery('#token-input-tag-list').attr('aria-label', 'Input text for tag. Separate tags by using "Enter".');
         if (annotation.tags && annotation.tags.length > 0) {
             annotation.tags.forEach(function(tag) {
                 self.field.tokenInput('add', {

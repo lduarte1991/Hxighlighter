@@ -157,6 +157,18 @@ require('./storage/catchpy.js');
      */
     $.TextTarget.prototype.setUpListeners = function() {
         var self = this;
+
+        jQuery('.toggle-alerts').click(function() {
+            if(jQuery(this).hasClass('on')) {
+                jQuery(this).html('Turn Alerts On');
+                jQuery(this).removeClass('on');
+                jQuery('.sr-alert').attr('aria-live', 'off');
+            } else {
+                jQuery(this).html('Turn Alerts Off');
+                jQuery(this).addClass('on');
+                jQuery('.sr-alert').attr('aria-live', 'polite');
+            }
+        })
         
         // once the target has been loaded, the selector can be instantiated
         $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
@@ -392,6 +404,7 @@ require('./storage/catchpy.js');
             // jQuery.each(self.storage, function(_, store) {
             //     store.StorageAnnotationSave(annotation, self.element, redraw);
             // });
+            jQuery('.sr-real-alert').html('Your annotation was saved.');
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
         }
 

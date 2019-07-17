@@ -1,12 +1,12 @@
 <div class="resize-handle side">
     <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->
 </div>
-<div class="annotationSection side">
-    <div>
+<section class="annotationSection side" role="region">
+    <nav role="navigation">
         <!-- <button class="sidebar-button" id='create-annotation-side'><i class="fa fa-edit"></i></button> -->
-        <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle"><i class="fa fa-keyboard-o"></i></button>
+        <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle"><i class="fas fa-keyboard"></i></button>
         <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick=""><i class="fa fa-arrow-left"></i></button>
-    </div>
+    </nav>
     <div class="group-wrap">
         <div class="annotation-filter-buttons btn-group buttons-<%= filterTabCount %>">
             <% if (tabsAvailable.indexOf('search') > -1) {%>
@@ -32,7 +32,7 @@
             <button type="button" class="btn btn-default query-filter" id="tag-filter" aria-label="Search by annotation tag">Tag</button>
         </div>
     </div> -->
-    <div class="search-bar side search-toggle" style='display:none;'>
+    <div class="search-bar side search-toggle" role="search" style='display:none;'>
         <div id="search-info" style="display:none">The following allows you to search annotations. The default filter is to search for a username, but make sure to change filter to annotation text or tag for other types of searches.</div>
     	<div class="input-group">
             <label for="srch-term" id="searchlabel" class="hidden">Search annotations:</label>
@@ -69,4 +69,4 @@
              <button type="button" class="btn btn-default loadMoreButton" id="loadMoreButton" aria-label="Load more annotations" style="margin-left:-999999px">Load More Annotations</button>
         <% } %>
 	</div>
-</div>
+</section>

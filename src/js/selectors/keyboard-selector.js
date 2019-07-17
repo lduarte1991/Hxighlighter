@@ -57,16 +57,36 @@ var hrange = require('../h-range.js');
     $.KeyboardSelector.prototype.setUpButton = function() {
         var self = this;
         jQuery(document).on('keydown', function(event){
-            if ((event.key == 'å' || event.key == 'a') && event.altKey && event.ctrlKey) {
+            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
                 //move this to external button
                 if(!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')){
                     self.turnSelectionModeOn();
                 }
+                return false;
             } else if (event.key == 'Escape') {
+                console.log("hello");
                 self.turnSelectionModeOff();
             // } else if (event.key == ' ') {
             //     event.preventDefault();
             //     return false;
+            }
+
+            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
+                var currentInst = jQuery('.sr-alert').html();
+                if (currentInst.trim() === "") {
+                    currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
+                }
+                jQuery('.sr-alert').html(currentInst);
+            }
+            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+                var currVal = jQuery('.sr-alert').attr('aria-live');
+                var newVal = currVal == "off" ? 'polite' : 'off';
+                jQuery('.sr-alert').attr('aria-live', newVal);
+                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+                jQuery('.sr-real-alert').html(newAlert);
+                event.preventDefault();
             }
         });
         jQuery(document).on('keyup', '*[role="button"]', function(evt) {
@@ -91,6 +111,10 @@ var hrange = require('../h-range.js');
         var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
         if (!toggleButton.hasClass('should-show')) {
             toggleButton.click();
+        }
+
+        if (window.navigator.platform.indexOf('Mac') !== -1) {
+            jQuery('.sr-alert').html('Enter the text box until editing text (usually VoiceOver Keys + Down Arrow) then move around using arrow keys without VoiceOver keys held down.');
         }
         jQuery(this.element).attr('contenteditable', 'true');
         jQuery(this.element).attr('role', 'textbox');
@@ -146,6 +170,26 @@ var hrange = require('../h-range.js');
                     self.start = undefined;
                     return true;
                 }
+            case "Escape":
+                self.turnSelectionModeOff();
+                keyPressed.preventDefault();
+                return false;
+            case "2":
+                if (keyPressed.altKey || keyPressed.ctrlKey) {
+                    jQuery('.sr-alert').html(jQuery('.sr-alert').html());
+                }
+                keyPressed.preventDefault();
+                return false;
+            case "3":
+                if (keyPressed.altKey || keyPressed.ctrlKey) {
+                    var currVal = jQuery('.sr-alert').attr('aria-live');
+                    var newVal = currVal == "off" ? 'polite' : 'off';
+                    jQuery('.sr-alert').attr('aria-live', newVal);
+                    var newAlert = currVal == "off" ? 'Alerts are on' : 'Alerts are off';
+                    jQuery('.sr-real-alert').html(newAlert);
+                }
+                keyPressed.preventDefault();
+                return false;
             default: keyPressed.preventDefault();
                 return false;
             } // switch
@@ -164,6 +208,7 @@ var hrange = require('../h-range.js');
                         top: self.start.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
                         left: self.start.getBoundingClientRect().left - 5
                     });
+                    jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
                     var end = self.copySelection(getSelection());
                     jQuery('.hx-selector-img').remove();
@@ -189,8 +234,9 @@ var hrange = require('../h-range.js');
                         top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
                         left: self.currentSelection.getBoundingClientRect().left - 5
                     }
-                    console.log(boundingBox)
-                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl')], boundingBox]);
+                    var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+                    jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+                    Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
                     self.element.blur();
                     self.turnSelectionModeOff();
                     // var startComesAfter = self.startComesAfter(self.start, end);

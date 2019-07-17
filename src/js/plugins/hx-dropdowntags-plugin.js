@@ -94,9 +94,11 @@ require('./hx-dropdowntags-plugin.css');
             theme: 'facebook',
             preventDuplicates: true,
             allowTabOut: true,
+            hintText: 'Add a tag...',
             allowFreeTagging: ('folksonomy' in self.options) ? self.options.folksonomy : false,
             noResultsText: "Not Found. Hit ENTER to add a personal tag.",
         });
+        jQuery('#token-input-tag-list').attr('aria-label', 'Input text for tag. Separate tags by using "Enter".');
         if (annotation.tags && annotation.tags.length > 0) {
             annotation.tags.forEach(function(tag) {
                 self.field.tokenInput('add', {

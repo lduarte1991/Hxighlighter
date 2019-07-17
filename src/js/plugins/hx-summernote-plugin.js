@@ -14,12 +14,42 @@ require('bs4-summernote');
      * @params {Object} options - specific options for this plugin
      */
     $.SummernoteRichText = function(options, instanceID) {
+        var maxLength = 1000;
         this.options = jQuery.extend({
             height: 100,
             focus: true,
             width: 398,
             placeholder: "Add annotation text...",
             maximumImageFileSize: 262144,
+            maxTextLength: maxLength,
+            callbacks: {
+                onKeydown:  function (e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.trim().length >= maxLength) {
+                        // delete key
+                        if (e.keyCode != 8){
+                            e.preventDefault();
+                        }
+                    }
+                },
+                onKeyup: function(e) {
+                    var t = e.currentTarget.innerText;
+                    jQuery('#maxContentPost').text(maxLength - t.trim().length);
+                },
+                onPaste: function (e) {
+                    var t = e.currentTarget.innerText;
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            
+                    if (t.length + bufferText.length >= maxLength) {
+                        e.preventDefault();
+                        var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
+                        setTimeout(function() { // wrap in a timer to prevent issues in Firefox
+                            document.execCommand('insertText', false, bufferTextAllowed);
+                            jQuery('#maxContentPost').text(maxLength - t.length);
+                        }, 10)
+                    }
+                }
+            },
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
