@@ -113,7 +113,8 @@ import 'timeago';
         jQuery('#search-submit').click(function() {
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
-            self.filterByType(searchValue, searchType);
+            var ops = self.filterByType(searchValue, searchType, undefined);
+            self.search(ops);
         });
 
         // trigger new filter tab
@@ -182,25 +183,48 @@ import 'timeago';
                 var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
                 if (total_left > 0 && jQuery('.load-more').length == 0) {
                     jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
-                    jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load All ' + $.totalAnnotations + ' Annotations</div>');
+                    jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load Next ' + self.options.viewer_options.pagination + ' Annotations</div>');
                     self.load_more_open = true;
                     jQuery('.side.load-more').click(function() {
                         var options = {
                             type: self.options.mediaType,
-                            limit: -1,
+                            limit: self.options.viewer_options.pagination,
+                            offset: jQuery('.side.ann-item').length
                         }
-                        var selectedTab = jQuery('.btn.user-filter.active').html().trim();
-                        if (selectedTab === "Mine") {
-                            options['username'] = self.options.username;
-                        } else if (selectedTab === "instructor") {
-                            options['user_id'] = self.options.instructors
+
+                        if (jQuery('.search-toggle:visible').length > 0) {
+                            var searchValue = jQuery('#srch-term').val().trim();
+                            var searchType = jQuery('.search-bar select').val();
+                            options = self.filterByType(searchValue, searchType, options);
+                        } else {
+                            var possible_exclude = [];
+                            var possible_include = [];
+                            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+                            if (filteroptions.indexOf('mynotes') > -1 ) {
+                                possible_include.push(self.options.user_id);
+                            } else {
+                                possible_exclude.push(self.options.user_id);
+                            }
+                            if(filteroptions.indexOf('instructor') > -1 ) {
+                                possible_include = possible_include.concat(self.options.instructors);
+                            } else {
+                                possible_exclude = possible_exclude.concat(self.options.instructors);
+                            }
+                            if (filteroptions.indexOf('public') > -1) {
+                                if (possible_exclude.length > 0) {
+                                    options['exclude_userid'] = possible_exclude
+                                }
+                            } else {
+                                options['userid'] = possible_include;
+                            }
                         }
+
                         jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
                         console.log(options);
                         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
                             jQuery('.side.load-more').remove();
                             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter]);
                         }, function() {
                             
                         }]);
@@ -233,7 +257,12 @@ import 'timeago';
         var self = this;
 
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
-            self.addAnnotation(annotation, updating);
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            if (filteroptions.indexOf('mynotes') > -1 ) {
+                self.addAnnotation(annotation, updating, false);
+            } else {
+                $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mynotes')]);
+            }
         });
 
         $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
@@ -252,11 +281,11 @@ import 'timeago';
         });
 
         $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
-            self.addAnnotation(annotation, false);
+            self.addAnnotation(annotation, false, true);
         });
     };
 
-    $.Sidebar.prototype.addAnnotation = function(annotation, updating) {
+    $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
         var self = this;
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
@@ -267,7 +296,12 @@ import 'timeago';
             if (jQuery('.side.item-' + ann.id).length > 0) {
                 jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
             }  else {
-                jQuery('.annotationsHolder').prepend(annHTML);
+                if (shouldAppend) {
+                    jQuery('.annotationsHolder').append(annHTML);
+                } else {
+                    jQuery('.annotationsHolder').prepend(annHTML);
+                }
+                
             }
             jQuery('.item-' + ann.id).find('.delete').confirm({
                 title: 'Delete Annotation?',
@@ -302,12 +336,10 @@ import 'timeago';
         }
     };
 
-    $.Sidebar.prototype.filterByType= function(searchValue, type) {
+    $.Sidebar.prototype.filterByType= function(searchValue, type, options) {
         var self = this;
         searchValue = searchValue.trim();
-        var options = {
-            'type': self.options.mediaType
-        }
+        var options = options ? options : { 'type': self.options.mediaType }
         if (searchValue === "") {
             jQuery('.annotationsHolder .annotationItem').show();
             return;
@@ -319,13 +351,14 @@ import 'timeago';
         } else if (type === "Tag") {
             options['tag'] = searchValue;
         }
-        self.search(options);
+        return options;
     };
 
     $.Sidebar.prototype.search = function(options) {
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
-            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+            jQuery('.annotationsHolder.side').html('');
+            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter]);
             jQuery('.loading-obj').remove();
             jQuery('.side.annotationsHolder').scrollTop(0);
             self.load_more_open = false;
@@ -399,7 +432,6 @@ import 'timeago';
     };
 
     $.Sidebar.prototype.StorageAnnotationLoad = function(annotations) {
-            jQuery('.annotationsHolder.side').html('');
     };
 
     $.viewers.push($.Sidebar);

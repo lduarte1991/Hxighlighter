@@ -71,7 +71,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     $.Reply.prototype.returnValue = function() {
         var result = this.elementObj.summernote('code');
         if (result.indexOf('<script') >= 0) {
-            alert('content contains javascript code that will be removed.');
+            alert("I'm sorry Colin, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
             return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
         }
         return result;

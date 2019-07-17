@@ -14,7 +14,7 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.onLoad = function(element, opts) {
         var self = this;
         var callB = function(result) {
-            jQuery.each(result.rows.reverse(), function(_, ann) {
+            jQuery.each(result.rows, function(_, ann) {
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
                 //console.log(waAnnotation);
                 setTimeout(function() {
@@ -32,7 +32,7 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.search = function(options, callBack, errfun) {
         var self = this;
         var data = jQuery.extend({}, {
-            limit: 20,
+            limit: self.options.storageOptions.pagination,
             offset: 0,
             source_id: self.options.object_id,
             context_id: self.options.context_id,
@@ -53,11 +53,21 @@ var hrange = require('../h-range.js');
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. If refreshing page does not work contact instructor. (Error code 401)", {buttons:[], time:5}])
                 } else if (xhr.status === 500) {
                     $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                } else if (xhr.status == 403) {
+                    $.publishEvent('HxAlert', self.instance_id, ["I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action. (Error code 403)", {buttons:[], time:5}])
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    if (self.options.instructors.indexOf(self.options.user_id) !== -1) {
+                        if (xhr.status === 409) {
+                            $.publishEvent('HxAlert', self.instance_id, ["If importing annotations check that user_id of the annotation matches your own. (Error code 409)", {time: 0, modal: true}])
+                        } else if (xhr.status === 422) {
+                            $.publishEvent('HxAlert', self.instance_id, ["If importing, something critical was removed in the process. (Error code 422)", {time: 0, modal: true}])
+                        } 
+                    } else {
+                        $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor. (Error code ' + xhr.status + ')', {time: 0}]);
+                    }
                 }
                 errfun([xhr, status, error]);
             }

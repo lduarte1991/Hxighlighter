@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 17th, 2019, 11:51:21 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 17th, 2019, 3:18:00 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -38870,7 +38870,7 @@ __webpack_require__(19);
 __webpack_require__(1);
 __webpack_require__(21);
 __webpack_require__(22);
-__webpack_require__(62);
+__webpack_require__(64);
 
 
 /***/ }),
@@ -39114,7 +39114,8 @@ __webpack_require__(54);
 __webpack_require__(56);
 __webpack_require__(58);
 __webpack_require__(59);
-__webpack_require__(61);
+__webpack_require__(61)
+__webpack_require__(63);
 
 (function($) {
 
@@ -40509,7 +40510,8 @@ __webpack_require__.r(__webpack_exports__);
         jQuery('#search-submit').click(function() {
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
-            self.filterByType(searchValue, searchType);
+            var ops = self.filterByType(searchValue, searchType, undefined);
+            self.search(ops);
         });
 
         // trigger new filter tab
@@ -40578,25 +40580,48 @@ __webpack_require__.r(__webpack_exports__);
                 var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
                 if (total_left > 0 && jQuery('.load-more').length == 0) {
                     jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
-                    jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load All ' + $.totalAnnotations + ' Annotations</div>');
+                    jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load Next ' + self.options.viewer_options.pagination + ' Annotations</div>');
                     self.load_more_open = true;
                     jQuery('.side.load-more').click(function() {
                         var options = {
                             type: self.options.mediaType,
-                            limit: -1,
+                            limit: self.options.viewer_options.pagination,
+                            offset: jQuery('.side.ann-item').length
                         }
-                        var selectedTab = jQuery('.btn.user-filter.active').html().trim();
-                        if (selectedTab === "Mine") {
-                            options['username'] = self.options.username;
-                        } else if (selectedTab === "instructor") {
-                            options['user_id'] = self.options.instructors
+
+                        if (jQuery('.search-toggle:visible').length > 0) {
+                            var searchValue = jQuery('#srch-term').val().trim();
+                            var searchType = jQuery('.search-bar select').val();
+                            options = self.filterByType(searchValue, searchType, options);
+                        } else {
+                            var possible_exclude = [];
+                            var possible_include = [];
+                            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+                            if (filteroptions.indexOf('mynotes') > -1 ) {
+                                possible_include.push(self.options.user_id);
+                            } else {
+                                possible_exclude.push(self.options.user_id);
+                            }
+                            if(filteroptions.indexOf('instructor') > -1 ) {
+                                possible_include = possible_include.concat(self.options.instructors);
+                            } else {
+                                possible_exclude = possible_exclude.concat(self.options.instructors);
+                            }
+                            if (filteroptions.indexOf('public') > -1) {
+                                if (possible_exclude.length > 0) {
+                                    options['exclude_userid'] = possible_exclude
+                                }
+                            } else {
+                                options['userid'] = possible_include;
+                            }
                         }
+
                         jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
                         console.log(options);
                         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
                             jQuery('.side.load-more').remove();
                             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter]);
                         }, function() {
                             
                         }]);
@@ -40629,7 +40654,12 @@ __webpack_require__.r(__webpack_exports__);
         var self = this;
 
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
-            self.addAnnotation(annotation, updating);
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            if (filteroptions.indexOf('mynotes') > -1 ) {
+                self.addAnnotation(annotation, updating, false);
+            } else {
+                $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mynotes')]);
+            }
         });
 
         $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
@@ -40648,11 +40678,11 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
-            self.addAnnotation(annotation, false);
+            self.addAnnotation(annotation, false, true);
         });
     };
 
-    $.Sidebar.prototype.addAnnotation = function(annotation, updating) {
+    $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
         var self = this;
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
@@ -40663,7 +40693,12 @@ __webpack_require__.r(__webpack_exports__);
             if (jQuery('.side.item-' + ann.id).length > 0) {
                 jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
             }  else {
-                jQuery('.annotationsHolder').prepend(annHTML);
+                if (shouldAppend) {
+                    jQuery('.annotationsHolder').append(annHTML);
+                } else {
+                    jQuery('.annotationsHolder').prepend(annHTML);
+                }
+                
             }
             jQuery('.item-' + ann.id).find('.delete').confirm({
                 title: 'Delete Annotation?',
@@ -40698,12 +40733,10 @@ __webpack_require__.r(__webpack_exports__);
         }
     };
 
-    $.Sidebar.prototype.filterByType= function(searchValue, type) {
+    $.Sidebar.prototype.filterByType= function(searchValue, type, options) {
         var self = this;
         searchValue = searchValue.trim();
-        var options = {
-            'type': self.options.mediaType
-        }
+        var options = options ? options : { 'type': self.options.mediaType }
         if (searchValue === "") {
             jQuery('.annotationsHolder .annotationItem').show();
             return;
@@ -40715,13 +40748,14 @@ __webpack_require__.r(__webpack_exports__);
         } else if (type === "Tag") {
             options['tag'] = searchValue;
         }
-        self.search(options);
+        return options;
     };
 
     $.Sidebar.prototype.search = function(options) {
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
-            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+            jQuery('.annotationsHolder.side').html('');
+            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter]);
             jQuery('.loading-obj').remove();
             jQuery('.side.annotationsHolder').scrollTop(0);
             self.load_more_open = false;
@@ -40795,7 +40829,6 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     $.Sidebar.prototype.StorageAnnotationLoad = function(annotations) {
-            jQuery('.annotationsHolder.side').html('');
     };
 
     $.viewers.push($.Sidebar);
@@ -41951,8 +41984,7 @@ __webpack_require__(9);
                 ['font', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontsize']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']],
-                ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+                ['insert', ['table', 'link', 'hr']],
                 ['view', ['codeview']],
             ],
         }, options);
@@ -42003,7 +42035,7 @@ __webpack_require__(9);
     $.SummernoteRichText.prototype.returnValue = function() {
         var result = this.elementObj.summernote('code');
         if (result.indexOf('<script') >= 0) {
-            alert('content contains javascript code that will be removed.');
+            alert("I'm sorry Colin, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
             return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
         }
         return result;
@@ -42527,7 +42559,7 @@ __webpack_require__(47);
     $.Reply.prototype.returnValue = function() {
         var result = this.elementObj.summernote('code');
         if (result.indexOf('<script') >= 0) {
-            alert('content contains javascript code that will be removed.');
+            alert("I'm sorry Colin, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
             return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
         }
         return result;
@@ -43385,6 +43417,7 @@ __webpack_require__(60);
      */
     $.HxAlert.prototype.init = function() {
         var self = this;
+        console.log("Alert options", self.options);
         self.defaultOptions = {
             buttons: [{title: 'OK', action: function() {self.current_alert.remove();}}, {title: 'Cancel', action: function() {self.current_alert.remove();}}],
             time: 0, // 0 = unlimited, 1 = 1 second, 2 = 2 seconds, ... etc.
@@ -43430,6 +43463,7 @@ __webpack_require__(60);
             });
         }
         var notificationHTML = "<div class='hx-notify'>"+message+"<div class='hx-notify-button-group'>"+buttonsHTML+"</div></div>";
+        jQuery('.sr-real-alert').html(message);
         // if (isModal) {
         //     notificationHTML = "<div class='hx-modal'>" + notificationHTML + "</div>";
         // }
@@ -43461,6 +43495,108 @@ __webpack_require__(60);
 /* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  Badges Annotations Plugin
+ *  
+ *
+ */
+
+//uncomment to add css file
+__webpack_require__(62);
+
+(function($){
+
+    /**
+     * @constructor
+     * @params {Object} options - specific options for this plugin
+     */
+    $.Badges = function(options, instanceID) {
+        this.options = jQuery.extend({}, options);
+        this.instanceID = instanceID;
+        this.init();
+        return this;
+    };
+
+    /**
+     * Initializes instance
+     */
+    $.Badges.prototype.init = function() {
+        var self = this;
+        console.log('test!');
+        self.setUpListeners();
+    };
+
+    $.Badges.prototype.setUpListeners = function() {
+        var self = this;
+        $.subscribeEvent('addBadge', self.instanceID, function(_, elem, counter) {
+            if (jQuery(elem).data('hxbadge')) {
+                self.updateBadge(elem, counter);
+            } else {
+                self.createBadge(elem, counter);
+            }
+        });
+        $.subscribeEvent('increaseBadgeCount', self.instanceID, function(_, elem) {
+            var count = jQuery(elem).data('hxbadge');
+            if (count) {
+                self.updateBadge(elem, count + 1);
+            } else {
+                self.addBadge(elem, 1);
+            }
+        });
+        $.subscribeEvent('updateBadge', self.instanceID, function(_, elem, counter) {
+            self.updateBadge(elem, counter);
+        });
+        $.subscribeEvent('clearBadge', self.instanceID, function(_, elem) {
+            self.clearBadge(elem, counter);
+        });
+    };
+
+    $.Badges.prototype.addBadge = function(elem, counter) {
+        var self = this;
+        // create a badge to go in the top-right corner
+        jQuery(elem).append('<span class="hx-badge" aria-label="'+counter+' new unread">' + counter + "</span>");
+        // add counter to data('hxbadge')
+        jQuery(elem).data('hxbadge', counter);
+        // add click event listener that will automatically clear badge when clicked
+        jQuery(elem).click(function() {
+            self.clearBadge(elem);
+        })
+    };
+
+    $.Badges.prototype.updateBadge = function(elem, counter) {
+        jQuery(elem).find('.hx-badge').html(counter);
+        jQuery(elem).data('hxbadge', counter);
+    };
+
+    $.Badges.prototype.clearBadge = function(elem) {
+        jQuery(elem).find('.hx-badge').remove();
+        jQuery(elem).removeData('hxbadge');
+    };
+
+    $.Badges.prototype.saving = function(annotation) {
+        return annotation;
+    };
+
+    Object.defineProperty($.Badges, 'name', {
+        value: "Badges"
+    });
+
+
+    $.plugins.push($.Badges);
+}(Hxighlighter ?  Hxighlighter : __webpack_require__(1)));
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(jQuery) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 var hrange = __webpack_require__(3);
 (function($) {
@@ -43477,7 +43613,7 @@ var hrange = __webpack_require__(3);
     $.CatchPy.prototype.onLoad = function(element, opts) {
         var self = this;
         var callB = function(result) {
-            jQuery.each(result.rows.reverse(), function(_, ann) {
+            jQuery.each(result.rows, function(_, ann) {
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
                 //console.log(waAnnotation);
                 setTimeout(function() {
@@ -43495,7 +43631,7 @@ var hrange = __webpack_require__(3);
     $.CatchPy.prototype.search = function(options, callBack, errfun) {
         var self = this;
         var data = jQuery.extend({}, {
-            limit: 20,
+            limit: self.options.storageOptions.pagination,
             offset: 0,
             source_id: self.options.object_id,
             context_id: self.options.context_id,
@@ -43516,11 +43652,21 @@ var hrange = __webpack_require__(3);
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. If refreshing page does not work contact instructor. (Error code 401)", {buttons:[], time:5}])
                 } else if (xhr.status === 500) {
                     $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                } else if (xhr.status == 403) {
+                    $.publishEvent('HxAlert', self.instance_id, ["I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action. (Error code 403)", {buttons:[], time:5}])
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    if (self.options.instructors.indexOf(self.options.user_id) !== -1) {
+                        if (xhr.status === 409) {
+                            $.publishEvent('HxAlert', self.instance_id, ["If importing annotations check that user_id of the annotation matches your own. (Error code 409)", {time: 0, modal: true}])
+                        } else if (xhr.status === 422) {
+                            $.publishEvent('HxAlert', self.instance_id, ["If importing, something critical was removed in the process. (Error code 422)", {time: 0, modal: true}])
+                        } 
+                    } else {
+                        $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor. (Error code ' + xhr.status + ')', {time: 0}]);
+                    }
                 }
                 errfun([xhr, status, error]);
             }
@@ -44059,7 +44205,7 @@ var hrange = __webpack_require__(3);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
