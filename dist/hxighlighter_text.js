@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Wednesday, July 17th, 2019, 3:18:00 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Thursday, July 18th, 2019, 3:04:56 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39488,35 +39488,32 @@ __webpack_require__(63);
      *
      * @class      ViewerEditorClose (name)
      */
-    $.TextTarget.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
+    $.TextTarget.prototype.ViewerEditorClose = function(annotation, is_new_annotation, hit_cancel) {
         var self = this;
-        
-        if (should_erase) {
-            self.TargetAnnotationUndraw(annotation);
-        } else {
+        console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+        if (hit_cancel) {
+            if (is_new_annotation) {
+                self.TargetAnnotationUndraw(annotation);
+            }
+            // else, the annotation was already drawn, so don't touch it.
+        } else if (is_new_annotation) {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
             self.TargetAnnotationDraw(annotation);
-            // jQuery.each(self.storage, function(_, store) {
-            //     store.StorageAnnotationSave(annotation, self.element, redraw);
-            // });
             jQuery('.sr-real-alert').html('Your annotation was saved.');
-            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
+            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
+        } else {
+            jQuery.each(self.drawers, function(_, drawer) {
+                self.TargetAnnotationUndraw(annotation);
+                annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+                $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+                jQuery('.sr-real-alert').html('Your annotation was updated.');
+                $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
+            });
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation);
         });
-        if (redraw) {
-            jQuery.each(self.drawers, function(_, drawer) {
-                self.TargetAnnotationUndraw(annotation);
-                $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
-                // jQuery.each(self.storage, function(_, store) {
-                //     store.StorageAnnotationUpdate(annotation, self.element);
-                // })
-                // $.publishEvent('StorageAnnotationUpdate', self.instance_id, [annotation, redraw]);
-                //drawer.redraw(annotation);
-            });
-        }
 
         return annotation;
     };
@@ -39829,6 +39826,25 @@ __webpack_require__(63);
             } // switch
     };
 
+    $.KeyboardSelector.prototype.getBoundingClientRect = function(range) {
+        var newRange = range.cloneRange();
+        try {
+            newRange.setStart(range.startContainer, range.startOffset);
+            newRange.setEnd(range.startContainer, range.startOffset+1);
+            return {
+                top: newRange.getBoundingClientRect().top,
+                left: newRange.getBoundingClientRect().left,
+            }
+        } catch(e) {
+            newRange.setStart(range.startContainer, range.startOffset-1);
+            newRange.setEnd(range.startContainer, range.startOffset);
+            return {
+                top: newRange.getBoundingClientRect().top,
+                left: newRange.getBoundingClientRect().right,
+            }
+        }
+    };
+
     $.KeyboardSelector.prototype.setSelection = function(keyPressed) {
         var self = this;
         const key = keyPressed.key;
@@ -39836,11 +39852,12 @@ __webpack_require__(63);
             case self.delimiter:
                 if (!(self.start) || typeof(self.start) == "undefined") {
                     self.start = self.copySelection(getSelection());
-                    console.log($.mouseFixedPositionFromRange(self.start), self.start.getBoundingClientRect(), jQuery(window).scrollTop());
+                    var bcr = self.getBoundingClientRect(self.start);
+                    console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
                     jQuery('body').append('<div class="hx-selector-img"></div>');
                     jQuery('.hx-selector-img').css({
-                        top: self.start.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
-                        left: self.start.getBoundingClientRect().left - 5
+                        top: bcr.top + jQuery(window).scrollTop() - 5,
+                        left: bcr.left - 5
                     });
                     jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
@@ -39871,7 +39888,16 @@ __webpack_require__(63);
                     var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
                     jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
-                    self.element.blur();
+                    console.log("Active Element", document.activeElement.className);
+                    if (document.activeElement.className.indexOf('note-editable') == -1) {
+                        console.log("BLURRING");
+                        self.element.blur();
+                    } else {
+                        setTimeout(function() {
+                            jQuery('.note-editable.card-block')[0].focus();
+                            console.log("should be focusing on", document.activeElement);
+                        }, 250);
+                    }
                     self.turnSelectionModeOff();
                     // var startComesAfter = self.startComesAfter(self.start, end);
                     // console.log("Found other", startComesAfter);
@@ -39932,7 +39958,10 @@ __webpack_require__(63);
 
         // publish selection made
         Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]);
-        self.element.blur();
+        console.log("Element Focused", document.activeElement);
+        if (document.activeElement.className.indexOf('note-editable') == -1) {
+            self.element.blur();
+        }
         self.turnSelectionModeOff();
         // this.element.focus();
     };
@@ -41522,7 +41551,7 @@ __webpack_require__.r(__webpack_exports__);
 
         // closes the editor tool and does not save annotation
         self.annotation_tool.editor.find('.cancel').click(function () {
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, !updating]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
         });
 
         // closes the editor and does save annotations
@@ -41532,7 +41561,7 @@ __webpack_require__.r(__webpack_exports__);
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, updating, false]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
         });
 
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
@@ -42699,6 +42728,7 @@ __webpack_require__(47);
                         jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
                         jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
                     }
+                    jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
                 } else {
                     if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
                         jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
@@ -42707,6 +42737,8 @@ __webpack_require__(47);
                         jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
                         jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
                     }
+                    jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+
                 }
                 jQuery('#'+prefix+'create-reply-area-' + annotation.id).hide();
                 jQuery(viewer).find('.create-reply').show();

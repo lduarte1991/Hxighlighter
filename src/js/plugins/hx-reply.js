@@ -211,6 +211,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                         jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
                         jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
                     }
+                    jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
                 } else {
                     if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
                         jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
@@ -219,6 +220,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
                         jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
                         jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
                     }
+                    jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+
                 }
                 jQuery('#'+prefix+'create-reply-area-' + annotation.id).hide();
                 jQuery(viewer).find('.create-reply').show();

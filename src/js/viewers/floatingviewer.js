@@ -137,7 +137,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // closes the editor tool and does not save annotation
         self.annotation_tool.editor.find('.cancel').click(function () {
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, !updating]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
         });
 
         // closes the editor and does save annotations
@@ -147,7 +147,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, updating, false]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
         });
 
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);

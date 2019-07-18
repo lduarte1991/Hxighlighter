@@ -394,35 +394,32 @@ require('./storage/catchpy.js');
      *
      * @class      ViewerEditorClose (name)
      */
-    $.TextTarget.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
+    $.TextTarget.prototype.ViewerEditorClose = function(annotation, is_new_annotation, hit_cancel) {
         var self = this;
-        
-        if (should_erase) {
-            self.TargetAnnotationUndraw(annotation);
-        } else {
+        console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+        if (hit_cancel) {
+            if (is_new_annotation) {
+                self.TargetAnnotationUndraw(annotation);
+            }
+            // else, the annotation was already drawn, so don't touch it.
+        } else if (is_new_annotation) {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
             self.TargetAnnotationDraw(annotation);
-            // jQuery.each(self.storage, function(_, store) {
-            //     store.StorageAnnotationSave(annotation, self.element, redraw);
-            // });
             jQuery('.sr-real-alert').html('Your annotation was saved.');
-            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, redraw]);
+            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
+        } else {
+            jQuery.each(self.drawers, function(_, drawer) {
+                self.TargetAnnotationUndraw(annotation);
+                annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+                $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+                jQuery('.sr-real-alert').html('Your annotation was updated.');
+                $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
+            });
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation);
         });
-        if (redraw) {
-            jQuery.each(self.drawers, function(_, drawer) {
-                self.TargetAnnotationUndraw(annotation);
-                $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
-                // jQuery.each(self.storage, function(_, store) {
-                //     store.StorageAnnotationUpdate(annotation, self.element);
-                // })
-                // $.publishEvent('StorageAnnotationUpdate', self.instance_id, [annotation, redraw]);
-                //drawer.redraw(annotation);
-            });
-        }
 
         return annotation;
     };

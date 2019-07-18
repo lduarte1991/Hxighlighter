@@ -195,6 +195,25 @@ var hrange = require('../h-range.js');
             } // switch
     };
 
+    $.KeyboardSelector.prototype.getBoundingClientRect = function(range) {
+        var newRange = range.cloneRange();
+        try {
+            newRange.setStart(range.startContainer, range.startOffset);
+            newRange.setEnd(range.startContainer, range.startOffset+1);
+            return {
+                top: newRange.getBoundingClientRect().top,
+                left: newRange.getBoundingClientRect().left,
+            }
+        } catch(e) {
+            newRange.setStart(range.startContainer, range.startOffset-1);
+            newRange.setEnd(range.startContainer, range.startOffset);
+            return {
+                top: newRange.getBoundingClientRect().top,
+                left: newRange.getBoundingClientRect().right,
+            }
+        }
+    };
+
     $.KeyboardSelector.prototype.setSelection = function(keyPressed) {
         var self = this;
         const key = keyPressed.key;
@@ -202,11 +221,12 @@ var hrange = require('../h-range.js');
             case self.delimiter:
                 if (!(self.start) || typeof(self.start) == "undefined") {
                     self.start = self.copySelection(getSelection());
-                    console.log($.mouseFixedPositionFromRange(self.start), self.start.getBoundingClientRect(), jQuery(window).scrollTop());
+                    var bcr = self.getBoundingClientRect(self.start);
+                    console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
                     jQuery('body').append('<div class="hx-selector-img"></div>');
                     jQuery('.hx-selector-img').css({
-                        top: self.start.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
-                        left: self.start.getBoundingClientRect().left - 5
+                        top: bcr.top + jQuery(window).scrollTop() - 5,
+                        left: bcr.left - 5
                     });
                     jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
@@ -237,7 +257,16 @@ var hrange = require('../h-range.js');
                     var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
                     jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
-                    self.element.blur();
+                    console.log("Active Element", document.activeElement.className);
+                    if (document.activeElement.className.indexOf('note-editable') == -1) {
+                        console.log("BLURRING");
+                        self.element.blur();
+                    } else {
+                        setTimeout(function() {
+                            jQuery('.note-editable.card-block')[0].focus();
+                            console.log("should be focusing on", document.activeElement);
+                        }, 250);
+                    }
                     self.turnSelectionModeOff();
                     // var startComesAfter = self.startComesAfter(self.start, end);
                     // console.log("Found other", startComesAfter);
@@ -298,7 +327,10 @@ var hrange = require('../h-range.js');
 
         // publish selection made
         Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]);
-        self.element.blur();
+        console.log("Element Focused", document.activeElement);
+        if (document.activeElement.className.indexOf('note-editable') == -1) {
+            self.element.blur();
+        }
         self.turnSelectionModeOff();
         // this.element.focus();
     };
