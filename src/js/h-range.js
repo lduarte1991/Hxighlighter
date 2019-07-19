@@ -151,7 +151,7 @@ function getExactText(range) {
         if (typeof(possibleImageList.forEach) !== "function") {
             var convertToArray = [];
             for (var i = possibleImageList.length - 1; i >= 0; i--) {
-                convertToArray.push(possibleImageList.values[i]);
+                convertToArray.push(possibleImageList[i]);
             }
             possibleImageList = convertToArray;
         }

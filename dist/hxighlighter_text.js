@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 11:50:06 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 11:52:22 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -28041,7 +28041,7 @@ function getExactText(range) {
       var convertToArray = [];
 
       for (var i = possibleImageList.length - 1; i >= 0; i--) {
-        convertToArray.push(possibleImageList.values[i]);
+        convertToArray.push(possibleImageList[i]);
       }
 
       possibleImageList = convertToArray;
