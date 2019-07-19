@@ -362,7 +362,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     var startResult = getNodeFromXpath(root, _start, _startOffset, ignoreSelector);
     var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
     if (startResult && endResult) {
-        var normalizedRange = new Range();
+        var normalizedRange = document.createRange();
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
         console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
@@ -377,7 +377,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
         startResult = recurseGetNodeFromOffset(root, serializedRange.position.globalStartOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalStartOffset, ignoreSelector);
         endResult = recurseGetNodeFromOffset(root, serializedRange.position.globalEndOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalEndOffset, ignoreSelector);
         
-        normalizedRange = new Range();
+        normalizedRange = document.createRange();
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
         console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
@@ -393,7 +393,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
             var s = recurseGetNodeFromOffset(root, poss);
             var e = recurseGetNodeFromOffset(root, poss + serializedRange.text.exact.length);
 
-            normalizedRange = new Range();
+            normalizedRange = document.createRange();
             normalizedRange.setStart(s.node, s.offset);
             normalizedRange.setEnd(e.node, e.offset);
 

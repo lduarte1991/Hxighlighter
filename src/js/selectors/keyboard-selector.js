@@ -460,7 +460,7 @@ var hrange = require('../h-range.js');
 
     $.KeyboardSelector.prototype.verifyBackspace = function() {
         const s = getSelection();
-        const r = new Range();
+        const r = document.createRange();
         var startOffset = s.anchorOffset;
         if (startOffset > 0) {
             startOffset -= 1;

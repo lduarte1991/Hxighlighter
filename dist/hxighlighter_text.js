@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 11:24:25 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 11:34:59 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -28277,7 +28277,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
 
   if (startResult && endResult) {
-    var normalizedRange = new Range();
+    var normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
     normalizedRange.setEnd(endResult.node, endResult.offset);
     console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
@@ -28293,7 +28293,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
     endResult = recurseGetNodeFromOffset(root, serializedRange.position.globalEndOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalEndOffset, ignoreSelector);
 
-    normalizedRange = new Range();
+    normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
     normalizedRange.setEnd(endResult.node, endResult.offset);
     console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH");
@@ -28308,7 +28308,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
       var poss = possibleCases[i];
       var s = recurseGetNodeFromOffset(root, poss);
       var e = recurseGetNodeFromOffset(root, poss + serializedRange.text.exact.length);
-      normalizedRange = new Range();
+      normalizedRange = document.createRange();
       normalizedRange.setStart(s.node, s.offset);
       normalizedRange.setEnd(e.node, e.offset);
       var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
@@ -40379,7 +40379,7 @@ __webpack_require__(63);
 
   $.KeyboardSelector.prototype.verifyBackspace = function () {
     var s = getSelection();
-    var r = new Range();
+    var r = document.createRange();
     var startOffset = s.anchorOffset;
 
     if (startOffset > 0) {
@@ -44294,7 +44294,7 @@ var hrange = __webpack_require__(3);
         var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
 
         if (startNode && endNode) {
-          var normalizedRange = new Range();
+          var normalizedRange = document.createRange();
           normalizedRange.setStart(startNode.node, startNode.offset);
           normalizedRange.setEnd(endNode.node, endNode.offset);
           var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');

@@ -341,7 +341,7 @@ var hrange = require('../h-range.js');
                 var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
 
                 if (startNode && endNode) {
-                    var normalizedRange = new Range();
+                    var normalizedRange = document.createRange();
                     normalizedRange.setStart(startNode.node, startNode.offset);
                     normalizedRange.setEnd(endNode.node, endNode.offset);
                     var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
