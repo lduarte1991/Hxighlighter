@@ -115,7 +115,7 @@
 
     $.Core.prototype.StorageAnnotationSearch = function(message) {
         var self = this;
-        console.log('Received here');
+        //console.log('Received here');
         self.callFuncInList(this.targets, 'StorageAnnotationSearch', message);
     }
 

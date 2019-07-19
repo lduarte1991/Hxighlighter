@@ -19,7 +19,7 @@ var hrange = require('../h-range.js');
         jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function(event) {
             $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
-            console.log("MOUSEOVER", annotations);
+            //console.log("MOUSEOVER", annotations);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
 
@@ -105,7 +105,7 @@ var hrange = require('../h-range.js');
         spans.forEach(function(span) {
             jQuery(span).data('annotation', annotation);
         });
-        console.log(annotation);
+        //console.log(annotation);
         $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
         
 
@@ -123,7 +123,7 @@ var hrange = require('../h-range.js');
         var self = this;
         //this.highlighter.undraw(annotation);
         if (annotation._local) {
-            console.log('Undrawing...', annotation._local.highlights)
+            //console.log('Undrawing...', annotation._local.highlights)
             annotation._local.highlights.forEach(function(hl) {
                 jQuery(hl).contents().unwrap();
             });
@@ -139,7 +139,7 @@ var hrange = require('../h-range.js');
                 return ann;
             }
         });
-        console.log(self.drawnAnnotations);
+        //console.log(self.drawnAnnotations);
         $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
     };
 
@@ -176,7 +176,7 @@ var hrange = require('../h-range.js');
         var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
         }).toArray(), 'id');
-        console.log(all);
+        //console.log(all);
         return all;
     };
 

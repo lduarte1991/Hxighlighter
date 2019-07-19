@@ -25,7 +25,7 @@ var hrange = require('../h-range.js');
             });
         }
         self.search(opts, callB, function(errs) {
-            console.log("Error", errs);
+            //console.log("Error", errs);
         });
     };
 
@@ -91,10 +91,10 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log('ANNOTATION SAVED', result);
+                //console.log('ANNOTATION SAVED', result);
             },
             error: function(xhr, status, error) {
-                console.log(xhr, status, error);
+                //console.log(xhr, status, error);
                 if (xhr.status === 401) {
                     $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
                 } else if (xhr.status === 500) {
@@ -115,7 +115,7 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log('ANNOTATION_DELETED', result)
+                //console.log('ANNOTATION_DELETED', result)
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
@@ -141,7 +141,7 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log('ANNOTATION_UPDATED', result)
+                //console.log('ANNOTATION_UPDATED', result)
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
@@ -351,7 +351,7 @@ var hrange = require('../h-range.js');
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;
             }
-            console.log('getAnnotationTarget', ranges, element);
+            //console.log('getAnnotationTarget', ranges, element);
             return ranges;
         } catch(e) {
             // console.log(ranges, element[0]);
@@ -486,7 +486,7 @@ var hrange = require('../h-range.js');
                 // For the keyboard made annotations
                 // we are borrowing the xpath range library from annotatorjs
                 // to keep them consistent
-                console.log("LOOK HERE:",r, hrange.serializeRange(r, contextEl, 'annotator-hl'));
+                //console.log("LOOK HERE:",r, hrange.serializeRange(r, contextEl, 'annotator-hl'));
                 serializedRange = hrange.serializeRange(r, contextEl, 'annotator-hl');
                 serializedRanges.push(serializedRange.xpath);
                 extraRanges.push({
@@ -512,11 +512,11 @@ var hrange = require('../h-range.js');
         var foundRange;
         jQuery.each(ranges, function(_, range) {
             // try {
-            //    console.log(xpathrange.toRange, elem.ownerDocument, range);
+            //    //console.log(xpathrange.toRange, elem.ownerDocument, range);
             //    foundRange = xpathrange.toRange(elem, range);
             // } catch(e) {
-            //     console.log("trying toRange");
-            console.log(elem, range.start, range.startOffset, range.end, range.endOffset);
+            //     //console.log("trying toRange");
+            //console.log(elem, range.start, range.startOffset, range.end, range.endOffset);
             var foundRange = hrange.normalizeRange(range, elem, 'annotator-hl');
             // }
             // console.log(elem);

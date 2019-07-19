@@ -71,7 +71,7 @@ require('bs4-summernote');
         
         // warns dev that they forgot to include summernote.js
         if (typeof jQuery.summernote !== "object") {
-            console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+            //console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
         }
     };
 
@@ -154,7 +154,7 @@ require('bs4-summernote');
 
             annotation['annotationText'] = [annotationText];
         } catch(e) {
-            console.log('plugin was never started');
+            //console.log('plugin was never started');
         }
         self.destroy();
         return annotation;

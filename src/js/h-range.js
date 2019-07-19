@@ -102,7 +102,7 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
     var prefix = prefixCounterNode.textContent.slice(0,prefixOffset);
     var suffix = suffixCounterNode.textContent.slice(suffixOffset);
     
-    console.log(suffixCounterNode, range.endOffset);
+    //console.log(suffixCounterNode, range.endOffset);
     
     while(prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
         prefix = prefixCounterNode.textContent + prefix;
@@ -146,7 +146,7 @@ function getExactText(range) {
     var rangeContents = range.cloneContents();
     var possibleImageList = rangeContents.querySelectorAll('img');
     var rangeContainsImage = possibleImageList.length;
-    console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
+    //console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
     if (rangeContainsImage) {
         if (typeof(possibleImageList.forEach) !== "function") {
             var convertToArray = [];
@@ -292,18 +292,18 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
             offset: 0
         }
     }
-    console.log(root_node, node_list, goal);
+    //console.log(root_node, node_list, goal);
 
     for (var i = 0; i < node_list.length; i++) {
-        console.log(i, currOffset);
+        //console.log(i, currOffset);
         var node = node_list[i];
         if (node.textContent.length + currOffset >= goal) {
             if (node.nodeType !== Node.TEXT_NODE) {
-                console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
+                //console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
                 found = recurseGetNodeFromOffset(node, goal - currOffset)
                 break;
             } else {
-                console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
+                //console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
                 found = {
                     node: node,
                     offset: goal - currOffset
@@ -366,7 +366,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
             while(traversingDown.className.indexOf(ignoreSelector) > -1) {
                 traversingDown = foundNodes[++counter];
             }
-            console.log('1', traversingDown, traversingDown.className);
+            //console.log('1', traversingDown, traversingDown.className);
         } else if(!foundNodes || foundNodes.length === 0){
             // should account for missing html elements without affecting text
         } else {
@@ -374,10 +374,10 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
             while(traversingDown.className.indexOf(ignoreSelector) > -1) {
                 traversingDown = foundNodes[++counter];
             }
-            console.log('2', traversingDown, traversingDown.className);
+            //console.log('2', traversingDown, traversingDown.className);
         }
     });
-    console.log("TRAVERSINGDOWN", traversingDown, offset);
+    //console.log("TRAVERSINGDOWN", traversingDown, offset);
     var found = recurseGetNodeFromOffset(traversingDown, offset);
     ////console.log(found);
     return found
@@ -421,11 +421,11 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
         var normalizedRange = document.createRange();
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
-        console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
-        console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+        //console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
+        //console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
 
     }
-    console.log(_start, _startOffset, startResult, endResult);
+    //console.log(_start, _startOffset, startResult, endResult);
     //console.log(getPrefixAndSuffix(normalizedRange, root, ignoreSelector))
     // Way #2: if that doesn't match what we have stored as the quote, try global positioning from root
     // This is for the usecase where someone has changed tagnames so xpath cannot be found
@@ -436,7 +436,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
         normalizedRange = document.createRange();
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
-        console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+        //console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
     }
 
     // Way #3: looks for an exact match of prefix, suffix, and exact
@@ -455,7 +455,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
             var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
             if (serializedRange.text.prefix === toCheck.prefix && serializedRange.text.suffix === toCheck.suffix) {
-                console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+                //console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
                 break;
             }
         }
@@ -487,7 +487,7 @@ function checkNode(currentNode, range) {
             // console.log('Node', currentNode, foundEnd, range.startContainer === range.endContainer);
             nodeList.push(currentNode);
         } else if(currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG"){
-            console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
+            //console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
             if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startContainer.childNodes.length < range.startOffset) {
                 var possibleStartNode = range.startContainer.childNodes[range.startOffset];
                 if (possibleStartNode === currentNode) {
@@ -497,18 +497,18 @@ function checkNode(currentNode, range) {
                     }
                 }
             } else if(!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
-                console.log("second")
+                //console.log("second")
                 var possibleEndNode = range.endContainer.childNodes[range.endOffset]
                 if (possibleEndNode === currentNode) {
                     foundEnd = true;
                     nodeList.push(currentNode);
                 }
             } else {
-                console.log("third", nodeList, currentNode);
+                //console.log("third", nodeList, currentNode);
                 foundEnd = false;
                 nodeList.push(currentNode);
             }
-            console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
+            //console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
         } else {
             if (currentNode.firstChild) {
                 var result = recurseFromNodeToNode(currentNode.firstChild, range);
@@ -576,7 +576,7 @@ function getTextNodesFromAnnotationRanges(ranges, root) {
     ranges.forEach(function(range) {
         var normRanged = normalizeRange(range, root, 'annotator-hl')//recurseFromNodeToNode(range.startContainer, range);
         var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged);
-        console.log(normRanged, ranges, nodes, normRanged.cloneContents());
+        //console.log(normRanged, ranges, nodes, normRanged.cloneContents());
         textNodesList = textNodesList.concat(nodes.nodes);
     });
 

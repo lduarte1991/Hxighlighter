@@ -1958,8 +1958,8 @@ process.umask = function() { return 0; };
       return document.evaluate('.' + xp, root, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     } catch (_error) {
       exception = _error;
-      console.log("XPath evaluation failed.");
-      console.log("Trying fallback...");
+      //console.log("XPath evaluation failed.");
+      //console.log("Trying fallback...");
       steps = xp.substring(1).split("/");
       node = root;
       for (_i = 0, _len = steps.length; _i < _len; _i++) {
@@ -2075,7 +2075,7 @@ process.umask = function() { return 0; };
       result = simpleXPathJQuery($el, relativeRoot);
     } catch (_error) {
       exception = _error;
-      console.log("jQuery-based XPath construction failed! Falling back to manual.");
+      //console.log("jQuery-based XPath construction failed! Falling back to manual.");
       result = simpleXPathPure($el, relativeRoot);
     }
     return result;

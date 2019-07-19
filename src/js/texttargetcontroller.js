@@ -396,7 +396,7 @@ require('./storage/catchpy.js');
      */
     $.TextTarget.prototype.ViewerEditorClose = function(annotation, is_new_annotation, hit_cancel) {
         var self = this;
-        console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+        //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
         if (hit_cancel) {
             if (is_new_annotation) {
                 self.TargetAnnotationUndraw(annotation);

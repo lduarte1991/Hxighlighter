@@ -114,7 +114,7 @@ var annotator = annotator ? annotator : require('annotator');
         var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
         }).toArray(), 'id');
-        console.log(all);
+        //console.log(all);
         return all;
     };
 

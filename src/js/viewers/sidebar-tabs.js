@@ -161,7 +161,7 @@ import 'timeago';
                             options['user_id'] = self.options.instructors
                         }
                         jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
-                        console.log(options);
+                        //console.log(options);
                         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
                             jQuery('.side.load-more').remove();
                             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
@@ -173,7 +173,7 @@ import 'timeago';
                     });
                 }
             } else if(self.load_more_open && jQuery(this).scrollTop() + jQuery(this).innerHeight() <= jQuery(this)[0].scrollHeight - 50) {
-                console.log('should remove it');
+                //console.log('should remove it');
                 self.load_more_open = false;
                 jQuery('.side.load-more').remove();
                 jQuery('.side.annotationsHolder').css('padding-bottom', '0px');

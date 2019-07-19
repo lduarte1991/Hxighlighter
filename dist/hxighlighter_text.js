@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 12:18:10 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 12:22:16 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -27984,8 +27984,7 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
   }
 
   var prefix = prefixCounterNode.textContent.slice(0, prefixOffset);
-  var suffix = suffixCounterNode.textContent.slice(suffixOffset);
-  console.log(suffixCounterNode, range.endOffset);
+  var suffix = suffixCounterNode.textContent.slice(suffixOffset); //console.log(suffixCounterNode, range.endOffset);
 
   while (prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
     prefix = prefixCounterNode.textContent + prefix;
@@ -28033,8 +28032,7 @@ function getExactText(range) {
   var exact = range.toString() == "[object Object]" ? range.exact : range.toString();
   var rangeContents = range.cloneContents();
   var possibleImageList = rangeContents.querySelectorAll('img');
-  var rangeContainsImage = possibleImageList.length;
-  console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
+  var rangeContainsImage = possibleImageList.length; //console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
 
   if (rangeContainsImage) {
     if (typeof possibleImageList.forEach !== "function") {
@@ -28191,21 +28189,20 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
       node: root_node,
       offset: 0
     };
-  }
+  } //console.log(root_node, node_list, goal);
 
-  console.log(root_node, node_list, goal);
 
   for (var i = 0; i < node_list.length; i++) {
-    console.log(i, currOffset);
+    //console.log(i, currOffset);
     var node = node_list[i];
 
     if (node.textContent.length + currOffset >= goal) {
       if (node.nodeType !== Node.TEXT_NODE) {
-        console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
+        //console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
         found = recurseGetNodeFromOffset(node, goal - currOffset);
         break;
       } else {
-        console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset);
+        //console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
         found = {
           node: node,
           offset: goal - currOffset
@@ -28270,21 +28267,19 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
 
       while (traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
-      }
+      } //console.log('1', traversingDown, traversingDown.className);
 
-      console.log('1', traversingDown, traversingDown.className);
     } else if (!foundNodes || foundNodes.length === 0) {// should account for missing html elements without affecting text
     } else {
       traversingDown = foundNodes[counter];
 
       while (traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
-      }
+      } //console.log('2', traversingDown, traversingDown.className);
 
-      console.log('2', traversingDown, traversingDown.className);
     }
-  });
-  console.log("TRAVERSINGDOWN", traversingDown, offset);
+  }); //console.log("TRAVERSINGDOWN", traversingDown, offset);
+
   var found = recurseGetNodeFromOffset(traversingDown, offset); ////console.log(found);
 
   return found;
@@ -28336,14 +28331,13 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   if (startResult && endResult) {
     var normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
-    normalizedRange.setEnd(endResult.node, endResult.offset);
-    console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
-    console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH");
-  }
-
-  console.log(_start, _startOffset, startResult, endResult); //console.log(getPrefixAndSuffix(normalizedRange, root, ignoreSelector))
+    normalizedRange.setEnd(endResult.node, endResult.offset); //console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
+    //console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+  } //console.log(_start, _startOffset, startResult, endResult);
+  //console.log(getPrefixAndSuffix(normalizedRange, root, ignoreSelector))
   // Way #2: if that doesn't match what we have stored as the quote, try global positioning from root
   // This is for the usecase where someone has changed tagnames so xpath cannot be found
+
 
   if (!(startResult && endResult) || serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
     startResult = recurseGetNodeFromOffset(root, serializedRange.position.globalStartOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalStartOffset, ignoreSelector);
@@ -28352,8 +28346,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
     normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
-    normalizedRange.setEnd(endResult.node, endResult.offset);
-    console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH");
+    normalizedRange.setEnd(endResult.node, endResult.offset); //console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
   } // Way #3: looks for an exact match of prefix, suffix, and exact
   // This is for the usecase where someone has added text/html before this
 
@@ -28371,7 +28364,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
       var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
 
       if (serializedRange.text.prefix === toCheck.prefix && serializedRange.text.suffix === toCheck.suffix) {
-        console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH");
+        //console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
         break;
       }
     }
@@ -28405,8 +28398,7 @@ function checkNode(currentNode, range) {
 
       nodeList.push(currentNode);
     } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG") {
-      console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
-
+      //console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
       if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startContainer.childNodes.length < range.startOffset) {
         var possibleStartNode = range.startContainer.childNodes[range.startOffset];
 
@@ -28418,7 +28410,7 @@ function checkNode(currentNode, range) {
           }
         }
       } else if (!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
-        console.log("second");
+        //console.log("second")
         var possibleEndNode = range.endContainer.childNodes[range.endOffset];
 
         if (possibleEndNode === currentNode) {
@@ -28426,12 +28418,11 @@ function checkNode(currentNode, range) {
           nodeList.push(currentNode);
         }
       } else {
-        console.log("third", nodeList, currentNode);
+        //console.log("third", nodeList, currentNode);
         foundEnd = false;
         nodeList.push(currentNode);
-      }
+      } //console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
 
-      console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
     } else {
       if (currentNode.firstChild) {
         var result = recurseFromNodeToNode(currentNode.firstChild, range); //console.log("RETURN2:", result);
@@ -28508,8 +28499,8 @@ function getTextNodesFromAnnotationRanges(ranges, root) {
   ranges.forEach(function (range) {
     var normRanged = normalizeRange(range, root, 'annotator-hl'); //recurseFromNodeToNode(range.startContainer, range);
 
-    var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged);
-    console.log(normRanged, ranges, nodes, normRanged.cloneContents());
+    var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged); //console.log(normRanged, ranges, nodes, normRanged.cloneContents());
+
     textNodesList = textNodesList.concat(nodes.nodes);
   });
   return textNodesList;
@@ -30676,9 +30667,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           try {
             return document.evaluate('.' + xp, root, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
           } catch (_error) {
-            exception = _error;
-            console.log("XPath evaluation failed.");
-            console.log("Trying fallback...");
+            exception = _error; //console.log("XPath evaluation failed.");
+            //console.log("Trying fallback...");
+
             steps = xp.substring(1).split("/");
             node = root;
 
@@ -30818,8 +30809,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           try {
             result = simpleXPathJQuery($el, relativeRoot);
           } catch (_error) {
-            exception = _error;
-            console.log("jQuery-based XPath construction failed! Falling back to manual.");
+            exception = _error; //console.log("jQuery-based XPath construction failed! Falling back to manual.");
+
             result = simpleXPathPure($el, relativeRoot);
           }
 
@@ -39085,8 +39076,7 @@ __webpack_require__(11);
 
     if (annotation.tags && annotation.tags.length > 0) {
       var tagList = annotation.tags.join(',');
-      editor.find('#tag-list').val(tagList);
-      console.log(tagList);
+      editor.find('#tag-list').val(tagList); //console.log(tagList);
     }
   };
 
@@ -39793,8 +39783,7 @@ __webpack_require__(63);
 
 
   $.TextTarget.prototype.ViewerEditorClose = function (annotation, is_new_annotation, hit_cancel) {
-    var self = this;
-    console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+    var self = this; //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
 
     if (hit_cancel) {
       if (is_new_annotation) {
@@ -39980,8 +39969,7 @@ __webpack_require__(63);
     var self = this;
     this.delimiter = this.checkDelimiter(self.element);
 
-    if (!this.delimiter) {
-      console.log('Error in delimiter...no suitable delimiter found!');
+    if (!this.delimiter) {//console.log('Error in delimiter...no suitable delimiter found!');
     }
 
     this.start = undefined;
@@ -40014,7 +40002,7 @@ __webpack_require__(63);
 
         return false;
       } else if (event.key == 'Escape') {
-        console.log("hello");
+        //console.log("hello");
         self.turnSelectionModeOff(); // } else if (event.key == ' ') {
         //     event.preventDefault();
         //     return false;
@@ -40199,8 +40187,8 @@ __webpack_require__(63);
       case self.delimiter:
         if (!self.start || typeof self.start == "undefined") {
           self.start = self.copySelection(getSelection());
-          var bcr = self.getBoundingClientRect(self.start);
-          console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
+          var bcr = self.getBoundingClientRect(self.start); //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
+
           jQuery('body').append('<div class="hx-selector-img"></div>');
           jQuery('.hx-selector-img').css({
             top: bcr.top + jQuery(window).scrollTop() - 5,
@@ -40209,11 +40197,9 @@ __webpack_require__(63);
           jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
         } else {
           var end = self.copySelection(getSelection());
-          jQuery('.hx-selector-img').remove();
-          console.log("Found end", end);
+          jQuery('.hx-selector-img').remove(); //console.log("Found end", end);
 
-          if (self.currentSelection) {
-            console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
+          if (self.currentSelection) {//console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
           } else {
             var end = self.copySelection(getSelection());
             var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
@@ -40236,16 +40222,14 @@ __webpack_require__(63);
           };
           var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
           jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
-          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
-          console.log("Active Element", document.activeElement.className);
+          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]); //console.log("Active Element", document.activeElement.className);
 
           if (document.activeElement.className.indexOf('note-editable') == -1) {
-            console.log("BLURRING");
+            //console.log("BLURRING");
             self.element.blur();
           } else {
             setTimeout(function () {
-              jQuery('.note-editable.card-block')[0].focus();
-              console.log("should be focusing on", document.activeElement);
+              jQuery('.note-editable.card-block')[0].focus(); //console.log("should be focusing on", document.activeElement);
             }, 250);
           }
 
@@ -40305,22 +40289,20 @@ __webpack_require__(63);
 
   $.KeyboardSelector.prototype.processSelection = function (start, end) {
     var self = this;
-    var s = getSelection();
-    console.log("LOOK HERE", start, end);
+    var s = getSelection(); //console.log("LOOK HERE", start, end);
+
     var r = this.removeMarkers(start, end);
-    self.start = undefined;
-    console.log("R!", r);
+    self.start = undefined; //console.log("R!", r);
 
     try {
       var boundingBox = r.end.parentElement.getBoundingClientRect();
     } catch (e) {
       var boundingBox = r.endContainer.parentElement.getBoundingClientRect();
-    }
+    } //console.log(boundingBox);
+    // publish selection made
 
-    console.log(boundingBox); // publish selection made
 
-    Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]);
-    console.log("Element Focused", document.activeElement);
+    Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]); //console.log("Element Focused", document.activeElement);
 
     if (document.activeElement.className.indexOf('note-editable') == -1) {
       self.element.blur();
@@ -40402,9 +40384,9 @@ __webpack_require__(63);
 
     var _end = end.anchorNode;
 
-    var _endOffset = end.anchorOffset - 1;
+    var _endOffset = end.anchorOffset - 1; //console.log(_start, _startOffset, _end, _endOffset);
 
-    console.log(_start, _startOffset, _end, _endOffset);
+
     var t2 = this.removeCharacter(_end.textContent, _endOffset);
     _end.textContent = t2;
     var t1 = this.removeCharacter(_start.textContent, _startOffset);
@@ -40500,8 +40482,8 @@ var hrange = __webpack_require__(3);
     var self = this;
     this.element.addEventListener('mouseup', function (event) {
       var selection = window.getSelection();
-      var selectionRange = selection.getRangeAt(0);
-      console.log(selectionRange.cloneContents());
+      var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
+
       self.onSelection(selectionRange, event);
     });
   };
@@ -40519,7 +40501,7 @@ var hrange = __webpack_require__(3);
           self.confirm(range, event);
         } else {
           //console.log("Sending TargetSelection to Hxighlighter");
-          console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+          //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
           Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(range, self.element, 'annotator-hl')], event]);
         }
       } else {
@@ -40547,8 +40529,8 @@ var hrange = __webpack_require__(3);
     self.hideConfirm();
 
     if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0) {
-      self.interactionPoint = $.mouseFixedPosition(event);
-      console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+      self.interactionPoint = $.mouseFixedPosition(event); //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+
       self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event); //console.log("Should have loaded button to confirm annotation");
     }
   };
@@ -40594,8 +40576,8 @@ var hrange = __webpack_require__(3);
 
     jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function (event) {
       $.pauseEvent(event);
-      var annotations = self.getAnnotationsFromElement(event);
-      console.log("MOUSEOVER", annotations);
+      var annotations = self.getAnnotationsFromElement(event); //console.log("MOUSEOVER", annotations);
+
       Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
     });
     jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function (event) {
@@ -40672,8 +40654,8 @@ var hrange = __webpack_require__(3);
 
     spans.forEach(function (span) {
       jQuery(span).data('annotation', annotation);
-    });
-    console.log(annotation);
+    }); //console.log(annotation);
+
     $.publishEvent('annotationDrawn', self.instance_id, [annotation]); // the annotation is then saved to the current list
 
     self.drawnAnnotations.push(annotation); // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
@@ -40688,8 +40670,7 @@ var hrange = __webpack_require__(3);
     var self = this; //this.highlighter.undraw(annotation);
 
     if (annotation._local) {
-      console.log('Undrawing...', annotation._local.highlights);
-
+      //console.log('Undrawing...', annotation._local.highlights)
       annotation._local.highlights.forEach(function (hl) {
         jQuery(hl).contents().unwrap();
       });
@@ -40704,8 +40685,8 @@ var hrange = __webpack_require__(3);
       if (ann.id !== annotation.id) {
         return ann;
       }
-    });
-    console.log(self.drawnAnnotations);
+    }); //console.log(self.drawnAnnotations);
+
     $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
   };
 
@@ -40742,8 +40723,8 @@ var hrange = __webpack_require__(3);
     var self = this;
     var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function (_, elem) {
       return jQuery(elem).data('annotation');
-    }).toArray(), 'id');
-    console.log(all);
+    }).toArray(), 'id'); //console.log(all);
+
     return all;
   };
 
@@ -40918,8 +40899,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
       }
 
       var possible_exclude = [];
-      var possible_include = [];
-      console.log(filteroptions);
+      var possible_include = []; //console.log(filteroptions);
 
       if (filteroptions.indexOf('mynotes') > -1) {
         possible_include.push(self.options.user_id);
@@ -40995,8 +40975,8 @@ var annotator = annotator ? annotator : __webpack_require__(5);
               }
             }
 
-            jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
-            console.log(options);
+            jQuery(this).html('<span class="fa fa-spinner make-spin"></span>'); //console.log(options);
+
             $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
               jQuery('.side.load-more').remove();
               jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
@@ -41005,7 +40985,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
           });
         }
       } else if (self.load_more_open && jQuery(this).scrollTop() + jQuery(this).innerHeight() <= jQuery(this)[0].scrollHeight - 50) {
-        console.log('should remove it');
+        //console.log('should remove it');
         self.load_more_open = false;
         jQuery('.side.load-more').remove();
         jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
@@ -42346,8 +42326,7 @@ __webpack_require__(9);
 
   $.SummernoteRichText.prototype.init = function () {
     // warns dev that they forgot to include summernote.js
-    if (_typeof(jQuery.summernote) !== "object") {
-      console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+    if (_typeof(jQuery.summernote) !== "object") {//console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
     }
   };
   /**
@@ -42431,8 +42410,7 @@ __webpack_require__(9);
       }
 
       annotation['annotationText'] = [annotationText];
-    } catch (e) {
-      console.log('plugin was never started');
+    } catch (e) {//console.log('plugin was never started');
     }
 
     self.destroy();
@@ -42965,8 +42943,7 @@ __webpack_require__(47);
 
   $.Reply.prototype.init = function () {
     // warns dev that they forgot to include summernote.js
-    if (_typeof(jQuery.summernote) !== "object") {
-      console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+    if (_typeof(jQuery.summernote) !== "object") {//console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
     }
   };
   /**
@@ -43868,8 +43845,8 @@ __webpack_require__(60);
 
 
   $.HxAlert.prototype.init = function () {
-    var self = this;
-    console.log("Alert options", self.options);
+    var self = this; //console.log("Alert options", self.options);
+
     self.defaultOptions = {
       buttons: [{
         title: 'OK',
@@ -43994,8 +43971,8 @@ __webpack_require__(62);
 
 
   $.Badges.prototype.init = function () {
-    var self = this;
-    console.log('test!');
+    var self = this; //console.log('test!');
+
     self.setUpListeners();
   };
 
@@ -44095,8 +44072,7 @@ var hrange = __webpack_require__(3);
       });
     };
 
-    self.search(opts, callB, function (errs) {
-      console.log("Error", errs);
+    self.search(opts, callB, function (errs) {//console.log("Error", errs);
     });
   };
 
@@ -44180,12 +44156,10 @@ var hrange = __webpack_require__(3);
       headers: {
         'x-annotator-auth-token': self.options.storageOptions.token
       },
-      success: function success(result) {
-        console.log('ANNOTATION SAVED', result);
+      success: function success(result) {//console.log('ANNOTATION SAVED', result);
       },
       error: function error(xhr, status, _error2) {
-        console.log(xhr, status, _error2);
-
+        //console.log(xhr, status, error);
         if (xhr.status === 401) {
           $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {
             buttons: [],
@@ -44213,8 +44187,7 @@ var hrange = __webpack_require__(3);
       headers: {
         'x-annotator-auth-token': self.options.storageOptions.token
       },
-      success: function success(result) {
-        console.log('ANNOTATION_DELETED', result);
+      success: function success(result) {//console.log('ANNOTATION_DELETED', result)
       },
       error: function error(xhr, status, _error3) {
         if (xhr.status === 401) {
@@ -44247,8 +44220,7 @@ var hrange = __webpack_require__(3);
       headers: {
         'x-annotator-auth-token': self.options.storageOptions.token
       },
-      success: function success(result) {
-        console.log('ANNOTATION_UPDATED', result);
+      success: function success(result) {//console.log('ANNOTATION_UPDATED', result)
       },
       error: function error(xhr, status, _error4) {
         if (xhr.status === 401) {
@@ -44469,9 +44441,9 @@ var hrange = __webpack_require__(3);
 
       if (webAnn['target']['items'][0]['type'] == "Annotation") {
         return ranges;
-      }
+      } //console.log('getAnnotationTarget', ranges, element);
 
-      console.log('getAnnotationTarget', ranges, element);
+
       return ranges;
     } catch (e) {
       // console.log(ranges, element[0]);
@@ -44608,7 +44580,7 @@ var hrange = __webpack_require__(3);
         // For the keyboard made annotations
         // we are borrowing the xpath range library from annotatorjs
         // to keep them consistent
-        console.log("LOOK HERE:", r, hrange.serializeRange(r, contextEl, 'annotator-hl'));
+        //console.log("LOOK HERE:",r, hrange.serializeRange(r, contextEl, 'annotator-hl'));
         serializedRange = hrange.serializeRange(r, contextEl, 'annotator-hl');
         serializedRanges.push(serializedRange.xpath);
         extraRanges.push({
@@ -44634,11 +44606,11 @@ var hrange = __webpack_require__(3);
     var foundRange;
     jQuery.each(ranges, function (_, range) {
       // try {
-      //    console.log(xpathrange.toRange, elem.ownerDocument, range);
+      //    //console.log(xpathrange.toRange, elem.ownerDocument, range);
       //    foundRange = xpathrange.toRange(elem, range);
       // } catch(e) {
-      //     console.log("trying toRange");
-      console.log(elem, range.start, range.startOffset, range.end, range.endOffset);
+      //     //console.log("trying toRange");
+      //console.log(elem, range.start, range.startOffset, range.end, range.endOffset);
       var foundRange = hrange.normalizeRange(range, elem, 'annotator-hl'); // }
       // console.log(elem);
       // console.log(foundRange);
@@ -44855,8 +44827,8 @@ var hrange = __webpack_require__(3);
 
 
   $.Core.prototype.StorageAnnotationSearch = function (message) {
-    var self = this;
-    console.log('Received here');
+    var self = this; //console.log('Received here');
+
     self.callFuncInList(this.targets, 'StorageAnnotationSearch', message);
   }; // Util functions
 

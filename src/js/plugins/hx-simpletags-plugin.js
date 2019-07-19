@@ -80,7 +80,7 @@ require('./hx-simpletags-plugin.css');
         if (annotation.tags && annotation.tags.length > 0) {
             var tagList = annotation.tags.join(',');
             editor.find('#tag-list').val(tagList);
-            console.log(tagList);
+            //console.log(tagList);
         }
     };
 

@@ -38,7 +38,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         
         // warns dev that they forgot to include summernote.js
         if (typeof jQuery.summernote !== "object") {
-            console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+            //console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
         }
     };
 

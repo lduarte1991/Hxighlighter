@@ -25,7 +25,7 @@ require('./hx-alert.css');
      */
     $.HxAlert.prototype.init = function() {
         var self = this;
-        console.log("Alert options", self.options);
+        //console.log("Alert options", self.options);
         self.defaultOptions = {
             buttons: [{title: 'OK', action: function() {self.current_alert.remove();}}, {title: 'Cancel', action: function() {self.current_alert.remove();}}],
             time: 0, // 0 = unlimited, 1 = 1 second, 2 = 2 seconds, ... etc.

@@ -25,7 +25,7 @@ require('./hx-badges.css');
      */
     $.Badges.prototype.init = function() {
         var self = this;
-        console.log('test!');
+        //console.log('test!');
         self.setUpListeners();
     };
 
