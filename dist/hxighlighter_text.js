@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 11:55:09 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, July 19th, 2019, 12:18:10 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40110,7 +40110,7 @@ __webpack_require__(63);
 
   $.KeyboardSelector.prototype.filterKeys = function (keyPressed) {
     var self = this;
-    var key = keyPressed.key;
+    var key = keyPressed.key || keypressed.keyCode;
 
     switch (key) {
       case self.delimiter:
@@ -40120,6 +40120,14 @@ __webpack_require__(63);
       case "ArrowDown":
       case "ArrowLeft":
       case "ArrowRight":
+      case "Up":
+      case "Down":
+      case "Left":
+      case "Right":
+      case 37:
+      case 38:
+      case 39:
+      case 40:
       case "Home":
       case "End":
       case "Tab":
@@ -40185,7 +40193,7 @@ __webpack_require__(63);
 
   $.KeyboardSelector.prototype.setSelection = function (keyPressed) {
     var self = this;
-    var key = keyPressed.key;
+    var key = keyPressed.key || keyPressed.keyCode;
 
     switch (key) {
       case self.delimiter:
@@ -40253,6 +40261,14 @@ __webpack_require__(63);
       case "ArrowDown":
       case "ArrowLeft":
       case "ArrowRight":
+      case "Up":
+      case "Down":
+      case "Left":
+      case "Right":
+      case 37:
+      case 38:
+      case 39:
+      case 40:
         if (self.start) {
           var end = self.copySelection(getSelection());
           var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');

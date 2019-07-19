@@ -153,7 +153,7 @@ var hrange = require('../h-range.js');
      */
     $.KeyboardSelector.prototype.filterKeys = function(keyPressed) {
         var self = this;
-        const key = keyPressed.key;
+        const key = keyPressed.key || keypressed.keyCode;
         switch (key) {
             case self.delimiter:
                 return false;
@@ -161,6 +161,14 @@ var hrange = require('../h-range.js');
             case "ArrowDown":
             case "ArrowLeft":
             case "ArrowRight":
+            case "Up":
+            case "Down":
+            case "Left":
+            case "Right":
+            case 37:
+            case 38:
+            case 39:
+            case 40:
             case "Home":
             case "End":
             case "Tab":
@@ -216,7 +224,7 @@ var hrange = require('../h-range.js');
 
     $.KeyboardSelector.prototype.setSelection = function(keyPressed) {
         var self = this;
-        const key = keyPressed.key;
+        const key = keyPressed.key || keyPressed.keyCode;
         switch (key) {
             case self.delimiter:
                 if (!(self.start) || typeof(self.start) == "undefined") {
@@ -278,6 +286,14 @@ var hrange = require('../h-range.js');
             case "ArrowDown":
             case "ArrowLeft":
             case "ArrowRight":
+            case "Up":
+            case "Down":
+            case "Left":
+            case "Right":
+            case 37:
+            case 38:
+            case 39:
+            case 40:
                 if (self.start) {
                     var end = self.copySelection(getSelection())
                     var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
