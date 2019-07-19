@@ -148,6 +148,14 @@ function getExactText(range) {
     var rangeContainsImage = possibleImageList.length;
     console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
     if (rangeContainsImage) {
+        if (typeof(possibleImageList.forEach) !== "function") {
+            var convertToArray = [];
+            for (var i = possibleImageList.length - 1; i >= 0; i--) {
+                convertToArray.push(possibleImageList.values[i]);
+            }
+            possibleImageList = convertToArray;
+        }
+
         possibleImageList.forEach(function(im) {
             //console.log(rangeContents);
             var indexOfImage = [].slice.call(rangeContents.childNodes).findIndex(function(el) {
