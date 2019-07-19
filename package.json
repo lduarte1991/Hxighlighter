@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/lduarte1991/Hxighlighter#readme",
   "dependencies": {
+    "babel-loader": "^8.0.6",
     "bootstrap": "^3.4.1",
     "codemirror": "^5.46.0",
     "jquery-confirm": "^3.3.4",
@@ -33,7 +34,7 @@
     "webpack-auto-inject-version": "^1.2.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.3",
+    "@babel/cli": "^7.5.5",
     "@babel/core": "^7.4.3",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.3",
@@ -50,7 +51,7 @@
     "imports-loader": "^0.8.0",
     "jquery": "^3.4.0",
     "jquery-tiny-pubsub": "^0.7.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.5.0",
     "mocha": "^6.1.4",
     "mocha-loader": "^2.0.1",
