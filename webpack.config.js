@@ -11,7 +11,8 @@ const PATHS = {
 
 module.exports = {
     entry: {
-        text: ['./src/text-index.js']
+        text: ['./src/text-index.js'],
+        author: ['./src/author-index.js']
     },
     plugins: [
         new webpack.ProvidePlugin({
