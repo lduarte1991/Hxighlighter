@@ -79,7 +79,7 @@ body {
     height: 50px;
     background: black;
     top: 0;
-    display: block;
+    display: none;
     width: 100%;
     z-index:999;
     overflow:hidden;
@@ -142,6 +142,12 @@ a#next_target_object {
     -webkit-box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);
     -moz-box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);
     border-radius: .4em;
+}
+
+.sr-only {
+    position: absolute;
+    top:-999999px;
+    left:-999999px
 }
 
 /*.hx-confirm-button button:after {

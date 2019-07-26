@@ -6,6 +6,7 @@
  */
 require('bs4-summernote/dist/summernote-bs4.css')
 require('bs4-summernote');
+require('./hx-summernote-plugin.css');
 
 (function($){
 
@@ -16,12 +17,16 @@ require('bs4-summernote');
     $.SummernoteRichText = function(options, instanceID) {
         var maxLength = 1000;
         this.options = jQuery.extend({
-            height: 100,
+            height: 150,
             focus: true,
             width: 398,
             placeholder: "Add annotation text...",
             maximumImageFileSize: 262144,
+            maxHeight: 400,
+            minHeight: 100,
             maxTextLength: maxLength,
+            dialogsInBody: true,
+            disableResizeEditor: true,
             callbacks: {
                 onKeydown:  function (e) {
                     var t = e.currentTarget.innerText;
@@ -73,6 +78,7 @@ require('bs4-summernote');
         if (typeof jQuery.summernote !== "object") {
             //console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
         }
+        this.annotationListeners();
     };
 
     /**
@@ -84,9 +90,9 @@ require('bs4-summernote');
         var self = this;
 
         // adds the summernote WYSIWIG to the editor to the selector's location
-        this.elementObj = element.find(selector);
-        this.options.width = this.elementObj.parent().width();
-        this.elementObj.summernote(this.options);
+        self.elementObj = element.find(selector);
+        self.options.width = this.elementObj.parent().width();
+        self.elementObj.summernote(this.options);
 
         // removes summernote's ability to tab within the editor so users can tab through items
         delete jQuery.summernote.options.keyMap.pc.TAB;
@@ -96,6 +102,35 @@ require('bs4-summernote');
 
         element.find('.note-editable').trigger('focus');
         jQuery('.note-editor button').attr('tabindex', '0');
+        jQuery('.note-statusbar').hide()
+
+        jQuery(document).on('mouseleave', function() {
+            jQuery('.note-statusbar').trigger('mouseup');
+            if (self.elementObj) {
+                var editorObj = self.elementObj.closest('.annotation-editor');
+                var newTop = parseInt(editorObj.css('top'), 10);;
+                var newLeft = parseInt(editorObj.css('left'), 10);
+
+                console.log(editorObj, newTop, newLeft);
+
+                if (newTop + editorObj.outerHeight() > window.innerHeight) {
+                    newTop = window.innerHeight - editorObj.outerHeight();
+                }
+                if (newLeft + editorObj.outerWidth() > window.innerWidth) {
+                    newLeft = window.innerWidth - editorObj.outerWidth();
+                }
+                if (newTop < 0) {
+                    newTop = 0;
+                }
+                if (newLeft < 0) {
+                    newLeft = 0;
+                }
+                editorObj.css({
+                    top: newTop,
+                    left: newLeft
+                });
+            }
+        });
     };
 
     /**
@@ -119,7 +154,8 @@ require('bs4-summernote');
      * @param      {String}  selector  The selector containing the area in the editor where to insert the WYSIWYG
      */
     $.SummernoteRichText.prototype.destroy = function(element, selector) {
-        this.elementObj.summernote('destroy');
+        var self = this;
+        self.elementObj.summernote('destroy');
         jQuery('.tooltip.fade').remove();
     };
 
@@ -132,9 +168,12 @@ require('bs4-summernote');
     $.SummernoteRichText.prototype.annotationListeners = function() {
         var self = this;
 
-        hxSubscribe('editorToBeHidden', self.instanceID, function(){
+        $.subscribeEvent('editorToBeHidden', self.instanceID, function(){
             self.destroy();
-        }.bind(this));
+        }.bind(self));
+        $.subscribeEvent('editorHidden', self.instanceID, function(){
+            self.destroy();
+        }.bind(self));
     };
 
     /**

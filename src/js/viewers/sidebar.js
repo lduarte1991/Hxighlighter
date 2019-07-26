@@ -77,7 +77,7 @@ import 'timeago';
     $.Sidebar.prototype.setUpSidebar = function() {
         var self = this;
         var sidebarOptions = jQuery.extend({
-            'tabsAvailable': ['search', 'mine', 'instructor', 'peers'],
+            'tabsAvailable': ['search', 'mine', 'instructor', 'peer'],
         }, self.options.viewer_options, {annotationItems: []});
         self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
 
@@ -119,17 +119,41 @@ import 'timeago';
 
         // trigger new filter tab
         jQuery('.btn.user-filter').click(function() {
+
             if (this.id === "search") {
                 jQuery('.btn.user-filter').removeClass('active');
                 jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
             } else {
                 if (jQuery(this).hasClass('active')) {
-                    if (jQuery('.btn.user-filter.active').length > 1) {
+
+                    if (jQuery('.btn.user-filter.active').length == 1) {
                         jQuery(this).removeClass('active');
                         jQuery(this).find('.far').removeClass('fa-check-square').addClass('fa-square');
+                        jQuery('.annotationsHolder.side').html('');
+                        var messageVals = [];
+                        var pluralMessage = '';
+                        jQuery.each(jQuery('.btn.user-filter'), function(a, b) {
+                            if (b.id == 'mynotes') {
+                                messageVals.push("your annotations")
+                            } else if (b.id == 'instructor') {
+                                messageVals.push("instructor annotations");
+                            } else if (b.id == 'public') {
+                                messageVals.push("peer annotations");
+                            }
+                        })
+                        if (messageVals.length > 1) {
+                            messageVals.splice(messageVals.length - 1, 0, 'and/or,')
+                            messageVals = messageVals.join(', ').replace(',,', '');
+                            pluralMessage = '<br><br>Note: You can select multiple tabs at a time to view those annotations together!</div>'
+                        }
+                        jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;"><strong>No Annotations Selected</strong><br>Use the filter buttons above to view ' + messageVals + '.' + pluralMessage)
+
+                        return;
                     }
+                    jQuery(this).removeClass('active');
+                    jQuery(this).find('.far').removeClass('fa-check-square').addClass('fa-square');
                 } else {
-                //jQuery('.btn.user-filter').removeClass('active');
+                    console.log("NOT an active class")
                     jQuery(this).addClass('active');
                     jQuery(this).find('.far').removeClass('fa-square').addClass('fa-check-square');
                 }
@@ -167,6 +191,17 @@ import 'timeago';
                 }
             } else {
                 search_options['userid'] = possible_include;
+            }
+
+            if (self.options.instructors.indexOf(self.options.user_id) > -1) {
+                if (filteroptions.indexOf('public') > -1 && ((filteroptions.indexOf('mynotes') > -1 && filteroptions.indexOf('instructor') == -1) || (filteroptions.indexOf('mynotes') == -1 && filteroptions.indexOf('instructor') > -1))) {
+                    jQuery('.btn.user-filter#instructor').addClass('active');
+                    jQuery('.btn.user-filter#instructor').find('.far').removeClass('fa-square').addClass('fa-check-square');
+                    jQuery('.btn.user-filter#mynotes').addClass('active');
+                    jQuery('.btn.user-filter#mynotes').find('.far').removeClass('fa-square').addClass('fa-check-square');
+                    search_options['exclude_userid'] = [];
+                    search_options['userid'] = [];
+                }
             }
 
             self.search(search_options)
@@ -243,7 +278,7 @@ import 'timeago';
     $.Sidebar.prototype.showSidebarTab = function(type) {
         // if (type === "smalltab") {
             jQuery(':root').css('--sidebar-width', '55px');
-            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button"><i class="fa fa-arrow-right"></i></div>');
+            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button"><span class="fas fa-comments"></span></div>');
         // }
 
         jQuery('.open-sidebar').click(function() {
@@ -318,7 +353,7 @@ import 'timeago';
                 self.ViewerEditorOpen(event, ann, true);
             });
 
-            jQuery('.side.item-' + ann.id).find('.quoteText').click(function() {
+            jQuery('.side.item-' + ann.id).click(function() {
                 if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
                     var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
                     jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 20)});
@@ -329,6 +364,44 @@ import 'timeago';
                         });
                     }, 350);
                 }
+            });
+
+            jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function(e) {
+                jQuery('.btn.user-filter').removeClass('active');
+                jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
+                if (jQuery(this).text().trim() !== self.options.common_instructor_name) {
+                    self.search(self.filterByType(jQuery(this).html().trim(), 'User', undefined));
+                    jQuery('.annotationsHolder').addClass('search-opened');
+                    jQuery('.search-toggle').show();
+                    $.publishEvent('searchSelected', self.instance_id, []);
+                    jQuery('#srch-term').val(jQuery(this).text().trim())
+                    jQuery('.search-bar select').val('User');
+                } else {
+                    // var options = {
+                    //     type: self.options.mediaType,
+                    // }
+                    // options['userid'] = self.options.instructors;
+                    // self.search(options);
+                    jQuery('.btn.user-filter#instructor').trigger('click');
+
+                }
+                $.pauseEvent(e);
+            });
+
+            jQuery('.side.item-' + ann.id).find('.annotation-tag.side').click(function(e) {
+                jQuery('.btn.user-filter').removeClass('active');
+                jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
+                jQuery('.annotationsHolder').addClass('search-opened');
+                jQuery('.search-toggle').show(jQuery(this).html().trim());
+                var options = {
+                    type: self.options.mediaType,
+                }
+                var tagSearched = jQuery(this).html().trim();
+                options['tag'] = tagSearched;
+                jQuery('#srch-term').val(tagSearched)
+                jQuery('.search-bar select').val('Tag');
+                self.search(options);
+                $.pauseEvent(e);
             });
 
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
@@ -387,6 +460,7 @@ import 'timeago';
         editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><div class="plugin-area"></div><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
         editor.find('.body').hide();
         editor.find('.tagList').hide();
+        jQuery('.edit').prop('disabled', true);
 
         // closes the editor tool and does not save annotation
         editor.find('.cancel').click(function () {
@@ -400,7 +474,7 @@ import 'timeago';
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
-            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, true, false]);
+            $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, false]);
             self.ViewerEditorClose(annotation, true, false, editor);
         });
 
@@ -409,6 +483,8 @@ import 'timeago';
 
     $.Sidebar.prototype.ViewerEditorClose = function(annotation, redraw, should_erase, editor) {
       jQuery('.editor-area.side').remove();
+      jQuery('.edit').prop('disabled', false);
+      $.publishEvent('editorHidden', self.instance_id, []);
       if (editor) {
          editor.find('.side.body').show();
          editor.find('.tagList.side').show();

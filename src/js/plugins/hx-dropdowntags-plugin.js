@@ -31,6 +31,7 @@ require('./hx-dropdowntags-plugin.css');
     $.DropdownTags.prototype.init = function() {
         var self = this;
         self.name = 'DropdownTags';
+        self.annotationListeners();
 
     };
 
@@ -133,6 +134,9 @@ require('./hx-dropdowntags-plugin.css');
      */
     $.DropdownTags.prototype.annotationListeners = function() {
         var self = this;
+        $.subscribeEvent('editorHidden', self.instanceID, function(){
+            self.destroy();
+        }.bind(this));
     };
 
     /**
@@ -172,10 +176,12 @@ require('./hx-dropdowntags-plugin.css');
             preventDuplicates: true,
             allowTabOut: true,
             hintText: 'Add a tag...',
+            placeholder: 'Add tags. Separate multiple by using "Enter".',
             allowFreeTagging: ('folksonomy' in self.options) ? self.options.folksonomy : false,
             noResultsText: "Not Found. Hit ENTER to add a personal tag.",
         });
-        jQuery('#token-input-tag-list').attr('aria-label', 'Input text for tag. Separate tags by using "Enter".');
+        jQuery('#token-input-tag-list').attr('aria-label', 'Add tags. Separate multiple by using "Enter".');
+        // jQuery('#token-input-tag-list').attr('placeholder', 'Tag:');
         if (annotation.tags && annotation.tags.length > 0) {
             annotation.tags.forEach(function(tag) {
                 self.field.tokenInput('add', {
@@ -184,6 +190,12 @@ require('./hx-dropdowntags-plugin.css');
                 });
             });
         }
+    };
+
+    $.DropdownTags.prototype.destroy = function() {
+        var self = this;
+        self.field.tokenInput('destroy');
+        jQuery('.token-input-dropdown-facebook').remove();
     };
 
     Object.defineProperty($.DropdownTags, 'name', {

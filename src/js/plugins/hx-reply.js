@@ -20,6 +20,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             height: 70,
             focus: true,
             width: 356,
+            dialogsInBody: true,
             // airMode: true,
             placeholder: "Reply to annotation...",
             toolbar: [

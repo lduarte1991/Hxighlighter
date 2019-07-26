@@ -401,6 +401,7 @@ require('./storage/catchpy.js');
             if (is_new_annotation) {
                 self.TargetAnnotationUndraw(annotation);
             }
+            
             // else, the annotation was already drawn, so don't touch it.
         } else if (is_new_annotation) {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
@@ -420,6 +421,7 @@ require('./storage/catchpy.js');
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerEditorClose(annotation);
         });
+
 
         return annotation;
     };

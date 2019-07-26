@@ -6,7 +6,7 @@
     --sidebar-button-back-accent: #333;
     --sidebar-button-color: #333;
     --sidebar-button-color-accent: #ededed;
-    --sidebar-search-bar-height-open: 0px;
+    --sidebar-search-bar-height-open: 73px;
 }
 
 .annotationSection.side {
@@ -79,7 +79,7 @@
 }
 
 .annotationSection .annotationsHolder.search-opened {
-    height: calc(100% - 73px);
+    height: calc(100% - var(--sidebar-search-bar-height-open));
 }
 
 .annotationSection .annotationsHolder .annotation-viewer-side {
@@ -101,11 +101,18 @@
     -webkit-box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.75);
     box-shadow: 0px 10px 10px -10px rgba(0,0,0,0.75);
+    cursor: pointer;
 }
 
 .annotationSection .annotationsHolder .annotationItem .annotatedBy{
     font-weight: bold;
     font-size: 11pt;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.annotationSection .annotationsHolder .annotationItem .annotatedBy:hover{
+    color: var(--pop-color);
 }
 
 .annotationSection .annotationsHolder .annotationItem .quote{
@@ -383,6 +390,11 @@ div[class^="reply-list"] {
     padding-left: 10px;
     background: black;
     background: var(--accent-color);
+}
+
+.sidemenu span {
+    margin-top: 10px;
+    margin-left: -5px;
 }
 
 .side .action-button.save {

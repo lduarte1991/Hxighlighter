@@ -5,7 +5,7 @@
     <nav role="navigation">
         <!-- <button class="sidebar-button" id='create-annotation-side'><i class="fa fa-edit"></i></button> -->
         <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" aria-label="Make annotation using keyboard"><i class="fas fa-keyboard"></i></button>
-        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar"><i class="fa fa-arrow-left"></i></button>
+        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar"><span class="fas fa-angle-double-left"></span></button>
     </nav>
     <div class="group-wrap">
         <div class="annotation-filter-buttons btn-group buttons-<%= filterTabCount %>">
@@ -15,11 +15,11 @@
             <% if (tabsAvailable.indexOf('mine') > -1) {%>
         	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('mine') > -1) {%>active<% } %>" id='mynotes' aria-label="View my annotations" role="button"><span class="far fa-<% if (defaultTab.indexOf('mine') > -1) {%>check-<% } %>square"></span>&nbsp;Mine</button>
             <% } %>
-            <% if (tabsAvailable.indexOf('instructor') > -1) {%>
-            	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('instructor') > -1) {%>active<% } %>" id='instructor' aria-label="View instructor annotations" role="button"><span class="far fa-<% if (defaultTab.indexOf('instructor') > -1) {%>check-<% } %>square"></span>&nbsp;Instructor</button>
+            <% if (tabsAvailable.indexOf('peer') > -1 || tabsAvailable.indexOf('all') > -1) {%>
+        	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('peer') > -1) {%>active<% } %>" id='public' aria-label="View peers' annotations" role="button"><span class="far fa-<% if (defaultTab.indexOf('peer') > -1) {%>check-<% } %>square"></span>&nbsp;Peer</button>
             <% } %>
-            <% if (tabsAvailable.indexOf('peers') > -1 || tabsAvailable.indexOf('all') > -1) {%>
-        	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('peers') > -1) {%>active<% } %>" id='public' aria-label="View peers' annotations" role="button"><span class="far fa-<% if (defaultTab.indexOf('peers') > -1) {%>check-<% } %>square"></span>&nbsp;Peers</button>
+            <% if (tabsAvailable.indexOf('instructor') > -1) {%>
+                <button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('instructor') > -1) {%>active<% } %>" id='instructor' aria-label="View instructor annotations" role="button"><span class="far fa-<% if (defaultTab.indexOf('instructor') > -1) {%>check-<% } %>square"></span>&nbsp;Instructor</button>
             <% } %>
         </div>
     </div>

@@ -124,6 +124,7 @@ var hrange = require('../h-range.js');
         jQuery('.hx-selector-img').remove();
         jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
         jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
+        jQuery('aside.sr-only').removeClass('sr-only');
         this.start = undefined;
         this.currentSelection = undefined;
         this.element.innerHTML = this.saveHTML;
@@ -142,6 +143,7 @@ var hrange = require('../h-range.js');
         jQuery(this.element).attr('tabindex', '');
         jQuery(this.element).attr('aria-multiline', 'false');
         jQuery(this.element).attr('outline', '0px');
+        jQuery('aside').addClass('sr-only')
         jQuery('.hx-selector-img').remove();
         this.start = undefined;
         this.currentSelection = undefined;

@@ -116,6 +116,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             self.annotation_tool.updating = false;
             self.annotation_tool.editing = false;
         }
+        jQuery('.edit').prop('disabled', true);
 
         // set editing mode
         self.annotation_tool.editing = true;
@@ -137,6 +138,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // closes the editor tool and does not save annotation
         self.annotation_tool.editor.find('.cancel').click(function () {
+            console.log("HERE", annotation, !updating, true);
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
         });
 
@@ -159,6 +161,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.FloatingViewer.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
         var self = this;
+        jQuery('.edit').prop('disabled', false);
+        $.publishEvent('editorHidden', self.instance_id, []);
         if (self.annotation_tool.editor) {
             self.annotation_tool.editor.remove();
         }
@@ -188,7 +192,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             'viewerid': self.instance_id.replace(/:/g, '-'),
             'annotations': annotations,
             'instructor_ids': self.options.instructors,
-            'common_name': (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name,
+            'common_name': (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : "",
         });
 
         // add the viewer to the DOM

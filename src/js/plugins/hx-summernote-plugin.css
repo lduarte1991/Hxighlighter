@@ -1,0 +1,13 @@
+.dropdown-menu.dropdown-fontsize a {
+    display: block;
+}
+
+.dropdown-menu.dropdown-style {
+    width: 175px;
+    padding: 5px;
+}
+
+.dropdown-menu.dropdown-style a p{
+    margin-top: 3px;
+    margin-top: 3px;
+}

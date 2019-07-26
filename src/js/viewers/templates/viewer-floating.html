@@ -7,7 +7,7 @@
     <div class="annotation-text-field">
         <% _.each(annotations, function(ann){ %>
             <div class="ann-item item-<%= ann.id %> floating <% if (instructor_ids.indexOf(ann.creator.id) > -1) {%>inst<%}%>" id="annotation-<%= ann.id %>">
-                <div class="annotation-username"><% if (instructor_ids.indexOf(ann.creator.id) > -1) { print(common_name);%>&nbsp;<span class="fas fa-certificate-cap"></span><%} else {print(ann.creator.name);} %></div>
+                <div class="annotation-username"><% if (instructor_ids.indexOf(ann.creator.id) > -1 && common_name !== "") { print(common_name);%>&nbsp;<span class="fas fa-certificate-cap"></span><%} else {print(ann.creator.name);} %></div>
                 <div class="annotation-date" title="<%= ann.created %>"><% if (ann.created){print(jQuery.timeago(ann.created));} else {print(jQuery.timeago(new Date()))} %></div>
                 <button class="edit" id="edit-<%= ann.id %>" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>
                 <button class="delete" id="delete-<%= ann.id %>" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>

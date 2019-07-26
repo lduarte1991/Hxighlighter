@@ -27,15 +27,10 @@ require('./hx-sidebar-tag-tokens.css');
         var self = this;
         // console.log(this);
         var search_button = jQuery('.btn.user-filter#search');
-        if (search_button.hasClass('active')) {
-            self.setUpTokens();
-        }
         search_button.click(function() {
             self.removeTokens();
             setTimeout(function() {
-                if (search_button.hasClass('active')) {
-                    self.setUpTokens();
-                }
+                self.setUpTokens();
             }, 250);
         });
         jQuery('.search-bar.side #search-submit').click(function() {
@@ -63,6 +58,7 @@ require('./hx-sidebar-tag-tokens.css');
 
     $.SidebarTagTokens.prototype.setUpTokens = function() {
         var self = this;
+        console.log("SETTING UP TOKENS", self.options.tagList);
         var tokenHTML = "<div class='tag-token-list'><span>Top Tags:</span><br>";
         self.options.tagList.forEach(function(tag) {
             tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>'
@@ -73,6 +69,15 @@ require('./hx-sidebar-tag-tokens.css');
 
     $.SidebarTagTokens.prototype.saving = function(annotation) {
         return annotation;
+    };
+
+    $.SidebarTagTokens.prototype.setUpListeners = function() {
+        var self = this;
+        $.subscribeEvent('searchSelected', self.instanceID, function() {
+            setTimeout(function() {
+                self.setUpTokens();
+            }, 250);
+        });
     };
 
     Object.defineProperty($.SidebarTagTokens, 'name', {

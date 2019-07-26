@@ -1,5 +1,5 @@
 :root {
-     --sidebar-search-bar-height-open: calc(var(--nav-bar-offset) + 128px);
+     --sidebar-search-bar-height-open: 128px;
 }
 .tag-token-tag {
     display: inline-block;
