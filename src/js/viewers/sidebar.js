@@ -360,7 +360,9 @@ import 'timeago';
                     //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
                     setTimeout(function() {
                         ann._local.highlights.forEach(function(hl) {
-                            jQuery(hl).css({border: '0 solid black'}).animate({borderWidth: 2}, 200).animate({borderWidth: 0}, 200);
+                            if (jQuery(hl).text().trim().length > 0) {
+                                jQuery(hl).css({border: '0 solid black'}).animate({borderWidth: 2}, 200).animate({borderWidth: 0}, 200);
+                            }
                         });
                     }, 350);
                 }

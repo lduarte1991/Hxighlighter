@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Thursday, July 25th, 2019, 2:26:03 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, July 26th, 2019, 4:42:58 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -41116,13 +41116,15 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
           setTimeout(function () {
             ann._local.highlights.forEach(function (hl) {
-              jQuery(hl).css({
-                border: '0 solid black'
-              }).animate({
-                borderWidth: 2
-              }, 200).animate({
-                borderWidth: 0
-              }, 200);
+              if (jQuery(hl).text().trim().length > 0) {
+                jQuery(hl).css({
+                  border: '0 solid black'
+                }).animate({
+                  borderWidth: 2
+                }, 200).animate({
+                  borderWidth: 0
+                }, 200);
+              }
             });
           }, 350);
         }
