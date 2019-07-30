@@ -445,7 +445,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             newLeft = 0;
         }
         if (newTop + elHeight > window.innerHeight) {
-            newTop = window.innerHeight - elHeight - 34; // 34 is the height of the save/cancel buttons that get cut off
+            newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
         }
         if (newLeft + elWidth > window.innerWidth) {
             newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar

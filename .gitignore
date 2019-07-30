@@ -10,6 +10,7 @@ node_modules
 *.tgz
 *.zip
 simple-server.py
+env
 
 # Testing
 .nyc_output

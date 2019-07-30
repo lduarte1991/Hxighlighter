@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Friday, July 26th, 2019, 4:42:58 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Tuesday, July 30th, 2019, 1:30:24 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -42241,7 +42241,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     }
 
     if (newTop + elHeight > window.innerHeight) {
-      newTop = window.innerHeight - elHeight - 34; // 34 is the height of the save/cancel buttons that get cut off
+      newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
     }
 
     if (newLeft + elWidth > window.innerWidth) {
