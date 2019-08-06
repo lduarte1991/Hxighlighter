@@ -20,7 +20,9 @@ require('./plugins/hx-display-resize.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
-require('./plugins/hx-badges.js')
+require('./plugins/hx-badges.js');
+require('./plugins/hx-adminbutton.js');
+require('./plugins/hx-prevnextbutton.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -286,7 +288,12 @@ require('./storage/catchpy.js');
                 }
             } else if (self.options.viewerOptions.defaultTab === "instructor") {
                 options = {
-                    'username': self.options.instructors
+                    'userid': self.options.instructors
+                }
+            } else {
+                var exclusion = [self.options.user_id].concat(self.options.instructors)
+                options = {
+                    'exclude_userid': exclusion
                 }
             }
 

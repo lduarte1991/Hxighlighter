@@ -40,8 +40,11 @@ var hrange = require('../h-range.js');
             resource_link_id: self.options.storageOptions.database_params.resource_link_id,
             utm_source: self.options.storageOptions.database_params.utm_source
         }, options);
+        var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
+        params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
+        params += '&version=' + this.options.storageOptions.database_params.version
         jQuery.ajax({
-            url: self.url_base + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
+            url: self.url_base + params,
             method: 'GET',
             data: data,
             headers: {
@@ -82,8 +85,11 @@ var hrange = require('../h-range.js');
             return;
         }
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
+        var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
+        params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
+        params += '&version=' + this.options.storageOptions.database_params.version
         jQuery.ajax({
-            url: self.url_base + save_ann['id'] + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
+            url: self.url_base + save_ann['id'] + params,
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),
@@ -108,8 +114,11 @@ var hrange = require('../h-range.js');
 
     $.CatchPy.prototype.StorageAnnotationDelete = function(ann_to_delete, elem) {
         var self = this;
+        var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
+        params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
+        params += '&version=' + this.options.storageOptions.database_params.version
         jQuery.ajax({
-            url: self.url_base + ann_to_delete['id']+'?catchpy=true&resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
+            url: self.url_base + ann_to_delete['id']+'?catchpy=true' + params,
             method: 'DELETE',
             headers: {
                 'x-annotator-auth-token': self.options.storageOptions.token,
@@ -132,8 +141,11 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem) {
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
+        var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
+        params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
+        params += '&version=' + this.options.storageOptions.database_params.version
         jQuery.ajax({
-            url: self.url_base + ann_to_update.id + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
+            url: self.url_base + ann_to_update.id + params,
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(save_ann),

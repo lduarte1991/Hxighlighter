@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Tuesday, July 30th, 2019, 1:30:24 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Tuesday, August 6th, 2019, 11:09:22 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39130,7 +39130,7 @@ __webpack_require__(21);
 
 __webpack_require__(22);
 
-__webpack_require__(65);
+__webpack_require__(69);
 
 /***/ }),
 /* 14 */
@@ -39406,6 +39406,10 @@ __webpack_require__(62);
 
 __webpack_require__(64);
 
+__webpack_require__(66);
+
+__webpack_require__(68);
+
 (function ($) {
   /**
    * { function_description }
@@ -39670,7 +39674,12 @@ __webpack_require__(64);
         };
       } else if (self.options.viewerOptions.defaultTab === "instructor") {
         options = {
-          'username': self.options.instructors
+          'userid': self.options.instructors
+        };
+      } else {
+        var exclusion = [self.options.user_id].concat(self.options.instructors);
+        options = {
+          'exclude_userid': exclusion
         };
       }
 
@@ -40949,12 +40958,11 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
       if (self.options.instructors.indexOf(self.options.user_id) > -1) {
         if (filteroptions.indexOf('public') > -1 && (filteroptions.indexOf('mynotes') > -1 && filteroptions.indexOf('instructor') == -1 || filteroptions.indexOf('mynotes') == -1 && filteroptions.indexOf('instructor') > -1)) {
-          jQuery('.btn.user-filter#instructor').addClass('active');
-          jQuery('.btn.user-filter#instructor').find('.far').removeClass('fa-square').addClass('fa-check-square');
-          jQuery('.btn.user-filter#mynotes').addClass('active');
-          jQuery('.btn.user-filter#mynotes').find('.far').removeClass('fa-square').addClass('fa-check-square');
-          search_options['exclude_userid'] = [];
-          search_options['userid'] = [];
+          // jQuery('.btn.user-filter#instructor').addClass('active');
+          // jQuery('.btn.user-filter#instructor').find('.far').removeClass('fa-square').addClass('fa-check-square');
+          // jQuery('.btn.user-filter#mynotes').addClass('active');
+          // jQuery('.btn.user-filter#mynotes').find('.far').removeClass('fa-square').addClass('fa-check-square');
+          search_options['exclude_userid'] = []; //search_options['userid'] = [];
         }
       }
 
@@ -41111,7 +41119,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
         if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
           var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
           jQuery(self.element).parent().animate({
-            scrollTop: jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 20
+            scrollTop: jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 40
           }); //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
 
           setTimeout(function () {
@@ -43424,7 +43432,12 @@ __webpack_require__(50);
   };
 
   $.InstructionPanel.prototype.setUpInstructions = function () {
-    var self = this; // console.log(self.options.instructions, typeof(self.options.instructions));
+    var self = this;
+
+    if (!self.options.instructions || self.options.instructions.length == 0) {
+      return;
+    } // console.log(self.options.instructions, typeof(self.options.instructions));
+
 
     var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span href="#" class="toggle-instructions" role="button" data-toggle="collapse" data-target=".instructions-body" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse in" aria-expanded="true" aria-live="polite" id="annotation-instructions">' + self.options.instructions + '</section></div>';
     jQuery(self.options.slot).prepend(container); // toggles the label for toggling instructions
@@ -43491,7 +43504,7 @@ __webpack_require__(52);
 
   $.FontResize.prototype.setUpButtons = function () {
     var self = this;
-    jQuery(self.options.slot).prepend('<div class="btn-group" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label"></span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
+    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label"></span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
     jQuery(self.options.slot).find('.annotations-text-size-plus').click(function () {
       self.toggleTextSize(1);
     });
@@ -44194,6 +44207,136 @@ __webpack_require__(63);
 /* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  AdminButton Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+__webpack_require__(65);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.AdminButton = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.AdminButton.prototype.init = function () {
+    var self = this;
+
+    if (self.options.AdminButton) {
+      self.url = self.options.AdminButton.homeURL;
+      self.allowed = self.options.AdminButton.has_staff_permissions;
+
+      if (self.allowed && self.url && self.url != '') {
+        self.setUpButtons();
+      }
+    }
+  };
+
+  $.AdminButton.prototype.setUpButtons = function () {
+    var self = this;
+    jQuery(self.options.slot).before('<div class="sidebar-navbar"><a href="' + self.url + '" title="Admin Hub" id="homebutton" role="button"><span class="fas fa-users-cog"></span></button></div>');
+  };
+
+  $.AdminButton.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  Object.defineProperty($.AdminButton, 'name', {
+    value: "AdminButton"
+  });
+  $.plugins.push($.AdminButton);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  PrevNextButton Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+__webpack_require__(67);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.PrevNextButton = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.PrevNextButton.prototype.init = function () {
+    var self = this;
+
+    if (self.options.PrevNextButton) {
+      self.prevUrl = self.options.PrevNextButton.prevUrl;
+      self.nextUrl = self.options.PrevNextButton.nextUrl;
+      self.setUpButtons();
+    }
+  };
+
+  $.PrevNextButton.prototype.setUpButtons = function () {
+    var self = this;
+
+    if (self.prevUrl && self.prevUrl != "") {
+      jQuery(self.options.slot).append('<a href="' + self.prevUrl + '" title="Previous Page" id="prevButton" role="button">Previous</button>');
+    }
+
+    if (self.nextUrl && self.nextUrl != "") {
+      jQuery(self.options.slot).append('<a href="' + self.nextUrl + '" title="Next Page" id="nextButton" role="button">Next</button>');
+    }
+  };
+
+  $.PrevNextButton.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  Object.defineProperty($.PrevNextButton, 'name', {
+    value: "PrevNextButton"
+  });
+  $.plugins.push($.PrevNextButton);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(jQuery) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 var hrange = __webpack_require__(3);
 
@@ -44236,8 +44379,11 @@ var hrange = __webpack_require__(3);
       resource_link_id: self.options.storageOptions.database_params.resource_link_id,
       utm_source: self.options.storageOptions.database_params.utm_source
     }, options);
+    var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
+    params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
+    params += '&version=' + this.options.storageOptions.database_params.version;
     jQuery.ajax({
-      url: self.url_base + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
+      url: self.url_base + params,
       method: 'GET',
       data: data,
       headers: {
@@ -44297,8 +44443,11 @@ var hrange = __webpack_require__(3);
     }
 
     var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
+    var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
+    params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
+    params += '&version=' + this.options.storageOptions.database_params.version;
     jQuery.ajax({
-      url: self.url_base + save_ann['id'] + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
+      url: self.url_base + save_ann['id'] + params,
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(save_ann),
@@ -44330,8 +44479,11 @@ var hrange = __webpack_require__(3);
 
   $.CatchPy.prototype.StorageAnnotationDelete = function (ann_to_delete, elem) {
     var self = this;
+    var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
+    params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
+    params += '&version=' + this.options.storageOptions.database_params.version;
     jQuery.ajax({
-      url: self.url_base + ann_to_delete['id'] + '?catchpy=true&resource_link_id=' + self.options.storageOptions.database_params.resource_link_id,
+      url: self.url_base + ann_to_delete['id'] + '?catchpy=true' + params,
       method: 'DELETE',
       headers: {
         'x-annotator-auth-token': self.options.storageOptions.token
@@ -44361,8 +44513,11 @@ var hrange = __webpack_require__(3);
   $.CatchPy.prototype.StorageAnnotationUpdate = function (ann_to_update, elem) {
     var self = this;
     var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
+    var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
+    params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
+    params += '&version=' + this.options.storageOptions.database_params.version;
     jQuery.ajax({
-      url: self.url_base + ann_to_update.id + '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id + '&utm_source=' + this.options.storageOptions.database_params.utm_source,
+      url: self.url_base + ann_to_update.id + params,
       method: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify(save_ann),
@@ -44864,7 +45019,7 @@ var hrange = __webpack_require__(3);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 65 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**

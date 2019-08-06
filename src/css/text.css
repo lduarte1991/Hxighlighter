@@ -5,7 +5,7 @@
 :root {
     --text-background: #FFFFFF;
     --text-accent-color: #687864;
-    --accent-color: #333;
+    --accent-color: #595959;
     --light-font-color: #fff;
     --accent-font-color: #888;
     --dark-font-color: #000;
@@ -23,6 +23,7 @@ body {
     background: var(--text-background);
     padding: 30px 50px;
     border: 1px solid #888;
+    margin-top: 20px;
     border-color: var(--text-accent-color);
     -webkit-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
     -moz-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
@@ -52,4 +53,8 @@ body {
 
 .inst .fa-certificate {
     color: var(--pop-color);
+}
+
+.annotator-wrapper {
+    margin-bottom: 20px;
 }

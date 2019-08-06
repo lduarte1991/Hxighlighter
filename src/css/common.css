@@ -26,6 +26,7 @@
 .force-show-scrollbars ::-webkit-scrollbar-track:vertical {
     border-left: 1px solid #E7E7E7;
     box-shadow: 1px 0 1px 0 #F6F6F6 inset, -1px 0 1px 0 #F6F6F6 inset;
+    border-radius: 5px;
 }
 
 .force-show-scrollbars ::-webkit-scrollbar-track:horizontal {
@@ -37,6 +38,7 @@
     -webkit-appearance: none;
     background-color: #FAFAFA;
     width: 16px;
+    border-radius: 5px;
 }
 
 .force-show-scrollbars ::-webkit-scrollbar-thumb {
@@ -137,7 +139,7 @@ a#next_target_object {
     color: white;
     font-size: 20px;
     text-align: center;
-    background: #333;
+    background: #595959;
     outline: white;
     -webkit-box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);
     -moz-box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);

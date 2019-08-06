@@ -195,12 +195,12 @@ import 'timeago';
 
             if (self.options.instructors.indexOf(self.options.user_id) > -1) {
                 if (filteroptions.indexOf('public') > -1 && ((filteroptions.indexOf('mynotes') > -1 && filteroptions.indexOf('instructor') == -1) || (filteroptions.indexOf('mynotes') == -1 && filteroptions.indexOf('instructor') > -1))) {
-                    jQuery('.btn.user-filter#instructor').addClass('active');
-                    jQuery('.btn.user-filter#instructor').find('.far').removeClass('fa-square').addClass('fa-check-square');
-                    jQuery('.btn.user-filter#mynotes').addClass('active');
-                    jQuery('.btn.user-filter#mynotes').find('.far').removeClass('fa-square').addClass('fa-check-square');
+                    // jQuery('.btn.user-filter#instructor').addClass('active');
+                    // jQuery('.btn.user-filter#instructor').find('.far').removeClass('fa-square').addClass('fa-check-square');
+                    // jQuery('.btn.user-filter#mynotes').addClass('active');
+                    // jQuery('.btn.user-filter#mynotes').find('.far').removeClass('fa-square').addClass('fa-check-square');
                     search_options['exclude_userid'] = [];
-                    search_options['userid'] = [];
+                    //search_options['userid'] = [];
                 }
             }
 
@@ -356,7 +356,7 @@ import 'timeago';
             jQuery('.side.item-' + ann.id).click(function() {
                 if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
                     var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
-                    jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 20)});
+                    jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 40)});
                     //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
                     setTimeout(function() {
                         ann._local.highlights.forEach(function(hl) {

@@ -5,10 +5,12 @@
 .create-reply-area button[id^="other-save-reply"] {
     background: #333;
     color: white;
+    border-bottom-left-radius: 5px;
 }
 
 .create-reply-area button[id^="other-cancel-reply"] {
     background: #eee;
+    border-bottom-right-radius: 5px;
 }
 
 .create-reply-area button[id^="sidebar-"] {
@@ -16,19 +18,27 @@
 }
 
 .create-reply-area button[id^="sidebar-save-reply"] {
-    background: #333;
+    background: #595959;
     color: white;
+    border-bottom-left-radius: 5px;
 }
 
 .create-reply-area button[id^="sidebar-cancel-reply"] {
     background: #eee;
+    border-bottom-right-radius: 5px;
 }
 
 .plugin-area-bottom button.create-reply, .plugin-area-bottom button.view-replies {
     background: #333;
     background: var(--accent-color);
-    color: white;
-    width: 100%;
+    background: #ededed;
+    color: black;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-right: auto;
+    width: 142px;
+    border-radius: 5px;
+    border: 1px solid #333;
 }
 
 .plugin-area-bottom div[class*='reply-list'] {
@@ -72,6 +82,7 @@
 .reply-menu {
     height: 10px;
     background: #333;
+    background: #595959;
     transition: all .2s ease-in-out;
     overflow: hidden;
 }

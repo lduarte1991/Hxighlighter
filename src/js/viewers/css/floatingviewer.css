@@ -1,9 +1,7 @@
 
-@supports (not(--value: 0)) {
-  /* CSS variables not supported */
-
+:root {
+    --floating-button-color: #595959;
 }
-
 .annotator-adder.annotator-invert-y{
     margin-top: 8px;
     background-position: right bottom;
@@ -78,10 +76,13 @@
 
 .annotation-editor .action-button.save {
     background: #333;
+    background: var(--floating-button-color);
+    border-bottom-left-radius: 5px;
 }
 
 .annotation-editor .action-button.cancel {
     background: #eee;
+    border-bottom-right-radius: 5px;
 }
 
 .token-input-list {
@@ -105,7 +106,7 @@
     min-height: 200px;
     border: 1px solid black;
     background: white;
-    /*border-radius: 10px;*/
+    border-radius: 5px;
     box-shadow: 5px 5px 3px #888;
     z-index: 9999;
 }
@@ -128,6 +129,7 @@
     height: 25px;
     position: relative;
     background: #333;
+    background: var(--floating-button-color);
     text-align: right;
 }
 
@@ -146,6 +148,7 @@
 .annotation-editor .annotation-editor-nav-bar button, .annotation-viewer .annotation-viewer-nav-bar button{
     display: inline;
     background-color: #333;
+    background-color: var(--floating-button-color);
     border: 0;
     color: white;
     margin-top: 1px;

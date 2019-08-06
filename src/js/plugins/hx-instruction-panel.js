@@ -26,11 +26,15 @@ require('./hx-instruction-panel.css');
      */
     $.InstructionPanel.prototype.init = function() {
         var self = this;
+        
         self.setUpInstructions();
     };
 
     $.InstructionPanel.prototype.setUpInstructions = function() {
         var self = this;
+        if (!self.options.instructions || self.options.instructions.length == 0) {
+            return;
+        }
         // console.log(self.options.instructions, typeof(self.options.instructions));
         var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span href="#" class="toggle-instructions" role="button" data-toggle="collapse" data-target=".instructions-body" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse in" aria-expanded="true" aria-live="polite" id="annotation-instructions">'+self.options.instructions+'</section></div>'
         jQuery(self.options.slot).prepend(container);

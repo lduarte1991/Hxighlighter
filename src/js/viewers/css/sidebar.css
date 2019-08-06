@@ -3,8 +3,8 @@
     --sidebar-background: #fff;
     --sidebar-border: 1px solid #888;
     --sidebar-button-back: #fff;
-    --sidebar-button-back-accent: #333;
-    --sidebar-button-color: #333;
+    --sidebar-button-back-accent: #595959;
+    --sidebar-button-color: #595959;
     --sidebar-button-color-accent: #ededed;
     --sidebar-search-bar-height-open: 73px;
 }
@@ -21,6 +21,7 @@
     height: calc(100% - var(--nav-bar-offset));
     border: 1px solid #888;
     border: var(--sidebar-border);
+    border: 0px;
     padding: 5px;
     overflow-x: hidden;
     background: white;
@@ -50,12 +51,17 @@
 
 .annotationSection nav {
     width: 100%;
-    height: 25px;
+    height: 27px;
     position: absolute;
     top: 0;
     left: 0;
     background: black;
     background: var(--sidebar-button-color);
+    background: #F7F9FB;
+    background: #EDEDED;
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.39);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.39);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.39);
 }
 
 .annotationSection .delete, .edit {
@@ -74,8 +80,11 @@
 
 .annotationSection .annotationsHolder {
     height: 100%;
+    height: calc(100% - 5px);
+    margin-top: 5px;
     overflow-y: scroll;
     overflow-x: hidden;
+    background: white;
 }
 
 .annotationSection .annotationsHolder.search-opened {
@@ -129,6 +138,8 @@
 
 .annotationSection .annotationsHolder .annotationItem .body {
     margin-bottom: 10px;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .annotationSection .annotationsHolder .annotationItem .annotation-tag{
@@ -157,10 +168,18 @@ button.sidebar-button#search {
 button.sidebar-button#hide_label {
     right: 0;
     text-align: right;
+    background: #F7F9FB;
+    background: transparent;
+    color: #595959;
+    font-size: 17px;
 }
 
 button.sidebar-button#keyboard-toggle {
-    right: 25px;
+    left: 0px;
+    background: #F7F9FB;
+    background: transparent;
+    color: #595959;
+    font-size: 17px;
 }
 
 .two-button-version button#hide_label {
@@ -176,7 +195,7 @@ button.sidebar-button#keyboard-toggle {
 
 .annotation-filter-buttons.btn-group {
     position: absolute;
-    top: 24px;
+    top: 30px;
     left: 0;
     width: 100%;
 }
@@ -185,6 +204,8 @@ button.sidebar-button#keyboard-toggle {
     background: var(--sidebar-button-color-accent);
     color: var(--dark-font-color);
     font-size: 0.85em;
+    border-top-right-radius: 5px!important;
+    border-top-left-radius: 5px!important;
 }
 
 .annotation-filter-buttons.btn-group .btn span{
