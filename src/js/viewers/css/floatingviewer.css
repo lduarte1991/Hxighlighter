@@ -108,7 +108,7 @@
     background: white;
     border-radius: 5px;
     box-shadow: 5px 5px 3px #888;
-    z-index: 9999;
+    z-index: 999;
 }
 
 .annotation-editor {
@@ -152,6 +152,14 @@
     border: 0;
     color: white;
     margin-top: 1px;
+}
+
+.annotation-viewer .annotation-viewer-nav-bar button.cancel {
+    display: none;
+}
+
+.annotation-viewer.static .annotation-viewer-nav-bar button.cancel {
+    display: inline-block;
 }
 
 .annotation-viewer .delete, .annotation-viewer .edit {
@@ -200,6 +208,11 @@
     border-top: 1px solid black;
     padding-top: 10px;
     margin-top: -10px;
+    cursor: pointer;
+}
+
+.annotation-text-field .annotation-username:hover {
+    color: var(--pop-color);
 }
 
 .annotation-text-field .annotation-date {
@@ -240,6 +253,7 @@
     border: 1px solid black;
     border-radius: 5px;
     display: inline-block;
+    cursor: pointer;
 }
 
 .annotation-tags {
@@ -306,7 +320,7 @@
     }
 }
 
-.annotation-viewer.static nav.annotation-viewer-nav-bar:before {
+/*.annotation-viewer.static nav.annotation-viewer-nav-bar:before {
     content: "\f08d";
     left: 5px;
     position: absolute;
@@ -315,4 +329,4 @@
     font-weight: 900;
     color: white;
     transform: rotate(-35deg);
-}
+}*/

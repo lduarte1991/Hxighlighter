@@ -17,4 +17,7 @@
 
 .tag-token-list {
     text-align: center;
+    width: 90%;
+    top: 105px;
+    position: absolute;
 }

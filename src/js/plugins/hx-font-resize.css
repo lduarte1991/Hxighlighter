@@ -14,6 +14,17 @@
     font-size: 8pt!important;*/
 }
 
+.pull-left {
+    width: 138px;
+}
+
+
+@media screen and (max-width: 960px) {
+    .hx-font-size {
+        margin-top: 15px;
+    }
+}
+
 /*.hx-font-size {
     margin-top: -114px;
     font-size: 8pt;

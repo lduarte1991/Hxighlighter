@@ -31,9 +31,12 @@ require('./hx-summernote-plugin.css');
                 onKeydown:  function (e) {
                     var t = e.currentTarget.innerText;
                     if (t.trim().length >= maxLength) {
-                        // delete key
-                        if (e.keyCode != 8){
+                        // prevents everything that could add a new character
+                        var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
+                        console.log(e.key);
+                        if (allowedKeys.indexOf(e.key) == -1 ||  (e.key == 'a' && !(e.ctrlKey || e.metaKey)) || (e.key == 'c' && !(e.ctrlKey || e.metaKey)) || (e.key == 'v' && !(e.ctrlKey || e.metaKey))){
                             e.preventDefault();
+                            alert('You have reached the character limit for this annotation (max 1000 characters).')
                         }
                     }
                 },
@@ -51,6 +54,7 @@ require('./hx-summernote-plugin.css');
                         setTimeout(function() { // wrap in a timer to prevent issues in Firefox
                             document.execCommand('insertText', false, bufferTextAllowed);
                             jQuery('#maxContentPost').text(maxLength - t.length);
+                            alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.')
                         }, 10)
                     }
                 }
@@ -61,7 +65,6 @@ require('./hx-summernote-plugin.css');
                 ['fontsize', ['fontsize']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['insert', ['table', 'link', 'hr']],
-                ['view', ['codeview']],
             ],
         }, options);
         this.init();
@@ -141,9 +144,10 @@ require('./hx-summernote-plugin.css');
     $.SummernoteRichText.prototype.returnValue = function() {
         var result = this.elementObj.summernote('code');
         if (result.indexOf('<script') >= 0) {
-            alert("I'm sorry Colin, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
+            alert("I'm sorry Dave, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
             return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
         }
+        result = result.replace(/<p><\/p>/g, '').replace(/<p><br><\/p>/g, '');
         return result;
     };
 
@@ -174,6 +178,19 @@ require('./hx-summernote-plugin.css');
         $.subscribeEvent('editorHidden', self.instanceID, function(){
             self.destroy();
         }.bind(self));
+
+        jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
+            var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
+            input.prop('type', 'url');
+            var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
+            var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+            var regex = new RegExp(expression);
+            if (chosen.match(regex)){
+                jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', false);
+            } else {
+                jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', true);
+            }
+        });
     };
 
     /**

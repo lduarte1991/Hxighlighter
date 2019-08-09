@@ -103,7 +103,7 @@ import 'timeago';
             $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
                 type: self.options.mediaType,
             }, function(results, converter) {
-                $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+                $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter, true]);
             }, function() {
 
             }])
@@ -165,7 +165,7 @@ import 'timeago';
                         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
                             jQuery('.side.load-more').remove();
                             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+                            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter, false]);
                         }, function() {
                             
                         }]);
@@ -290,7 +290,7 @@ import 'timeago';
     $.Sidebar.prototype.search = function(options) {
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
-            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+            $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter, true]);
             jQuery('.loading-obj').remove();
             jQuery('.side.annotationsHolder').scrollTop(0);
             self.load_more_open = false;

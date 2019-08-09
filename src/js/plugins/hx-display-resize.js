@@ -39,12 +39,12 @@ require('./hx-display-resize.css');
             jQuery(self.options.slot).on('mousemove', function(event) {
                 self.stretch(event);
                 if (self.itemStretching) {
-                    jQuery('body').css('overflow', 'hidden');
+                    // jQuery('body').css('overflow', 'hidden');
                 }
             });
             jQuery(self.options.slot).on('mouseup', function(event) {
                 if (self.itemStretching) {
-                    jQuery('body').css('overflow', 'inherit');
+                    // jQuery('body').css('overflow', 'inherit');
                 }
                 self.finishedStretching(event);
             });

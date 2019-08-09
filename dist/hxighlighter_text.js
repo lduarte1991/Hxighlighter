@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Tuesday, August 6th, 2019, 11:09:22 AM  
+// [AIV_SHORT]  Version: 0.0.1 - Friday, August 9th, 2019, 12:47:13 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,7 +82,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10686,7 +10686,7 @@ return jQuery;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _css_common_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _css_common_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony import */ var _css_common_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_common_css__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * Hxighlighter is the superclass that will contain all instances of the tool.
@@ -27864,7 +27864,7 @@ Hxighlighter.storage = []; // comment out following line when not webpacking
   else {}
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(27)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(29)(module)))
 
 /***/ }),
 /* 3 */
@@ -31722,6 +31722,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(jQuery) {/*! jquery.tokeninput 2019-05-06 */
+!function(a){function b(a){return String(null===a||void 0===a?"":a)}function c(a){return b(a).replace(i,function(a){return h[a]})}var d={method:"GET",queryParam:"q",searchDelay:300,minChars:1,propertyToSearch:"name",jsonContainer:null,contentType:"json",excludeCurrent:!1,excludeCurrentParameter:"x",prePopulate:null,processPrePopulate:!1,hintText:"Type in a search term",noResultsText:"No results",searchingText:"Searching...",deleteText:"&#215;",animateDropdown:!0,placeholder:null,theme:null,zindex:999,resultsLimit:null,enableHTML:!1,resultsFormatter:function(a){var b=a[this.propertyToSearch];return"<li>"+(this.enableHTML?b:c(b))+"</li>"},tokenFormatter:function(a){var b=a[this.propertyToSearch];return"<li><p>"+(this.enableHTML?b:c(b))+"</p></li>"},tokenLimit:null,tokenDelimiter:",",preventDuplicates:!1,tokenValue:"id",allowFreeTagging:!1,allowTabOut:!1,autoSelectFirstResult:!1,onResult:null,onCachedResult:null,onAdd:null,onFreeTaggingAdd:null,onDelete:null,onReady:null,idPrefix:"token-input-",disabled:!1},e={tokenList:"token-input-list",token:"token-input-token",tokenReadOnly:"token-input-token-readonly",tokenDelete:"token-input-delete-token",selectedToken:"token-input-selected-token",highlightedToken:"token-input-highlighted-token",dropdown:"token-input-dropdown",dropdownItem:"token-input-dropdown-item",dropdownItem2:"token-input-dropdown-item2",selectedDropdownItem:"token-input-selected-dropdown-item",inputToken:"token-input-input-token",focused:"token-input-focused",disabled:"token-input-disabled"},f={BEFORE:0,AFTER:1,END:2},g={BACKSPACE:8,TAB:9,ENTER:13,ESCAPE:27,SPACE:32,PAGE_UP:33,PAGE_DOWN:34,END:35,HOME:36,LEFT:37,UP:38,RIGHT:39,DOWN:40,NUMPAD_ENTER:108,COMMA:188},h={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","/":"&#x2F;"},i=/[&<>"'\/]/g,j={init:function(b,c){var e=a.extend({},d,c||{});return this.each(function(){a(this).data("settings",e),a(this).data("tokenInputObject",new a.TokenList(this,b,e))})},clear:function(){return this.data("tokenInputObject").clear(),this},add:function(a){return this.data("tokenInputObject").add(a),this},remove:function(a){return this.data("tokenInputObject").remove(a),this},get:function(){return this.data("tokenInputObject").getTokens()},toggleDisabled:function(a){return this.data("tokenInputObject").toggleDisabled(a),this},setOptions:function(b){return a(this).data("settings",a.extend({},a(this).data("settings"),b||{})),this},destroy:function(){if(this.data("tokenInputObject")){this.data("tokenInputObject").clear();var a=this,b=this.parent();return b.empty(),a.show(),b.append(a),a}}};a.fn.tokenInput=function(a){return j[a]?j[a].apply(this,Array.prototype.slice.call(arguments,1)):j.init.apply(this,arguments)},a.TokenList=function(b,d,h){function i(d){return a(b).data("settings").enableHTML?d:c(d)}function j(c){"boolean"==typeof c?a(b).data("settings").disabled=c:a(b).data("settings").disabled=!a(b).data("settings").disabled,P.attr("disabled",a(b).data("settings").disabled),U.toggleClass(a(b).data("settings").classes.disabled,a(b).data("settings").disabled),R&&q(a(R),f.END),Q.attr("disabled",a(b).data("settings").disabled)}function k(){return null!==a(b).data("settings").tokenLimit&&N>=a(b).data("settings").tokenLimit?(P.hide(),void u()):void 0}function l(){if(L!==(L=P.val())){var a=U.width()-P.offset().left-U.offset().left;X.html(c(L)||c(h.placeholder)),P.width(Math.min(U.width(),Math.max(a,X.width()+30)))}}function m(){var c=a.trim(P.val()),d=c.split(a(b).data("settings").tokenDelimiter);a.each(d,function(c,d){if(d){a.isFunction(a(b).data("settings").onFreeTaggingAdd)&&(d=a(b).data("settings").onFreeTaggingAdd.call(Q,d));var e={};e[a(b).data("settings").tokenValue]=e[a(b).data("settings").propertyToSearch]=d,o(e)}})}function n(c){var d=a(a(b).data("settings").tokenFormatter(c)),e=c.readonly===!0;e&&d.addClass(a(b).data("settings").classes.tokenReadOnly),d.addClass(a(b).data("settings").classes.token).insertBefore(V),e||a("<span>"+a(b).data("settings").deleteText+"</span>").addClass(a(b).data("settings").classes.tokenDelete).appendTo(d).click(function(){return a(b).data("settings").disabled?void 0:(s(a(this).parent()),Q.change(),!1)});var f=c;return a.data(d.get(0),"tokeninput",c),M=M.slice(0,S).concat([f]).concat(M.slice(S)),S++,t(M,Q),N+=1,null!==a(b).data("settings").tokenLimit&&N>=a(b).data("settings").tokenLimit&&(P.hide(),u()),d}function o(c){var d=a(b).data("settings").onAdd;if(N>0&&a(b).data("settings").preventDuplicates){var e=null;if(U.children().each(function(){var b=a(this),d=a.data(b.get(0),"tokeninput");return console.log(d,h,h.tokenValue),d&&d[h.tokenValue]===c[h.tokenValue]?(e=b,!1):void 0}),e)return p(e),V.insertAfter(e),void I(P)}P.width(1),(null==a(b).data("settings").tokenLimit||N<a(b).data("settings").tokenLimit)&&(n(c),P.attr("placeholder",null),k()),P.val(""),u(),a.isFunction(d)&&d.call(Q,c)}function p(c){a(b).data("settings").disabled||(c.addClass(a(b).data("settings").classes.selectedToken),R=c.get(0),P.val(""),u())}function q(c,d){c.removeClass(a(b).data("settings").classes.selectedToken),R=null,d===f.BEFORE?(V.insertBefore(c),S--):d===f.AFTER?(V.insertAfter(c),S++):(V.appendTo(U),S=N),I(P)}function r(b){var c=R;R&&q(a(R),f.END),c===b.get(0)?q(b,f.END):p(b)}function s(c){var d=a.data(c.get(0),"tokeninput"),e=a(b).data("settings").onDelete,f=c.prevAll().length;f>S&&f--,c.remove(),R=null,I(P),M=M.slice(0,f).concat(M.slice(f+1)),0==M.length&&P.attr("placeholder",h.placeholder),S>f&&S--,t(M,Q),N-=1,null!==a(b).data("settings").tokenLimit&&(P.show().val(""),I(P)),a.isFunction(e)&&e.call(Q,d)}function t(c,d){var e=a.map(c,function(c){return"function"==typeof a(b).data("settings").tokenValue?a(b).data("settings").tokenValue.call(this,c):c[a(b).data("settings").tokenValue]});d.val(e.join(a(b).data("settings").tokenDelimiter))}function u(){W.hide().empty(),T=null}function v(){W.css({position:"absolute",top:U.offset().top+U.outerHeight(!0),left:U.offset().left,width:U.width(),"z-index":a(b).data("settings").zindex}).show()}function w(){a(b).data("settings").searchingText&&(W.html("<p>"+i(a(b).data("settings").searchingText)+"</p>"),v())}function x(){a(b).data("settings").hintText&&(W.html("<p>"+i(a(b).data("settings").hintText)+"</p>"),v())}function y(a){return a.replace(Z,"\\$&")}function z(a,b){return a.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+y(b)+")(?![^<>]*>)(?![^&;]+;)","gi"),function(a,b){return"<b>"+i(b)+"</b>"})}function A(a,b,c){return a.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+y(b)+")(?![^<>]*>)(?![^&;]+;)","g"),z(b,c))}function B(c){if(a(b).data("settings").excludeCurrent){var d=a(b).data("tokenInputObject").getTokens(),e=[];d.length&&(a.each(c,function(c,f){var g=!0;a.each(d,function(c,d){return f[a(b).data("settings").propertyToSearch]==d[a(b).data("settings").propertyToSearch]?(g=!1,!1):void 0}),g&&e.push(f)}),c=e)}return c}function C(c,d){if(d=B(d),d&&d.length){W.empty();var e=a("<ul/>").appendTo(W).mouseover(function(b){D(a(b.target).closest("li"))}).mousedown(function(b){return o(a(b.target).closest("li").data("tokeninput")),Q.change(),!1}).hide();a(b).data("settings").resultsLimit&&d.length>a(b).data("settings").resultsLimit&&(d=d.slice(0,a(b).data("settings").resultsLimit)),a.each(d,function(d,f){var g=a(b).data("settings").resultsFormatter(f);g=A(g,f[a(b).data("settings").propertyToSearch],c),g=a(g).appendTo(e),d%2?g.addClass(a(b).data("settings").classes.dropdownItem):g.addClass(a(b).data("settings").classes.dropdownItem2),0===d&&a(b).data("settings").autoSelectFirstResult&&D(g),a.data(g.get(0),"tokeninput",f)}),v(),a(b).data("settings").animateDropdown?e.slideDown("fast"):e.show()}else a(b).data("settings").noResultsText&&(W.html("<p>"+i(a(b).data("settings").noResultsText)+"</p>"),v())}function D(c){c&&(T&&E(a(T)),c.addClass(a(b).data("settings").classes.selectedDropdownItem),T=c.get(0))}function E(c){c.removeClass(a(b).data("settings").classes.selectedDropdownItem),T=null}function F(){var c=P.val();c&&c.length&&(R&&q(a(R),f.AFTER),c.length>=a(b).data("settings").minChars?(w(),clearTimeout(K),K=setTimeout(function(){G(c)},a(b).data("settings").searchDelay)):u())}function G(c){var d=c+H(),e=O.get(d);if(e)a.isFunction(a(b).data("settings").onCachedResult)&&(e=a(b).data("settings").onCachedResult.call(Q,e)),C(c,e);else if(a(b).data("settings").url){var f=H(),g={};if(g.data={},f.indexOf("?")>-1){var i=f.split("?");g.url=i[0];var j=i[1].split("&");a.each(j,function(a,b){var c=b.split("=");g.data[c[0]]=c[1]})}else g.url=f;if(g.data[a(b).data("settings").queryParam]=c,g.type=a(b).data("settings").method,g.dataType=a(b).data("settings").contentType,a(b).data("settings").crossDomain&&(g.dataType="jsonp"),a(b).data("settings").excludeCurrent){var k=a(b).data("tokenInputObject").getTokens(),l=a.map(k,function(c){return"function"==typeof a(b).data("settings").tokenValue?a(b).data("settings").tokenValue.call(this,c):c[a(b).data("settings").tokenValue]});g.data[a(b).data("settings").excludeCurrentParameter]=l.join(a(b).data("settings").tokenDelimiter)}g.success=function(e){O.add(d,a(b).data("settings").jsonContainer?e[a(b).data("settings").jsonContainer]:e),a.isFunction(a(b).data("settings").onResult)&&(e=a(b).data("settings").onResult.call(Q,e)),P.val()===c&&C(c,a(b).data("settings").jsonContainer?e[a(b).data("settings").jsonContainer]:e)},h.onSend&&h.onSend(g),a.ajax(g)}else if(a(b).data("settings").local_data){var m=a.grep(a(b).data("settings").local_data,function(d){return d[a(b).data("settings").propertyToSearch].toLowerCase().indexOf(c.toLowerCase())>-1});O.add(d,m),a.isFunction(a(b).data("settings").onResult)&&(m=a(b).data("settings").onResult.call(Q,m)),C(c,m)}}function H(){var c=a(b).data("settings");return"function"==typeof c.url?c.url.call(c):c.url}function I(a){setTimeout(function(){a.focus()},50)}if("string"==typeof d||"function"==typeof d){a(b).data("settings").url=d;var J=H();void 0===a(b).data("settings").crossDomain&&"string"==typeof J&&(-1===J.indexOf("://")?a(b).data("settings").crossDomain=!1:a(b).data("settings").crossDomain=location.href.split(/\/+/g)[1]!==J.split(/\/+/g)[1])}else"object"==typeof d&&(a(b).data("settings").local_data=d);a(b).data("settings").classes?a(b).data("settings").classes=a.extend({},e,a(b).data("settings").classes):a(b).data("settings").theme?(a(b).data("settings").classes={},a.each(e,function(c,d){a(b).data("settings").classes[c]=d+"-"+a(b).data("settings").theme})):a(b).data("settings").classes=e;var K,L,M=[],N=0,O=new a.TokenList.Cache,P=a('<input type="text" autocomplete="off" autocapitalize="off"/>').css({outline:"none"}).attr("id",a(b).data("settings").idPrefix+b.id).focus(function(){return a(b).data("settings").disabled?!1:((null===a(b).data("settings").tokenLimit||a(b).data("settings").tokenLimit!==N)&&x(),void U.addClass(a(b).data("settings").classes.focused))}).blur(function(){u(),a(b).data("settings").allowFreeTagging&&m(),a(this).val(""),U.removeClass(a(b).data("settings").classes.focused)}).bind("keyup keydown blur update",l).keydown(function(c){var d,e;switch(c.keyCode){case g.LEFT:case g.RIGHT:case g.UP:case g.DOWN:if(0===this.value.length)d=V.prev(),e=V.next(),d.length&&d.get(0)===R||e.length&&e.get(0)===R?c.keyCode===g.LEFT||c.keyCode===g.UP?q(a(R),f.BEFORE):q(a(R),f.AFTER):c.keyCode!==g.LEFT&&c.keyCode!==g.UP||!d.length?c.keyCode!==g.RIGHT&&c.keyCode!==g.DOWN||!e.length||p(a(e.get(0))):p(a(d.get(0)));else{var h=null;c.keyCode===g.DOWN||c.keyCode===g.RIGHT?(h=a(W).find("li").first(),T&&(h=a(T).next())):(h=a(W).find("li").last(),T&&(h=a(T).prev())),D(h)}break;case g.BACKSPACE:if(d=V.prev(),0===this.value.length)return R?(s(a(R)),Q.change()):d.length&&p(a(d.get(0))),!1;1===a(this).val().length?u():setTimeout(function(){F()},5);break;case g.TAB:case g.ENTER:case g.NUMPAD_ENTER:case g.COMMA:if(T)o(a(T).data("tokeninput")),Q.change();else{if(a(b).data("settings").allowFreeTagging){if(a(b).data("settings").allowTabOut&&""===a(this).val())return!0;m()}else if(a(this).val(""),a(b).data("settings").allowTabOut)return!0;c.stopPropagation(),c.preventDefault()}return!1;case g.ESCAPE:return u(),!0;default:String.fromCharCode(c.which)&&setTimeout(function(){F()},5)}});h.placeholder&&P.attr("placeholder",h.placeholder);var Q=a(b).hide().val("").focus(function(){I(P)}).blur(function(){return P.blur(),Q}),R=null,S=0,T=null,U=a("<ul />").addClass(a(b).data("settings").classes.tokenList).click(function(b){var c=a(b.target).closest("li");c&&c.get(0)&&a.data(c.get(0),"tokeninput")?r(c):(R&&q(a(R),f.END),I(P))}).mouseover(function(c){var d=a(c.target).closest("li");d&&R!==this&&d.addClass(a(b).data("settings").classes.highlightedToken)}).mouseout(function(c){var d=a(c.target).closest("li");d&&R!==this&&d.removeClass(a(b).data("settings").classes.highlightedToken)}).insertBefore(Q),V=a("<li />").addClass(a(b).data("settings").classes.inputToken).appendTo(U).append(P),W=a("<div/>").addClass(a(b).data("settings").classes.dropdown).appendTo("body").hide(),X=a("<tester/>").insertAfter(P).css({position:"absolute",top:-9999,left:-9999,width:"auto",fontSize:P.css("fontSize"),fontFamily:P.css("fontFamily"),fontWeight:P.css("fontWeight"),letterSpacing:P.css("letterSpacing"),whiteSpace:"nowrap"});Q.val("");var Y=a(b).data("settings").prePopulate||Q.data("pre");a(b).data("settings").processPrePopulate&&a.isFunction(a(b).data("settings").onResult)&&(Y=a(b).data("settings").onResult.call(Q,Y)),Y&&Y.length&&a.each(Y,function(a,b){n(b),k(),P.attr("placeholder",null)}),a(b).data("settings").disabled&&j(!0),"function"==typeof a(b).data("settings").onReady&&a(b).data("settings").onReady.call(),this.clear=function(){U.children("li").each(function(){0===a(this).children("input").length&&s(a(this))})},this.add=function(a){o(a)},this.remove=function(b){U.children("li").each(function(){if(0===a(this).children("input").length){var c=a(this).data("tokeninput"),d=!0;for(var e in b)if(b[e]!==c[e]){d=!1;break}d&&s(a(this))}})},this.getTokens=function(){return M},this.toggleDisabled=function(a){j(a)},l();var Z=new RegExp("[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]","g")},a.TokenList.Cache=function(b){var c,d,e={},f=0;c=a.extend({max_size:500},b),d=function(){e={},f=0},this.add=function(a,b){f>c.max_size&&d(),e[a]||(f+=1),e[a]=b},this.get=function(a){return e[a]}}}(jQuery);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function($) {/**
  * Super simple wysiwyg editor v0.8.9
  * https://summernote.org
@@ -32335,7 +32349,7 @@ var lists = {
     unique: unique
 };
 
-var isSupportAmd =  true && __webpack_require__(39); // eslint-disable-line
+var isSupportAmd =  true && __webpack_require__(41); // eslint-disable-line
 /**
  * returns whether font is installed or not.
  *
@@ -38993,7 +39007,7 @@ $$1.summernote = $$1.extend($$1.summernote, {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -39002,7 +39016,7 @@ $$1.summernote = $$1.extend($$1.summernote, {
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(11);
+__webpack_require__(13);
 
 (function ($) {
   /**
@@ -39088,61 +39102,49 @@ __webpack_require__(11);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(13);
+module.exports = __webpack_require__(15);
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
 /* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+/* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
 /* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
+/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
+/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
 /* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_css_text_css__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
  // vendors
 
-__webpack_require__(18);
+__webpack_require__(20);
 
-__webpack_require__(19); // common Hxighlighter object
+__webpack_require__(21); // common Hxighlighter object
 
 
 __webpack_require__(1);
 
-__webpack_require__(21);
+__webpack_require__(23);
 
-__webpack_require__(22);
+__webpack_require__(24);
 
-__webpack_require__(69);
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
+__webpack_require__(70);
 
 /***/ }),
 /* 16 */
@@ -39160,6 +39162,18 @@ __webpack_require__(69);
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
@@ -39169,7 +39183,7 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*! Tiny Pub/Sub - v0.7.0 - 2013-01-29
@@ -39179,13 +39193,13 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery, $) {(function ($$) {
@@ -39361,28 +39375,28 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(0)))
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * 
  */
 //during deployment, this is what decides what gets instantiated, should be moved elsewhere
-__webpack_require__(23);
-
-__webpack_require__(24);
-
 __webpack_require__(25);
 
 __webpack_require__(26);
 
-__webpack_require__(34);
+__webpack_require__(27);
 
-__webpack_require__(38);
+__webpack_require__(28);
 
-__webpack_require__(10);
+__webpack_require__(36);
 
-__webpack_require__(41);
+__webpack_require__(40);
+
+__webpack_require__(12);
+
+__webpack_require__(43);
 
 __webpack_require__(45);
 
@@ -39409,6 +39423,8 @@ __webpack_require__(64);
 __webpack_require__(66);
 
 __webpack_require__(68);
+
+__webpack_require__(69);
 
 (function ($) {
   /**
@@ -39611,7 +39627,7 @@ __webpack_require__(68);
     var self = this;
     self.drawers = [];
     jQuery.each($.drawers, function (_, drawer) {
-      self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector));
+      self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
     });
   };
 
@@ -39875,18 +39891,22 @@ __webpack_require__(68);
    */
 
 
-  $.TextTarget.prototype.StorageAnnotationLoad = function (annotations, converter) {
+  $.TextTarget.prototype.StorageAnnotationLoad = function (annotations, converter, undrawOld) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
       if (typeof viewer.StorageAnnotationLoad === "function") {
         viewer.StorageAnnotationLoad(annotations);
       }
     });
-    $.publishEvent('GetAnnotationsData', self.instance_id, [function (anns) {
-      anns.forEach(function (ann) {
-        self.TargetAnnotationUndraw(ann);
-      });
-    }]);
+
+    if (undrawOld) {
+      $.publishEvent('GetAnnotationsData', self.instance_id, [function (anns) {
+        anns.forEach(function (ann) {
+          self.TargetAnnotationUndraw(ann);
+        });
+      }]);
+    }
+
     annotations.forEach(function (ann) {
       var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
       self.TargetAnnotationDraw(converted_ann);
@@ -39934,7 +39954,7 @@ __webpack_require__(68);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(3);
@@ -40462,7 +40482,7 @@ __webpack_require__(68);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40496,6 +40516,16 @@ var hrange = __webpack_require__(3);
       var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
 
       self.onSelection(selectionRange, event);
+    });
+    document.addEventListener('keyup', function (e) {
+      var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
+
+      if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
+        var selection = window.getSelection();
+        var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
+
+        self.onSelection(selectionRange, event);
+      }
     });
   };
 
@@ -40552,7 +40582,12 @@ var hrange = __webpack_require__(3);
 
   $.MouseSelector.prototype.loadButton = function (range, iP, event) {
     var self = this;
-    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + iP.top + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
+
+    if (iP.top <= 48) {
+      iP.top = 49;
+    }
+
+    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
     jQuery('body').append(confirmButtonTemplate);
     jQuery('.hx-confirm-button button').click(function () {
       $.publishEvent('drawTemp', self.instance_id, [[range]]);
@@ -40565,19 +40600,20 @@ var hrange = __webpack_require__(3);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(3);
 
 (function ($) {
-  $.XPathDrawer = function (element, inst_id, hClass) {
+  $.XPathDrawer = function (element, inst_id, hClass, options) {
     this.element = element;
     this.instance_id = inst_id;
     this.h_class = (hClass + ' annotator-hl').trim();
     this.init();
     this.drawnAnnotations = [];
     this.tempHighlights = [];
+    this.options = options || {};
   };
 
   $.XPathDrawer.prototype.init = function () {
@@ -40643,7 +40679,8 @@ var hrange = __webpack_require__(3);
   };
 
   $.XPathDrawer.prototype.draw = function (annotation) {
-    var self = this; // console.log("Annotation Being Drawn", annotation);
+    var self = this; // console.log(self.options, annotation);
+    // console.log("Annotation Being Drawn", annotation);
 
     self.tempHighlights.forEach(function (hl) {
       jQuery(hl).contents().unwrap();
@@ -40653,9 +40690,19 @@ var hrange = __webpack_require__(3);
     var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
 
     var spans = [];
+    var otherLabel = '';
+
+    if (self.options.user_id === annotation.creator.id) {
+      otherLabel += ' annotation-mine';
+    }
+
+    if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
+      otherLabel += ' annotation-instructor';
+    }
+
     textNodes.forEach(function (node) {
       //console.log(node, jQuery(node));
-      jQuery(node).wrap('<span class="' + self.h_class + '"></span>');
+      jQuery(node).wrap('<span class="' + self.h_class + otherLabel + '"></span>');
       spans.push(jQuery(node).parent()[0]);
     }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
 
@@ -40711,7 +40758,9 @@ var hrange = __webpack_require__(3);
   $.XPathDrawer.prototype.getAnnotationsFromElement = function (event) {
     return jQuery(event.target).parents('.annotator-hl').addBack().map(function (_, elem) {
       return jQuery(elem).data('annotation');
-    }).toArray();
+    }).toArray().sort(function (a, b) {
+      return a.created - b.created;
+    });
   }; // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
 
 
@@ -40734,7 +40783,10 @@ var hrange = __webpack_require__(3);
     var self = this;
     var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function (_, elem) {
       return jQuery(elem).data('annotation');
-    }).toArray(), 'id'); //console.log(all);
+    }).toArray(), 'id');
+    all.sort(function (a, b) {
+      return b - a;
+    }); //console.log(all);
 
     return all;
   };
@@ -40755,18 +40807,18 @@ var hrange = __webpack_require__(3);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(30);
 /* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 /* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(29);
+/* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(31);
 /* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(timeago__WEBPACK_IMPORTED_MODULE_3__);
 /**
  * 
@@ -40777,6 +40829,10 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
 
 
+__webpack_require__(8);
+
+__webpack_require__(9);
+
 (function ($) {
   $.Sidebar = function (options, inst_id) {
     // sets default options
@@ -40784,10 +40840,10 @@ var annotator = annotator ? annotator : __webpack_require__(5);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(30),
-        viewer: __webpack_require__(31),
-        annotationSection: __webpack_require__(32),
-        annotationItem: __webpack_require__(33)
+        editor: __webpack_require__(32),
+        viewer: __webpack_require__(33),
+        annotationSection: __webpack_require__(34),
+        annotationItem: __webpack_require__(35)
       },
       template_suffix: "sidebar",
       template_urls: ""
@@ -40804,6 +40860,13 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     this.element = jQuery(this.options.element);
     this.hideTimer = null;
     this.load_more_open = false;
+
+    if (options && options.viewer_options && options.viewer_options.defaultTab) {
+      this.latestOpenedTabs = [options.viewer_options.defaultTab];
+    } else {
+      this.latestOpenedTabs = [];
+    }
+
     this.init();
   };
 
@@ -40850,25 +40913,65 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     });
     self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
     self.sidebar = self.element.find('.annotationSection');
-    self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
-    self.element.on('mouseover', '.annotationsHolder', function (event) {
-      jQuery('body').css('overflow-y', 'hidden');
-    });
-    self.element.on('mouseleave', '.annotationsHolder', function (event) {
-      jQuery('body').css('overflow-y', 'scroll');
-    }); // toggle search
+    self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))'); // self.element.on('mouseover', '.annotationsHolder', function(event) {
+    //     jQuery('body').css('overflow-y', 'hidden');
+    // });
+    // self.element.on('mouseleave', '.annotationsHolder', function(event) {
+    //     jQuery('body').css('overflow-y', 'scroll');
+    // });
+    // toggle search
 
     jQuery('#search').click(function () {
       jQuery('.search-bar.search-toggle').toggle();
       jQuery('.annotationsHolder').toggleClass('search-opened');
+      $.publishEvent('StorageAnnotationLoad', self.instance_id, [[], function (a) {
+        return a;
+      }, true]);
+    });
+    jQuery('#sidebar-filter-options').click(function () {
+      jQuery('.annotationsHolder').removeClass('search-opened');
+      jQuery('.annotation-filter-buttons').show();
+      jQuery('#sidebar-filter-options').hide();
+      jQuery('.search-bar.search-toggle').hide();
+      jQuery('.tag-token-list').hide();
+      var doit = self.latestOpenedTabs;
+      self.latestOpenedTabs = [];
+      jQuery.each(doit, function (_, tab) {
+        console.log(tab);
+        jQuery('#' + tab).trigger('click');
+      }); // jQuery('.annotationsHolder.side').html('');
+      // var messageVals = [];
+      // var pluralMessage = '';
+      // jQuery.each(jQuery('.btn.user-filter'), function(a, b) {
+      //     if (b.id == 'mynotes') {
+      //         messageVals.push("your annotations")
+      //     } else if (b.id == 'instructor') {
+      //         messageVals.push("instructor annotations");
+      //     } else if (b.id == 'public') {
+      //         messageVals.push("peer annotations");
+      //     }
+      // })
+      // if (messageVals.length > 1) {
+      //     messageVals.splice(messageVals.length - 1, 0, 'and/or,')
+      //     messageVals = messageVals.join(', ').replace(',,', '');
+      //     pluralMessage = '<br><br>Note: You can select multiple tabs at a time to view those annotations together!</div>'
+      // }
+      // jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;"><strong>No Annotations Selected</strong><br>Use the filter buttons above to view ' + messageVals + '.' + pluralMessage)
+
+      return;
     });
     jQuery('#search-clear').click(function () {
       jQuery('#srch-term').val('');
       $.publishEvent('StorageAnnotationSearch', self.instance_id, [{
         type: self.options.mediaType
       }, function (results, converter) {
-        $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter]);
+        $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter, true]);
       }, function () {}]);
+    });
+    jQuery('#srch-term').on('keydown', function (event) {
+      if (event.key == "Enter") {
+        jQuery('#search-submit').trigger('click');
+      }
     });
     jQuery('#search-submit').click(function () {
       var searchValue = jQuery('#srch-term').val().trim();
@@ -40880,21 +40983,26 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     jQuery('.btn.user-filter').click(function () {
       if (this.id === "search") {
         jQuery('.btn.user-filter').removeClass('active');
-        jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
+        jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //.removeClass('fa-toggle-on').addClass('fa-toggle-off');
       } else {
         if (jQuery(this).hasClass('active')) {
+          self.latestOpenedTabs.splice(self.latestOpenedTabs.indexOf(this.id), 1);
+
           if (jQuery('.btn.user-filter.active').length == 1) {
             jQuery(this).removeClass('active');
-            jQuery(this).find('.far').removeClass('fa-check-square').addClass('fa-square');
+            jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');
+            $.publishEvent('StorageAnnotationLoad', self.instance_id, [[], function (a) {
+              return a;
+            }, true]);
             jQuery('.annotationsHolder.side').html('');
             var messageVals = [];
             var pluralMessage = '';
             jQuery.each(jQuery('.btn.user-filter'), function (a, b) {
-              if (b.id == 'mynotes') {
+              if (b.id == 'mine') {
                 messageVals.push("your annotations");
               } else if (b.id == 'instructor') {
                 messageVals.push("instructor annotations");
-              } else if (b.id == 'public') {
+              } else if (b.id == 'peer') {
                 messageVals.push("peer annotations");
               }
             });
@@ -40910,11 +41018,11 @@ var annotator = annotator ? annotator : __webpack_require__(5);
           }
 
           jQuery(this).removeClass('active');
-          jQuery(this).find('.far').removeClass('fa-check-square').addClass('fa-square');
+          jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //removeClass('fa-toggle-on').addClass('fa-toggle-off');
         } else {
-          console.log("NOT an active class");
           jQuery(this).addClass('active');
-          jQuery(this).find('.far').removeClass('fa-square').addClass('fa-check-square');
+          self.latestOpenedTabs.push(this.id);
+          jQuery(this).find('.fas.fa-toggle-on').removeClass('fa-flip-horizontal'); //.removeClass('fa-toggle-off').addClass('fa-toggle-on');
         }
       }
 
@@ -40929,14 +41037,19 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
       if (this.id === "search") {
         jQuery('.annotationsHolder').addClass('search-opened');
+        jQuery('.annotation-filter-buttons').hide();
+        jQuery('#sidebar-filter-options').show();
         jQuery('.search-bar.search-toggle').show();
+        jQuery('.tag-token-list').show();
+        jQuery('.annotationsHolder.side').html('');
+        jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">Search annotations with options above.</div>');
         return;
       }
 
       var possible_exclude = [];
       var possible_include = []; //console.log(filteroptions);
 
-      if (filteroptions.indexOf('mynotes') > -1) {
+      if (filteroptions.indexOf('mine') > -1) {
         possible_include.push(self.options.user_id);
       } else {
         possible_exclude.push(self.options.user_id);
@@ -40948,7 +41061,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
         possible_exclude = possible_exclude.concat(self.options.instructors);
       }
 
-      if (filteroptions.indexOf('public') > -1) {
+      if (filteroptions.indexOf('peer') > -1) {
         if (possible_exclude.length > 0) {
           search_options['exclude_userid'] = possible_exclude;
         }
@@ -40957,11 +41070,11 @@ var annotator = annotator ? annotator : __webpack_require__(5);
       }
 
       if (self.options.instructors.indexOf(self.options.user_id) > -1) {
-        if (filteroptions.indexOf('public') > -1 && (filteroptions.indexOf('mynotes') > -1 && filteroptions.indexOf('instructor') == -1 || filteroptions.indexOf('mynotes') == -1 && filteroptions.indexOf('instructor') > -1)) {
+        if (filteroptions.indexOf('peer') > -1 && (filteroptions.indexOf('mine') > -1 && filteroptions.indexOf('instructor') == -1 || filteroptions.indexOf('mine') == -1 && filteroptions.indexOf('instructor') > -1)) {
           // jQuery('.btn.user-filter#instructor').addClass('active');
-          // jQuery('.btn.user-filter#instructor').find('.far').removeClass('fa-square').addClass('fa-check-square');
+          // jQuery('.btn.user-filter#instructor').find('.fas').removeClass('fa-toggle-off').addClass('fa-toggle-on');
           // jQuery('.btn.user-filter#mynotes').addClass('active');
-          // jQuery('.btn.user-filter#mynotes').find('.far').removeClass('fa-square').addClass('fa-check-square');
+          // jQuery('.btn.user-filter#mynotes').find('.fas').removeClass('fa-toggle-off').addClass('fa-toggle-on');
           search_options['exclude_userid'] = []; //search_options['userid'] = [];
         }
       }
@@ -40999,7 +41112,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
                 return button.id;
               });
 
-              if (filteroptions.indexOf('mynotes') > -1) {
+              if (filteroptions.indexOf('mine') > -1) {
                 possible_include.push(self.options.user_id);
               } else {
                 possible_exclude.push(self.options.user_id);
@@ -41011,7 +41124,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
                 possible_exclude = possible_exclude.concat(self.options.instructors);
               }
 
-              if (filteroptions.indexOf('public') > -1) {
+              if (filteroptions.indexOf('peer') > -1) {
                 if (possible_exclude.length > 0) {
                   options['exclude_userid'] = possible_exclude;
                 }
@@ -41025,7 +41138,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
             $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
               jQuery('.side.load-more').remove();
               jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-              $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter]);
+              $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, false]);
             }, function () {}]);
           });
         }
@@ -41057,10 +41170,10 @@ var annotator = annotator ? annotator : __webpack_require__(5);
         return button.id;
       });
 
-      if (filteroptions.indexOf('mynotes') > -1) {
+      if (filteroptions.indexOf('mine') > -1) {
         self.addAnnotation(annotation, updating, false);
       } else {
-        $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mynotes')]);
+        $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
       }
     });
     $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function (_, annotation, updating) {
@@ -41079,6 +41192,9 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     });
     $.subscribeEvent('annotationLoaded', self.instance_id, function (_, annotation) {
       self.addAnnotation(annotation, false, true);
+    });
+    $.subscribeEvent('autosearch', self.instance_id, function (_, term, type) {
+      self.autosearch(term, type);
     });
   };
 
@@ -41138,40 +41254,27 @@ var annotator = annotator ? annotator : __webpack_require__(5);
         }
       });
       jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function (e) {
-        jQuery('.btn.user-filter').removeClass('active');
-        jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
-
-        if (jQuery(this).text().trim() !== self.options.common_instructor_name) {
-          self.search(self.filterByType(jQuery(this).html().trim(), 'User', undefined));
-          jQuery('.annotationsHolder').addClass('search-opened');
-          jQuery('.search-toggle').show();
-          $.publishEvent('searchSelected', self.instance_id, []);
-          jQuery('#srch-term').val(jQuery(this).text().trim());
-          jQuery('.search-bar select').val('User');
-        } else {
-          // var options = {
-          //     type: self.options.mediaType,
-          // }
-          // options['userid'] = self.options.instructors;
-          // self.search(options);
-          jQuery('.btn.user-filter#instructor').trigger('click');
-        }
-
+        self.autosearch(jQuery(this).text().trim(), 'User');
         $.pauseEvent(e);
       });
       jQuery('.side.item-' + ann.id).find('.annotation-tag.side').click(function (e) {
-        jQuery('.btn.user-filter').removeClass('active');
-        jQuery('.btn.user-filter').find('.far.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
-        jQuery('.annotationsHolder').addClass('search-opened');
-        jQuery('.search-toggle').show(jQuery(this).html().trim());
-        var options = {
-          type: self.options.mediaType
-        };
-        var tagSearched = jQuery(this).html().trim();
-        options['tag'] = tagSearched;
-        jQuery('#srch-term').val(tagSearched);
-        jQuery('.search-bar select').val('Tag');
-        self.search(options);
+        self.autosearch(jQuery(this).text().trim(), 'Tag'); // jQuery('.btn.user-filter').removeClass('active');
+        // jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+        // jQuery('.annotationsHolder').addClass('search-opened');
+        // jQuery('.annotation-filter-buttons').hide();
+        // jQuery('#sidebar-filter-options').show();
+        // jQuery('.search-bar.search-toggle').show();
+        // jQuery('.tag-token-list').show();
+        // jQuery('.search-toggle').show(jQuery(this).html().trim());
+        // var options = {
+        //     type: self.options.mediaType,
+        // }
+        // var tagSearched = jQuery(this).html().trim();
+        // options['tag'] = tagSearched;
+        // jQuery('#srch-term').val(tagSearched)
+        // jQuery('.search-bar select').val('Tag');
+        // self.search(options);
+
         $.pauseEvent(e);
       });
       $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
@@ -41206,7 +41309,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
       jQuery('.annotationsHolder.side').html('');
-      $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter]);
+      $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, true]);
       jQuery('.loading-obj').remove();
       jQuery('.side.annotationsHolder').scrollTop(0);
       self.load_more_open = false;
@@ -41257,6 +41360,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
   $.Sidebar.prototype.ViewerEditorClose = function (annotation, redraw, should_erase, editor) {
     jQuery('.editor-area.side').remove();
     jQuery('.edit').prop('disabled', false);
+    jQuery('.note-link-popover').remove();
     $.publishEvent('editorHidden', self.instance_id, []);
 
     if (editor) {
@@ -41275,12 +41379,34 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
   $.Sidebar.prototype.StorageAnnotationLoad = function (annotations) {};
 
+  $.Sidebar.prototype.autosearch = function (term, type) {
+    var self = this;
+    jQuery('.btn.user-filter').removeClass('active');
+    jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+
+    if (term !== self.options.common_instructor_name) {
+      self.search(self.filterByType(term, type, undefined));
+      jQuery('.annotationsHolder').addClass('search-opened');
+      jQuery('.search-toggle').show();
+      jQuery('.annotation-filter-buttons').hide();
+      jQuery('#sidebar-filter-options').show();
+      jQuery('.search-bar.search-toggle').show();
+      jQuery('.tag-token-list').show();
+      $.publishEvent('searchSelected', self.instance_id, []);
+      jQuery('#srch-term').val(term);
+      jQuery('.search-bar select').val(type);
+    } else {
+      jQuery('#sidebar-filter-options').trigger('click');
+      jQuery('.btn.user-filter#instructor').trigger('click');
+    }
+  };
+
   $.viewers.push($.Sidebar);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -41308,13 +41434,13 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -41550,7 +41676,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -41567,7 +41693,7 @@ return __p
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -41612,7 +41738,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -41628,7 +41754,7 @@ __p += '\n            <button type="button" class="btn btn-default inverted user
  if (defaultTab.indexOf('search') > -1) {;
 __p += 'active';
  } ;
-__p += '" id="search" id="sidebar-search" aria-label="Toggle Search Region"><i class="fa fa-search"></i></button>\n            ';
+__p += '" id="search" id="sidebar-search" aria-label="Toggle Search Region"><span class="fa fa-search"></span><br>Search</button>\n            ';
  } ;
 __p += '\n            ';
  if (tabsAvailable.indexOf('mine') > -1) {;
@@ -41636,11 +41762,11 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
  if (defaultTab.indexOf('mine') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'mynotes\' aria-label="View my annotations" role="button"><span class="far fa-';
- if (defaultTab.indexOf('mine') > -1) {;
-__p += 'check-';
+__p += '" id=\'mine\' aria-label="View my annotations" role="button"><span class="fas fa-toggle-on ';
+ if (defaultTab.indexOf('mine') == -1) {;
+__p += 'fa-flip-horizontal';
  } ;
-__p += 'square"></span>&nbsp;Mine</button>\n            ';
+__p += '"></span><br>Mine</button>\n            ';
  } ;
 __p += '\n            ';
  if (tabsAvailable.indexOf('peer') > -1 || tabsAvailable.indexOf('all') > -1) {;
@@ -41648,11 +41774,11 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
  if (defaultTab.indexOf('peer') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'public\' aria-label="View peers\' annotations" role="button"><span class="far fa-';
- if (defaultTab.indexOf('peer') > -1) {;
-__p += 'check-';
+__p += '" id=\'peer\' aria-label="View peers\' annotations" role="button"><span class="fas fa-toggle-on ';
+ if (defaultTab.indexOf('peer')== -1) {;
+__p += 'fa-flip-horizontal';
  } ;
-__p += 'square"></span>&nbsp;Peer</button>\n            ';
+__p += '"></span><br>Peer</button>\n            ';
  } ;
 __p += '\n            ';
  if (tabsAvailable.indexOf('instructor') > -1) {;
@@ -41660,13 +41786,17 @@ __p += '\n                <button type="button" class="btn btn-default user-filt
  if (defaultTab.indexOf('instructor') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'instructor\' aria-label="View instructor annotations" role="button"><span class="far fa-';
- if (defaultTab.indexOf('instructor') > -1) {;
-__p += 'check-';
+__p += '" id=\'instructor\' aria-label="View instructor annotations" role="button"><span class="fas fa-toggle-on ';
+ if (defaultTab.indexOf('instructor') == -1) {;
+__p += 'fa-flip-horizontal';
  } ;
-__p += 'square"></span>&nbsp;Instructor</button>\n            ';
+__p += '"></span><br>Instructor</button>\n            ';
  } ;
-__p += '\n        </div>\n    </div>\n    <div class="separator-solid side"></div>\n    <!-- <div class="filter-options side search-toggle" style=\'display:none;\'>\n        <div class="search-label">Search by:</div>\n        <div class="btn-group">\n            <button type="button" class="btn btn-default query-filter" id="users-filter" aria-label="Search by username">Users</button>\n            <button type="button" class="btn btn-default query-filter" id="annotationtext-filter" aria-label="Search by annotation content">Annotation Text</button>\n            <button type="button" class="btn btn-default query-filter" id="tag-filter" aria-label="Search by annotation tag">Tag</button>\n        </div>\n    </div> -->\n    <div class="search-bar side search-toggle" style=\'display:none;\'>\n        <div id="search-info" style="display:none">The following allows you to search annotations. The default filter is to search for a username, but make sure to change filter to annotation text or tag for other types of searches.</div>\n    	<div class="input-group">\n            <label for="srch-term" id="searchlabel" class="hidden">Search annotations:</label>\n            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" aria-describedby="search-info" aria-labeledby="searchlabel">\n            <div class="input-group-btn">\n                <select class="form-control">\n                    <option>User</option>\n                    <option>Annotation</option>\n                    <option>Tag</option>\n                </select>\n            </div>\n        </div>\n        <div class="input-group-btn">\n                <button title="Search" class="btn btn-default" type="submit" id="search-submit" role="button" aria-label="Submit search"><i class="glyphicon glyphicon-search"></i></button>\n                <button title="Clear" class="btn btn-default" type="clear" id="search-clear" role="button" aria-label="Clear search input"><i class="glyphicon glyphicon-ban-circle"></i></button>\n            </div>\n        <div id="timeRangeFilter" style="display:none; color:white; margin-top:15px; margin-bottom:-30px">\n            <label for="startTimeFilter">Start:</label> <input type="text" id="startTimeFilter" style="display:inline; width:20%; color: black;" value="0:00"/>\n            <label for="endTimeFilter">End:</label> <input type="text" id="endTimeFilter" style="display:inline;width:20%; color: black;" value="0:00"/>\n        </div>\n    </div>\n    <div class="handleAnnotations" style="display:none">\n        <div id="printAnnotations"> <i class="fa fa-print"></i>   Print My Notes</div>\n        <div id="exportAnnotations"> <i class="fa fa-cloud-download"></i> Export</div>\n        <div id="importAnnotations"> <i class="fa fa-cloud-upload"></i> Import</div>\n    </div>\n    <div class="annotationsHolder side" role="list" aria-label="Annotations" >\n		';
+__p += '\n        </div>\n    </div>\n    <div class="separator-solid side"></div>\n    <!-- <div class="filter-options side search-toggle" style=\'display:none;\'>\n        <div class="search-label">Search by:</div>\n        <div class="btn-group">\n            <button type="button" class="btn btn-default query-filter" id="users-filter" aria-label="Search by username">Users</button>\n            <button type="button" class="btn btn-default query-filter" id="annotationtext-filter" aria-label="Search by annotation content">Annotation Text</button>\n            <button type="button" class="btn btn-default query-filter" id="tag-filter" aria-label="Search by annotation tag">Tag</button>\n        </div>\n    </div> -->\n    ';
+ if (tabsAvailable.indexOf('search') > -1) {;
+__p += '\n            <button type="button" class="btn btn-default" id="sidebar-filter-options" aria-label="Hide search options"><i class="fas fa-times"></i></button>\n        ';
+ } ;
+__p += '\n    <div class="search-bar side search-toggle" style=\'display:none;\'>\n        <div id="search-info" style="display:none">The following allows you to search annotations. The default filter is to search for a username, but make sure to change filter to annotation text or tag for other types of searches.</div>\n    	<div class="input-group">\n            <label for="srch-term" id="searchlabel" class="hidden">Search annotations:</label>\n            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" aria-describedby="search-info" aria-labeledby="searchlabel" list="tag-list-options">\n            <div class="input-group-btn">\n                <select class="form-control">\n                    <option>Annotation</option>\n                    <option>User</option>\n                    <option>Tag</option>\n                </select>\n            </div>\n        </div>\n        <div class="input-group-btn">\n                <button title="Search" class="btn btn-default" type="submit" id="search-submit" role="button" aria-label="Submit search"><i class="glyphicon glyphicon-search"></i></button>\n                <button title="Clear Search Input" class="btn btn-default" type="clear" id="search-clear" role="button" aria-label="Clear search input"><i class="fas fa-backspace"></i></button>\n            </div>\n        <div id="timeRangeFilter" style="display:none; color:white; margin-top:15px; margin-bottom:-30px">\n            <label for="startTimeFilter">Start:</label> <input type="text" id="startTimeFilter" style="display:inline; width:20%; color: black;" value="0:00"/>\n            <label for="endTimeFilter">End:</label> <input type="text" id="endTimeFilter" style="display:inline;width:20%; color: black;" value="0:00"/>\n        </div>\n    </div>\n    <div class="handleAnnotations" style="display:none">\n        <div id="printAnnotations"> <i class="fa fa-print"></i>   Print My Notes</div>\n        <div id="exportAnnotations"> <i class="fa fa-cloud-download"></i> Export</div>\n        <div id="importAnnotations"> <i class="fa fa-cloud-upload"></i> Import</div>\n    </div>\n    <div class="annotationsHolder side" role="list" aria-label="Annotations" >\n		';
  _.each(annotationItems, function(item) { ;
 __p += '\n			' +
 ((__t = ( item )) == null ? '' : __t) +
@@ -41678,7 +41808,7 @@ __p += '\n            <div id=\'empty-alert\' style="padding:20px;text-align:cen
  } else {;
 __p += '\n             <button type="button" class="btn btn-default loadMoreButton" id="loadMoreButton" aria-label="Load more annotations" style="margin-left:-999999px">Load More Annotations</button>\n        ';
  } ;
-__p += '\n	</div>\n</section>';
+__p += '\n	</div>\n    <datalist id="tag-list-options">\n    </datalist>\n</section>';
 
 }
 return __p
@@ -41687,7 +41817,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -41814,12 +41944,12 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(35);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(37);
 /* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
@@ -41840,8 +41970,8 @@ var annotator = annotator ? annotator : __webpack_require__(5);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(36),
-        viewer: __webpack_require__(37)
+        editor: __webpack_require__(38),
+        viewer: __webpack_require__(39)
       },
       template_suffix: "floating",
       template_urls: ""
@@ -41887,6 +42017,12 @@ var annotator = annotator ? annotator : __webpack_require__(5);
         self.annotation_tool.viewer.addClass('static');
         self.annotation_tool.isStatic = true;
       }
+    });
+    jQuery('body').on('click', '.annotation-username', function (e) {
+      $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
+    });
+    jQuery('body').on('click', '.annotation-tag', function (e) {
+      $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
     });
     this.setUpPinAndMove();
   };
@@ -41981,6 +42117,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
   $.FloatingViewer.prototype.ViewerEditorClose = function (annotation, redraw, should_erase) {
     var self = this;
     jQuery('.edit').prop('disabled', false);
+    jQuery('.note-link-popover').remove();
     $.publishEvent('editorHidden', self.instance_id, []);
 
     if (self.annotation_tool.editor) {
@@ -41989,8 +42126,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
     delete self.annotation_tool.editor;
     self.annotation_tool.editing = false;
-    self.annotation_tool.updating = false;
-    jQuery('body').css('overflow-y', 'scroll');
+    self.annotation_tool.updating = false; // jQuery('body').css('overflow-y', 'scroll');
   };
 
   $.FloatingViewer.prototype.ViewerDisplayOpen = function (event, anns) {
@@ -42001,7 +42137,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
       clearTimeout(self.hideTimer);
     }
 
-    if (self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer)) {
+    if (jQuery('.annotation-editor').is(':visible') || jQuery('.hx-confirm-button').is(':visible') || self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer)) {
       // there's already an open editor window for this instance so don't do anything
       return;
     }
@@ -42021,7 +42157,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     }
 
     self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/:/g, '-'));
-    var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop();
+    var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
     var newLeft = annotator.util.mousePosition(event).left + 30;
     self.annotation_tool.viewer.css({
       'top': newTop,
@@ -42031,8 +42167,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     self.annotation_tool.viewer.find('.cancel').click(function (event1) {
       self.annotation_tool.isStatic = false;
       self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer;
-      jQuery('body').css('overflow-y', 'scroll');
+      delete self.annotation_tool.viewer; // jQuery('body').css('overflow-y', 'scroll');
     });
     self.annotation_tool.viewer.find('.edit').click(function (event1) {
       var annotation_id = jQuery(this).attr('id').replace('edit-', '');
@@ -42061,8 +42196,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
             delete self.annotation_tool.viewer;
             self.annotation_tool.isStatic = false;
             self.annotation_tool.updating = false;
-            self.annotation_tool.editing = false;
-            jQuery('body').css('overflow-y', 'scroll');
+            self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
           }
         },
         cancel: function cancel() {}
@@ -42080,9 +42214,12 @@ var annotator = annotator ? annotator : __webpack_require__(5);
       return;
     }
 
+    console.log('should hide display');
     clearTimeout(self.hideTimer);
     self.hideTimer = setTimeout(function () {
       if (self.hideTimer) {
+        $.publishEvent('displayHidden', self.instance_id, []);
+
         if (self.annotation_tool.viewer) {
           self.annotation_tool.viewer.remove();
           delete self.annotation_tool.viewer;
@@ -42090,8 +42227,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
         self.annotation_tool.isStatic = false;
         self.annotation_tool.updating = false;
-        self.annotation_tool.editing = false;
-        jQuery('body').css('overflow-y', 'scroll');
+        self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
       }
     }, 500);
   };
@@ -42108,8 +42244,7 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 
     self.annotation_tool.isStatic = false;
     self.annotation_tool.updating = false;
-    self.annotation_tool.editing = false;
-    jQuery('body').css('overflow-y', 'scroll');
+    self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
   };
 
   $.FloatingViewer.prototype.StorageAnnotationDelete = function (annotation) {
@@ -42144,19 +42279,19 @@ var annotator = annotator ? annotator : __webpack_require__(5);
     });
     jQuery('body').on('mouseup', function (event) {
       self.finishedMoving(event);
-    });
-    jQuery('body').on('mouseover', '.annotation-editor', function (event) {
-      jQuery('body').css('overflow-y', 'hidden');
-    });
-    jQuery('body').on('mouseleave', '.annotation-editor', function (event) {
-      jQuery('body').css('overflow-y', 'scroll');
-    });
-    jQuery('body').on('mouseover', '.annotation-viewer', function (event) {
-      jQuery('body').css('overflow-y', 'hidden');
-    });
-    jQuery('body').on('mouseleave', '.annotation-viewer', function (event) {
-      jQuery('body').css('overflow-y', 'scroll');
-    });
+    }); // jQuery('body').on('mouseover', '.annotation-editor', function(event) {
+    //     jQuery('body').css('overflow-y', 'hidden');
+    // });
+    // jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
+    //     jQuery('body').css('overflow-y', 'scroll');
+    // });
+    // jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
+    //     jQuery('body').css('overflow-y', 'hidden');
+    // });
+    // jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
+    //     jQuery('body').css('overflow-y', 'scroll');
+    // });
+
     jQuery('body').on('mouseleave', function (event) {
       self.finishedMoving(event);
     });
@@ -42265,13 +42400,13 @@ var annotator = annotator ? annotator : __webpack_require__(5);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -42288,7 +42423,7 @@ return __p
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -42345,7 +42480,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -42356,11 +42491,11 @@ return __p
  *  Should be generic, but its main purpose is to be used in tandem with annotations.
  *
  */
-__webpack_require__(8);
+__webpack_require__(10);
 
-__webpack_require__(9);
+__webpack_require__(11);
 
-__webpack_require__(40);
+__webpack_require__(42);
 
 (function ($) {
   /**
@@ -42385,9 +42520,13 @@ __webpack_require__(40);
           var t = e.currentTarget.innerText;
 
           if (t.trim().length >= maxLength) {
-            // delete key
-            if (e.keyCode != 8) {
+            // prevents everything that could add a new character
+            var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
+            console.log(e.key);
+
+            if (allowedKeys.indexOf(e.key) == -1 || e.key == 'a' && !(e.ctrlKey || e.metaKey) || e.key == 'c' && !(e.ctrlKey || e.metaKey) || e.key == 'v' && !(e.ctrlKey || e.metaKey)) {
               e.preventDefault();
+              alert('You have reached the character limit for this annotation (max 1000 characters).');
             }
           }
         },
@@ -42406,11 +42545,12 @@ __webpack_require__(40);
               // wrap in a timer to prevent issues in Firefox
               document.execCommand('insertText', false, bufferTextAllowed);
               jQuery('#maxContentPost').text(maxLength - t.length);
+              alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.');
             }, 10);
           }
         }
       },
-      toolbar: [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr']], ['view', ['codeview']]]
+      toolbar: [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr']]]
     }, options);
     this.init();
     this.instanceID = instanceID;
@@ -42493,10 +42633,11 @@ __webpack_require__(40);
     var result = this.elementObj.summernote('code');
 
     if (result.indexOf('<script') >= 0) {
-      alert("I'm sorry Colin, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
+      alert("I'm sorry Dave, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
       return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
     }
 
+    result = result.replace(/<p><\/p>/g, '').replace(/<p><br><\/p>/g, '');
     return result;
   };
   /**
@@ -42526,6 +42667,19 @@ __webpack_require__(40);
     $.subscribeEvent('editorHidden', self.instanceID, function () {
       self.destroy();
     }.bind(self));
+    jQuery('body').on('mouseover', '.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function () {
+      var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
+      input.prop('type', 'url');
+      var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
+      var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+      var regex = new RegExp(expression);
+
+      if (chosen.match(regex)) {
+        jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', false);
+      } else {
+        jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', true);
+      }
+    });
   };
   /**
    * Code to run just before the annotation is saved to storage
@@ -42605,7 +42759,7 @@ __webpack_require__(40);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -42614,13 +42768,13 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(this, {}))
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42629,13 +42783,13 @@ module.exports = __webpack_amd_options__;
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(10);
+__webpack_require__(12);
 
-__webpack_require__(11);
+__webpack_require__(13);
 
-__webpack_require__(42);
+__webpack_require__(8);
 
-__webpack_require__(43);
+__webpack_require__(9);
 
 __webpack_require__(44);
 
@@ -42660,6 +42814,19 @@ __webpack_require__(44);
     var self = this;
     self.name = 'DropdownTags';
     self.annotationListeners();
+    var tags = 'tags' in self.options ? self.options.tags : []; // jQuery.each(tags, function(_, tag) {
+    //   jQuery('#tag-list-options').append('<option value="' + tag + '" />');
+    // });
+
+    jQuery('.search-bar select').on('change', function () {
+      if (jQuery(this).val() == "Tag") {
+        jQuery.each(tags, function (_, tag) {
+          jQuery('#tag-list-options').append('<option value="' + tag + '" />');
+        });
+      } else {
+        jQuery('#tag-list-options').html('');
+      }
+    });
   };
   /**
    * Returns the HTML value of the WYSIWYG. 
@@ -42845,20 +43012,6 @@ __webpack_require__(44);
   });
   $.plugins.push($.DropdownTags);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/*! jquery.tokeninput 2019-05-06 */
-!function(a){function b(a){return String(null===a||void 0===a?"":a)}function c(a){return b(a).replace(i,function(a){return h[a]})}var d={method:"GET",queryParam:"q",searchDelay:300,minChars:1,propertyToSearch:"name",jsonContainer:null,contentType:"json",excludeCurrent:!1,excludeCurrentParameter:"x",prePopulate:null,processPrePopulate:!1,hintText:"Type in a search term",noResultsText:"No results",searchingText:"Searching...",deleteText:"&#215;",animateDropdown:!0,placeholder:null,theme:null,zindex:999,resultsLimit:null,enableHTML:!1,resultsFormatter:function(a){var b=a[this.propertyToSearch];return"<li>"+(this.enableHTML?b:c(b))+"</li>"},tokenFormatter:function(a){var b=a[this.propertyToSearch];return"<li><p>"+(this.enableHTML?b:c(b))+"</p></li>"},tokenLimit:null,tokenDelimiter:",",preventDuplicates:!1,tokenValue:"id",allowFreeTagging:!1,allowTabOut:!1,autoSelectFirstResult:!1,onResult:null,onCachedResult:null,onAdd:null,onFreeTaggingAdd:null,onDelete:null,onReady:null,idPrefix:"token-input-",disabled:!1},e={tokenList:"token-input-list",token:"token-input-token",tokenReadOnly:"token-input-token-readonly",tokenDelete:"token-input-delete-token",selectedToken:"token-input-selected-token",highlightedToken:"token-input-highlighted-token",dropdown:"token-input-dropdown",dropdownItem:"token-input-dropdown-item",dropdownItem2:"token-input-dropdown-item2",selectedDropdownItem:"token-input-selected-dropdown-item",inputToken:"token-input-input-token",focused:"token-input-focused",disabled:"token-input-disabled"},f={BEFORE:0,AFTER:1,END:2},g={BACKSPACE:8,TAB:9,ENTER:13,ESCAPE:27,SPACE:32,PAGE_UP:33,PAGE_DOWN:34,END:35,HOME:36,LEFT:37,UP:38,RIGHT:39,DOWN:40,NUMPAD_ENTER:108,COMMA:188},h={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","/":"&#x2F;"},i=/[&<>"'\/]/g,j={init:function(b,c){var e=a.extend({},d,c||{});return this.each(function(){a(this).data("settings",e),a(this).data("tokenInputObject",new a.TokenList(this,b,e))})},clear:function(){return this.data("tokenInputObject").clear(),this},add:function(a){return this.data("tokenInputObject").add(a),this},remove:function(a){return this.data("tokenInputObject").remove(a),this},get:function(){return this.data("tokenInputObject").getTokens()},toggleDisabled:function(a){return this.data("tokenInputObject").toggleDisabled(a),this},setOptions:function(b){return a(this).data("settings",a.extend({},a(this).data("settings"),b||{})),this},destroy:function(){if(this.data("tokenInputObject")){this.data("tokenInputObject").clear();var a=this,b=this.parent();return b.empty(),a.show(),b.append(a),a}}};a.fn.tokenInput=function(a){return j[a]?j[a].apply(this,Array.prototype.slice.call(arguments,1)):j.init.apply(this,arguments)},a.TokenList=function(b,d,h){function i(d){return a(b).data("settings").enableHTML?d:c(d)}function j(c){"boolean"==typeof c?a(b).data("settings").disabled=c:a(b).data("settings").disabled=!a(b).data("settings").disabled,P.attr("disabled",a(b).data("settings").disabled),U.toggleClass(a(b).data("settings").classes.disabled,a(b).data("settings").disabled),R&&q(a(R),f.END),Q.attr("disabled",a(b).data("settings").disabled)}function k(){return null!==a(b).data("settings").tokenLimit&&N>=a(b).data("settings").tokenLimit?(P.hide(),void u()):void 0}function l(){if(L!==(L=P.val())){var a=U.width()-P.offset().left-U.offset().left;X.html(c(L)||c(h.placeholder)),P.width(Math.min(U.width(),Math.max(a,X.width()+30)))}}function m(){var c=a.trim(P.val()),d=c.split(a(b).data("settings").tokenDelimiter);a.each(d,function(c,d){if(d){a.isFunction(a(b).data("settings").onFreeTaggingAdd)&&(d=a(b).data("settings").onFreeTaggingAdd.call(Q,d));var e={};e[a(b).data("settings").tokenValue]=e[a(b).data("settings").propertyToSearch]=d,o(e)}})}function n(c){var d=a(a(b).data("settings").tokenFormatter(c)),e=c.readonly===!0;e&&d.addClass(a(b).data("settings").classes.tokenReadOnly),d.addClass(a(b).data("settings").classes.token).insertBefore(V),e||a("<span>"+a(b).data("settings").deleteText+"</span>").addClass(a(b).data("settings").classes.tokenDelete).appendTo(d).click(function(){return a(b).data("settings").disabled?void 0:(s(a(this).parent()),Q.change(),!1)});var f=c;return a.data(d.get(0),"tokeninput",c),M=M.slice(0,S).concat([f]).concat(M.slice(S)),S++,t(M,Q),N+=1,null!==a(b).data("settings").tokenLimit&&N>=a(b).data("settings").tokenLimit&&(P.hide(),u()),d}function o(c){var d=a(b).data("settings").onAdd;if(N>0&&a(b).data("settings").preventDuplicates){var e=null;if(U.children().each(function(){var b=a(this),d=a.data(b.get(0),"tokeninput");return console.log(d,h,h.tokenValue),d&&d[h.tokenValue]===c[h.tokenValue]?(e=b,!1):void 0}),e)return p(e),V.insertAfter(e),void I(P)}P.width(1),(null==a(b).data("settings").tokenLimit||N<a(b).data("settings").tokenLimit)&&(n(c),P.attr("placeholder",null),k()),P.val(""),u(),a.isFunction(d)&&d.call(Q,c)}function p(c){a(b).data("settings").disabled||(c.addClass(a(b).data("settings").classes.selectedToken),R=c.get(0),P.val(""),u())}function q(c,d){c.removeClass(a(b).data("settings").classes.selectedToken),R=null,d===f.BEFORE?(V.insertBefore(c),S--):d===f.AFTER?(V.insertAfter(c),S++):(V.appendTo(U),S=N),I(P)}function r(b){var c=R;R&&q(a(R),f.END),c===b.get(0)?q(b,f.END):p(b)}function s(c){var d=a.data(c.get(0),"tokeninput"),e=a(b).data("settings").onDelete,f=c.prevAll().length;f>S&&f--,c.remove(),R=null,I(P),M=M.slice(0,f).concat(M.slice(f+1)),0==M.length&&P.attr("placeholder",h.placeholder),S>f&&S--,t(M,Q),N-=1,null!==a(b).data("settings").tokenLimit&&(P.show().val(""),I(P)),a.isFunction(e)&&e.call(Q,d)}function t(c,d){var e=a.map(c,function(c){return"function"==typeof a(b).data("settings").tokenValue?a(b).data("settings").tokenValue.call(this,c):c[a(b).data("settings").tokenValue]});d.val(e.join(a(b).data("settings").tokenDelimiter))}function u(){W.hide().empty(),T=null}function v(){W.css({position:"absolute",top:U.offset().top+U.outerHeight(!0),left:U.offset().left,width:U.width(),"z-index":a(b).data("settings").zindex}).show()}function w(){a(b).data("settings").searchingText&&(W.html("<p>"+i(a(b).data("settings").searchingText)+"</p>"),v())}function x(){a(b).data("settings").hintText&&(W.html("<p>"+i(a(b).data("settings").hintText)+"</p>"),v())}function y(a){return a.replace(Z,"\\$&")}function z(a,b){return a.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+y(b)+")(?![^<>]*>)(?![^&;]+;)","gi"),function(a,b){return"<b>"+i(b)+"</b>"})}function A(a,b,c){return a.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+y(b)+")(?![^<>]*>)(?![^&;]+;)","g"),z(b,c))}function B(c){if(a(b).data("settings").excludeCurrent){var d=a(b).data("tokenInputObject").getTokens(),e=[];d.length&&(a.each(c,function(c,f){var g=!0;a.each(d,function(c,d){return f[a(b).data("settings").propertyToSearch]==d[a(b).data("settings").propertyToSearch]?(g=!1,!1):void 0}),g&&e.push(f)}),c=e)}return c}function C(c,d){if(d=B(d),d&&d.length){W.empty();var e=a("<ul/>").appendTo(W).mouseover(function(b){D(a(b.target).closest("li"))}).mousedown(function(b){return o(a(b.target).closest("li").data("tokeninput")),Q.change(),!1}).hide();a(b).data("settings").resultsLimit&&d.length>a(b).data("settings").resultsLimit&&(d=d.slice(0,a(b).data("settings").resultsLimit)),a.each(d,function(d,f){var g=a(b).data("settings").resultsFormatter(f);g=A(g,f[a(b).data("settings").propertyToSearch],c),g=a(g).appendTo(e),d%2?g.addClass(a(b).data("settings").classes.dropdownItem):g.addClass(a(b).data("settings").classes.dropdownItem2),0===d&&a(b).data("settings").autoSelectFirstResult&&D(g),a.data(g.get(0),"tokeninput",f)}),v(),a(b).data("settings").animateDropdown?e.slideDown("fast"):e.show()}else a(b).data("settings").noResultsText&&(W.html("<p>"+i(a(b).data("settings").noResultsText)+"</p>"),v())}function D(c){c&&(T&&E(a(T)),c.addClass(a(b).data("settings").classes.selectedDropdownItem),T=c.get(0))}function E(c){c.removeClass(a(b).data("settings").classes.selectedDropdownItem),T=null}function F(){var c=P.val();c&&c.length&&(R&&q(a(R),f.AFTER),c.length>=a(b).data("settings").minChars?(w(),clearTimeout(K),K=setTimeout(function(){G(c)},a(b).data("settings").searchDelay)):u())}function G(c){var d=c+H(),e=O.get(d);if(e)a.isFunction(a(b).data("settings").onCachedResult)&&(e=a(b).data("settings").onCachedResult.call(Q,e)),C(c,e);else if(a(b).data("settings").url){var f=H(),g={};if(g.data={},f.indexOf("?")>-1){var i=f.split("?");g.url=i[0];var j=i[1].split("&");a.each(j,function(a,b){var c=b.split("=");g.data[c[0]]=c[1]})}else g.url=f;if(g.data[a(b).data("settings").queryParam]=c,g.type=a(b).data("settings").method,g.dataType=a(b).data("settings").contentType,a(b).data("settings").crossDomain&&(g.dataType="jsonp"),a(b).data("settings").excludeCurrent){var k=a(b).data("tokenInputObject").getTokens(),l=a.map(k,function(c){return"function"==typeof a(b).data("settings").tokenValue?a(b).data("settings").tokenValue.call(this,c):c[a(b).data("settings").tokenValue]});g.data[a(b).data("settings").excludeCurrentParameter]=l.join(a(b).data("settings").tokenDelimiter)}g.success=function(e){O.add(d,a(b).data("settings").jsonContainer?e[a(b).data("settings").jsonContainer]:e),a.isFunction(a(b).data("settings").onResult)&&(e=a(b).data("settings").onResult.call(Q,e)),P.val()===c&&C(c,a(b).data("settings").jsonContainer?e[a(b).data("settings").jsonContainer]:e)},h.onSend&&h.onSend(g),a.ajax(g)}else if(a(b).data("settings").local_data){var m=a.grep(a(b).data("settings").local_data,function(d){return d[a(b).data("settings").propertyToSearch].toLowerCase().indexOf(c.toLowerCase())>-1});O.add(d,m),a.isFunction(a(b).data("settings").onResult)&&(m=a(b).data("settings").onResult.call(Q,m)),C(c,m)}}function H(){var c=a(b).data("settings");return"function"==typeof c.url?c.url.call(c):c.url}function I(a){setTimeout(function(){a.focus()},50)}if("string"==typeof d||"function"==typeof d){a(b).data("settings").url=d;var J=H();void 0===a(b).data("settings").crossDomain&&"string"==typeof J&&(-1===J.indexOf("://")?a(b).data("settings").crossDomain=!1:a(b).data("settings").crossDomain=location.href.split(/\/+/g)[1]!==J.split(/\/+/g)[1])}else"object"==typeof d&&(a(b).data("settings").local_data=d);a(b).data("settings").classes?a(b).data("settings").classes=a.extend({},e,a(b).data("settings").classes):a(b).data("settings").theme?(a(b).data("settings").classes={},a.each(e,function(c,d){a(b).data("settings").classes[c]=d+"-"+a(b).data("settings").theme})):a(b).data("settings").classes=e;var K,L,M=[],N=0,O=new a.TokenList.Cache,P=a('<input type="text" autocomplete="off" autocapitalize="off"/>').css({outline:"none"}).attr("id",a(b).data("settings").idPrefix+b.id).focus(function(){return a(b).data("settings").disabled?!1:((null===a(b).data("settings").tokenLimit||a(b).data("settings").tokenLimit!==N)&&x(),void U.addClass(a(b).data("settings").classes.focused))}).blur(function(){u(),a(b).data("settings").allowFreeTagging&&m(),a(this).val(""),U.removeClass(a(b).data("settings").classes.focused)}).bind("keyup keydown blur update",l).keydown(function(c){var d,e;switch(c.keyCode){case g.LEFT:case g.RIGHT:case g.UP:case g.DOWN:if(0===this.value.length)d=V.prev(),e=V.next(),d.length&&d.get(0)===R||e.length&&e.get(0)===R?c.keyCode===g.LEFT||c.keyCode===g.UP?q(a(R),f.BEFORE):q(a(R),f.AFTER):c.keyCode!==g.LEFT&&c.keyCode!==g.UP||!d.length?c.keyCode!==g.RIGHT&&c.keyCode!==g.DOWN||!e.length||p(a(e.get(0))):p(a(d.get(0)));else{var h=null;c.keyCode===g.DOWN||c.keyCode===g.RIGHT?(h=a(W).find("li").first(),T&&(h=a(T).next())):(h=a(W).find("li").last(),T&&(h=a(T).prev())),D(h)}break;case g.BACKSPACE:if(d=V.prev(),0===this.value.length)return R?(s(a(R)),Q.change()):d.length&&p(a(d.get(0))),!1;1===a(this).val().length?u():setTimeout(function(){F()},5);break;case g.TAB:case g.ENTER:case g.NUMPAD_ENTER:case g.COMMA:if(T)o(a(T).data("tokeninput")),Q.change();else{if(a(b).data("settings").allowFreeTagging){if(a(b).data("settings").allowTabOut&&""===a(this).val())return!0;m()}else if(a(this).val(""),a(b).data("settings").allowTabOut)return!0;c.stopPropagation(),c.preventDefault()}return!1;case g.ESCAPE:return u(),!0;default:String.fromCharCode(c.which)&&setTimeout(function(){F()},5)}});h.placeholder&&P.attr("placeholder",h.placeholder);var Q=a(b).hide().val("").focus(function(){I(P)}).blur(function(){return P.blur(),Q}),R=null,S=0,T=null,U=a("<ul />").addClass(a(b).data("settings").classes.tokenList).click(function(b){var c=a(b.target).closest("li");c&&c.get(0)&&a.data(c.get(0),"tokeninput")?r(c):(R&&q(a(R),f.END),I(P))}).mouseover(function(c){var d=a(c.target).closest("li");d&&R!==this&&d.addClass(a(b).data("settings").classes.highlightedToken)}).mouseout(function(c){var d=a(c.target).closest("li");d&&R!==this&&d.removeClass(a(b).data("settings").classes.highlightedToken)}).insertBefore(Q),V=a("<li />").addClass(a(b).data("settings").classes.inputToken).appendTo(U).append(P),W=a("<div/>").addClass(a(b).data("settings").classes.dropdown).appendTo("body").hide(),X=a("<tester/>").insertAfter(P).css({position:"absolute",top:-9999,left:-9999,width:"auto",fontSize:P.css("fontSize"),fontFamily:P.css("fontFamily"),fontWeight:P.css("fontWeight"),letterSpacing:P.css("letterSpacing"),whiteSpace:"nowrap"});Q.val("");var Y=a(b).data("settings").prePopulate||Q.data("pre");a(b).data("settings").processPrePopulate&&a.isFunction(a(b).data("settings").onResult)&&(Y=a(b).data("settings").onResult.call(Q,Y)),Y&&Y.length&&a.each(Y,function(a,b){n(b),k(),P.attr("placeholder",null)}),a(b).data("settings").disabled&&j(!0),"function"==typeof a(b).data("settings").onReady&&a(b).data("settings").onReady.call(),this.clear=function(){U.children("li").each(function(){0===a(this).children("input").length&&s(a(this))})},this.add=function(a){o(a)},this.remove=function(b){U.children("li").each(function(){if(0===a(this).children("input").length){var c=a(this).data("tokeninput"),d=!0;for(var e in b)if(b[e]!==c[e]){d=!1;break}d&&s(a(this))}})},this.getTokens=function(){return M},this.toggleDisabled=function(a){j(a)},l();var Z=new RegExp("[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]","g")},a.TokenList.Cache=function(b){var c,d,e={},f=0;c=a.extend({max_size:500},b),d=function(){e={},f=0},this.add=function(a,b){f>c.max_size&&d(),e[a]||(f+=1),e[a]=b},this.get=function(a){return e[a]}}}(jQuery);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
@@ -43062,9 +43215,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
  *  
  *
  */
-__webpack_require__(8);
+__webpack_require__(10);
 
-__webpack_require__(9);
+__webpack_require__(11);
 
 __webpack_require__(48);
 
@@ -43097,8 +43250,11 @@ __webpack_require__(48);
 
   $.Reply.prototype.init = function () {
     // warns dev that they forgot to include summernote.js
-    if (_typeof(jQuery.summernote) !== "object") {//console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+    if (_typeof(jQuery.summernote) !== "object") {
+      console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
     }
+
+    this.annotationListeners();
   };
   /**
    * 
@@ -43116,6 +43272,7 @@ __webpack_require__(48);
 
 
     this.elementObj = element.find(selector);
+    console.log(this.elementObj);
     var newOptions = jQuery.extend({}, this.options, {
       'width': element.outerWidth() - 24
     });
@@ -43150,9 +43307,15 @@ __webpack_require__(48);
 
 
   $.Reply.prototype.destroy = function (element, selector) {
-    this.elementObj.val('');
-    this.elementObj.summernote('destroy');
-    this.elementObj = undefined;
+    console.log(jQuery('.summernote').each(function () {
+      jQuery(this).summernote('destroy');
+    }));
+
+    if (this.elementObj) {
+      this.elementObj.val('');
+      this.elementObj.summernote('destroy');
+      this.elementObj = undefined;
+    }
   }; // Annotation specific functions
 
   /**
@@ -43162,6 +43325,10 @@ __webpack_require__(48);
 
   $.Reply.prototype.annotationListeners = function () {
     var self = this;
+    $.subscribeEvent('displayHidden', self.instanceID, function () {
+      console.log('reached here, but nothing to destroy');
+      self.destroy();
+    });
   };
   /**
    * Code to run just before the annotation is saved to storage
@@ -43343,7 +43510,14 @@ __webpack_require__(48);
 
   $.Reply.prototype.addReplyToViewer = function (viewer, reply, prefix, annotation) {
     var self = this;
-    jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'><button class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button><strong>" + reply.creator.name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
+    console.log(annotation, self.options);
+    var delete_option = '';
+
+    if (self.options.HxPermissions && self.options.HxPermissions.has_staff_permissions || annotation.permissions && annotation.permissions.can_delete && annotation.permissions.can_delete.indexOf(self.options.user_id) > -1) {
+      delete_option = "<button class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
+    }
+
+    jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + delete_option + "<strong>" + reply.creator.name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
     jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
       'title': 'Delete Reply?',
       'content': 'Would you like to delete your reply? This is permanent.',
@@ -43504,7 +43678,7 @@ __webpack_require__(52);
 
   $.FontResize.prototype.setUpButtons = function () {
     var self = this;
-    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label"></span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
+    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label">(default)</span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
     jQuery(self.options.slot).find('.annotations-text-size-plus').click(function () {
       self.toggleTextSize(1);
     });
@@ -43732,13 +43906,11 @@ __webpack_require__(56);
       jQuery(self.options.slot).on('mousemove', function (event) {
         self.stretch(event);
 
-        if (self.itemStretching) {
-          jQuery('body').css('overflow', 'hidden');
+        if (self.itemStretching) {// jQuery('body').css('overflow', 'hidden');
         }
       });
       jQuery(self.options.slot).on('mouseup', function (event) {
-        if (self.itemStretching) {
-          jQuery('body').css('overflow', 'inherit');
+        if (self.itemStretching) {// jQuery('body').css('overflow', 'inherit');
         }
 
         self.finishedStretching(event);
@@ -43847,7 +44019,7 @@ __webpack_require__(58);
     jQuery('.search-bar.side #search-clear').click(function () {
       jQuery('.tag-token-tag').removeClass('active');
     });
-    jQuery('.search-bar.side').on('click', '.tag-token-tag', function () {
+    jQuery('.annotationSection.side').on('click', '.tag-token-tag', function () {
       if (jQuery(this).hasClass('active')) {
         jQuery('.tag-token-tag').removeClass('active');
         jQuery('.search-bar.side #search-clear').trigger('click');
@@ -43855,9 +44027,12 @@ __webpack_require__(58);
         jQuery('.tag-token-tag').removeClass('active');
         var tagFound = jQuery(this).html().trim();
         $.publishEvent('searchTag', self.instanceID, [tagFound]);
+        jQuery('.search-bar #srch-term').val(tagFound);
+        jQuery('.search-bar select').val('Tag');
         jQuery(this).addClass('active');
       }
     });
+    self.setUpListeners();
   };
 
   $.SidebarTagTokens.prototype.removeTokens = function () {
@@ -43866,13 +44041,12 @@ __webpack_require__(58);
 
   $.SidebarTagTokens.prototype.setUpTokens = function () {
     var self = this;
-    console.log("SETTING UP TOKENS", self.options.tagList);
     var tokenHTML = "<div class='tag-token-list'><span>Top Tags:</span><br>";
     self.options.tagList.forEach(function (tag) {
       tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
     });
     tokenHTML += "</div>";
-    jQuery('.search-bar.side').append(tokenHTML);
+    jQuery('.search-bar.side').after(tokenHTML);
   };
 
   $.SidebarTagTokens.prototype.saving = function (annotation) {
@@ -44240,6 +44414,8 @@ __webpack_require__(65);
 
       if (self.allowed && self.url && self.url != '') {
         self.setUpButtons();
+      } else {
+        jQuery(self.options.slot).before('<div class="sidebar-navbar"></div>');
       }
     }
   };
@@ -44335,6 +44511,63 @@ __webpack_require__(67);
 
 /***/ }),
 /* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  HxStyleMine Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+//require('./filaname.css');
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.HxStyleMine = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.HxStyleMine.prototype.init = function () {
+    var self = this;
+    self.setUpButtons();
+  };
+
+  $.HxStyleMine.prototype.setUpButtons = function () {
+    var self = this;
+    jQuery(self.options.slot).prepend('<button class="hx-style-mine btn btn-default" style="margin-right: 10px; width: 150px;">Underline Mine</button>');
+    jQuery('.hx-style-mine').click(function () {
+      if (jQuery(this).text().trim() == "Underline Mine") {
+        jQuery('body').append('<style id="style-mine-underline">.annotation-mine { text-decoration: underline dashed; }</style>');
+        jQuery(this).html('Remove Underlines');
+      } else {
+        jQuery('#style-mine-underline').remove();
+        jQuery(this).html('Underline Mine');
+      }
+    });
+  };
+
+  $.HxStyleMine.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  Object.defineProperty($.HxStyleMine, 'name', {
+    value: "HxStyleMine"
+  });
+  $.plugins.push($.HxStyleMine);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
@@ -44482,6 +44715,7 @@ var hrange = __webpack_require__(3);
     var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
     params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
     params += '&version=' + this.options.storageOptions.database_params.version;
+    params += '&collection_id=' + this.options.collection_id;
     jQuery.ajax({
       url: self.url_base + ann_to_delete['id'] + '?catchpy=true' + params,
       method: 'DELETE',
@@ -45019,7 +45253,7 @@ var hrange = __webpack_require__(3);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**

@@ -30,6 +30,8 @@ require('./hx-adminbutton.css');
             self.allowed = self.options.AdminButton.has_staff_permissions;
             if (self.allowed && self.url && self.url != '') {
                 self.setUpButtons();
+            } else {
+                jQuery(self.options.slot).before('<div class="sidebar-navbar"></div>');
             }
         }
     };

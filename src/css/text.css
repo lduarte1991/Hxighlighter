@@ -58,3 +58,11 @@ body {
 .annotator-wrapper {
     margin-bottom: 20px;
 }
+
+span.annotation-mine {
+    /*text-decoration: underline dashed;*/
+}
+
+span.annotation-instructor {
+    /*text-decoration: underline wavy;*/
+}

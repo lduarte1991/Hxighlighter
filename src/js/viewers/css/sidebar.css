@@ -30,7 +30,7 @@
     -moz-box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
     -webkit-box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
     box-shadow: 4px 0px 4px rgba(0,0,0,0.3);
-    padding-top: 60px;
+    /*padding-top: 60px;*/
     /* For videojs */
     z-index: 999;
     /* For IE 8 */
@@ -81,14 +81,16 @@
 .annotationSection .annotationsHolder {
     height: 100%;
     height: calc(100% - 5px);
-    margin-top: 5px;
+    height: calc(100% - 80px);
+    margin-top: 80px;
     overflow-y: scroll;
     overflow-x: hidden;
     background: white;
 }
 
 .annotationSection .annotationsHolder.search-opened {
-    height: calc(100% - var(--sidebar-search-bar-height-open));
+    height: calc(100% - 30px - var(--sidebar-search-bar-height-open));
+    margin-top: calc(30px + var(--sidebar-search-bar-height-open));
 }
 
 .annotationSection .annotationsHolder .annotation-viewer-side {
@@ -203,26 +205,30 @@ button.sidebar-button#keyboard-toggle {
 .annotation-filter-buttons.btn-group .btn {
     background: var(--sidebar-button-color-accent);
     color: var(--dark-font-color);
-    font-size: 0.85em;
-    border-top-right-radius: 5px!important;
-    border-top-left-radius: 5px!important;
+    font-weight: bold;
+    font-size: 0.80em;
+    border: 0px;
+    height: 43px;
+    box-shadow: none;
+    /*border-top-right-radius: 5px!important;
+    border-top-left-radius: 5px!important;*/
 }
 
 .annotation-filter-buttons.btn-group .btn span{
-    font-size: 0.75em;
+    font-size: 1.75em;
 }
 
 .annotation-filter-buttons.btn-group .btn.active {
-    background-color: white;
-    background-color: var(--sidebar-background);
-    border-bottom: 0px solid white;
-    border-bottom-color: var(--sidebar-background);
-    color: rgb(17, 118, 178);
-    color: var(--pop-color);
+    /*background-color: white;
+    background-color: var(--sidebar-background);*/
+    /*border-bottom: 0px solid white;
+    border-bottom-color: var(--sidebar-background);*/
+    /*color: rgb(17, 118, 178);
+    color: var(--pop-color);*/
     font-weight: bold;
     font-size: 0.80em;
-    cursor: default;
-    padding-top: 7px;
+    cursor: pointer;
+    height: 43px;
 }
 
 .btn.user-filter {
@@ -242,13 +248,18 @@ button.sidebar-button#keyboard-toggle {
 
 .btn.user-filter.active {
     box-shadow: none;
-    color: rgb(17, 118, 178);
-    color: var(--accent-color);
+    /*color: rgb(17, 118, 178);
+    color: var(--accent-color);*/
+}
+
+.btn.user-filter.active span {
+    color: var(--pop-color);
 }
 
 .btn.user-filter.inverted {
     background: var(--pop-color);
     color: var(--sidebar-background);
+    text-shadow: none;
 }
 
 /*.btn.user-filter.selected {
@@ -267,6 +278,16 @@ button.sidebar-button#keyboard-toggle {
     z-index: 99999;
 }
 
+#sidebar-filter-options {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    width: 20%;
+    display: none;
+    height: 68px;
+    font-size: 2.25em;
+}
+
 .search-bar .input-group .input-group-btn {
     width: 120px;
 }
@@ -275,6 +296,10 @@ button.sidebar-button#keyboard-toggle {
     margin-bottom: 5px;
     height: 73px;
     height: var(--sidebar-search-bar-height);
+    position: absolute;
+    top: 30px;
+    width: 80%;
+    right: 0;
 }
 
 #search-submit, #search-clear {
@@ -589,6 +614,9 @@ div[class^="reply-list"] {
     to {
         transform:rotate(360deg);
     }
+}
+input:invalid {
+    border: 2px dashed red;
 }
 
 /*button[id^="replies-close"], div[id^="create-reply"] button {

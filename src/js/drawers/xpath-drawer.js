@@ -1,13 +1,14 @@
 var hrange = require('../h-range.js');
 
 (function($){
-    $.XPathDrawer = function(element, inst_id, hClass) {
+    $.XPathDrawer = function(element, inst_id, hClass, options) {
         this.element = element;
         this.instance_id = inst_id;
         this.h_class = (hClass + ' annotator-hl').trim();
         this.init();
         this.drawnAnnotations = [];
         this.tempHighlights = [];
+        this.options = options || {};
     };
 
     $.XPathDrawer.prototype.init = function() {
@@ -83,6 +84,7 @@ var hrange = require('../h-range.js');
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
+        // console.log(self.options, annotation);
         // console.log("Annotation Being Drawn", annotation);
         self.tempHighlights.forEach(function(hl) {
             jQuery(hl).contents().unwrap();
@@ -92,9 +94,16 @@ var hrange = require('../h-range.js');
         var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
         // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
         var spans = [];
+        var otherLabel = '';
+        if (self.options.user_id === annotation.creator.id) {
+            otherLabel += ' annotation-mine';
+        }
+        if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
+            otherLabel += ' annotation-instructor';
+        }
         textNodes.forEach(function(node) {
             //console.log(node, jQuery(node));
-            jQuery(node).wrap('<span class="'+self.h_class+'"></span>');
+            jQuery(node).wrap('<span class="'+self.h_class+otherLabel+'"></span>');
             spans.push(jQuery(node).parent()[0]);
         });
         // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
@@ -154,7 +163,9 @@ var hrange = require('../h-range.js');
     $.XPathDrawer.prototype.getAnnotationsFromElement = function(event) {
         return jQuery(event.target).parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
-        }).toArray();
+        }).toArray().sort(function(a, b) {
+            return a.created - b.created;
+        });
     };
 
     // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
@@ -176,6 +187,9 @@ var hrange = require('../h-range.js');
         var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function(_, elem) {
             return jQuery(elem).data('annotation');
         }).toArray(), 'id');
+        all.sort(function(a, b) {
+            return b - a;
+        })
         //console.log(all);
         return all;
     };

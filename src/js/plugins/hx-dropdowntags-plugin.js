@@ -32,7 +32,19 @@ require('./hx-dropdowntags-plugin.css');
         var self = this;
         self.name = 'DropdownTags';
         self.annotationListeners();
-
+        var tags = ('tags' in self.options) ? self.options.tags : [];
+        // jQuery.each(tags, function(_, tag) {
+        //   jQuery('#tag-list-options').append('<option value="' + tag + '" />');
+        // });
+        jQuery('.search-bar select').on('change', function() {
+          if (jQuery(this).val() == "Tag") {
+            jQuery.each(tags, function(_, tag) {
+              jQuery('#tag-list-options').append('<option value="' + tag + '" />');
+            });
+          } else {
+            jQuery('#tag-list-options').html('');
+          }
+        });
     };
 
 

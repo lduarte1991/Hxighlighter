@@ -30,6 +30,16 @@ var hrange = require('../h-range.js');
             self.onSelection(selectionRange, event);
 
         });
+
+        document.addEventListener('keyup', function(e) { 
+            var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
+            if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
+                var selection = window.getSelection();
+                var selectionRange = selection.getRangeAt(0);
+                //console.log(selectionRange.cloneContents());
+                self.onSelection(selectionRange, event);
+            }
+        });
     }
 
     $.MouseSelector.prototype.onSelection = function(range, event) {
@@ -82,7 +92,10 @@ var hrange = require('../h-range.js');
 
     $.MouseSelector.prototype.loadButton = function(range, iP, event) {
         var self = this;
-        var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+iP.top+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
+        if (iP.top <= 48) {
+            iP.top = 49;
+        }
+        var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+(iP.top- 10)+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
         jQuery('body').append(confirmButtonTemplate);
         jQuery('.hx-confirm-button button').click(function() {
             $.publishEvent('drawTemp', self.instance_id, [[range]])

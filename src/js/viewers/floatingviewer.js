@@ -67,6 +67,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
             }
         });
 
+        jQuery('body').on('click', '.annotation-username', function(e) {
+            $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
+        });
+
+        jQuery('body').on('click', '.annotation-tag', function(e) {
+            $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
+        });
+
         this.setUpPinAndMove();
     };
 
@@ -162,6 +170,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     $.FloatingViewer.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
         var self = this;
         jQuery('.edit').prop('disabled', false);
+        jQuery('.note-link-popover').remove();
         $.publishEvent('editorHidden', self.instance_id, []);
         if (self.annotation_tool.editor) {
             self.annotation_tool.editor.remove();
@@ -169,7 +178,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
         self.annotation_tool.updating = false;
-        jQuery('body').css('overflow-y', 'scroll');
+        // jQuery('body').css('overflow-y', 'scroll');
     };
 
     $.FloatingViewer.prototype.ViewerDisplayOpen = function(event, anns) {
@@ -181,7 +190,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             
         }
 
-        if (self.annotation_tool.editing || self.annotation_tool.updating || (self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer))) {
+        if (jQuery('.annotation-editor').is(':visible') || jQuery('.hx-confirm-button').is(':visible') || self.annotation_tool.editing || self.annotation_tool.updating || (self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer))) {
             // there's already an open editor window for this instance so don't do anything
             return;
         }
@@ -203,7 +212,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             delete self.annotation_tool.viewer
         }
         self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/:/g, '-'));
-        var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop();
+        var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
         var newLeft = annotator.util.mousePosition(event).left + 30
         self.annotation_tool.viewer.css({
             'top': newTop,
@@ -216,7 +225,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             self.annotation_tool.isStatic = false;
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer;
-            jQuery('body').css('overflow-y', 'scroll');
+            // jQuery('body').css('overflow-y', 'scroll');
         });
 
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
@@ -245,7 +254,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                         self.annotation_tool.isStatic = false;
                         self.annotation_tool.updating = false;
                         self.annotation_tool.editing = false;
-                        jQuery('body').css('overflow-y', 'scroll');
+                        // jQuery('body').css('overflow-y', 'scroll');
                     }
                 },
                 cancel: function () {
@@ -263,9 +272,12 @@ import 'jquery-confirm/css/jquery-confirm.css'
         if (self.annotation_tool.isStatic) {
             return;
         }
+
+        console.log('should hide display');
         clearTimeout(self.hideTimer);
         self.hideTimer = setTimeout(function () {
             if (self.hideTimer) {
+                $.publishEvent('displayHidden', self.instance_id, []);
                 if (self.annotation_tool.viewer) {
                     self.annotation_tool.viewer.remove();
                     delete self.annotation_tool.viewer;
@@ -273,7 +285,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 self.annotation_tool.isStatic = false;
                 self.annotation_tool.updating = false;
                 self.annotation_tool.editing = false;
-                jQuery('body').css('overflow-y', 'scroll');
+                // jQuery('body').css('overflow-y', 'scroll');
             }
         }, 500);
         
@@ -292,7 +304,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.isStatic = false;
         self.annotation_tool.updating = false;
         self.annotation_tool.editing = false;
-        jQuery('body').css('overflow-y', 'scroll');
+        // jQuery('body').css('overflow-y', 'scroll');
     };
 
     $.FloatingViewer.prototype.StorageAnnotationDelete = function(annotation) {
@@ -335,21 +347,21 @@ import 'jquery-confirm/css/jquery-confirm.css'
            self.finishedMoving(event);
         });
 
-        jQuery('body').on('mouseover', '.annotation-editor', function(event) {
-            jQuery('body').css('overflow-y', 'hidden');
-        });
+        // jQuery('body').on('mouseover', '.annotation-editor', function(event) {
+        //     jQuery('body').css('overflow-y', 'hidden');
+        // });
 
-        jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
-            jQuery('body').css('overflow-y', 'scroll');
-        });
+        // jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
+        //     jQuery('body').css('overflow-y', 'scroll');
+        // });
 
-        jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
-            jQuery('body').css('overflow-y', 'hidden');
-        });
+        // jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
+        //     jQuery('body').css('overflow-y', 'hidden');
+        // });
 
-        jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
-            jQuery('body').css('overflow-y', 'scroll');
-        });
+        // jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
+        //     jQuery('body').css('overflow-y', 'scroll');
+        // });
 
         jQuery('body').on('mouseleave', function(event) {
             self.finishedMoving(event);

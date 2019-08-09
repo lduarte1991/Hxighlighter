@@ -39,8 +39,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
         
         // warns dev that they forgot to include summernote.js
         if (typeof jQuery.summernote !== "object") {
-            //console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+            console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
         }
+        this.annotationListeners();
     };
 
     /**
@@ -56,6 +57,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // adds the summernote WYSIWIG to the editor to the selector's location
         this.elementObj = element.find(selector);
+        console.log(this.elementObj);
         var newOptions = jQuery.extend({}, this.options, {'width': element.outerWidth()-24});
         this.elementObj.summernote(newOptions);
 
@@ -85,9 +87,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
      * @param      {String}  selector  The selector containing the area in the editor where to insert the WYSIWYG
      */
     $.Reply.prototype.destroy = function(element, selector) {
-        this.elementObj.val('');
-        this.elementObj.summernote('destroy');
-        this.elementObj = undefined;
+        console.log(jQuery('.summernote').each(function() {
+            jQuery(this).summernote('destroy');
+        }));
+        if (this.elementObj) {
+            this.elementObj.val('');
+            this.elementObj.summernote('destroy');
+            this.elementObj = undefined;
+        }
     };
 
 
@@ -98,6 +105,11 @@ import 'jquery-confirm/css/jquery-confirm.css'
      */
     $.Reply.prototype.annotationListeners = function() {
         var self = this;
+
+        $.subscribeEvent('displayHidden', self.instanceID, function() {
+            console.log('reached here, but nothing to destroy');
+            self.destroy();
+        });
     };
 
     /**
@@ -273,7 +285,12 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix, annotation) {
         var self = this;
-        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'><button class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button><strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+        console.log(annotation, self.options);
+        var delete_option = '';
+        if ((self.options.HxPermissions && self.options.HxPermissions.has_staff_permissions) || (annotation.permissions && annotation.permissions.can_delete && annotation.permissions.can_delete.indexOf(self.options.user_id) > -1)) {
+            delete_option = "<button class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
+        }
+        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
         jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
             'title': 'Delete Reply?',
             'content': 'Would you like to delete your reply? This is permanent.',

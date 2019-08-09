@@ -23,6 +23,7 @@ require('./plugins/hx-alert.js');
 require('./plugins/hx-badges.js');
 require('./plugins/hx-adminbutton.js');
 require('./plugins/hx-prevnextbutton.js');
+require('./plugins/hx-style-mine.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -235,7 +236,7 @@ require('./storage/catchpy.js');
         var self = this;
         self.drawers = [];
         jQuery.each($.drawers, function(_, drawer) {
-            self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector));
+            self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
         });
     }
 
@@ -480,18 +481,20 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationLoad (name)
      */
-    $.TextTarget.prototype.StorageAnnotationLoad = function(annotations, converter) {
+    $.TextTarget.prototype.StorageAnnotationLoad = function(annotations, converter, undrawOld) {
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
             if (typeof(viewer.StorageAnnotationLoad) === "function") {
                 viewer.StorageAnnotationLoad(annotations);
             }
         });
-        $.publishEvent('GetAnnotationsData', self.instance_id, [function(anns) {
-            anns.forEach(function(ann) {
-                self.TargetAnnotationUndraw(ann);
-            });
-        }]);
+        if (undrawOld) {
+            $.publishEvent('GetAnnotationsData', self.instance_id, [function(anns) {
+                anns.forEach(function(ann) {
+                    self.TargetAnnotationUndraw(ann);
+                });
+            }]);
+        }
 
         annotations.forEach(function(ann) {
             var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));

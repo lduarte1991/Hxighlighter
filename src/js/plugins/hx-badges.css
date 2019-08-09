@@ -11,3 +11,9 @@
     padding-top: 1px;
     border-radius: 50%;
 }
+
+.annotation-filter-buttons.btn-group .btn span.hx-badge {
+    font-size: 0.85em;
+    width: 10PX;
+    word-break: break-all;
+}

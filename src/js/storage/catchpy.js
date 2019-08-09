@@ -117,6 +117,7 @@ var hrange = require('../h-range.js');
         var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
+        params += '&collection_id=' + this.options.collection_id
         jQuery.ajax({
             url: self.url_base + ann_to_delete['id']+'?catchpy=true' + params,
             method: 'DELETE',
