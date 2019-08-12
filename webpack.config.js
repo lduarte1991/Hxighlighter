@@ -12,7 +12,7 @@ const PATHS = {
 module.exports = {
     entry: {
         text: ['./src/text-index.js'],
-        author: ['./src/author-index.js']
+        text_lite: ['./src/author-index.js']
     },
     plugins: [
         new webpack.ProvidePlugin({

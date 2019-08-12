@@ -12,19 +12,14 @@ require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
-require('./plugins/hx-reply.js');
 require('./plugins/hx-instruction-panel.js');
 require('./plugins/hx-font-resize.js');
 require('./plugins/hx-toggle-annotations.js');
 require('./plugins/hx-display-resize.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
+require('./plugins/hx-adminbutton.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
-require('./plugins/hx-badges.js');
-require('./plugins/hx-adminbutton.js');
-require('./plugins/hx-prevnextbutton.js');
-require('./plugins/hx-style-mine.js');
-require('./storage/catchpy.js');
 
 (function($) {
 
@@ -50,13 +45,12 @@ require('./storage/catchpy.js');
         var self = this;
         // this target is only meant to work with text/html objects
         this.media = "text";
+        this.setUpListeners();
 
         // this where the target will be contained
         this.target_selector = this.options.target_selector;
 
         // sets up listeners from core and other places
-        this.setUpListeners();
-
         if (this.options.method == "url") {
             // if the text exists externally, this will load it into the DOM
             this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector)
@@ -102,10 +96,12 @@ require('./storage/catchpy.js');
         this.guid = $.getUniqueId();
 
         // each annotation target will be enclosed in a "slot"
-        var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
+        //var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
         
         // adds it to the page and turns on the wrapper
-        jQuery(selector).append(slot);
+        jQuery(selector + ' .annotations-section').append(content);
+        jQuery(selector).prop('id', this.guid);
+        jQuery(selector).addClass('annotation-slot');
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');        
         
         // lets Core know that the target has finished loading on screen
@@ -181,9 +177,10 @@ require('./storage/catchpy.js');
             self.element = element;
             self.element.data('source_type', self.options.object_source);
             self.element.data('source_type', 'text');
-
             // finish setting up selectors
-            self.setUpSelectors(self.element[0]);
+            if (!self.options.viewerOptions.readonly) {
+                self.setUpSelectors(self.element[0]);
+            }
             self.setUpDrawers(self.element[0]);
 
             // finish setting up viewers (which contain displays and editors)

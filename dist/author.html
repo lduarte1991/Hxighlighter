@@ -6,27 +6,35 @@
         <title>Hxighlighter</title>
         <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico"/>
     </head>
-    <body>
-        <main class="hxighlighter-authoring" role="main">
-            <h3>Authoring Serverless Annotations</h3>
-            <div>
-                Type:&nbsp;&nbsp;&nbsp;
-                <select>
-                    <option>Text</option>
-                </select>
-                <br>
-                <button>Upload HTML</button> or <button>Online HTML Editor</button>
-                <input type="file" />
-                <textarea></textarea>
-                <br>
-                <button>Start Annotating</button>
-            </div>
-            
-            <h4>Files to Download</h4>
-            <ul>
-                <li><a download href="./hxighlighter_text.js">Hxighlighter JS</a></li>
-                <li><a download href="./hxighlighter_text.css">Hxighlighter CSS</a></li>
-            </ul>
+    <body>            
+        <main class="hxighlighter-container" role="main">
+            <p>
+                <script>
+                    var head  = document.getElementsByTagName('head')[0];
+                    var link  = document.createElement('link');
+                    link.id   = "bundlecss";
+                    link.rel  = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = './hxighlighter_text_lite.css';
+                    link.media = 'all';
+                    if (window.location.host.indexOf('studio') === -1) {
+                        head.appendChild(link);
+                    }
+                </script>
+            </p>
+            <section class="container1">
+                <div class="annotations-section">
+                    <div id="hxat_lite_loading"><i class='fa fa-spinner make-spin'></i></div>
+                </div>                    
+            </section>
         </main>
+
+        <div id='text_url' style='display:none;'>http://localhost:8000/dist/sample_targets/raven.txt</div>
+        <div id="tags" style="display: none;">test1:#0000FF</div>
+        <div id="annotations-url" style="display: none;">http://localhost:8000/dist/sample_targets/annotations%20%2825%29.json</div>
+        <div id='media-type' style="display: none;">text</div>
+        <div id='common-inst-display-name' style='display: none;'>HxStaff</div>
+        <div id="extra_options" style="display:none;"></div>
+        <script src="./hxighlighter_text_lite.js"></script>
     </body>
 </html>

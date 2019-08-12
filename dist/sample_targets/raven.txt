@@ -1,6 +1,5 @@
-<h3>The Raven</h3>
-<h4>by Edgar Allan Poe</h4>
-<div class='annotations-section'>
+    <h3>The Raven</h3>
+    <h4>by Edgar Allan Poe</h4>
     <p>
     Once upon a midnight dreary, while I pondered, weak and weary,<br>
     Over many a quaint and curious volume of forgotten lore,<br>
@@ -144,4 +143,3 @@
     And the lamplight o'er him streaming throws his shadow on the floor;<br>
     And my soul from out that shadow that lies floating on the floor<br>
                                               Shall be lifted--nevermore!</p>
-</div>

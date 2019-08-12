@@ -25,9 +25,11 @@ require('./hx-adminbutton.css');
      */
     $.AdminButton.prototype.init = function() {
         var self = this;
+        console.log("here");
         if (self.options.AdminButton) {
             self.url = self.options.AdminButton.homeURL;
             self.allowed = self.options.AdminButton.has_staff_permissions;
+            console.log(self.url, self.allowed);
             if (self.allowed && self.url && self.url != '') {
                 self.setUpButtons();
             } else {

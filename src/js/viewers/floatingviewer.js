@@ -24,6 +24,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             template_urls: ""
         };
         this.options = jQuery.extend({}, defaultOptions, options);
+        console.log("Floating options", this.options);
         this.instance_id = inst_id;
         this.annotation_tool = {
             interactionPoint: null,
@@ -203,6 +204,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
             'instructor_ids': self.options.instructors,
             'common_name': (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : "",
         });
+
+        if (self.options.viewer_options.readonly) {
+            self.annotation_tool.viewerTemplate = self.annotation_tool.viewerTemplate.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '')
+        }
 
         // add the viewer to the DOM
         self.element.find('.annotator-wrapper').after(self.annotation_tool.viewerTemplate);

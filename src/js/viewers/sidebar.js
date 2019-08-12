@@ -29,6 +29,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             template_urls: ""
         };
         this.options = jQuery.extend({}, defaultOptions, options);
+        console.log("Sidebar options", this.options);
         this.instance_id = inst_id;
         this.annotation_tool = {
             interactionPoint: null,
@@ -347,6 +348,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         var self = this;
 
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
+            console.log("reached here!");
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
             if (filteroptions.indexOf('mine') > -1 ) {
                 self.addAnnotation(annotation, updating, false);
@@ -386,7 +388,10 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             ann.index = 0;
             ann.instructor_ids = self.options.instructors;
             ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
-            var annHTML = self.options.TEMPLATES.annotationItem(ann)
+            var annHTML = self.options.TEMPLATES.annotationItem(ann);
+            if (self.options.viewer_options.readonly) {
+                annHTML = annHTML.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '')
+            }
             if (jQuery('.side.item-' + ann.id).length > 0) {
                 jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
             }  else {
@@ -562,8 +567,33 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
     $.Sidebar.prototype.autosearch = function(term, type) {
         var self = this;
-        jQuery('.btn.user-filter').removeClass('active');
-        jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');
+        if (self.options.viewer_options.readonly) {
+            $.publishEvent('GetAnnotationsData', self.instance_id, [function(data) {
+                data.forEach(function(ann) {
+                    if (type == "Tag") {
+                        if(ann.tags.indexOf(term) == -1) {
+                            jQuery('.ann-item.item-' + ann.id).hide();
+                        }
+                    } else if (type == "User") {
+                        if(ann.creator.username !== term && ann.common_name !== term) {
+                            jQuery('.ann-item.item-' + ann.id).hide();
+                        }
+                    }
+                });
+            }]);
+            jQuery('#empty-alert').html('You are now viewing only annotations with ' + type.toLowerCase() + ' "' + term + '". Click here to view all annotations');
+            jQuery('#empty-alert').show();
+            jQuery('#empty-alert').css('cursor', 'pointer');
+            
+            jQuery('#empty-alert').on('click', function() {
+                jQuery('.ann-item').show();
+                jQuery('#empty-alert').off('click');
+                jQuery('#empty-alert').hide();
+                jQuery('#empty-alert').css('cursor', 'default');
+            });
+        } else {
+            jQuery('.btn.user-filter').removeClass('active');
+            jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');
             if (term !== self.options.common_instructor_name) {
                 self.search(self.filterByType(term, type, undefined));
                 jQuery('.annotationsHolder').addClass('search-opened');
@@ -579,6 +609,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 jQuery('#sidebar-filter-options').trigger('click');
                 jQuery('.btn.user-filter#instructor').trigger('click');
             }
+        }
     };
 
     $.viewers.push($.Sidebar);
