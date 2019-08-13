@@ -1,0 +1,113 @@
+.create-reply-area button[id^="other-"] {
+    width: 166px;
+}
+
+.create-reply-area button[id^="other-save-reply"] {
+    background: #333;
+    color: white;
+    border-bottom-left-radius: 5px;
+}
+
+.create-reply-area button[id^="other-cancel-reply"] {
+    background: #eee;
+    border-bottom-right-radius: 5px;
+}
+
+.create-reply-area button[id^="sidebar-"] {
+    width: 50%;
+}
+
+.create-reply-area button[id^="sidebar-save-reply"] {
+    background: #595959;
+    color: white;
+    border-bottom-left-radius: 5px;
+}
+
+.create-reply-area button[id^="sidebar-cancel-reply"] {
+    background: #eee;
+    border-bottom-right-radius: 5px;
+}
+
+.plugin-area-bottom button.create-reply, .plugin-area-bottom button.view-replies {
+    background: #333;
+    background: var(--accent-color);
+    background: #ededed;
+    color: black;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-right: auto;
+    width: 142px;
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+
+.plugin-area-bottom div[class*='reply-list'] {
+    border-top: 1px dashed black;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.plugin-area-bottom div[class*='reply-list'].reversed {
+    flex-direction: column-reverse;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply {
+    padding: 5px 15px 1px 15px;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply .delete-reply{
+    cursor: pointer;
+    background: #fff;
+    background: rgba(255, 255, 255, 0.0);
+    outline: 0;
+    border: 0;
+    color: #888;
+    color: var(--sidebar-button-color);
+    margin-left: -20px;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply > p {
+    margin-left: 8px;
+}
+
+.plugin-area-bottom div[class*='reply-list'] .reply:nth-child(even) {
+    background-color: rgba(136, 136, 136, 0.2);
+}
+
+.plugin-area-bottom {
+    margin-top: 10px;
+}
+
+.reply-menu {
+    height: 10px;
+    background: #333;
+    background: #595959;
+    transition: all .2s ease-in-out;
+    overflow: hidden;
+}
+
+.reply-menu:focus-within {
+    height: 30px;
+}
+
+.reply-menu:hover {
+    height: 30px;
+}
+
+.reply-menu button {
+    margin-top: 10px;
+    background: none;
+    border: 0;
+    color: white;
+    transition: all .2s ease-in-out;
+}
+
+.reply-menu:hover button {
+    margin-top: 4px;
+}
+
+.reply-menu button:focus {
+    outline: 0;
+    color: #20a9ff;
+}

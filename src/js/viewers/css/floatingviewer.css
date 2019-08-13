@@ -1,0 +1,332 @@
+
+:root {
+    --floating-button-color: #595959;
+}
+.annotator-adder.annotator-invert-y{
+    margin-top: 8px;
+    background-position: right bottom;
+}
+
+.annotator-adder.annotator-invert-y:hover{
+    background-position: center bottom;
+}
+
+.annotator-adder.annotator-invert-y:active{
+    margin-top: 8px;
+    background-position: left bottom;
+}
+
+.annotation-editor.annotator-invert-y {
+    margin-top: -277px;
+}
+
+.annotation-viewer.annotator-invert-y  {
+    margin-top: -235px;
+}
+
+.annotation-editor.annotator-invert-x, .annotation-viewer.annotator-invert-x {
+    margin-left: -210px;
+}
+
+.annotation-dashboard {
+    width: 300px;
+    height: 100%;
+    height: calc(100% - 50px);
+    margin-top: 50px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 999999;
+    background: var
+}
+
+.annotation-item {
+    background: white;
+    background: var(--text-background);
+    min-height: 100px;
+    text-align: center;
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: 3px solid black;
+    padding-bottom: 25px;
+}
+
+.unfilter-button {
+    background: darkblue;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    font-size: 16pt;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.token-input-input-token input {
+    width: 100%!important;
+}
+
+.annotation-editor .action-button {
+    width: 49.5%;
+    border-radius: 0px;
+    margin: 0;
+    font-weight: bolder;
+}
+
+.annotation-editor .action-button.save {
+    background: #333;
+    background: var(--floating-button-color);
+    border-bottom-left-radius: 5px;
+}
+
+.annotation-editor .action-button.cancel {
+    background: #eee;
+    border-bottom-right-radius: 5px;
+}
+
+.token-input-list {
+    margin-bottom: 0px;
+}
+
+#navigation_bar {
+    position: fixed;
+    height: 50px;
+    background: black;
+    top: 0;
+    display: block;
+    width: 100%;
+    z-index:999;
+    overflow:hidden;
+}
+
+.annotation-editor, .annotation-viewer {
+    position: fixed;
+    width: 400px;
+    min-height: 200px;
+    border: 1px solid black;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 5px 5px 3px #888;
+    z-index: 999;
+}
+
+.annotation-editor {
+    min-height: 237px;
+}
+
+.note-toolbar.btn-toolbar {
+    cursor: move;
+}
+
+.annotation-editor textarea#annotation-text-field {
+    width: 100%;
+    min-height: 165px;
+    margin: 0;
+}
+
+.annotation-editor .annotation-editor-nav-bar, .annotation-viewer .annotation-viewer-nav-bar {
+    height: 25px;
+    position: relative;
+    background: #333;
+    background: var(--floating-button-color);
+    text-align: right;
+}
+
+.annotation-editor .annotation-editor-nav-bar, .annotation-viewer.static .annotation-viewer-nav-bar {
+    cursor: move;
+}
+
+.backup-removelater {
+    background: rgb(39, 86, 126); /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* Standard syntax */
+}
+
+.annotation-editor .annotation-editor-nav-bar button, .annotation-viewer .annotation-viewer-nav-bar button{
+    display: inline;
+    background-color: #333;
+    background-color: var(--floating-button-color);
+    border: 0;
+    color: white;
+    margin-top: 1px;
+}
+
+.annotation-viewer .annotation-viewer-nav-bar button.cancel {
+    display: none;
+}
+
+.annotation-viewer.static .annotation-viewer-nav-bar button.cancel {
+    display: inline-block;
+}
+
+.annotation-viewer .delete, .annotation-viewer .edit {
+    background-color: white;
+    border: 0;
+    color: black;
+    display: inline-block;
+}
+
+.annotation-viewer .delete:focus, .annotation-viewer .edit:focus {
+    outline: none;
+}
+
+.annotation-viewer .delete:hover, .annotation-viewer .edit:hover {
+    border: 0;
+    color: #666;
+}
+
+#sidebar_button, #accessibility_button {
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
+    border-style: none;
+    background: black;
+    color: white;
+    font-size: 18pt;
+}
+
+#sidebar_button:hover, #accessibility_button:hover {
+    color: rgb(255, 255, 10);
+}
+
+.annotation-text-field {
+    padding: 15px;
+    overflow-y: scroll;
+    max-height: 200px;
+    min-height: 170px;
+}
+
+.annotation-text-field .ann-item {
+    padding-bottom: 25px;
+}
+
+.annotation-text-field .annotation-username {
+    font-weight: bold;
+    border-top: 1px solid black;
+    padding-top: 10px;
+    margin-top: -10px;
+    cursor: pointer;
+}
+
+.annotation-text-field .annotation-username:hover {
+    color: var(--pop-color);
+}
+
+.annotation-text-field .annotation-date {
+    font-size: 8pt;
+    color: #333;
+}
+
+.annotation-text-field .annotation-date:before{
+    content: "(";
+}
+
+.annotation-text-field .annotation-date:after{
+    content: ")";
+}
+
+.annotation-text-field img, .annotation-text-field iframe {
+    max-width: 100%;
+    width: auto!important;
+}
+
+.annotation-text-field .annotation-quote {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+    color: #555;
+    border-left: 2px solid #333;
+    font-size: 8pt;
+}
+
+.annotation-text-field .annotation-text {
+    margin-bottom: 20px;
+}
+
+.annotation-text-field .annotation-tag {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.annotation-tags {
+    margin-bottom: 20px;
+}
+
+.annotator-hl {
+    cursor: pointer;
+}
+
+.notice-alert {
+    margin-top: 70px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+    background: #eee;
+}
+
+.popover, .tooltip {
+    z-index: 99999;
+}
+
+.make-spin {
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 4000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 4000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 4000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    
+    animation-name: spin;
+    animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@-ms-keyframes spin {
+    from { -ms-transform: rotate(0deg); }
+    to { -ms-transform: rotate(360deg); }
+}
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+
+/*.annotation-viewer.static nav.annotation-viewer-nav-bar:before {
+    content: "\f08d";
+    left: 5px;
+    position: absolute;
+    top: 3px;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: white;
+    transform: rotate(-35deg);
+}*/

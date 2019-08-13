@@ -1,0 +1,15 @@
+#prevButton, #nextButton {
+    background: #ededed;
+    color: #333;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 10px;
+    border: 1px solid #888;
+    cursor: pointer;
+    float: left;
+    margin-top: 50px;
+}
+
+#prevButton:hover, #nextButton:hover {
+    background: #e0e0e0;
+}

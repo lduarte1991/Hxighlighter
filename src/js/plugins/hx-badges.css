@@ -1,0 +1,19 @@
+.hx-badge {
+    background: rgb(240, 80, 80);
+    background: var(--pop-color);
+    min-width: 16px;
+    height: 16px;
+    position: absolute;
+    top: -8px;
+    right: -2px;
+    z-index: 999999;
+    color: white;
+    padding-top: 1px;
+    border-radius: 50%;
+}
+
+.annotation-filter-buttons.btn-group .btn span.hx-badge {
+    font-size: 0.85em;
+    width: 10PX;
+    word-break: break-all;
+}

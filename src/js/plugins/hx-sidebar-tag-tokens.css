@@ -1,0 +1,23 @@
+:root {
+     --sidebar-search-bar-height-open: 128px;
+}
+.tag-token-tag {
+    display: inline-block;
+    padding: 3px;
+    border: 2px solid black;
+    border-radius: 3px;
+    margin-right: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+    background: inherit;
+}
+.tag-token-tag.active {
+    background: rgba(0, 255, 255, 0.3)
+}
+
+.tag-token-list {
+    text-align: center;
+    width: 90%;
+    top: 105px;
+    position: absolute;
+}

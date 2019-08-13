@@ -1,0 +1,76 @@
+<div class="ann-item annotationItem item-<%= id %> side <% if (instructor_ids.indexOf(creator.id) > -1) {%>inst<%}%>" role="listitem" aria-label="Annotation #<%=index%>">
+    <div style="overflow:auto;">
+    <span class="idAnnotation" style="display:none;"><%= id %></span>
+    <% if (typeof(creator) !== 'undefined') { %>
+    <div class= "annotatedBy field side" aria-label="Annotation created by <% if (instructor_ids.indexOf(creator.id) > -1) { print(common_name);} else {print(creator.name);} %>">
+        <% if (instructor_ids.indexOf(creator.id) > -1) { print(common_name);%>&nbsp;<span class="fas fa-certificate"></span><%} else {print(creator.name);} %>     
+        <% } else { %>
+        <div class= "annotatedBy field side" aria-label="Annotation created by lduarte1991">
+        lduarte19911
+        <% } %>
+    </div>
+    <% if( typeof(created) !== 'undefined') { %>
+        <% var date = new Date(created); %>
+        <div class="annotatedAt field side" title="<% print(date) %>" aria-label="last updated <% print(date); %>">
+            created <% print(jQuery.timeago(date)); %>
+        </div>
+    <% } %>
+    </div>
+    <button class="edit" id="edit-<%= id %>" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>
+                <button class="delete" id="delete-<%= id %>" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>
+    <% if (media === 'text' || media === "Text") {%>
+        <div class="quote field side">
+            <div class="quoteText" aria-label="Excerpt selected for this annotation:"><%= exact %></div>
+        </div>
+    <% } else if (media === 'image' && thumbnail) {%>
+        <div class="zoomToImageBounds" style='position:relative;'>
+            <img class="annotation-thumbnail" src="/static/css/images/loading.gif" data-src="<%= thumbnail %>" onError="this.onerror=null;this.src='/static/css/images/image-error.png';" data-svg=".thumbnail-<%= id %>" alt="Thumbnail Preview"/>
+            <% if (typeof(svg) !== "undefined") { %>
+                <%= svg %>
+            <% } %>
+            <span class="idAnnotation" style="display:none"><%= id %></span>
+            <span class="uri" style="display:none"><%= uri %></span>
+        </div>
+    <% } else if (media === "video") {%>
+        <div class="playMediaButton" style="text-align:center;">
+            <div class="btn btn-default" style="text-align:center;margin-top:20px;">
+                Segment <%= rangeTime.start %> - <%= rangeTime.end %>
+            </div>
+            <span class="idAnnotation" style="display:none"><%= id %></span>
+            <span class="uri" style="display:none"><%= uri %></span>
+        </div>
+    <% } %>
+    <div style="display:none;" id="annotationTextLabel">Annotation text</div>
+    <div class="body field side" aria-label="Comment: <%- annotationText[0].replace(/"/g, '&quot;') %>">
+        <% if (typeof annotationText !== 'undefined') {%>
+            <%= annotationText[0] %>
+        <% } %>
+    </div>
+    <% if (typeof tags !== "undefined") { %>
+        <div class="tagList field side">
+            <% _.each(tags, function(tagItem){ %>
+                <div class="annotation-tag side" aria-label="tag: <%- tagItem.replace(/"/g, '&quot;') %>">
+                    <%= tagItem %>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+
+    <div class="plugin-area-bottom"></div>
+        <!-- <% if (typeof(totalReplies) == "undefined" || totalReplies === 0) { %>
+            <button class='create-reply'>Reply to Annotation</button>
+        <% } else { %>
+            <button class='view-replies'>View <%= totalReplies %> Replies</button>
+        <% } %> -->
+    <!-- <div class="totalreplies field side clicking_allowed" tabindex="0" role="button" aria-label="Make or view replies Annotation #<%=index %>">
+        <span class="glyphicon glyphicon-comment"></span>
+        <% if (typeof(totalReplies) == "undefined") { %>
+        <span class="replyNum"> 0 </span>
+        <% } else { %>
+        <span class="replyNum"> <%= totalReplies %> </span>
+        <% } %>
+    </div> -->
+    <script>
+        // jQuery('.annotationItem.item-<%= id %>.side').data('annotation')
+    </script>
+</div>

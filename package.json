@@ -1,0 +1,68 @@
+{
+  "name": "hxighlighter",
+  "version": "0.0.1",
+  "description": "JavaScript annotation tool suite",
+  "main": "index.js",
+  "scripts": {
+    "test": "./test_server.sh",
+    "webp": "webpack -p",
+    "start": "cd dist && http-server",
+    "all": "webpack -p && cd dist && http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lduarte1991/Hxighlighter.git"
+  },
+  "keywords": [
+    "annotations"
+  ],
+  "private": true,
+  "author": "lduarte1991",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/lduarte1991/Hxighlighter/issues"
+  },
+  "homepage": "https://github.com/lduarte1991/Hxighlighter#readme",
+  "dependencies": {
+    "babel-loader": "^8.0.6",
+    "bootstrap": "^3.4.1",
+    "codemirror": "^5.46.0",
+    "jquery-confirm": "^3.3.4",
+    "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
+    "timeago": "^1.6.7",
+    "webpack": "^4.29.6",
+    "webpack-auto-inject-version": "^1.2.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/register": "^7.4.0",
+    "@fortawesome/fontawesome-free": "^5.9.0",
+    "bs4-summernote": "^0.8.10",
+    "chai": "^4.2.0",
+    "connect": "^3.6.6",
+    "css-loader": "^2.1.1",
+    "exports-loader": "^0.7.0",
+    "file-loader": "^3.0.1",
+    "http-server": "^0.11.1",
+    "ignore-styles": "^5.0.1",
+    "imports-loader": "^0.8.0",
+    "jquery": "^3.4.0",
+    "jquery-tiny-pubsub": "^0.7.1",
+    "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "^0.5.0",
+    "mocha": "^6.1.4",
+    "mocha-loader": "^2.0.1",
+    "nyc": "^14.0.0",
+    "popper.js": "^1.14.7",
+    "puppeteer": "^1.14.0",
+    "regenerator-runtime": "^0.13.2",
+    "serve-static": "^1.13.2",
+    "style-loader": "^0.23.1",
+    "underscore-template-loader": "^1.0.0",
+    "url-loader": "^1.1.2",
+    "webpack-cli": "^3.3.0"
+  }
+}
