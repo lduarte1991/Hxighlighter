@@ -296,15 +296,15 @@ var hrange = require('../h-range.js');
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
-            // console.log("reached getAnnotationTargetItems", webAnn);
+            console.log("reached getAnnotationTargetItems", webAnn);
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
             }
-            // console.log("nope, something went wrong");
+            //console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
         } catch(e) {
-            // console.log(e);
+            console.log(e);
             return [];
         }
     };
@@ -319,6 +319,7 @@ var hrange = require('../h-range.js');
             jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
                 if (!('parent' in targetItem)) {
                     if (targetItem['type'] === "RangeSelector") {
+                        console.log("Reached RangeSelector", targetItem);
                         xpathRanges.push({
                             start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
                             startOffset: targetItem['refinedBy'][0].start,
@@ -332,9 +333,9 @@ var hrange = require('../h-range.js');
                         });
                     } else if (targetItem['type'] === "TextQuoteSelector") {
                         textRanges.push({
-                            prefix: targetItem['prefix'],
+                            prefix: targetItem['prefix'] || '',
                             exact: targetItem['exact'],
-                            suffix: targetItem['suffix']
+                            suffix: targetItem['suffix'] || ''
                         })
                     }
                 } else {
@@ -360,6 +361,18 @@ var hrange = require('../h-range.js');
                     var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
                     ranges.push(serializedRange);
                 }
+            } else {
+                var rangeFound = {}
+                if (xpathRanges.length >= 1) {
+                    rangeFound['xpath'] = xpathRanges[0];
+                }
+                if (positionRanges.length >= 1) {
+                    rangeFound['position'] = positionRanges[0];
+                }
+                if (textRanges.length >= 1) {
+                    rangeFound['text'] = textRanges[0];
+                }
+                ranges.push(rangeFound)
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;

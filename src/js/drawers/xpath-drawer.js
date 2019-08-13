@@ -85,7 +85,7 @@ var hrange = require('../h-range.js');
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
         // console.log(self.options, annotation);
-        // console.log("Annotation Being Drawn", annotation);
+        console.log("Annotation Being Drawn", annotation);
         self.tempHighlights.forEach(function(hl) {
             jQuery(hl).contents().unwrap();
         });

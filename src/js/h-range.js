@@ -422,7 +422,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
         //console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
-        //console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+        console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
 
     }
     //console.log(_start, _startOffset, startResult, endResult);
@@ -436,7 +436,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
         normalizedRange = document.createRange();
         normalizedRange.setStart(startResult.node, startResult.offset);
         normalizedRange.setEnd(endResult.node, endResult.offset);
-        //console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+        console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
     }
 
     // Way #3: looks for an exact match of prefix, suffix, and exact
@@ -455,7 +455,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
             var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
             if (serializedRange.text.prefix === toCheck.prefix && serializedRange.text.suffix === toCheck.suffix) {
-                //console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+                console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
                 break;
             }
         }
