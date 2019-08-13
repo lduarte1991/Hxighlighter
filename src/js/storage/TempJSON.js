@@ -13,14 +13,20 @@ var hrange = require('../h-range.js');
             callBack(self.store.reverse())
         });
 
+        $.subscribeEvent('dumpStore', self.instance_id, function(_, callBack) {
+            var annotations = [];
+            self.store.forEach(function(ann) {
+                annotations.push(self.convertFromWebAnnotation(ann));
+            })
+            callBack(annotations);
+        });
+
         try {
             if(self.options.storageOptions.external_url.json_url != '') {
                 var callB = function(result) {
                     jQuery.each(result.rows, function(_, ann) {
-                        console.log(jQuery(self.options.target_selector).find('.annotator-wrapper'));
                         var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
                         self.store.push(ann);
-                        console.log(ann);
                         setTimeout(function() {
                             // console.log('definitely getting to here');
                             $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);

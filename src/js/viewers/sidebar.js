@@ -568,29 +568,44 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     $.Sidebar.prototype.autosearch = function(term, type) {
         var self = this;
         if (self.options.viewer_options.readonly) {
-            $.publishEvent('GetAnnotationsData', self.instance_id, [function(data) {
-                data.forEach(function(ann) {
-                    if (type == "Tag") {
-                        if(ann.tags.indexOf(term) == -1) {
-                            jQuery('.ann-item.item-' + ann.id).hide();
-                        }
-                    } else if (type == "User") {
-                        if(ann.creator.username !== term && ann.common_name !== term) {
-                            jQuery('.ann-item.item-' + ann.id).hide();
-                        }
-                    }
-                });
-            }]);
-            jQuery('#empty-alert').html('You are now viewing only annotations with ' + type.toLowerCase() + ' "' + term + '". Click here to view all annotations');
-            jQuery('#empty-alert').show();
-            jQuery('#empty-alert').css('cursor', 'pointer');
-            
-            jQuery('#empty-alert').on('click', function() {
+            $.publishEvent('dumpStore', self.instance_id, [function(annotations) {
+                self.tempAnnotationList = annotations;
                 jQuery('.ann-item').show();
-                jQuery('#empty-alert').off('click');
-                jQuery('#empty-alert').hide();
-                jQuery('#empty-alert').css('cursor', 'default');
-            });
+                $.publishEvent('undrawAll', self.instance_id, [function(annList) {
+                    self.foundList = [];
+                    self.tempAnnotationList.forEach(function(ann) {
+                        if (type == "Tag") {
+                            if(ann.tags.indexOf(term) > -1) {
+                               self.foundList.push(ann);
+                            } else {
+                                jQuery('.ann-item.item-' + ann.id).hide();
+                            }
+                        } else if (type == "User") {
+                            if(ann.creator.name === term) {
+                                self.foundList.push(ann);
+                            } else {
+                                jQuery('.ann-item.item-' + ann.id).hide();
+                            }
+                        }
+                    });
+                    $.publishEvent('drawList', self.instance_id, [self.foundList, function() {
+                        jQuery('#empty-alert').html('You are now viewing only annotations with ' + type.toLowerCase() + ' "' + term + '". Click here to view all annotations');
+                        jQuery('#empty-alert').show();
+                        jQuery('#empty-alert').css('cursor', 'pointer');
+                        
+                        jQuery('#empty-alert').on('click', function() {
+                            jQuery('#empty-alert').off('click');
+                            jQuery('#empty-alert').hide();
+                            jQuery('#empty-alert').css('cursor', 'default');
+                            jQuery('.ann-item').show();
+                            $.publishEvent('undrawAll', self.instance_id, [function(annList){
+                                $.publishEvent('drawList', self.instance_id, [self.tempAnnotationList, function(){}])
+                            }]);
+                        });
+                    }]);
+                }]);
+            }]);
+                
         } else {
             jQuery('.btn.user-filter').removeClass('active');
             jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');

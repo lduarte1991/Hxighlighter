@@ -56,7 +56,18 @@ require('./hx-colortags-plugin.css');
                     setTimeout(function() {$.publishEvent('changeDrawnColor', self.instanceID, [ann, color]);}, 250);
                 }
             }
-        })
+        });
+        $.subscribeEvent('drawList', self.instanceID, function(_, anns) {
+            anns.forEach(function(ann) {
+                // console.log('hello', ann.tags);
+                if (typeof(ann.tags) !== 'undefined' && ann.tags.length > 0) {
+                    var color = self.getColorFromValue(ann.tags[ann.tags.length - 1]);
+                    if (typeof(color) !== "undefined") {
+                        setTimeout(function() {$.publishEvent('changeDrawnColor', self.instanceID, [ann, color]);}, 250);
+                    }
+                }
+            });
+        });
     };
 
     $.ColorTags.prototype.getColorFromValue = function(value) {
