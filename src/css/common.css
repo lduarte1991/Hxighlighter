@@ -74,6 +74,7 @@ body {
     height: 100vh;
     overflow: auto;
     height: calc(100vh - var(--nav-bar-offset));
+    height: calc(100vh - var(--nav-bar-offset) - var(--footer-height));
     margin-top: var(--nav-bar-offset);
 }
 

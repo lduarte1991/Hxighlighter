@@ -19,6 +19,7 @@
     min-width: 150px;
     height: 100%;
     height: calc(100% - var(--nav-bar-offset));
+    height: calc(100% - var(--footer-height));
     border: 1px solid #888;
     border: var(--sidebar-border);
     border: 0px;
@@ -81,8 +82,8 @@
 .annotationSection .annotationsHolder {
     height: 100%;
     height: calc(100% - 5px);
-    height: calc(100% - 80px);
-    margin-top: 80px;
+    height: calc(100% - 68px);
+    margin-top: 68px;
     overflow-y: scroll;
     overflow-x: hidden;
     background: white;
