@@ -1,4 +1,4 @@
-<div class="ann-item annotationItem item-<%= id %> side <% if (instructor_ids.indexOf(creator.id) > -1) {%>inst<%}%>" role="listitem" aria-label="Annotation #<%=index%>">
+<li class="ann-item annotationItem item-<%= id %> side <% if (instructor_ids.indexOf(creator.id) > -1) {%>inst<%}%>" role="listitem" aria-label="Annotation #<%=index%>">
     <div style="overflow:auto;">
     <span class="idAnnotation" style="display:none;"><%= id %></span>
     <% if (typeof(creator) !== 'undefined') { %>
@@ -73,4 +73,4 @@
     <script>
         // jQuery('.annotationItem.item-<%= id %>.side').data('annotation')
     </script>
-</div>
+</li>

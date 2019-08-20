@@ -3,7 +3,6 @@
  */
 
 //during deployment, this is what decides what gets instantiated, should be moved elsewhere
-require('./selectors/keyboard-selector.js');
 require('./selectors/mouse-selector.js');
 require('./drawers/xpath-drawer.js');
 require('./viewers/sidebar.js');
@@ -14,6 +13,7 @@ require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-instruction-panel.js');
 require('./plugins/hx-font-resize.js');
+require('./selectors/keyboard-selector.js');
 require('./plugins/hx-toggle-annotations.js');
 require('./plugins/hx-display-resize.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
@@ -178,9 +178,6 @@ require('./plugins/hx-alert.js');
             self.element.data('source_type', self.options.object_source);
             self.element.data('source_type', 'text');
             // finish setting up selectors
-            if (!self.options.viewerOptions.readonly) {
-                self.setUpSelectors(self.element[0]);
-            }
             self.setUpDrawers(self.element[0]);
 
             // finish setting up viewers (which contain displays and editors)
@@ -191,6 +188,10 @@ require('./plugins/hx-alert.js');
 
             // finish setting up the storage containers
             self.setUpStorage(self.element[0]);
+            
+            if (!self.options.viewerOptions.readonly) {
+                self.setUpSelectors(self.element[0]);
+            }
         });
 
         $.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {

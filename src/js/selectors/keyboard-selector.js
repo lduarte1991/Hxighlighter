@@ -95,6 +95,14 @@ var hrange = require('../h-range.js');
                 return $.pauseEvent(evt);;
             }
         });
+        var slot = self.element;
+        if (!self.element.hasClass('annotation-slot')) {
+            slot = self.element.find('.annotation-slot');
+        }
+        if (slot.length === 0) {
+            slot = self.element.closest('.annotation-slot');
+        }
+        jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
         jQuery(document).on('click', 'button[class*="keyboard-toggle"]', function(evt) {
             if (jQuery(this).hasClass('selection-mode-on')) {
                 self.turnSelectionModeOff();

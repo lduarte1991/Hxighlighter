@@ -78,11 +78,14 @@ var hrange = require('../h-range.js');
     $.MouseSelector.prototype.confirm = function(range, event) {
         var self = this;
         self.hideConfirm();
-        if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0) {
+        if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length == 0) {
+            
             self.interactionPoint = $.mouseFixedPosition(event);
             //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
             self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event);
             //console.log("Should have loaded button to confirm annotation");
+        } else {
+            $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {buttons:[], time:5}])
         }
     };
 

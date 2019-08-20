@@ -33,7 +33,7 @@
         jQuery(self.options.slot).prepend('<button class="hx-style-mine btn btn-default" style="margin-right: 10px; width: 150px;">Underline Mine</button>');
         jQuery('.hx-style-mine').click(function() {
             if (jQuery(this).text().trim() == "Underline Mine") {
-                jQuery('body').append('<style id="style-mine-underline">.annotation-mine { text-decoration: underline dashed; }</style>')
+                jQuery('body').append('<style id="style-mine-underline">.annotation-mine { text-decoration: underline; text-decoration: underline dashed; }</style>')
                 jQuery(this).html('Remove Underlines')
             } else {
                 jQuery('#style-mine-underline').remove();

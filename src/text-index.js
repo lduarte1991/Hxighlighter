@@ -13,7 +13,7 @@ require('./js/hxelper-functions.js');
 require('./js/plugins/hx-reply.js');
 require('./js/plugins/hx-badges.js');
 require('./js/plugins/hx-prevnextbutton.js');
-require('./js/plugins/hx-style-mine.js');
 require('./js/texttargetcontroller.js');
+require('./js/plugins/hx-style-mine.js');
 require('./js/core.js');
 require('./js/storage/catchpy.js');

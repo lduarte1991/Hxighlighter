@@ -4,7 +4,7 @@
 <section class="annotationSection side" role="region" id="annotationList">
     <nav role="navigation">
         <!-- <button class="sidebar-button" id='create-annotation-side'><i class="fa fa-edit"></i></button> -->
-        <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" aria-label="Make annotation using keyboard"><i class="fas fa-keyboard"></i></button>
+        <!-- <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" aria-label="Make annotation using keyboard"><i class="fas fa-keyboard"></i></button> -->
         <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar"><span class="fas fa-angle-double-left"></span></button>
     </nav>
     <div class="group-wrap">
@@ -62,16 +62,18 @@
         <div id="exportAnnotations"> <i class="fa fa-cloud-download"></i> Export</div>
         <div id="importAnnotations"> <i class="fa fa-cloud-upload"></i> Import</div>
     </div>
-    <div class="annotationsHolder side" role="list" aria-label="Annotations" >
+    <ul class="annotationsHolder side" role="list" aria-label="Annotations" >
 		<% _.each(annotationItems, function(item) { %>
 			<%= item %>
 		<% }); %>
         <% if (annotationItems.length == 0) { %>
-            <div id='empty-alert' style="padding:20px;text-align:center;">There are currently no annotations in this document. Be the first!</div>
+            <li id='empty-alert' style="padding:20px;text-align:center;">Create an annotation by highlighting a portion of the text to the right.</li>
         <% } else {%>
-             <button type="button" class="btn btn-default loadMoreButton" id="loadMoreButton" aria-label="Load more annotations" style="margin-left:-999999px">Load More Annotations</button>
+            <li>
+                <button type="button" class="btn btn-default loadMoreButton" id="loadMoreButton" aria-label="Load more annotations" style="margin-left:-999999px">Load More Annotations</button>
+            </li>
         <% } %>
-	</div>
+	</ul>
     <datalist id="tag-list-options">
     </datalist>
 </section>

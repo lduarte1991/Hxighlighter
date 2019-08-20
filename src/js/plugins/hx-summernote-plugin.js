@@ -5,7 +5,7 @@
  *
  */
 require('bs4-summernote/dist/summernote-bs4.css')
-require('bs4-summernote');
+// require('bs4-summersnote/dist/summernote-bs4.js');
 require('./hx-summernote-plugin.css');
 
 (function($){

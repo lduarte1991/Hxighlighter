@@ -492,10 +492,14 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             jQuery('.side.load-more').remove();
             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
             if (results.rows.length == 0) {
-                jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>')
+                jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations to show! Create an annotation by highlighting a portion of the text to the right.</div>');
             }
         }, function(err) {
             jQuery('.loading-obj').remove();
+            if (jQuery('.ann-item').length == 0) {
+                jQuery('#empty-alert').remove();
+                jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations to show! Create an annotation by highlighting a portion of the text to the right.</div>');
+            }
         }]);
     }
 
