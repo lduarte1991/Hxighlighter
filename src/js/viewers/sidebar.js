@@ -179,6 +179,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         jQuery(this).removeClass('active');
                         
                         jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');
+                        jQuery(this).attr('aria-pressed', 'false');
                         $.publishEvent('StorageAnnotationLoad', self.instance_id, [[], function(a){return a}, true]);
                         jQuery('.annotationsHolder.side').html('');
                         var messageVals = [];
@@ -202,9 +203,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         return;
                     }
                     jQuery(this).removeClass('active');
+                    jQuery(this).attr('aria-pressed', 'false');
                     jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//removeClass('fa-toggle-on').addClass('fa-toggle-off');
                 } else {
                     jQuery(this).addClass('active');
+                    jQuery(this).attr('aria-pressed', 'true');
                     self.latestOpenedTabs.push(this.id);
                     jQuery(this).find('.fas.fa-toggle-on').removeClass('fa-flip-horizontal');//.removeClass('fa-toggle-off').addClass('fa-toggle-on');
                 }
@@ -334,7 +337,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     $.Sidebar.prototype.showSidebarTab = function(type) {
         // if (type === "smalltab") {
             jQuery(':root').css('--sidebar-width', '55px');
-            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button"><span class="fas fa-comments"></span></div>');
+            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-comments"></span></div>');
         // }
 
         jQuery('.open-sidebar').click(function() {
@@ -353,6 +356,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             if (filteroptions.indexOf('mine') > -1 ) {
                 self.addAnnotation(annotation, updating, false);
             } else {
+                jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
                 $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
             }
         });
@@ -385,7 +389,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         var self = this;
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
-            ann.index = 0;
+            ann.index = jQuery('.ann-item').length;
             ann.instructor_ids = self.options.instructors;
             ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
             var annHTML = self.options.TEMPLATES.annotationItem(ann);

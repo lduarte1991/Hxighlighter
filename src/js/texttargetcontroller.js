@@ -188,7 +188,7 @@ require('./plugins/hx-alert.js');
 
             // finish setting up the storage containers
             self.setUpStorage(self.element[0]);
-            
+
             if (!self.options.viewerOptions.readonly) {
                 self.setUpSelectors(self.element[0]);
             }
@@ -412,14 +412,16 @@ require('./plugins/hx-alert.js');
         } else if (is_new_annotation) {
             annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
             self.TargetAnnotationDraw(annotation);
-            jQuery('.sr-real-alert').html('Your annotation was saved.');
+            jQuery('.sr-alert').html('');
+            jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
         } else {
             jQuery.each(self.drawers, function(_, drawer) {
                 self.TargetAnnotationUndraw(annotation);
                 annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
                 $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
-                jQuery('.sr-real-alert').html('Your annotation was updated.');
+                jQuery('.sr-alert').html('');
+                jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
                 $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
             });
         }

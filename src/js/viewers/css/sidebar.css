@@ -87,7 +87,8 @@
     overflow-x: hidden;
     background: white;
     list-style: none!important;
-    padding-left: 0px!important;
+    padding: 0px!important;
+    margin-bottom: 0px!important;
 }
 
 .annotationSection .annotationsHolder.search-opened {
@@ -178,12 +179,17 @@ button.sidebar-button#hide_label {
     font-size: 17px;
 }
 
-button.sidebar-button#keyboard-toggle {
-    left: 0px;
+.sidebar-button#keyboard-toggle {
+    left: 7px;
+    position: absolute;
     background: #F7F9FB;
     background: transparent;
     color: #595959;
     font-size: 17px;
+}
+
+.sidebar-button#keyboard-toggle.selected {
+    color: var(--pop-color);
 }
 
 .two-button-version button#hide_label {

@@ -152,6 +152,10 @@ a#next_target_object {
     top:-999999px;
     left:-999999px
 }
+.sr-only:active, .sr-only:focus {
+    top: auto;
+    left: auto;
+}
 
 /*.hx-confirm-button button:after {
     content: '';

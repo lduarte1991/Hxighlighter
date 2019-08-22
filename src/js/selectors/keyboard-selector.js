@@ -78,14 +78,31 @@ var hrange = require('../h-range.js');
                 if (currentInst.trim() === "") {
                     currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
                 }
-                jQuery('.sr-alert').html(currentInst);
+                jQuery('.sr-alert').html('');
+                setTimeout(function() {
+                    jQuery('.sr-alert').html(currentInst);
+                }, 250);
             }
             if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
-                var currVal = jQuery('.sr-alert').attr('aria-live');
-                var newVal = currVal == "off" ? 'polite' : 'off';
-                jQuery('.sr-alert').attr('aria-live', newVal);
+                var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
+                var newVal = (currVal == "off") ? 'assertive' : 'off';
                 var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-                jQuery('.sr-real-alert').html(newAlert);
+                if (newVal == "off") {
+                    jQuery('.sr-real-alert').html(newAlert);
+                    setTimeout(function() {
+                        jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+                        jQuery('.sr-real-alert').html('');
+                    }, 500);
+                    var currVal = jQuery('.sr-alert').html();
+                    jQuery('.sr-alert').html('');
+                    jQuery('.sr-alert').data('old', currVal);
+                } else {
+                    jQuery('.sr-alert').html(jQuery('.sr-alert').data('old'));
+                    jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+                    jQuery('.sr-real-alert').html(newAlert);
+
+                }
+                
                 event.preventDefault();
             }
         });
@@ -95,15 +112,29 @@ var hrange = require('../h-range.js');
                 return $.pauseEvent(evt);;
             }
         });
-        var slot = self.element;
-        if (!self.element.hasClass('annotation-slot')) {
-            slot = self.element.find('.annotation-slot');
-        }
-        if (slot.length === 0) {
-            slot = self.element.closest('.annotation-slot');
-        }
-        jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
-        jQuery(document).on('click', 'button[class*="keyboard-toggle"]', function(evt) {
+        // var slot = self.element;
+        // if (!self.element.hasClass('annotation-slot')) {
+        //     slot = self.element.find('.annotation-slot');
+        // }
+        // if (slot.length === 0) {
+        //     slot = self.element.closest('.annotation-slot');
+        // }
+        // jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
+        jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+            jQuery('#key-help').toggleClass('sr-only');
+            jQuery(this).toggleClass('selected');
+            jQuery(self.element).closest('main').animate({
+                scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
+            })
+            // if (jQuery(this).hasClass('selection-mode-on')) {
+               // self.turnSelectionModeOff();
+                //jQuery(this).removeClass('selection-mode-on');
+            // } else {
+                // self.turnSelectionModeOn();
+                //jQuery(this).addClass('selection-mode-on');
+            // }
+        });
+        jQuery(document).on('click', 'button[class*="make-annotation-button"]', function(evt) {
             if (jQuery(this).hasClass('selection-mode-on')) {
                 self.turnSelectionModeOff();
                 jQuery(this).removeClass('selection-mode-on');
@@ -127,12 +158,13 @@ var hrange = require('../h-range.js');
         jQuery(this.element).attr('contenteditable', 'true');
         jQuery(this.element).attr('role', 'textbox');
         jQuery(this.element).attr('tabindex', "0");
+        jQuery(this.element).attr('aria-label', 'You are now in the text to be annotated. Mark selection with asterisks.');
         jQuery(this.element).attr('aria-multiline', 'true');
         jQuery(this.element).attr('accesskey', 't');
         jQuery('.hx-selector-img').remove();
         jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
         jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
-        jQuery('aside.sr-only').removeClass('sr-only');
+        
         this.start = undefined;
         this.currentSelection = undefined;
         this.element.innerHTML = this.saveHTML;
@@ -140,6 +172,7 @@ var hrange = require('../h-range.js');
     };
 
     $.KeyboardSelector.prototype.turnSelectionModeOff = function() {
+        var self = this;
         var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
         if (toggleButton.hasClass('should-show')) {
             toggleButton.click();
@@ -151,11 +184,12 @@ var hrange = require('../h-range.js');
         jQuery(this.element).attr('tabindex', '');
         jQuery(this.element).attr('aria-multiline', 'false');
         jQuery(this.element).attr('outline', '0px');
-        jQuery('aside').addClass('sr-only')
         jQuery('.hx-selector-img').remove();
         this.start = undefined;
         this.currentSelection = undefined;
-        this.element.focus();
+        setTimeout(function() {
+            self.element.blur();
+        }, 250);
     };
 
     /* Credit to Rich Caloggero
@@ -191,6 +225,7 @@ var hrange = require('../h-range.js');
             case "Escape":
                 self.turnSelectionModeOff();
                 keyPressed.preventDefault();
+                jQuery('.sr-real-alert').html("Keyboard Selection Mode is off.");
                 return false;
             case "2":
                 if (keyPressed.altKey || keyPressed.ctrlKey) {
@@ -203,7 +238,7 @@ var hrange = require('../h-range.js');
                     var currVal = jQuery('.sr-alert').attr('aria-live');
                     var newVal = currVal == "off" ? 'polite' : 'off';
                     jQuery('.sr-alert').attr('aria-live', newVal);
-                    var newAlert = currVal == "off" ? 'Alerts are on' : 'Alerts are off';
+                    var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
                     jQuery('.sr-real-alert').html(newAlert);
                 }
                 keyPressed.preventDefault();
@@ -246,6 +281,7 @@ var hrange = require('../h-range.js');
                         top: bcr.top + jQuery(window).scrollTop() - 5,
                         left: bcr.left - 5
                     });
+                    jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
                     var end = self.copySelection(getSelection());
@@ -273,6 +309,7 @@ var hrange = require('../h-range.js');
                         left: self.currentSelection.getBoundingClientRect().left - 5
                     }
                     var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+                    jQuery('.sr-alert').html('');
                     jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
                     //console.log("Active Element", document.activeElement.className);

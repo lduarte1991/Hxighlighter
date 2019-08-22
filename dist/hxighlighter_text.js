@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Tuesday, August 20th, 2019, 2:21:16 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Thursday, August 22nd, 2019, 2:44:39 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -32501,7 +32501,8 @@ __webpack_require__(56);
         return plugin.saving(ann);
       }, annotation);
       self.TargetAnnotationDraw(annotation);
-      jQuery('.sr-real-alert').html('Your annotation was saved.');
+      jQuery('.sr-alert').html('');
+      jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
       $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
     } else {
       jQuery.each(self.drawers, function (_, drawer) {
@@ -32510,7 +32511,8 @@ __webpack_require__(56);
           return plugin.saving(ann);
         }, annotation);
         $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
-        jQuery('.sr-real-alert').html('Your annotation was updated.');
+        jQuery('.sr-alert').html('');
+        jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
         $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
       });
     }
@@ -33150,6 +33152,7 @@ __webpack_require__(9);
           if (jQuery('.btn.user-filter.active').length == 1) {
             jQuery(this).removeClass('active');
             jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');
+            jQuery(this).attr('aria-pressed', 'false');
             $.publishEvent('StorageAnnotationLoad', self.instance_id, [[], function (a) {
               return a;
             }, true]);
@@ -33177,9 +33180,11 @@ __webpack_require__(9);
           }
 
           jQuery(this).removeClass('active');
+          jQuery(this).attr('aria-pressed', 'false');
           jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //removeClass('fa-toggle-on').addClass('fa-toggle-off');
         } else {
           jQuery(this).addClass('active');
+          jQuery(this).attr('aria-pressed', 'true');
           self.latestOpenedTabs.push(this.id);
           jQuery(this).find('.fas.fa-toggle-on').removeClass('fa-flip-horizontal'); //.removeClass('fa-toggle-off').addClass('fa-toggle-on');
         }
@@ -33313,7 +33318,7 @@ __webpack_require__(9);
   $.Sidebar.prototype.showSidebarTab = function (type) {
     // if (type === "smalltab") {
     jQuery(':root').css('--sidebar-width', '55px');
-    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button"><span class="fas fa-comments"></span></div>'); // }
+    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-comments"></span></div>'); // }
 
     jQuery('.open-sidebar').click(function () {
       jQuery('.open-sidebar').remove();
@@ -33333,6 +33338,7 @@ __webpack_require__(9);
       if (filteroptions.indexOf('mine') > -1) {
         self.addAnnotation(annotation, updating, false);
       } else {
+        jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
         $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
       }
     });
@@ -33363,7 +33369,7 @@ __webpack_require__(9);
 
     if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
       var ann = annotation;
-      ann.index = 0;
+      ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
       ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
@@ -33955,7 +33961,7 @@ obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class="resize-handle side">\n    <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->\n</div>\n<section class="annotationSection side" role="region" id="annotationList">\n    <nav role="navigation">\n        <!-- <button class="sidebar-button" id=\'create-annotation-side\'><i class="fa fa-edit"></i></button> -->\n        <!-- <button class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" aria-label="Make annotation using keyboard"><i class="fas fa-keyboard"></i></button> -->\n        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar"><span class="fas fa-angle-double-left"></span></button>\n    </nav>\n    <div class="group-wrap">\n        <div class="annotation-filter-buttons btn-group buttons-' +
+__p += '<div class="resize-handle side">\n    <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->\n</div>\n<section class="annotationSection side" role="region" id="annotationList">\n    <nav role="navigation">\n        <!-- <button class="sidebar-button" id=\'create-annotation-side\'><i class="fa fa-edit"></i></button> -->\n        <a href="#key-help" class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" title="Keyboard Help" aria-label="Keyboard Help"><span class="fas fa-keyboard"></span><span class="fas fa-question" style="margin-left: -16px; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959; "></span></a>\n        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar" title="Toggle sidebar"><span class="fas fa-angle-double-left" aria-pressed="true"></span></button>\n    </nav>\n    <div class="group-wrap">\n        <div class="annotation-filter-buttons btn-group buttons-' +
 ((__t = ( filterTabCount )) == null ? '' : __t) +
 '">\n            ';
  if (tabsAvailable.indexOf('search') > -1) {;
@@ -33963,7 +33969,13 @@ __p += '\n            <button type="button" class="btn btn-default inverted user
  if (defaultTab.indexOf('search') > -1) {;
 __p += 'active';
  } ;
-__p += '" id="search" id="sidebar-search" aria-label="Toggle Search Region"><span class="fa fa-search"></span><br>Search</button>\n            ';
+__p += '" id="search" id="sidebar-search" aria-label="Toggle Search Region" aria-pressed="';
+ if (defaultTab.indexOf('search') > -1) {;
+__p += 'true';
+ } else { ;
+__p += 'false';
+ } ;
+__p += '"><span class="fa fa-search"></span><br>Search</button>\n            ';
  } ;
 __p += '\n            ';
  if (tabsAvailable.indexOf('mine') > -1) {;
@@ -33971,7 +33983,13 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
  if (defaultTab.indexOf('mine') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'mine\' aria-label="View my annotations" role="button"><span class="fas fa-toggle-on ';
+__p += '" id=\'mine\' aria-label="View my annotations" role="button" aria-pressed="';
+ if (defaultTab.indexOf('search') > -1) {;
+__p += 'true';
+ } else { ;
+__p += 'false';
+ } ;
+__p += '"><span class="fas fa-toggle-on ';
  if (defaultTab.indexOf('mine') == -1) {;
 __p += 'fa-flip-horizontal';
  } ;
@@ -33983,7 +34001,13 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
  if (defaultTab.indexOf('peer') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'peer\' aria-label="View peers\' annotations" role="button"><span class="fas fa-toggle-on ';
+__p += '" id=\'peer\' aria-label="View peers\' annotations" role="button" aria-pressed="';
+ if (defaultTab.indexOf('search') > -1) {;
+__p += 'true';
+ } else { ;
+__p += 'false';
+ } ;
+__p += '"><span class="fas fa-toggle-on ';
  if (defaultTab.indexOf('peer')== -1) {;
 __p += 'fa-flip-horizontal';
  } ;
@@ -33995,7 +34019,13 @@ __p += '\n                <button type="button" class="btn btn-default user-filt
  if (defaultTab.indexOf('instructor') > -1) {;
 __p += 'active';
  } ;
-__p += '" id=\'instructor\' aria-label="View instructor annotations" role="button"><span class="fas fa-toggle-on ';
+__p += '" id=\'instructor\' aria-label="View instructor annotations" role="button" aria-pressed="';
+ if (defaultTab.indexOf('search') > -1) {;
+__p += 'true';
+ } else { ;
+__p += 'false';
+ } ;
+__p += '"><span class="fas fa-toggle-on ';
  if (defaultTab.indexOf('instructor') == -1) {;
 __p += 'fa-flip-horizontal';
  } ;
@@ -34005,7 +34035,7 @@ __p += '\n        </div>\n    </div>\n    <div class="separator-solid side"></di
  if (tabsAvailable.indexOf('search') > -1) {;
 __p += '\n            <button type="button" class="btn btn-default" id="sidebar-filter-options" aria-label="Hide search options"><i class="fas fa-times"></i></button>\n        ';
  } ;
-__p += '\n    <div class="search-bar side search-toggle" style=\'display:none;\'>\n        <div id="search-info" style="display:none">The following allows you to search annotations. The default filter is to search for a username, but make sure to change filter to annotation text or tag for other types of searches.</div>\n    	<div class="input-group">\n            <label for="srch-term" id="searchlabel" class="hidden">Search annotations:</label>\n            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" aria-describedby="search-info" aria-labeledby="searchlabel" list="tag-list-options">\n            <div class="input-group-btn">\n                <select class="form-control">\n                    <option>Annotation</option>\n                    <option>User</option>\n                    <option>Tag</option>\n                </select>\n            </div>\n        </div>\n        <div class="input-group-btn">\n                <button title="Search" class="btn btn-default" type="submit" id="search-submit" role="button" aria-label="Submit search"><i class="glyphicon glyphicon-search"></i></button>\n                <button title="Clear Search Input" class="btn btn-default" type="clear" id="search-clear" role="button" aria-label="Clear search input"><i class="fas fa-backspace"></i></button>\n            </div>\n        <div id="timeRangeFilter" style="display:none; color:white; margin-top:15px; margin-bottom:-30px">\n            <label for="startTimeFilter">Start:</label> <input type="text" id="startTimeFilter" style="display:inline; width:20%; color: black;" value="0:00"/>\n            <label for="endTimeFilter">End:</label> <input type="text" id="endTimeFilter" style="display:inline;width:20%; color: black;" value="0:00"/>\n        </div>\n    </div>\n    <div class="handleAnnotations" style="display:none">\n        <div id="printAnnotations"> <i class="fa fa-print"></i>   Print My Notes</div>\n        <div id="exportAnnotations"> <i class="fa fa-cloud-download"></i> Export</div>\n        <div id="importAnnotations"> <i class="fa fa-cloud-upload"></i> Import</div>\n    </div>\n    <ul class="annotationsHolder side" role="list" aria-label="Annotations" >\n		';
+__p += '\n    <div class="search-bar side search-toggle" style=\'display:none;\'>\n        <div id="search-info" style="display:none">The following allows you to search annotations. The default filter is to search for a username, but make sure to change filter to annotation text or tag for other types of searches.</div>\n    	<div class="input-group">\n            <label for="srch-term" id="searchlabel" class="hidden">Search annotations:</label>\n            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" aria-describedby="search-info" aria-labeledby="searchlabel" list="tag-list-options">\n            <div class="input-group-btn">\n                <select class="form-control">\n                    <option>Annotation</option>\n                    <option>User</option>\n                    <option>Tag</option>\n                </select>\n            </div>\n        </div>\n        <div class="input-group-btn">\n                <button title="Search" class="btn btn-default" type="submit" id="search-submit" role="button" aria-label="Submit search"><i class="glyphicon glyphicon-search"></i></button>\n                <button title="Clear Search Input" class="btn btn-default" type="clear" id="search-clear" role="button" aria-label="Clear search input"><i class="fas fa-backspace"></i></button>\n            </div>\n        <div id="timeRangeFilter" style="display:none; color:white; margin-top:15px; margin-bottom:-30px">\n            <label for="startTimeFilter">Start:</label> <input type="text" id="startTimeFilter" style="display:inline; width:20%; color: black;" value="0:00"/>\n            <label for="endTimeFilter">End:</label> <input type="text" id="endTimeFilter" style="display:inline;width:20%; color: black;" value="0:00"/>\n        </div>\n    </div>\n    <div class="handleAnnotations" style="display:none">\n        <div id="printAnnotations"> <i class="fa fa-print"></i>   Print My Notes</div>\n        <div id="exportAnnotations"> <i class="fa fa-cloud-download"></i> Export</div>\n        <div id="importAnnotations"> <i class="fa fa-cloud-upload"></i> Import</div>\n    </div>\n    <ul class="annotationsHolder side" role="list" aria-label="Annotations" id=\'annotationsHolder\'>\n		';
  _.each(annotationItems, function(item) { ;
 __p += '\n			' +
 ((__t = ( item )) == null ? '' : __t) +
@@ -35524,7 +35554,7 @@ __webpack_require__(45);
 
   $.FontResize.prototype.setUpButtons = function () {
     var self = this;
-    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label">(default)</span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
+    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label">(+0)</span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
     jQuery(self.options.slot).find('.annotations-text-size-plus').click(function () {
       self.toggleTextSize(1);
     });
@@ -35567,7 +35597,7 @@ __webpack_require__(45);
     sizediff = this.targetFontSize - this.defaultFontSize;
 
     if (sizediff === 0) {
-      $label.html("(default)");
+      $label.html("(+0)");
       $content.css('fontSize', '');
     } else {
       $label.html("(" + (sizediff > 0 ? "+" + sizediff : sizediff) + ")");
@@ -35715,15 +35745,32 @@ __webpack_require__(45);
           currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
         }
 
-        jQuery('.sr-alert').html(currentInst);
+        jQuery('.sr-alert').html('');
+        setTimeout(function () {
+          jQuery('.sr-alert').html(currentInst);
+        }, 250);
       }
 
       if (event.key == '3' && (event.altKey || event.ctrlKey)) {
-        var currVal = jQuery('.sr-alert').attr('aria-live');
-        var newVal = currVal == "off" ? 'polite' : 'off';
-        jQuery('.sr-alert').attr('aria-live', newVal);
+        var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
+        var newVal = currVal == "off" ? 'assertive' : 'off';
         var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-        jQuery('.sr-real-alert').html(newAlert);
+
+        if (newVal == "off") {
+          jQuery('.sr-real-alert').html(newAlert);
+          setTimeout(function () {
+            jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+            jQuery('.sr-real-alert').html('');
+          }, 500);
+          var currVal = jQuery('.sr-alert').html();
+          jQuery('.sr-alert').html('');
+          jQuery('.sr-alert').data('old', currVal);
+        } else {
+          jQuery('.sr-alert').html(jQuery('.sr-alert').data('old'));
+          jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+          jQuery('.sr-real-alert').html(newAlert);
+        }
+
         event.preventDefault();
       }
     });
@@ -35733,19 +35780,29 @@ __webpack_require__(45);
         return $.pauseEvent(evt);
         ;
       }
+    }); // var slot = self.element;
+    // if (!self.element.hasClass('annotation-slot')) {
+    //     slot = self.element.find('.annotation-slot');
+    // }
+    // if (slot.length === 0) {
+    //     slot = self.element.closest('.annotation-slot');
+    // }
+    // jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
+
+    jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function (evt) {
+      jQuery('#key-help').toggleClass('sr-only');
+      jQuery(this).toggleClass('selected');
+      jQuery(self.element).closest('main').animate({
+        scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
+      }); // if (jQuery(this).hasClass('selection-mode-on')) {
+      // self.turnSelectionModeOff();
+      //jQuery(this).removeClass('selection-mode-on');
+      // } else {
+      // self.turnSelectionModeOn();
+      //jQuery(this).addClass('selection-mode-on');
+      // }
     });
-    var slot = self.element;
-
-    if (!self.element.hasClass('annotation-slot')) {
-      slot = self.element.find('.annotation-slot');
-    }
-
-    if (slot.length === 0) {
-      slot = self.element.closest('.annotation-slot');
-    }
-
-    jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
-    jQuery(document).on('click', 'button[class*="keyboard-toggle"]', function (evt) {
+    jQuery(document).on('click', 'button[class*="make-annotation-button"]', function (evt) {
       if (jQuery(this).hasClass('selection-mode-on')) {
         self.turnSelectionModeOff();
         jQuery(this).removeClass('selection-mode-on');
@@ -35771,12 +35828,12 @@ __webpack_require__(45);
     jQuery(this.element).attr('contenteditable', 'true');
     jQuery(this.element).attr('role', 'textbox');
     jQuery(this.element).attr('tabindex', "0");
+    jQuery(this.element).attr('aria-label', 'You are now in the text to be annotated. Mark selection with asterisks.');
     jQuery(this.element).attr('aria-multiline', 'true');
     jQuery(this.element).attr('accesskey', 't');
     jQuery('.hx-selector-img').remove();
     jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
     jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
-    jQuery('aside.sr-only').removeClass('sr-only');
     this.start = undefined;
     this.currentSelection = undefined;
     this.element.innerHTML = this.saveHTML;
@@ -35784,6 +35841,7 @@ __webpack_require__(45);
   };
 
   $.KeyboardSelector.prototype.turnSelectionModeOff = function () {
+    var self = this;
     var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
 
     if (toggleButton.hasClass('should-show')) {
@@ -35797,11 +35855,12 @@ __webpack_require__(45);
     jQuery(this.element).attr('tabindex', '');
     jQuery(this.element).attr('aria-multiline', 'false');
     jQuery(this.element).attr('outline', '0px');
-    jQuery('aside').addClass('sr-only');
     jQuery('.hx-selector-img').remove();
     this.start = undefined;
     this.currentSelection = undefined;
-    this.element.focus();
+    setTimeout(function () {
+      self.element.blur();
+    }, 250);
   };
   /* Credit to Rich Caloggero
    * https://github.com/RichCaloggero/annotator/blob/master/annotator.html
@@ -35842,6 +35901,7 @@ __webpack_require__(45);
       case "Escape":
         self.turnSelectionModeOff();
         keyPressed.preventDefault();
+        jQuery('.sr-real-alert').html("Keyboard Selection Mode is off.");
         return false;
 
       case "2":
@@ -35857,7 +35917,7 @@ __webpack_require__(45);
           var currVal = jQuery('.sr-alert').attr('aria-live');
           var newVal = currVal == "off" ? 'polite' : 'off';
           jQuery('.sr-alert').attr('aria-live', newVal);
-          var newAlert = currVal == "off" ? 'Alerts are on' : 'Alerts are off';
+          var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
           jQuery('.sr-real-alert').html(newAlert);
         }
 
@@ -35906,6 +35966,7 @@ __webpack_require__(45);
             top: bcr.top + jQuery(window).scrollTop() - 5,
             left: bcr.left - 5
           });
+          jQuery('.sr-alert').html();
           jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
         } else {
           var end = self.copySelection(getSelection());
@@ -35933,6 +35994,7 @@ __webpack_require__(45);
             left: self.currentSelection.getBoundingClientRect().left - 5
           };
           var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+          jQuery('.sr-alert').html('');
           jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
           Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]); //console.log("Active Element", document.activeElement.className);
 
@@ -36507,7 +36569,7 @@ __webpack_require__(54);
 
   $.AdminButton.prototype.setUpButtons = function () {
     var self = this;
-    jQuery(self.options.slot).before('<div class="sidebar-navbar"><a href="' + self.url + '" title="Admin Hub" id="homebutton" role="button"><span class="fas fa-users-cog"></span></button></div>');
+    jQuery(self.options.slot).before('<div class="sidebar-navbar"><a href="' + self.url + '" title="Admin Hub" aria-label="Admin Hub" id="homebutton" role="button"><span class="fas fa-users-cog"></span></button></div>');
   };
 
   $.AdminButton.prototype.saving = function (annotation) {
@@ -37081,7 +37143,7 @@ __webpack_require__(64);
   $.Reply.prototype.annotationShown = function (viewer, annotation, isSidebar) {
     var self = this;
     var prefix = isSidebar ? "sidebar-" : "other-";
-    jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button aria-label="Closes Reply List" class="close-list-reply"><span class="fa fa-times-circle"></span></button><button aria-label="Toggle Visual Order of Replies" class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-' + annotation.id + '"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-' + annotation.id + '">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="' + prefix + 'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-' + annotation.id + '" style="display:none;"><textarea id="' + prefix + 'reply-textarea-' + annotation.id + '"></textarea><button id="' + prefix + 'save-reply-' + annotation.id + '">Save</button><button id="' + prefix + 'cancel-reply-' + annotation.id + '">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-' + annotation.id + '">Reply to Annotation</button></div>');
+    jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button aria-label="Close Reply List" title="Close Reply List" class="close-list-reply"><span class="fa fa-times-circle"></span></button><button aria-label="Toggle Visual Order of Replies" title="Reverse Replies Order" class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-' + annotation.id + '"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-' + annotation.id + '">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="' + prefix + 'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-' + annotation.id + '" style="display:none;"><textarea id="' + prefix + 'reply-textarea-' + annotation.id + '"></textarea><button id="' + prefix + 'save-reply-' + annotation.id + '">Save</button><button id="' + prefix + 'cancel-reply-' + annotation.id + '">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-' + annotation.id + '">Reply to Annotation</button></div>');
 
     if ('totalReplies' in annotation && annotation.totalReplies > 0) {
       jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
@@ -37230,7 +37292,7 @@ __webpack_require__(64);
     var delete_option = '';
 
     if (self.options.HxPermissions && self.options.HxPermissions.has_staff_permissions || annotation.permissions && annotation.permissions.can_delete && annotation.permissions.can_delete.indexOf(self.options.user_id) > -1) {
-      delete_option = "<button aria-label='delete reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
+      delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
     }
 
     jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + delete_option + "<strong>" + reply.creator.name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
