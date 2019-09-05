@@ -100,7 +100,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         jQuery.when.apply(jQuery, deferreds).done(function (){
             self.annotation_tool.editorTemplate = self.options.TEMPLATES.editor({
-                editorid: self.instance_id.replace(/:/g, '-')
+                editorid: self.instance_id.replace(/\W/g, '-')
             });
         });
     };
@@ -136,7 +136,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         wrapperElement.after(self.annotation_tool.editorTemplate);
 
         // save the element to call upon later
-        self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/:/g, '-'));
+        self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
 
         var intPt = interactionPoint;
         // situate it on its proper location
@@ -199,7 +199,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         
         self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
-            'viewerid': self.instance_id.replace(/:/g, '-'),
+            'viewerid': self.instance_id.replace(/\W/g, '-'),
             'annotations': annotations,
             'instructor_ids': self.options.instructors,
             'common_name': (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : "",
@@ -216,7 +216,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer
         }
-        self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/:/g, '-'));
+        self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
         var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
         var newLeft = annotator.util.mousePosition(event).left + 30
         self.annotation_tool.viewer.css({

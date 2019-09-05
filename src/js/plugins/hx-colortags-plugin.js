@@ -131,7 +131,7 @@ require('./hx-colortags-plugin.css');
         var self = this;
         // console.log('ColorTags editorShown');
         var listNode = editor.find('.token-input-list-facebook')[0];
-        if (listNode.addEventListener) {
+        if (listNode && listNode.addEventListener) {
             listNode.addEventListener('DOMNodeInserted', function(event) {
                 if (event.target.className === "token-input-token-facebook") {
                     var color = self.getColorFromValue(jQuery(event.target).find('p').text().trim());

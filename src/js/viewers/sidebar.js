@@ -76,7 +76,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
         jQuery.when.apply(jQuery, deferreds).done(function(){
             self.annotation_tool.editorTemplate = self.options.TEMPLATES.editor({
-                editorid: self.instance_id.replace(/:/g, '-')
+                editorid: self.instance_id.replace(/\W/g, '-')
             });
         });
     };
