@@ -29,7 +29,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             template_urls: ""
         };
         this.options = jQuery.extend({}, defaultOptions, options);
-        console.log("Sidebar options", this.options);
         this.instance_id = inst_id;
         this.annotation_tool = {
             interactionPoint: null,
@@ -432,6 +431,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                                 jQuery(hl).css({border: '0 solid black'}).animate({borderWidth: 2}, 200).animate({borderWidth: 0}, 200);
                             }
                         });
+                        jQuery('#first-node-' + ann.id)[0].focus();
+                        $.publishEvent('focusOnContext', self.instance_id, [ann]);
                     }, 350);
                 }
             });

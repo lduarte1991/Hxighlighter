@@ -15,6 +15,7 @@ require('./hx-summernote-plugin.css');
      * @params {Object} options - specific options for this plugin
      */
     $.SummernoteRichText = function(options, instanceID) {
+        var self = this;
         var maxLength = 1000;
         this.options = jQuery.extend({
             height: 150,
@@ -30,15 +31,19 @@ require('./hx-summernote-plugin.css');
             callbacks: {
                 onKeydown:  function (e) {
                     var t = e.currentTarget.innerText;
-                    if (t.trim().length >= maxLength) {
+                    if ('Escape' === (e.key)) {
+                        $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
+                        jQuery('.sr-real-alert').html('You have closed the editor and unselected text for annotation.');
+                    } else if (t.trim().length >= maxLength) {
                         // prevents everything that could add a new character
                         var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
-                        console.log(e.key);
                         if (allowedKeys.indexOf(e.key) == -1 ||  (e.key == 'a' && !(e.ctrlKey || e.metaKey)) || (e.key == 'c' && !(e.ctrlKey || e.metaKey)) || (e.key == 'v' && !(e.ctrlKey || e.metaKey))){
                             e.preventDefault();
                             alert('You have reached the character limit for this annotation (max 1000 characters).')
                         }
                     }
+
+                    
                 },
                 onKeyup: function(e) {
                     var t = e.currentTarget.innerText;
@@ -57,7 +62,10 @@ require('./hx-summernote-plugin.css');
                             alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.')
                         }, 10)
                     }
-                }
+                },
+                onFocus: function(e) {
+                    $.publishEvent('wysiwygOpened', self.instanceID, [e]);
+                },
             },
             toolbar: [
                 ['style', ['style']],
@@ -105,7 +113,7 @@ require('./hx-summernote-plugin.css');
 
         element.find('.note-editable').trigger('focus');
         jQuery('.note-editor button').attr('tabindex', '0');
-        jQuery('.note-statusbar').hide()
+        jQuery('.note-statusbar').hide();
 
         jQuery(document).on('mouseleave', function() {
             jQuery('.note-statusbar').trigger('mouseup');
@@ -225,16 +233,23 @@ require('./hx-summernote-plugin.css');
     $.SummernoteRichText.prototype.editorShown = function(editor, annotation) {
         var self = this;
         self.addWYSIWYG(editor, '#annotation-text-field');
+        self.currentAnnotation = annotation;
+        var annotationText = "";
         if (annotation.annotationText) {
+            annotationText = annotation.annotationText;
             self.elementObj.summernote('code', annotation.annotationText);
         } else if (annotation.schema_version && annotation.schema_version === "catch_v2") {
-            var annotationText = returnWAText(annotation);
+            annotationText = returnWAText(annotation);
             if (typeof annotationText !== "undefined") {
                 self.elementObj.summernote('code', annotationText);
                 self.updating = true;
                 self.updatingText = annotationText;
             }
         }
+        if (typeof(annotationText) === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
+            editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.")
+        }
+
     };
 
     $.SummernoteRichText.prototype.setUpEditor = function(type) {

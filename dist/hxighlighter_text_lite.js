@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Thursday, August 22nd, 2019, 2:44:39 PM  
+// [AIV_SHORT]  Version: 0.0.1 - Wednesday, September 4th, 2019, 1:00:01 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -32860,9 +32860,17 @@ var hrange = __webpack_require__(3);
       otherLabel += ' annotation-instructor';
     }
 
+    var labelIt = true;
     textNodes.forEach(function (node) {
       //console.log(node, jQuery(node));
-      jQuery(node).wrap('<span class="' + self.h_class + otherLabel + '"></span>');
+      var node_id = "";
+
+      if (labelIt) {
+        labelIt = false;
+        node_id = ' id="first-node-' + annotation.id + '" ';
+      }
+
+      jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
       spans.push(jQuery(node).parent()[0]);
     }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
 
@@ -33009,7 +33017,6 @@ __webpack_require__(9);
       template_urls: ""
     };
     this.options = jQuery.extend({}, defaultOptions, options);
-    console.log("Sidebar options", this.options);
     this.instance_id = inst_id;
     this.annotation_tool = {
       interactionPoint: null,
@@ -33420,6 +33427,9 @@ __webpack_require__(9);
                 }, 200);
               }
             });
+
+            jQuery('#first-node-' + ann.id)[0].focus();
+            $.publishEvent('focusOnContext', self.instance_id, [ann]);
           }, 350);
         }
       });
@@ -33930,7 +33940,9 @@ __p += '\n            <div class="ann-item" id="annotation-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
 '" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>\n                <div class="annotation-quote">' +
 ((__t = ( ann.exact )) == null ? '' : __t) +
-'</div>\n                <div class="annotation-text">' +
+'</div>\n                <div class="annotation-quote-focus sr-only"><a href="#first-node-' +
+((__t = ( ann.id )) == null ? '' : __t) +
+'">View quote in context</a></div>\n                <div class="annotation-text">' +
 ((__t = ( ann.annotationText )) == null ? '' : __t) +
 '</div>\n                ';
  if (ann.tags && ann.tags.length > 0) { ;
@@ -33984,7 +33996,7 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
 __p += 'active';
  } ;
 __p += '" id=\'mine\' aria-label="View my annotations" role="button" aria-pressed="';
- if (defaultTab.indexOf('search') > -1) {;
+ if (defaultTab.indexOf('mine') > -1) {;
 __p += 'true';
  } else { ;
 __p += 'false';
@@ -34002,7 +34014,7 @@ __p += '\n        	<button type="button" class="btn btn-default user-filter ';
 __p += 'active';
  } ;
 __p += '" id=\'peer\' aria-label="View peers\' annotations" role="button" aria-pressed="';
- if (defaultTab.indexOf('search') > -1) {;
+ if (defaultTab.indexOf('peer') > -1) {;
 __p += 'true';
  } else { ;
 __p += 'false';
@@ -34020,7 +34032,7 @@ __p += '\n                <button type="button" class="btn btn-default user-filt
 __p += 'active';
  } ;
 __p += '" id=\'instructor\' aria-label="View instructor annotations" role="button" aria-pressed="';
- if (defaultTab.indexOf('search') > -1) {;
+ if (defaultTab.indexOf('instructor') > -1) {;
 __p += 'true';
  } else { ;
 __p += 'false';
@@ -34106,7 +34118,9 @@ __p += '\n    </div>\n    <button class="edit" id="edit-' +
  if (media === 'text' || media === "Text") {;
 __p += '\n        <div class="quote field side">\n            <div class="quoteText" aria-label="Excerpt selected for this annotation:">' +
 ((__t = ( exact )) == null ? '' : __t) +
-'</div>\n        </div>\n    ';
+'</div>\n        </div>\n        <div class="annotation-quote-focus sr-only"><a href="#first-node-' +
+((__t = ( id )) == null ? '' : __t) +
+'">Jump to quote in context</a></div>\n    ';
  } else if (media === 'image' && thumbnail) {;
 __p += '\n        <div class="zoomToImageBounds" style=\'position:relative;\'>\n            <img class="annotation-thumbnail" src="/static/css/images/loading.gif" data-src="' +
 ((__t = ( thumbnail )) == null ? '' : __t) +
@@ -34747,6 +34761,7 @@ __webpack_require__(37);
    * @params {Object} options - specific options for this plugin
    */
   $.SummernoteRichText = function (options, instanceID) {
+    var self = this;
     var maxLength = 1000;
     this.options = jQuery.extend({
       height: 150,
@@ -34763,10 +34778,12 @@ __webpack_require__(37);
         onKeydown: function onKeydown(e) {
           var t = e.currentTarget.innerText;
 
-          if (t.trim().length >= maxLength) {
+          if ('Escape' === e.key) {
+            $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
+            jQuery('.sr-real-alert').html('You have closed the editor and unselected text for annotation.');
+          } else if (t.trim().length >= maxLength) {
             // prevents everything that could add a new character
             var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
-            console.log(e.key);
 
             if (allowedKeys.indexOf(e.key) == -1 || e.key == 'a' && !(e.ctrlKey || e.metaKey) || e.key == 'c' && !(e.ctrlKey || e.metaKey) || e.key == 'v' && !(e.ctrlKey || e.metaKey)) {
               e.preventDefault();
@@ -34792,6 +34809,9 @@ __webpack_require__(37);
               alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.');
             }, 10);
           }
+        },
+        onFocus: function onFocus(e) {
+          $.publishEvent('wysiwygOpened', self.instanceID, [e]);
         }
       },
       toolbar: [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr']]]
@@ -34961,17 +34981,24 @@ __webpack_require__(37);
   $.SummernoteRichText.prototype.editorShown = function (editor, annotation) {
     var self = this;
     self.addWYSIWYG(editor, '#annotation-text-field');
+    self.currentAnnotation = annotation;
+    var annotationText = "";
 
     if (annotation.annotationText) {
+      annotationText = annotation.annotationText;
       self.elementObj.summernote('code', annotation.annotationText);
     } else if (annotation.schema_version && annotation.schema_version === "catch_v2") {
-      var annotationText = returnWAText(annotation);
+      annotationText = returnWAText(annotation);
 
       if (typeof annotationText !== "undefined") {
         self.elementObj.summernote('code', annotationText);
         self.updating = true;
         self.updatingText = annotationText;
       }
+    }
+
+    if (typeof annotationText === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
+      editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.");
     }
   };
 
@@ -35811,6 +35838,15 @@ __webpack_require__(45);
         jQuery(this).addClass('selection-mode-on');
       }
     });
+    $.subscribeEvent('wysiwygOpened', self.instance_id, function (e) {
+      if (self.currentSelection) {
+        var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+        jQuery('.note-editable.card-block').attr('aria-label', 'The quote you have selected is: <em>' + ser.text.exact + '</em>. You are now in a text box. Add your annotation.');
+      }
+    });
+    $.subscribeEvent('focusOnContext', self.instance_id, function (_, ann) {
+      self.addMarkers(ann.ranges);
+    });
   };
 
   $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
@@ -35994,8 +36030,8 @@ __webpack_require__(45);
             left: self.currentSelection.getBoundingClientRect().left - 5
           };
           var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
-          jQuery('.sr-alert').html('');
-          jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+          jQuery('.sr-alert').html(''); //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+
           Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]); //console.log("Active Element", document.activeElement.className);
 
           if (document.activeElement.className.indexOf('note-editable') == -1) {
@@ -36192,6 +36228,10 @@ __webpack_require__(45);
     // console.log(sR, nR);
 
     return r;
+  };
+
+  $.KeyboardSelector.prototype.addMarkers = function (ranges) {
+    console.log(ranges);
   };
 
   $.KeyboardSelector.prototype.removeCharacter = function (s, offset) {

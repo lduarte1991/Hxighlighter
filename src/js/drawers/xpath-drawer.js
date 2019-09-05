@@ -101,14 +101,20 @@ var hrange = require('../h-range.js');
         if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
             otherLabel += ' annotation-instructor';
         }
+        var labelIt = true;
         textNodes.forEach(function(node) {
             //console.log(node, jQuery(node));
-            jQuery(node).wrap('<span class="'+self.h_class+otherLabel+'"></span>');
+            var node_id = "";
+            if (labelIt) {
+                labelIt = false;
+                node_id = ' id="first-node-' + annotation.id + '" ';
+            }
+            jQuery(node).wrap('<span' + node_id + ' class="'+self.h_class+otherLabel+'"></span>');
             spans.push(jQuery(node).parent()[0]);
         });
         // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
         annotation['_local'] = {
-            'highlights': spans
+            'highlights': spans,
         };
         // 3. Store in each span tag the value of the annotation post-saving _local.highlights
         spans.forEach(function(span) {

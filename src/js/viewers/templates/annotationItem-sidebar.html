@@ -22,6 +22,7 @@
         <div class="quote field side">
             <div class="quoteText" aria-label="Excerpt selected for this annotation:"><%= exact %></div>
         </div>
+        <div class="annotation-quote-focus sr-only"><a href="#first-node-<%= id %>">Jump to quote in context</a></div>
     <% } else if (media === 'image' && thumbnail) {%>
         <div class="zoomToImageBounds" style='position:relative;'>
             <img class="annotation-thumbnail" src="/static/css/images/loading.gif" data-src="<%= thumbnail %>" onError="this.onerror=null;this.src='/static/css/images/image-error.png';" data-svg=".thumbnail-<%= id %>" alt="Thumbnail Preview"/>
