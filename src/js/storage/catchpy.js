@@ -332,9 +332,9 @@ var hrange = require('../h-range.js');
                         });
                     } else if (targetItem['type'] === "TextQuoteSelector") {
                         textRanges.push({
-                            prefix: targetItem['prefix'],
+                            prefix: targetItem['prefix'] || '',
                             exact: targetItem['exact'],
-                            suffix: targetItem['suffix']
+                            suffix: targetItem['suffix'] || ''
                         })
                     }
                 } else {
@@ -360,6 +360,18 @@ var hrange = require('../h-range.js');
                     var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
                     ranges.push(serializedRange);
                 }
+            } else {
+                var rangeFound = {}
+                if (xpathRanges.length >= 1) {
+                    rangeFound['xpath'] = xpathRanges[0];
+                }
+                if (positionRanges.length >= 1) {
+                    rangeFound['position'] = positionRanges[0];
+                }
+                if (textRanges.length >= 1) {
+                    rangeFound['text'] = textRanges[0];
+                }
+                ranges.push(rangeFound)
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;
