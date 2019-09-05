@@ -143,6 +143,17 @@ var hrange = require('../h-range.js');
                 jQuery(this).addClass('selection-mode-on');
             }
         });
+
+        $.subscribeEvent('wysiwygOpened', self.instance_id, function(e) {
+            if (self.currentSelection) {
+                var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+                jQuery('.note-editable.card-block').attr('aria-label', 'The quote you have selected is: <em>' + ser.text.exact + '</em>. You are now in a text box. Add your annotation.');
+            }
+        });
+
+        $.subscribeEvent('focusOnContext', self.instance_id, function(_, ann) {
+            self.addMarkers(ann.ranges);
+        });
     };
 
     $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
@@ -310,7 +321,7 @@ var hrange = require('../h-range.js');
                     }
                     var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
                     jQuery('.sr-alert').html('');
-                    jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+                    //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
                     //console.log("Active Element", document.activeElement.className);
                     if (document.activeElement.className.indexOf('note-editable') == -1) {
@@ -508,6 +519,10 @@ var hrange = require('../h-range.js');
         //var nR = hrange.normalizeRange(sR, self.element, 'annotator-hl');
         // console.log(sR, nR);
         return r;
+    };
+
+    $.KeyboardSelector.prototype.addMarkers = function(ranges) {
+        console.log(ranges);
     };
 
     $.KeyboardSelector.prototype.removeCharacter = function(s, offset) {

@@ -4,7 +4,7 @@
 <section class="annotationSection side" role="region" id="annotationList">
     <nav role="navigation">
         <!-- <button class="sidebar-button" id='create-annotation-side'><i class="fa fa-edit"></i></button> -->
-        <a href="#key-help" class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" title="Keyboard Help" aria-label="Keyboard Help"><span class="fas fa-keyboard"></span><span class="fas fa-question" style="margin-left: -16px; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959; "></span></a>
+        <a href="#key-help" class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" title="Keyboard Help" aria-label="Keyboard Help"><span class="fas fa-keyboard"></span><span class="fas fa-question" style="display: inline;margin-left: -16px; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959; "></span></a>
         <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar" title="Toggle sidebar"><span class="fas fa-angle-double-left" aria-pressed="true"></span></button>
     </nav>
     <div class="group-wrap">
@@ -13,13 +13,13 @@
             <button type="button" class="btn btn-default inverted user-filter <% if (defaultTab.indexOf('search') > -1) {%>active<% } %>" id="search" id="sidebar-search" aria-label="Toggle Search Region" aria-pressed="<% if (defaultTab.indexOf('search') > -1) {%>true<% } else { %>false<% } %>"><span class="fa fa-search"></span><br>Search</button>
             <% } %>
             <% if (tabsAvailable.indexOf('mine') > -1) {%>
-        	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('mine') > -1) {%>active<% } %>" id='mine' aria-label="View my annotations" role="button" aria-pressed="<% if (defaultTab.indexOf('search') > -1) {%>true<% } else { %>false<% } %>"><span class="fas fa-toggle-on <% if (defaultTab.indexOf('mine') == -1) {%>fa-flip-horizontal<% } %>"></span><br>Mine</button>
+        	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('mine') > -1) {%>active<% } %>" id='mine' aria-label="View my annotations" role="button" aria-pressed="<% if (defaultTab.indexOf('mine') > -1) {%>true<% } else { %>false<% } %>"><span class="fas fa-toggle-on <% if (defaultTab.indexOf('mine') == -1) {%>fa-flip-horizontal<% } %>"></span><br>Mine</button>
             <% } %>
             <% if (tabsAvailable.indexOf('peer') > -1 || tabsAvailable.indexOf('all') > -1) {%>
-        	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('peer') > -1) {%>active<% } %>" id='peer' aria-label="View peers' annotations" role="button" aria-pressed="<% if (defaultTab.indexOf('search') > -1) {%>true<% } else { %>false<% } %>"><span class="fas fa-toggle-on <% if (defaultTab.indexOf('peer')== -1) {%>fa-flip-horizontal<% } %>"></span><br>Peer</button>
+        	<button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('peer') > -1) {%>active<% } %>" id='peer' aria-label="View peers' annotations" role="button" aria-pressed="<% if (defaultTab.indexOf('peer') > -1) {%>true<% } else { %>false<% } %>"><span class="fas fa-toggle-on <% if (defaultTab.indexOf('peer')== -1) {%>fa-flip-horizontal<% } %>"></span><br>Peer</button>
             <% } %>
             <% if (tabsAvailable.indexOf('instructor') > -1) {%>
-                <button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('instructor') > -1) {%>active<% } %>" id='instructor' aria-label="View instructor annotations" role="button" aria-pressed="<% if (defaultTab.indexOf('search') > -1) {%>true<% } else { %>false<% } %>"><span class="fas fa-toggle-on <% if (defaultTab.indexOf('instructor') == -1) {%>fa-flip-horizontal<% } %>"></span><br>Instructor</button>
+                <button type="button" class="btn btn-default user-filter <% if (defaultTab.indexOf('instructor') > -1) {%>active<% } %>" id='instructor' aria-label="View instructor annotations" role="button" aria-pressed="<% if (defaultTab.indexOf('instructor') > -1) {%>true<% } else { %>false<% } %>"><span class="fas fa-toggle-on <% if (defaultTab.indexOf('instructor') == -1) {%>fa-flip-horizontal<% } %>"></span><br>Instructor</button>
             <% } %>
         </div>
     </div>
