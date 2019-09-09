@@ -16,6 +16,7 @@ require('./hx-sidebar-tag-tokens.css');
     $.SidebarTagTokens = function(options, instanceID) {
         this.options = jQuery.extend({}, options);
         this.instanceID = instanceID;
+        this.first_time = true;
         this.init();
         return this;
     };
@@ -61,12 +62,21 @@ require('./hx-sidebar-tag-tokens.css');
 
     $.SidebarTagTokens.prototype.setUpTokens = function() {
         var self = this;
-        var tokenHTML = "<div class='tag-token-list'><span>Top Tags:</span><br>";
+        if (self.first_time) {
+            jQuery('#empty-alert').hide();
+            self.first_time = false;
+        }
+        var tokenHTML = "<div class='tag-token-list'><span>Available Tags:</span><br>";
         self.options.tagList.forEach(function(tag) {
-            tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>'
+            tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
         });
         tokenHTML += "</div>";
         jQuery('.search-bar.side').after(tokenHTML);
+        setTimeout(function() {
+            var tag_list_height = jQuery('.annotationSection > .tag-token-list').height()
+            document.documentElement.style.setProperty('--sidebar-search-bar-height-open', (tag_list_height + 72) + "px")
+            jQuery('#empty-alert').show();
+        }, 150);
     };
 
     $.SidebarTagTokens.prototype.saving = function(annotation) {
