@@ -62,6 +62,10 @@ require('./hx-sidebar-tag-tokens.css');
 
     $.SidebarTagTokens.prototype.setUpTokens = function() {
         var self = this;
+        if (self.options.tagList.length === 0 || (self.options.tagList.length === 1 && self.options.tagList[0] === "")) {
+            document.documentElement.style.setProperty('--sidebar-search-bar-height-open', (72) + "px")
+            return;
+        }
         if (self.first_time) {
             jQuery('#empty-alert').hide();
             self.first_time = false;

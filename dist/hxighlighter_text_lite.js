@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 0.0.1 - Monday, September 9th, 2019, 4:28:15 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Wednesday, September 11th, 2019, 5:03:13 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -36529,6 +36529,11 @@ __webpack_require__(52);
 
   $.SidebarTagTokens.prototype.setUpTokens = function () {
     var self = this;
+
+    if (self.options.tagList.length === 0 || self.options.tagList.length === 1 && self.options.tagList[0] === "") {
+      document.documentElement.style.setProperty('--sidebar-search-bar-height-open', 72 + "px");
+      return;
+    }
 
     if (self.first_time) {
       jQuery('#empty-alert').hide();
