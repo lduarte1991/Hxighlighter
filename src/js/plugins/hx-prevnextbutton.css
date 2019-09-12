@@ -1,15 +1,37 @@
-#prevButton, #nextButton {
-    background: #ededed;
+#prevButtonTop, #prevButtonBottom, #nextButtonTop, #nextButtonBottom {
+    background: white;
     color: #333;
-    padding: 5px;
+    padding: 0px 5px;
     border-radius: 5px;
     margin-right: 10px;
     border: 1px solid #888;
     cursor: pointer;
+    height: 21px;
     float: left;
-    margin-top: 50px;
+    margin-top: 40px;
+    margin-bottom: 0px;
 }
 
-#prevButton:hover, #nextButton:hover {
+#nextButtonTop, #nextButtonBottom {
+    float: right;
+}
+
+#nextButtonTop, #prevButtonTop {
+    margin-top: 24px;
+}
+
+#prevButtonTop {
+    margin-left: calc(var(--sidebar-width) + 50px);
+}
+
+#nextButtonTop {
+    margin-right: 50px;
+}
+
+#prevButtonTop:hover, #prevButtonBottom:hover, #nextButtonTop:hover, #nextButtonBottom:hover {
     background: #e0e0e0;
+}
+
+a[id$="ButtonTop"] + .annotation-slot {
+    margin-top: 50px;
 }

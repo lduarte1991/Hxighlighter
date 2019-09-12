@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Wednesday, September 11th, 2019, 5:03:13 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Thursday, September 12th, 2019, 1:24:14 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -37024,15 +37024,15 @@ __webpack_require__(61);
 
 __webpack_require__(65);
 
-__webpack_require__(67);
-
 __webpack_require__(21);
 
-__webpack_require__(69);
+__webpack_require__(67);
 
 __webpack_require__(58);
 
-__webpack_require__(70);
+__webpack_require__(68);
+
+__webpack_require__(69);
 
 /***/ }),
 /* 61 */
@@ -44795,73 +44795,6 @@ __webpack_require__(66);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
- *  PrevNextButton Annotations Plugin
- *  
- *
- */
-//uncomment to add css file
-__webpack_require__(68);
-
-(function ($) {
-  /**
-   * @constructor
-   * @params {Object} options - specific options for this plugin
-   */
-  $.PrevNextButton = function (options, instanceID) {
-    this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID;
-    this.init();
-    return this;
-  };
-  /**
-   * Initializes instance
-   */
-
-
-  $.PrevNextButton.prototype.init = function () {
-    var self = this;
-
-    if (self.options.PrevNextButton) {
-      self.prevUrl = self.options.PrevNextButton.prevUrl;
-      self.nextUrl = self.options.PrevNextButton.nextUrl;
-      self.setUpButtons();
-    }
-  };
-
-  $.PrevNextButton.prototype.setUpButtons = function () {
-    var self = this;
-
-    if (self.prevUrl && self.prevUrl != "") {
-      jQuery(self.options.slot).append('<a href="' + self.prevUrl + '" title="Previous Page" id="prevButton" role="button">Previous</button>');
-    }
-
-    if (self.nextUrl && self.nextUrl != "") {
-      jQuery(self.options.slot).append('<a href="' + self.nextUrl + '" title="Next Page" id="nextButton" role="button">Next</button>');
-    }
-  };
-
-  $.PrevNextButton.prototype.saving = function (annotation) {
-    return annotation;
-  };
-
-  Object.defineProperty($.PrevNextButton, 'name', {
-    value: "PrevNextButton"
-  });
-  $.plugins.push($.PrevNextButton);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
  *  HxStyleMine Annotations Plugin
  *  
  *
@@ -44915,7 +44848,7 @@ __webpack_require__(68);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 70 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
@@ -45615,6 +45548,80 @@ var hrange = __webpack_require__(3);
   $.storage.push($.CatchPy);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  PrevNextButton Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+__webpack_require__(70);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.PrevNextButton = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.PrevNextButton.prototype.init = function () {
+    var self = this;
+
+    if (self.options.PrevNextButton) {
+      self.prevUrl = self.options.PrevNextButton.prevUrl;
+      self.nextUrl = self.options.PrevNextButton.nextUrl;
+      self.setUpButtons();
+    }
+  };
+
+  $.PrevNextButton.prototype.setUpButtons = function () {
+    var self = this;
+    var toAppend = "";
+    var toPrepend = "";
+
+    if (self.prevUrl && self.prevUrl != "") {
+      toPrepend += '<a href="' + self.prevUrl + '" title="Previous Page" id="prevButtonTop" role="button">Previous</button>';
+      toAppend += '<a href="' + self.prevUrl + '" title="Previous Page" id="prevButtonBottom" role="button">Previous</button>'; //jQuery(self.options.slot).append('<a href="'+self.prevUrl+'" title="Previous Page" id="prevButton" role="button">Previous</button>');
+    }
+
+    if (self.nextUrl && self.nextUrl != "") {
+      toPrepend += '<a href="' + self.nextUrl + '" title="Next Page" id="nextButtonTop" role="button">Next</button>';
+      toAppend += '<a href="' + self.nextUrl + '" title="Next Page" id="nextButtonBottom" role="button">Next</button>'; //jQuery(self.options.slot).append('<a href="'+self.nextUrl+'" title="Next Page" id="nextButton" role="button">Next</button>');
+    }
+
+    jQuery(self.options.slot).before(toPrepend);
+    jQuery(self.options.slot).append(toAppend);
+  };
+
+  $.PrevNextButton.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  Object.defineProperty($.PrevNextButton, 'name', {
+    value: "PrevNextButton"
+  });
+  $.plugins.push($.PrevNextButton);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
 
 /***/ })
 /******/ ]); 
