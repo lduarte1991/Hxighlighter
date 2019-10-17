@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <!-- Each page should have its own title -->
+        <title>Hxighlighter</title>
+        <link rel="stylesheet" type="text/css" href="./hxighlighter_image_m2.css">
+        <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico"/>
+    </head>
+    <body>
+        <main class="hxighlighter-container" role="main">
+
+            <section class='container1' aria-labelledby="to-title" role="region" accesskey="t">
+                <aside labelledby='aside-title' role="complementary" class="sr-only" accesskey="h" id='key-help' tabindex="-1">
+                    <h3 id='aside-title'>Keyboard Help</h3>
+                    <details>
+                        <summary>Quick Navigation Links</summary>
+                        <ul>
+                            <li><a href="#to-title">Text to be Annotated</a></li>
+                            <li><a href="#annotationsHolder">Annotation List</a></li>
+                        </ul>
+                    </details>
+                    <details>
+                        <summary>Making Annotations via Keyboard Instructions</summary>
+                        <ol>
+                            <li>Use the shortcut or the <a href="#ma-button">Make Annotation</a> button to capture what is currently in the viewer.</li>
+                        </ol>
+                    </details>
+                    <details>
+                        <summary>Keyboard Shortcuts</summary>
+                        <ul>
+                            <li><strong>"Ctrl + 1"</strong>: Make annotation using what is currently in the viewer</li>
+                        </ul>
+                    </details>
+                    <button id='ma-button' class="make-annotation-button btn btn-default">Make Annotation</button>
+
+                    
+                    <div id="hx-sr-notifications" class='sr-only' aria-live="assertive">
+                        <div class='sr-real-alert'></div>
+                        <div class="sr-alert"></div>
+                        <button role="button" class="toggle-alerts on">Turn Hint Text Off</button>
+                    </div>
+                </aside>
+                <div class='annotations-section'>
+                    <div id="viewer" class="hx-mirador"></div>
+                </div>
+            </section>
+        </main>
+        <script type="text/javascript" src="./hxighlighter_image_m2.js"></script>
+        <script>
+            var hxighlighter_object1 = {
+                "commonInfo": {
+                    "mediaType": "image",
+                    "context_id": "fake-course-id.2",
+                    "collection_id": "e-a-poe-section",
+                    "object_id": "the-raven-id",
+                    "username": "Instructor",
+                    "user_id": "fake-anonymous-id-student",
+                    "instructors": ['fake-anonymous-id-student'],
+                    "common_instructor_name": "HxStaff"
+                },
+                "targets": [{
+                    'mediaType': "image",
+                    'method': 'manifest',
+                    'manifest_url': "https://www.e-codices.unifr.ch/metadata/iiif/sl-0002/manifest.json",
+                    'object_source': '.container1',
+                    "template_urls": 'https://gracious-noether-988002.netlify.com/src/js/viewers/templates/',
+                    "DropdownTags": {
+                        'tags': ['test1', 'test2', 'parallelism', 'imagery'],
+                        'folksonomy': true,
+                    },
+                    "InstructionPanel": {
+                        'instructions': "<p>In the area below, mark every other word as <span style='background-color:rgba(255,0,0,0.2);'>test1</span> in order get a score.</p>"
+                    },
+                    "ColorTags": {
+                        // 'allTags': '#FF0000',
+                        'test1': '#00FF00',
+                        'parallelism': '#0000FF'
+                    },
+                    "SidebarTagTokens": {
+                        'tagList': ['test1', 'test2', 'parallelism', 'imagery']
+                    },
+                    "HxPermissions": {
+                        has_staff_permissions: true
+                    },
+                    viewerOptions: {
+                        filterTabCount: 4,
+                        defaultTab: 'instructor',
+                        tabsAvailable: ['search', 'mine', 'instructor', 'peer' ],
+                        sidebarversion: 'sidemenu',
+                        pagination: 100,
+                    },
+                    Badges: {
+                    },
+                    AdminButton: {
+                        homeURL: 'http://google.com',
+                        has_staff_permissions: false
+                    },
+                    PrevNextButton: {
+                        prevUrl: "http://google.com",
+                        nextUrl: "http://google.com"
+                    },
+                    storageOptions: {
+                        external_url: {
+                            catchpy: 'https://devo.catchpy.harvardx.harvard.edu/annos/'
+                        },
+                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLXN0dWRlbnQiLCJpc3N1ZWRBdCI6IjIwMTktMDgtMjJUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.ulrGKDyThdZ9jhJvKuCixkPn5tBw1m5dHW2kXhQnYPw",
+                        pagination: 100,
+                        database_params: {
+                            resource_link_id: "",
+                            utm_source: "",
+                            version: "catchpy"
+                        }
+                    }
+                }],
+            };
+            Hxighlighter(hxighlighter_object1);
+        </script>
+    </body>
+</html>

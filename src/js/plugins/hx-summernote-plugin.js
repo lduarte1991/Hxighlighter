@@ -5,7 +5,7 @@
  *
  */
 require('bs4-summernote/dist/summernote-bs4.css')
-// require('bs4-summersnote/dist/summernote-bs4.js');
+require('bs4-summernote/dist/summernote-bs4.js');
 require('./hx-summernote-plugin.css');
 
 (function($){
@@ -17,14 +17,17 @@ require('./hx-summernote-plugin.css');
     $.SummernoteRichText = function(options, instanceID) {
         var self = this;
         var maxLength = 1000;
-        this.options = jQuery.extend({
+        // console.log("SummernoteRichText Options Sent:", options);
+        this.options = options;
+        this.summernoteOpts = {
             height: 150,
             focus: true,
-            width: 398,
+            width: 435,
             placeholder: "Add annotation text...",
             maximumImageFileSize: 262144,
             maxHeight: 400,
             minHeight: 100,
+            minwidth: 435,
             maxTextLength: maxLength,
             dialogsInBody: true,
             disableResizeEditor: true,
@@ -74,7 +77,8 @@ require('./hx-summernote-plugin.css');
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['insert', ['table', 'link', 'hr']],
             ],
-        }, options);
+        };
+        // console.log("After init options", this.options);
         this.init();
         this.instanceID = instanceID;
         return this;
@@ -102,8 +106,9 @@ require('./hx-summernote-plugin.css');
 
         // adds the summernote WYSIWIG to the editor to the selector's location
         self.elementObj = element.find(selector);
-        self.options.width = this.elementObj.parent().width();
-        self.elementObj.summernote(this.options);
+        self.options.width = self.elementObj.parent().width();
+        // console.log(self.options);
+        self.elementObj.summernote(self.summernoteOpts);
 
         // removes summernote's ability to tab within the editor so users can tab through items
         delete jQuery.summernote.options.keyMap.pc.TAB;
@@ -122,7 +127,7 @@ require('./hx-summernote-plugin.css');
                 var newTop = parseInt(editorObj.css('top'), 10);;
                 var newLeft = parseInt(editorObj.css('left'), 10);
 
-                console.log(editorObj, newTop, newLeft);
+                // console.log(editorObj, newTop, newLeft);
 
                 if (newTop + editorObj.outerHeight() > window.innerHeight) {
                     newTop = window.innerHeight - editorObj.outerHeight();
@@ -187,6 +192,7 @@ require('./hx-summernote-plugin.css');
             self.destroy();
         }.bind(self));
 
+
         jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
             var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
             input.prop('type', 'url');
@@ -235,10 +241,10 @@ require('./hx-summernote-plugin.css');
         self.addWYSIWYG(editor, '#annotation-text-field');
         self.currentAnnotation = annotation;
         var annotationText = "";
-        if (annotation.annotationText) {
+        if ($.exists(annotation.annotationText)) {
             annotationText = annotation.annotationText;
             self.elementObj.summernote('code', annotation.annotationText);
-        } else if (annotation.schema_version && annotation.schema_version === "catch_v2") {
+        } else /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/ {
             annotationText = returnWAText(annotation);
             if (typeof annotationText !== "undefined") {
                 self.elementObj.summernote('code', annotationText);

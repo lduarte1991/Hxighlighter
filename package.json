@@ -27,8 +27,12 @@
     "babel-loader": "^8.0.6",
     "bootstrap": "^3.4.1",
     "codemirror": "^5.46.0",
+    "handlebars": "^4.4.2",
+    "handlebars-loader": "^1.7.1",
     "jquery-confirm": "^3.3.4",
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
+    "mirador": "^2.7.2",
+    "script-loader": "^0.7.2",
     "timeago": "^1.6.7",
     "webpack": "^4.29.6",
     "webpack-auto-inject-version": "^1.2.2"
