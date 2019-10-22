@@ -93,3 +93,7 @@ span.annotation-instructor {
 .note-editing-area {
     cursor: text;
 }
+
+img.annotation-thumbnail {
+    max-width: 150px!important;
+}

@@ -122,7 +122,7 @@ require('./plugins/m2-editor-plugin.js');
                 'name': 'Catchpy',
                 'module': 'CatchEndpoint',
                 'options': {
-                    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLXN0dWRlbnQiLCJpc3N1ZWRBdCI6IjIwMTktMTAtMTVUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.6o149mr75QtNrOv3vm1K9yXFppcztT6V26Z6_sXhDA8',
+                    token: self.options.storageOptions.token,
                     prefix: 'https://devo.catchpy.harvardx.harvard.edu/annos',
                     params: '',
                     userid: self.options.user_id,
@@ -137,32 +137,86 @@ require('./plugins/m2-editor-plugin.js');
 
         self.mir.eventEmitter.subscribe('windowAdded', function(event, windowId, slotAddress) {
             self.windowId = windowId.id;
-            self.mir.eventEmitter.subscribe('catchAnnotationsLoaded.' + self.windowId , function (event, miradorAnnotation) {
-                console.log('AnnotationsLoaded: ', miradorAnnotation);
-                console.log('Viewers (' + self.viewers.length + "):", self.viewers)
+            self.mir.eventEmitter.subscribe('catchAnnotationsLoaded.' + self.windowId , function (event) {
+                var miradorAnnotations = Array.from(arguments);
+                miradorAnnotations.shift();
                 jQuery.each(self.viewers, function(_, viewer) {
-                    console.log(typeof(viewer.StorageAnnotationLoad) === "function");
                     if (typeof(viewer.StorageAnnotationLoad) === "function") {
-                        var annotation = {
-                            annotationText: miradorAnnotation.text,
-                            created: miradorAnnotation.created,
-                            creator: miradorAnnotation.user,
-                            thumbnail: miradorAnnotation.thumb,
-                            id: miradorAnnotation.id,
-                            media: "image",
-                            tags: miradorAnnotation.tags,
-                            ranges: miradorAnnotation.rangePosition,
-                            totalReplies: miradorAnnotation.tags,
-                            permissions: miradorAnnotation.permissions,
-                            uri: miradorAnnotation.uri,
-                            svg: miradorAnnotation.rangePosition[0].selector.item.value
-                        };
-                        $.publishEvent("annotationLoaded", self.instance_id, [annotation]);
+                        jQuery.each(miradorAnnotations, function(idx, miradorAnnotation) {
+                            var annotation = self.convertFromOA(miradorAnnotation);
+                            $.publishEvent("annotationLoaded", self.instance_id, [annotation]);
+                        });
                     }
                 });
             });
+            self.mir.eventEmitter.subscribe('annotationEditSave.' + self.windowId, function(event, miradorAnnotation) {
+                console.log("what");
+                var endpointAnnotation = miradorAnnotation.endpoint.getAnnotationInEndpoint(miradorAnnotation)[0];
+                var annotation = self.convertFromOA(endpointAnnotation);
+                jQuery.each(self.viewers, function(_, viewer) {
+                    viewer.addAnnotation(annotation, true, false);
+                });
+            });
+
+            self.mir.eventEmitter.subscribe('catchAnnotationDeleted.' + self.windowId, function(event, annotationId) {
+                    $.publishEvent('StorageAnnotationDelete', self.instance_id, [{id: annotationId}, false]);
+            });
+
+            self.mir.eventEmitter.subscribe('catchAnnotationCreated.' + self.windowId, function(event, catchAnnotation) {
+                var annotation = self.convertFromOA(catchAnnotation);
+                jQuery.each(self.viewers, function(_, viewer) {
+                    viewer.addAnnotation(annotation, false, false);
+                });
+            })
+
         });
+    };
+
+    $.ImageTarget.prototype.convertFromOA = function(miradorAnnotation) {
+        var self = this;
+        var annotation = {
+            annotationText: [miradorAnnotation.text],
+            created: miradorAnnotation.created,
+            creator: miradorAnnotation.user,
+            thumbnail: miradorAnnotation.thumb,
+            id: miradorAnnotation.id,
+            media: "image",
+            tags: miradorAnnotation.tags,
+            ranges: miradorAnnotation.rangePosition,
+            totalReplies: miradorAnnotation.tags,
+            permissions: miradorAnnotation.permissions,
+            uri: miradorAnnotation.uri,
+            svg: miradorAnnotation.rangePosition[0].selector.item["@type"] === "oa:SvgSelector" ? self.setUpSvg(miradorAnnotation) : ""
+        };
+        return annotation;
+    };
+
+    $.ImageTarget.prototype.setUpSvg = function(item) {
+        var self = this;
+        var svgVal = item.rangePosition[0].selector.item.value;
+
+        var leftmargin = "-150px";
+        var widthHeight = 'width="150"';
         
+
+        var width = parseFloat(item.bounds.width);
+        var height = parseFloat(item.bounds.height);
+        var strokewidth = (width * 0.00995) + "px"//'20px';
+        if (height > width) {
+            var recalc = 150.0*(width/height);
+            leftmargin = "-" + recalc.toString() + 'px';
+            widthHeight = 'height="150"';
+        }
+        if (width < 150 && height < 150) {
+            widthHeight = 'width="' + width + '" height="' + height + '" ';
+            leftmargin = "-" + item.bounds.width + "px";
+            strokewidth = '2px';
+        }
+        
+        var finalSvg = "";
+        finalSvg += svgVal.replace('<svg xmlns', '<svg class="thumbnail-'+ item.id +'" id="thumbnail-' + item.id +'" ' + widthHeight + ' style="left: -9999px; position: absolute; margin-left: ' + leftmargin + '" viewBox="' + item.bounds.x + ' ' + item.bounds.y + ' ' + item.bounds.width + ' ' + item.bounds.height + '" xmlns').replace(/stroke-width=\".+?\"/g, 'stroke-width="' + strokewidth + '"');
+
+        return finalSvg;
     }
 
     /**
@@ -255,4 +309,57 @@ require('./plugins/m2-editor-plugin.js');
             self.plugins.push(new plugin( optionsForPlugin, self.instance_id));
         });
     };
+
+    $.ImageTarget.prototype.StorageAnnotationDelete = function(ann) {
+        var self = this;
+        console.log("DELETING", arguments);
+        self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());
+    };
+
+    $.ImageTarget.prototype.ViewerEditorClose = function(ann, is_new_annotation, hit_cancel) {
+        var self = this;
+        console.log("EDITING", arguments);
+
+        if (!hit_cancel && !is_new_annotation) {
+            var annotation = ann;
+            console.log("Should update", ann, self.mir);
+            
+            var annotationInOA = self.mir.viewer.workspace.slots[0].window.annotationsList.filter(function(mirAnn) {
+                if (ann.id.toString() === mirAnn["@id"].toString()) {
+                    return mirAnn;
+                }
+            })[0];
+
+            // from mirador endpoint code
+            //remove all tag-related content in annotation
+            annotationInOA.motivation = jQuery.grep(annotationInOA.motivation, function(value) {
+                return value !== "oa:tagging";
+            });
+            annotationInOA.resource = jQuery.grep(annotationInOA.resource, function(value) {
+                return value["@type"] !== "oa:Tag";
+            });
+            //re-add tagging if we have them
+            if (ann.tags && ann.tags.length > 0) {
+                annotationInOA.motivation.push("oa:tagging");
+                jQuery.each(ann.tags, function(index, value) {
+                    annotationInOA.resource.push({
+                        "@type": "oa:Tag",
+                        "chars": value
+                    });
+                });
+            }
+            jQuery.each(annotationInOA.resource, function(index, value) {
+                if (value["@type"] === "dctypes:Text") {
+                    value.chars = ann.annotationText.join('<p></p>');
+                }
+            });
+
+            self.mir.eventEmitter.publish('annotationUpdated.' + self.windowId, annotationInOA);
+
+            jQuery.each(self.viewers, function(_, viewer) {
+                viewer.addAnnotation(ann, true, false);
+            })
+        }
+    };
+
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

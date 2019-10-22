@@ -381,7 +381,48 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
         $.subscribeEvent('autosearch', self.instance_id, function(_, term, type) {
             self.autosearch(term, type);
-        })
+        });
+
+        if(self.options.mediaType == "image") {
+            $.subscribeEvent('tryLazyLoad', self.instance_id, function() {
+                self.lazyLoadImages();
+            });
+
+            jQuery('.annotationsHolder.side').scroll(function() {  
+                self.lazyLoadImages();
+            });
+        }
+    };
+
+    $.Sidebar.prototype.lazyLoadImages = function() {
+        var self = this;
+        var thumbnails = Array.from(document.querySelectorAll('.side.annotationsHolder img.annotation-thumbnail'));
+        var unloaded_images = thumbnails.filter(function(x) {
+            if (!x.dataset['loaded'] || x.dataset['loaded'] == "false") {
+                return true;
+            }
+        });
+        var scrollableViewer = jQuery('.side.annotationsHolder')[0];
+        var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight;
+        
+        //console.log(currentViewPortLimit);
+        unloaded_images.forEach(function(img) {
+            if (img.getBoundingClientRect().y <= currentViewPortLimit) {    
+                img.onload = function() {
+                    if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+                        console.log(img.getBoundingClientRect().y, img.nextElementSibling.getBoundingClientRect().y)
+                        var diff = img.getBoundingClientRect().y - img.nextElementSibling.getBoundingClientRect().y;
+                        img.nextElementSibling.style.top = diff + 'px';
+                        img.nextElementSibling.style.left = "";
+                    } else {
+                        img.nextElementSibling.style.left = "";
+                    }
+                };
+                img.src = img.dataset['src'];
+
+                img.dataset['loaded'] = true;
+            }
+        });
     };
 
     $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
@@ -465,6 +506,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
             jQuery('#empty-alert').css('display', 'none');
+            self.lazyLoadImages();
         }
     };
 
