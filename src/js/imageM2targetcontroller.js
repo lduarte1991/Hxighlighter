@@ -8,12 +8,13 @@ require('./plugins/hx-adminbutton.js');
 require('./viewers/sidebar.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
-require('./viewers/sidebar.js');
 require('./plugins/hx-summernote-plugin.js');
 require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/m2-editor-plugin.js');
+require('./plugins/m2-hxighlighter-endpoint.js');
+require('./storage/catchpy.js');
 
 (function($) {
 
@@ -119,8 +120,8 @@ require('./plugins/m2-editor-plugin.js');
               }
             },
             'annotationEndpoint': {
-                'name': 'Catchpy',
-                'module': 'CatchEndpoint',
+                'name': 'Hx',
+                'module': 'HxighlighterEndpoint',
                 'options': {
                     token: self.options.storageOptions.token,
                     prefix: 'https://devo.catchpy.harvardx.harvard.edu/annos',
@@ -130,8 +131,24 @@ require('./plugins/m2-editor-plugin.js');
                     roles: [],
                     collection_id: self.options.collection_id,
                     context_id: self.options.context_id,
+                    instance_id: self.instance_id,
+                    manifest_url: self.options.manifest_url,
                 }
             }
+            // 'annotationEndpoint': {
+            //     'name': 'Catchpy',
+            //     'module': 'CatchEndpoint',
+            //     'options': {
+            //         token: self.options.storageOptions.token,
+            //         prefix: 'https://devo.catchpy.harvardx.harvard.edu/annos',
+            //         params: '',
+            //         userid: self.options.user_id,
+            //         username: self.options.username,
+            //         roles: [],
+            //         collection_id: self.options.collection_id,
+            //         context_id: self.options.context_id,
+            //     }
+            // }
         });
         $.publishEvent('targetLoaded', self.instance_id, [jQuery('#viewer')]);
 
@@ -140,11 +157,11 @@ require('./plugins/m2-editor-plugin.js');
             self.mir.eventEmitter.subscribe('catchAnnotationsLoaded.' + self.windowId , function (event) {
                 var miradorAnnotations = Array.from(arguments);
                 miradorAnnotations.shift();
+                console.log(miradorAnnotations);
                 jQuery.each(self.viewers, function(_, viewer) {
                     if (typeof(viewer.StorageAnnotationLoad) === "function") {
-                        jQuery.each(miradorAnnotations, function(idx, miradorAnnotation) {
-                            var annotation = self.convertFromOA(miradorAnnotation);
-                            $.publishEvent("annotationLoaded", self.instance_id, [annotation]);
+                        jQuery.each(miradorAnnotations, function(idx, hxAnnotation) {
+                            $.publishEvent("annotationLoaded", self.instance_id, [hxAnnotation]);
                         });
                     }
                 });
@@ -174,6 +191,7 @@ require('./plugins/m2-editor-plugin.js');
 
     $.ImageTarget.prototype.convertFromOA = function(miradorAnnotation) {
         var self = this;
+        console.log(self.mir, miradorAnnotation);
         var annotation = {
             annotationText: [miradorAnnotation.text],
             created: miradorAnnotation.created,
@@ -186,7 +204,7 @@ require('./plugins/m2-editor-plugin.js');
             totalReplies: miradorAnnotation.tags,
             permissions: miradorAnnotation.permissions,
             uri: miradorAnnotation.uri,
-            svg: miradorAnnotation.rangePosition[0].selector.item["@type"] === "oa:SvgSelector" ? self.setUpSvg(miradorAnnotation) : ""
+            //svg: miradorAnnotation.rangePosition[0].selector.item["@type"] === "oa:SvgSelector" ? self.setUpSvg(miradorAnnotation) : ""
         };
         return annotation;
     };
@@ -252,8 +270,8 @@ require('./plugins/m2-editor-plugin.js');
             // finish setting up extra plugins
             self.setUpPlugins(self.element[0]);
 
-            // // finish setting up the storage containers
-            // self.setUpStorage(self.element[0]);
+            // finish setting up the storage containers
+            self.setUpStorage(self.element[0]);
 
             // if (!self.options.viewerOptions.readonly) {
             //     self.setUpSelectors(self.element[0]);
@@ -310,10 +328,24 @@ require('./plugins/m2-editor-plugin.js');
         });
     };
 
-    $.ImageTarget.prototype.StorageAnnotationDelete = function(ann) {
+    $.ImageTarget.prototype.StorageAnnotationSave = function(ann, callBack, errorCallback) {
+        var self = this;
+        jQuery.each(self.storage, function(_, store) {
+            console.log("Saving to store", store, ann);
+            store.StorageAnnotationSave(ann, self.element, false, callBack, errorCallback);
+        });
+    };
+
+    $.ImageTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
         var self = this;
         console.log("DELETING", arguments);
-        self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());
+        // self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.StorageAnnotationDelete(ann);
+        });
+        jQuery.each(self.storage, function(_, store) {
+            store.StorageAnnotationDelete(ann, callBack, errorCallback);
+        });
     };
 
     $.ImageTarget.prototype.ViewerEditorClose = function(ann, is_new_annotation, hit_cancel) {
@@ -360,6 +392,48 @@ require('./plugins/m2-editor-plugin.js');
                 viewer.addAnnotation(ann, true, false);
             })
         }
+    };
+
+    /**
+     * { function_description }
+     *
+     * @class      StorageAnnotationGetReplies (name)
+     */
+    $.ImageTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun) {
+        var self = this;
+        jQuery.each(self.storage, function(_, store) {
+            store.search(search_options, callback, errfun);
+        });
+    };
+
+    $.ImageTarget.prototype.setUpStorage = function(element, options) {
+        var self = this;
+        self.storage = [];
+        jQuery.each($.storage, function(idx, storage) {
+            var optionsForStorage;
+            try {
+                optionsForStorage = jQuery.extend({}, self.options, self.options[storage.name]) || {};
+            } catch (e) {
+                optionsForStorage = {};
+            }
+            self.storage.push(new storage(optionsForStorage, self.instance_id));
+            if (self.options.viewerOptions.defaultTab === "mine") {
+                options = {
+                    'username': self.options.username
+                }
+            } else if (self.options.viewerOptions.defaultTab === "instructor") {
+                options = {
+                    'userid': self.options.instructors
+                }
+            } else {
+                var exclusion = [self.options.user_id].concat(self.options.instructors)
+                options = {
+                    'exclude_userid': exclusion
+                }
+            }
+
+            self.storage[idx].onLoad(element, options);
+        });
     };
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));
