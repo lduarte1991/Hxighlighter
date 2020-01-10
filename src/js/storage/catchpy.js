@@ -85,9 +85,8 @@ var hrange = require('../h-range.js');
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
-        console.log(arguments);
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
-        console.log("Web Annotation being sent to catchpy: ", save_ann);
+        console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
@@ -103,6 +102,7 @@ var hrange = require('../h-range.js');
                 //console.log('ANNOTATION SAVED', result);
                 if (typeof callBack === "function") {
                     callBack(result);
+                    //callBack(self.convertFromWebAnnotation(result, jQuery(elem).find('.annotator-wrapper')));
                 }
             },
             error: function(xhr, status, error) {
@@ -250,6 +250,8 @@ var hrange = require('../h-range.js');
                                 'type': 'SvgSelector',
                                 'value': choice.selector.items[0].selector.item.value
                             }]
+                        } else if (choice.type === "Thumbnail") {
+                            targetList.push(choice)
                         }
                     })
                 }
@@ -305,31 +307,72 @@ var hrange = require('../h-range.js');
 
     $.CatchPy.prototype.convertFromWebAnnotation = function(webAnn, element) {
         var self = this;
+        var mediaFound = self.getMediaType(webAnn);
         var annotation = {
             annotationText: self.getAnnotationText(webAnn),
             created: self.getAnnotationCreated(webAnn),
             creator: self.getAnnotationCreator(webAnn),
             exact: self.getAnnotationExact(webAnn),
             id: self.getAnnotationId(webAnn),
-            media: self.getMediaType(webAnn),
+            media: mediaFound,
             tags: self.getAnnotationTags(webAnn),
-            ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
+            ranges: self.getAnnotationTarget(webAnn, jQuery(element), mediaFound),
             totalReplies: webAnn.totalReplies,
             permissions: webAnn.permissions,
+        }
+        if (mediaFound.toLowerCase() === "image") {
+            jQuery.each(annotation['ranges'], function(index, range) {
+                if (range['type'].toLowerCase() === "thumbnail") {
+                    annotation['thumbnail'] = range.source;
+                } else if (range['type'].toLowerCase() === "image") {
+                    annotation['source_url'] = range.source;
+                    var fragFound = false;
+                    var svgExists = false;
+                    var fragVal = "";
+                    jQuery.each(range['selector']['items'], function(index, selector) {
+                        if (selector['type'].toLowerCase() === "svgselector") {
+                            var svgVal = selector.value
+                            if (fragFound) {
+                                svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                            }
+                            annotation['svg'] = svgVal;
+                            svgExists = true;
+                        } else {
+                            fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
+                            if (svgExists) {
+                                annotation['svg'] = annotation['svg'].replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                            }
+                            fragFound = true;
+                        }
+                    });
+                }
+            })
         }
         return annotation;
     };
 
     $.CatchPy.prototype.getMediaType = function(webAnn, element) {
-        return webAnn['target']['items'][0]['type'];
+        var found = webAnn['target']['items'][0]['type'];
+        jQuery.each(webAnn['target']['items'], function(index, item) {
+            var m = item['type'].toLowerCase();
+
+            if (m === "image" || m === "video" || m === "text" || m === "audio") {
+                found = item['type'];
+            }
+        });
+        console.log("FOUND IT", found);
+        return found;
     };
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
+            var annType = webAnn['target']['items'][0]['type']
             // console.log("reached getAnnotationTargetItems", webAnn);
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
+            if (annType === "Annotation") {
                 // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
+            } else if (annType === "Image" || annType === "Thumbnail") {
+                return webAnn['target']['items']
             }
             // console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
@@ -339,69 +382,75 @@ var hrange = require('../h-range.js');
         }
     };
 
-    $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element) {
+    $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element, media) {
         var self = this;
         try {
-            var ranges = [];
-            var xpathRanges = [];
-            var positionRanges = [];
-            var textRanges = [];
-            jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
-                if (!('parent' in targetItem)) {
-                    if (targetItem['type'] === "RangeSelector") {
-                        xpathRanges.push({
-                            start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
-                            startOffset: targetItem['refinedBy'][0].start,
-                            end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
-                            endOffset: targetItem['refinedBy'][0].end
+            console.log(media);
+            if (media.toLowerCase() === "text") {
+                var ranges = [];
+                var xpathRanges = [];
+                var positionRanges = [];
+                var textRanges = [];
+                jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
+                    if (!('parent' in targetItem)) {
+                        if (targetItem['type'] === "RangeSelector") {
+                            xpathRanges.push({
+                                start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
+                                startOffset: targetItem['refinedBy'][0].start,
+                                end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
+                                endOffset: targetItem['refinedBy'][0].end
+                            });
+                        } else if (targetItem['type'] === "TextPositionSelector") {
+                            positionRanges.push({
+                                globalStartOffset: targetItem['start'],
+                                globalEndOffset: targetItem['end'] 
+                            });
+                        } else if (targetItem['type'] === "TextQuoteSelector") {
+                            textRanges.push({
+                                prefix: targetItem['prefix'] || '',
+                                exact: targetItem['exact'],
+                                suffix: targetItem['suffix'] || ''
+                            })
+                        }
+                    } else {
+                        return ranges.push(targetItem)
+                    }
+                });
+                if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
+                    for (var i = xpathRanges.length - 1; i >= 0; i--) {
+                        ranges.push({
+                            'xpath': xpathRanges[i],
+                            'position': positionRanges[i],
+                            'text': textRanges[i]
                         });
-                    } else if (targetItem['type'] === "TextPositionSelector") {
-                        positionRanges.push({
-                            globalStartOffset: targetItem['start'],
-                            globalEndOffset: targetItem['end'] 
-                        });
-                    } else if (targetItem['type'] === "TextQuoteSelector") {
-                        textRanges.push({
-                            prefix: targetItem['prefix'] || '',
-                            exact: targetItem['exact'],
-                            suffix: targetItem['suffix'] || ''
-                        })
+                    }
+                } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+                    var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+                    var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+
+                    if (startNode && endNode) {
+                        var normalizedRange = document.createRange();
+                        normalizedRange.setStart(startNode.node, startNode.offset);
+                        normalizedRange.setEnd(endNode.node, endNode.offset);
+                        var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+                        ranges.push(serializedRange);
                     }
                 } else {
-                    return ranges.push(targetItem)
+                    var rangeFound = {}
+                    if (xpathRanges.length >= 1) {
+                        rangeFound['xpath'] = xpathRanges[0];
+                    }
+                    if (positionRanges.length >= 1) {
+                        rangeFound['position'] = positionRanges[0];
+                    }
+                    if (textRanges.length >= 1) {
+                        rangeFound['text'] = textRanges[0];
+                    }
+                    ranges.push(rangeFound)
                 }
-            });
-            if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
-                for (var i = xpathRanges.length - 1; i >= 0; i--) {
-                    ranges.push({
-                        'xpath': xpathRanges[i],
-                        'position': positionRanges[i],
-                        'text': textRanges[i]
-                    });
-                }
-            } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
-                var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
-                var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
-
-                if (startNode && endNode) {
-                    var normalizedRange = document.createRange();
-                    normalizedRange.setStart(startNode.node, startNode.offset);
-                    normalizedRange.setEnd(endNode.node, endNode.offset);
-                    var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
-                    ranges.push(serializedRange);
-                }
-            } else {
-                var rangeFound = {}
-                if (xpathRanges.length >= 1) {
-                    rangeFound['xpath'] = xpathRanges[0];
-                }
-                if (positionRanges.length >= 1) {
-                    rangeFound['position'] = positionRanges[0];
-                }
-                if (textRanges.length >= 1) {
-                    rangeFound['text'] = textRanges[0];
-                }
-                ranges.push(rangeFound)
+            } else if (media.toLowerCase() == "image") {
+                console.log(webAnn['target'])
+                return webAnn['target']['items'];
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;

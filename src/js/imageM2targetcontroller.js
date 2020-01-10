@@ -102,7 +102,7 @@ require('./storage/catchpy.js');
             "windowObjects": [{
                 "loadedManifest": self.options.manifest_url,
                 "viewType" : "ImageView",
-                "canvasID" : "https://www.e-codices.unifr.ch/metadata/iiif/sl-0002/canvas/bke-0020_e001.json",
+                "canvasID" : self.options.object_id,
                 "annotationLayer" : true,
                 "annotationCreation" : true,
                 "sidePanel" : false,
@@ -169,20 +169,23 @@ require('./storage/catchpy.js');
             self.mir.eventEmitter.subscribe('annotationEditSave.' + self.windowId, function(event, miradorAnnotation) {
                 console.log("what");
                 var endpointAnnotation = miradorAnnotation.endpoint.getAnnotationInEndpoint(miradorAnnotation)[0];
+                endpointAnnotation = endpointAnnotation || miradorAnnotation; 
+                console.log('~', endpointAnnotation, miradorAnnotation);
                 var annotation = self.convertFromOA(endpointAnnotation);
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.addAnnotation(annotation, true, false);
                 });
             });
 
-            self.mir.eventEmitter.subscribe('catchAnnotationDeleted.' + self.windowId, function(event, annotationId) {
-                    $.publishEvent('StorageAnnotationDelete', self.instance_id, [{id: annotationId}, false]);
-            });
+            // self.mir.eventEmitter.subscribe('catchAnnotationDeleted.' + self.windowId, function(event, annotationId) {
+            //         $.publishEvent('StorageAnnotationDelete', self.instance_id, [{id: annotationId}, false]);
+            // });
 
             self.mir.eventEmitter.subscribe('catchAnnotationCreated.' + self.windowId, function(event, catchAnnotation) {
-                var annotation = self.convertFromOA(catchAnnotation);
+                console.log("annotation Created", catchAnnotation);
+                
                 jQuery.each(self.viewers, function(_, viewer) {
-                    viewer.addAnnotation(annotation, false, false);
+                    viewer.addAnnotation(catchAnnotation, false, false);
                 });
             })
 
@@ -331,7 +334,7 @@ require('./storage/catchpy.js');
     $.ImageTarget.prototype.StorageAnnotationSave = function(ann, callBack, errorCallback) {
         var self = this;
         jQuery.each(self.storage, function(_, store) {
-            console.log("Saving to store", store, ann);
+            console.log("3. Sending it to store to save", store, ann);
             store.StorageAnnotationSave(ann, self.element, false, callBack, errorCallback);
         });
     };

@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Friday, October 25th, 2019, 5:00:44 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Thursday, January 9th, 2020, 4:40:29 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39703,12 +39703,12 @@ __webpack_require__(9);
   $.Sidebar.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('StorageAnnotationSave', self.instance_id, function (_, annotation, updating) {
-      console.log("reached here!");
+      console.log("6. Got Annotation in Viewer", annotation, self.options);
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
       });
 
-      if (filteroptions.indexOf('mine') > -1) {
+      if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)) {
         self.addAnnotation(annotation, updating, false);
       } else {
         jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
@@ -39760,13 +39760,46 @@ __webpack_require__(9);
     unloaded_images.forEach(function (img) {
       if (img.getBoundingClientRect().y <= currentViewPortLimit) {
         img.onload = function () {
-          if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
-            console.log(img.getBoundingClientRect().y, img.nextElementSibling.getBoundingClientRect().y);
-            var diff = img.getBoundingClientRect().y - img.nextElementSibling.getBoundingClientRect().y;
-            img.nextElementSibling.style.top = diff + 'px';
-            img.nextElementSibling.style.left = "";
-          } else {
-            img.nextElementSibling.style.left = "";
+          // if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+          //     //console.log(img.getBoundingClientRect().y, img.nextElementSibling.getBoundingClientRect().y)
+          //     var diff = img.getBoundingClientRect().y - img.nextElementSibling.getBoundingClientRect().y;
+          //     img.nextElementSibling.style.top = diff + 'px';
+          //     //img.nextElementSibling.style.left = "";
+          //     var w = img.getBoundingClientRect().width;
+          //     img.nextElementSibling.style['margin-left'] = w + "px";
+          // } else {
+          //     img.nextElementSibling.style.left = "";
+          // }
+          if (img.nextElementSibling.tagName.toLowerCase() === "svg") {
+            var w = img.getBoundingClientRect().width;
+            var h = img.getBoundingClientRect().height;
+            var sv = img.nextElementSibling;
+            var img_id = sv.classList['value'].replace(' ', '.').replace('thumbnail-svg-', '');
+            var path = jQuery(sv).find('path');
+
+            if (new window.paper.Path(path.attr('d')).isClosed()) {
+              path.wrap('<clipPath id="' + img_id + '-clippath"></clipPath>');
+              img.style = "display: none;";
+              var img_url = img.src;
+              var viewBox = sv.getAttribute('viewBox').split(' ');
+              jQuery(sv)[0].innerHTML += '<image x="' + viewBox[0] + '" y="' + viewBox[1] + '" width="' + viewBox[2] + '" height="' + viewBox[3] + '" clip-path="url(#' + img_id + '-clippath)" class="annotation-thumbnail" href="' + img_url + '" />';
+              sv.style['max-width'] = w + "px";
+              sv.style['max-height'] = w + "px";
+              sv.style['margin-left'] = "auto";
+              sv.style['margin-right'] = "auto";
+              sv.style['display'] = 'block';
+            } else {
+              if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+                sv.style['position'] = 'absolute';
+                sv.style['margin-left'] = '-' + w + 'px';
+                sv.style['width'] = w + 'px';
+                sv.style['height'] = h + 'px';
+                sv.style['display'] = 'inline-block';
+                sv.innerHTML = sv.innerHTML.replace('stroke-width="1"', 'stroke-width="5px"');
+              } else {
+                img.nextElementSibling.style.left = "";
+              }
+            }
           }
         };
 
@@ -39778,12 +39811,14 @@ __webpack_require__(9);
 
   $.Sidebar.prototype.addAnnotation = function (annotation, updating, shouldAppend) {
     var self = this;
+    console.log("7. Should add Annotation to viewer", annotation);
 
     if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
       ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
+      console.log('ann', ann);
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
 
       if (self.options.viewer_options.readonly) {
@@ -40527,7 +40562,7 @@ __p += '\n        <div class="quote field side">\n            <div class="quoteT
 '</div>\n        </div>\n        <div class="annotation-quote-focus sr-only"><a href="#first-node-' +
 ((__t = ( id )) == null ? '' : __t) +
 '">Jump to quote in context</a></div>\n    ';
- } else if (media === 'image' && thumbnail) {;
+ } else if (media.toLowerCase() === 'image' && thumbnail) {;
 __p += '\n        <div class="zoomToImageBounds" style=\'position:relative;\'>\n            <img class="annotation-thumbnail" data-src="' +
 ((__t = ( thumbnail )) == null ? '' : __t) +
 '" data-svg=".thumbnail-' +
@@ -40541,7 +40576,7 @@ __p += '\n                ' +
 __p += '\n            <span class="idAnnotation" style="display:none">' +
 ((__t = ( id )) == null ? '' : __t) +
 '</span>\n            <span class="uri" style="display:none">' +
-((__t = ( uri )) == null ? '' : __t) +
+((__t = ( source_url )) == null ? '' : __t) +
 '</span>\n        </div>\n    ';
  } else if (media === "video") {;
 __p += '\n        <div class="playMediaButton" style="text-align:center;">\n            <div class="btn btn-default" style="text-align:center;margin-top:20px;">\n                Segment ' +

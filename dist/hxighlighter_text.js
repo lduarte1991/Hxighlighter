@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Friday, October 25th, 2019, 5:00:44 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Thursday, January 9th, 2020, 4:40:29 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39703,12 +39703,12 @@ __webpack_require__(9);
   $.Sidebar.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('StorageAnnotationSave', self.instance_id, function (_, annotation, updating) {
-      console.log("reached here!");
+      console.log("6. Got Annotation in Viewer", annotation, self.options);
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
       });
 
-      if (filteroptions.indexOf('mine') > -1) {
+      if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)) {
         self.addAnnotation(annotation, updating, false);
       } else {
         jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
@@ -39760,13 +39760,46 @@ __webpack_require__(9);
     unloaded_images.forEach(function (img) {
       if (img.getBoundingClientRect().y <= currentViewPortLimit) {
         img.onload = function () {
-          if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
-            console.log(img.getBoundingClientRect().y, img.nextElementSibling.getBoundingClientRect().y);
-            var diff = img.getBoundingClientRect().y - img.nextElementSibling.getBoundingClientRect().y;
-            img.nextElementSibling.style.top = diff + 'px';
-            img.nextElementSibling.style.left = "";
-          } else {
-            img.nextElementSibling.style.left = "";
+          // if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+          //     //console.log(img.getBoundingClientRect().y, img.nextElementSibling.getBoundingClientRect().y)
+          //     var diff = img.getBoundingClientRect().y - img.nextElementSibling.getBoundingClientRect().y;
+          //     img.nextElementSibling.style.top = diff + 'px';
+          //     //img.nextElementSibling.style.left = "";
+          //     var w = img.getBoundingClientRect().width;
+          //     img.nextElementSibling.style['margin-left'] = w + "px";
+          // } else {
+          //     img.nextElementSibling.style.left = "";
+          // }
+          if (img.nextElementSibling.tagName.toLowerCase() === "svg") {
+            var w = img.getBoundingClientRect().width;
+            var h = img.getBoundingClientRect().height;
+            var sv = img.nextElementSibling;
+            var img_id = sv.classList['value'].replace(' ', '.').replace('thumbnail-svg-', '');
+            var path = jQuery(sv).find('path');
+
+            if (new window.paper.Path(path.attr('d')).isClosed()) {
+              path.wrap('<clipPath id="' + img_id + '-clippath"></clipPath>');
+              img.style = "display: none;";
+              var img_url = img.src;
+              var viewBox = sv.getAttribute('viewBox').split(' ');
+              jQuery(sv)[0].innerHTML += '<image x="' + viewBox[0] + '" y="' + viewBox[1] + '" width="' + viewBox[2] + '" height="' + viewBox[3] + '" clip-path="url(#' + img_id + '-clippath)" class="annotation-thumbnail" href="' + img_url + '" />';
+              sv.style['max-width'] = w + "px";
+              sv.style['max-height'] = w + "px";
+              sv.style['margin-left'] = "auto";
+              sv.style['margin-right'] = "auto";
+              sv.style['display'] = 'block';
+            } else {
+              if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+                sv.style['position'] = 'absolute';
+                sv.style['margin-left'] = '-' + w + 'px';
+                sv.style['width'] = w + 'px';
+                sv.style['height'] = h + 'px';
+                sv.style['display'] = 'inline-block';
+                sv.innerHTML = sv.innerHTML.replace('stroke-width="1"', 'stroke-width="5px"');
+              } else {
+                img.nextElementSibling.style.left = "";
+              }
+            }
           }
         };
 
@@ -39778,12 +39811,14 @@ __webpack_require__(9);
 
   $.Sidebar.prototype.addAnnotation = function (annotation, updating, shouldAppend) {
     var self = this;
+    console.log("7. Should add Annotation to viewer", annotation);
 
     if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
       ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
+      console.log('ann', ann);
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
 
       if (self.options.viewer_options.readonly) {
@@ -40527,7 +40562,7 @@ __p += '\n        <div class="quote field side">\n            <div class="quoteT
 '</div>\n        </div>\n        <div class="annotation-quote-focus sr-only"><a href="#first-node-' +
 ((__t = ( id )) == null ? '' : __t) +
 '">Jump to quote in context</a></div>\n    ';
- } else if (media === 'image' && thumbnail) {;
+ } else if (media.toLowerCase() === 'image' && thumbnail) {;
 __p += '\n        <div class="zoomToImageBounds" style=\'position:relative;\'>\n            <img class="annotation-thumbnail" data-src="' +
 ((__t = ( thumbnail )) == null ? '' : __t) +
 '" data-svg=".thumbnail-' +
@@ -40541,7 +40576,7 @@ __p += '\n                ' +
 __p += '\n            <span class="idAnnotation" style="display:none">' +
 ((__t = ( id )) == null ? '' : __t) +
 '</span>\n            <span class="uri" style="display:none">' +
-((__t = ( uri )) == null ? '' : __t) +
+((__t = ( source_url )) == null ? '' : __t) +
 '</span>\n        </div>\n    ';
  } else if (media === "video") {;
 __p += '\n        <div class="playMediaButton" style="text-align:center;">\n            <div class="btn btn-default" style="text-align:center;margin-top:20px;">\n                Segment ' +
@@ -44427,9 +44462,8 @@ var hrange = __webpack_require__(4);
       return;
     }
 
-    console.log(arguments);
     var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
-    console.log("Web Annotation being sent to catchpy: ", save_ann);
+    console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
     var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
     params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
     params += '&version=' + this.options.storageOptions.database_params.version;
@@ -44444,7 +44478,7 @@ var hrange = __webpack_require__(4);
       success: function success(result) {
         //console.log('ANNOTATION SAVED', result);
         if (typeof callBack === "function") {
-          callBack(result);
+          callBack(result); //callBack(self.convertFromWebAnnotation(result, jQuery(elem).find('.annotator-wrapper')));
         }
       },
       error: function error(xhr, status, _error2) {
@@ -44616,6 +44650,8 @@ var hrange = __webpack_require__(4);
                 'type': 'SvgSelector',
                 'value': choice.selector.items[0].selector.item.value
               }];
+            } else if (choice.type === "Thumbnail") {
+              targetList.push(choice);
             }
           });
         }
@@ -44672,33 +44708,80 @@ var hrange = __webpack_require__(4);
 
   $.CatchPy.prototype.convertFromWebAnnotation = function (webAnn, element) {
     var self = this;
+    var mediaFound = self.getMediaType(webAnn);
     var annotation = {
       annotationText: self.getAnnotationText(webAnn),
       created: self.getAnnotationCreated(webAnn),
       creator: self.getAnnotationCreator(webAnn),
       exact: self.getAnnotationExact(webAnn),
       id: self.getAnnotationId(webAnn),
-      media: self.getMediaType(webAnn),
+      media: mediaFound,
       tags: self.getAnnotationTags(webAnn),
-      ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
+      ranges: self.getAnnotationTarget(webAnn, jQuery(element), mediaFound),
       totalReplies: webAnn.totalReplies,
       permissions: webAnn.permissions
     };
+
+    if (mediaFound.toLowerCase() === "image") {
+      jQuery.each(annotation['ranges'], function (index, range) {
+        if (range['type'].toLowerCase() === "thumbnail") {
+          annotation['thumbnail'] = range.source;
+        } else if (range['type'].toLowerCase() === "image") {
+          annotation['source_url'] = range.source;
+          var fragFound = false;
+          var svgExists = false;
+          var fragVal = "";
+          jQuery.each(range['selector']['items'], function (index, selector) {
+            if (selector['type'].toLowerCase() === "svgselector") {
+              var svgVal = selector.value;
+
+              if (fragFound) {
+                svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+              }
+
+              annotation['svg'] = svgVal;
+              svgExists = true;
+            } else {
+              fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
+
+              if (svgExists) {
+                annotation['svg'] = annotation['svg'].replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+              }
+
+              fragFound = true;
+            }
+          });
+        }
+      });
+    }
+
     return annotation;
   };
 
   $.CatchPy.prototype.getMediaType = function (webAnn, element) {
-    return webAnn['target']['items'][0]['type'];
+    var found = webAnn['target']['items'][0]['type'];
+    jQuery.each(webAnn['target']['items'], function (index, item) {
+      var m = item['type'].toLowerCase();
+
+      if (m === "image" || m === "video" || m === "text" || m === "audio") {
+        found = item['type'];
+      }
+    });
+    console.log("FOUND IT", found);
+    return found;
   };
 
   $.CatchPy.prototype.getAnnotationTargetItems = function (webAnn) {
     try {
-      // console.log("reached getAnnotationTargetItems", webAnn);
-      if (webAnn['target']['items'][0]['type'] == "Annotation") {
+      var annType = webAnn['target']['items'][0]['type']; // console.log("reached getAnnotationTargetItems", webAnn);
+
+      if (annType === "Annotation") {
         // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
         return [{
           'parent': webAnn['target']['items'][0]['source']
         }];
+      } else if (annType === "Image" || annType === "Thumbnail") {
+        return webAnn['target']['items'];
       } // console.log("nope, something went wrong");
 
 
@@ -44709,75 +44792,82 @@ var hrange = __webpack_require__(4);
     }
   };
 
-  $.CatchPy.prototype.getAnnotationTarget = function (webAnn, element) {
+  $.CatchPy.prototype.getAnnotationTarget = function (webAnn, element, media) {
     var self = this;
 
     try {
-      var ranges = [];
-      var xpathRanges = [];
-      var positionRanges = [];
-      var textRanges = [];
-      jQuery.each(this.getAnnotationTargetItems(webAnn), function (_, targetItem) {
-        if (!('parent' in targetItem)) {
-          if (targetItem['type'] === "RangeSelector") {
-            xpathRanges.push({
-              start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
-              startOffset: targetItem['refinedBy'][0].start,
-              end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
-              endOffset: targetItem['refinedBy'][0].end
-            });
-          } else if (targetItem['type'] === "TextPositionSelector") {
-            positionRanges.push({
-              globalStartOffset: targetItem['start'],
-              globalEndOffset: targetItem['end']
-            });
-          } else if (targetItem['type'] === "TextQuoteSelector") {
-            textRanges.push({
-              prefix: targetItem['prefix'] || '',
-              exact: targetItem['exact'],
-              suffix: targetItem['suffix'] || ''
+      console.log(media);
+
+      if (media.toLowerCase() === "text") {
+        var ranges = [];
+        var xpathRanges = [];
+        var positionRanges = [];
+        var textRanges = [];
+        jQuery.each(this.getAnnotationTargetItems(webAnn), function (_, targetItem) {
+          if (!('parent' in targetItem)) {
+            if (targetItem['type'] === "RangeSelector") {
+              xpathRanges.push({
+                start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
+                startOffset: targetItem['refinedBy'][0].start,
+                end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
+                endOffset: targetItem['refinedBy'][0].end
+              });
+            } else if (targetItem['type'] === "TextPositionSelector") {
+              positionRanges.push({
+                globalStartOffset: targetItem['start'],
+                globalEndOffset: targetItem['end']
+              });
+            } else if (targetItem['type'] === "TextQuoteSelector") {
+              textRanges.push({
+                prefix: targetItem['prefix'] || '',
+                exact: targetItem['exact'],
+                suffix: targetItem['suffix'] || ''
+              });
+            }
+          } else {
+            return ranges.push(targetItem);
+          }
+        });
+
+        if (xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length) {
+          for (var i = xpathRanges.length - 1; i >= 0; i--) {
+            ranges.push({
+              'xpath': xpathRanges[i],
+              'position': positionRanges[i],
+              'text': textRanges[i]
             });
           }
+        } else if (xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+          var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+          var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+
+          if (startNode && endNode) {
+            var normalizedRange = document.createRange();
+            normalizedRange.setStart(startNode.node, startNode.offset);
+            normalizedRange.setEnd(endNode.node, endNode.offset);
+            var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+            ranges.push(serializedRange);
+          }
         } else {
-          return ranges.push(targetItem);
-        }
-      });
+          var rangeFound = {};
 
-      if (xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length) {
-        for (var i = xpathRanges.length - 1; i >= 0; i--) {
-          ranges.push({
-            'xpath': xpathRanges[i],
-            'position': positionRanges[i],
-            'text': textRanges[i]
-          });
-        }
-      } else if (xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
-        var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
-        var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+          if (xpathRanges.length >= 1) {
+            rangeFound['xpath'] = xpathRanges[0];
+          }
 
-        if (startNode && endNode) {
-          var normalizedRange = document.createRange();
-          normalizedRange.setStart(startNode.node, startNode.offset);
-          normalizedRange.setEnd(endNode.node, endNode.offset);
-          var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
-          ranges.push(serializedRange);
-        }
-      } else {
-        var rangeFound = {};
+          if (positionRanges.length >= 1) {
+            rangeFound['position'] = positionRanges[0];
+          }
 
-        if (xpathRanges.length >= 1) {
-          rangeFound['xpath'] = xpathRanges[0];
-        }
+          if (textRanges.length >= 1) {
+            rangeFound['text'] = textRanges[0];
+          }
 
-        if (positionRanges.length >= 1) {
-          rangeFound['position'] = positionRanges[0];
+          ranges.push(rangeFound);
         }
-
-        if (textRanges.length >= 1) {
-          rangeFound['text'] = textRanges[0];
-        }
-
-        ranges.push(rangeFound);
+      } else if (media.toLowerCase() == "image") {
+        console.log(webAnn['target']);
+        return webAnn['target']['items'];
       }
 
       if (webAnn['target']['items'][0]['type'] == "Annotation") {

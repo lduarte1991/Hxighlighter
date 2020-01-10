@@ -627,6 +627,22 @@ input:invalid {
     border: 2px dashed red;
 }
 
+svg[class^="thumbnail-svg-"] {
+    max-width: 150px;
+    max-height: 150px;
+    display: none;
+}
+
+svg[class^="thumbnail-svg-"] path {
+    stroke-width: 15px;
+}
+
+div.zoomToImageBounds {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 /*button[id^="replies-close"], div[id^="create-reply"] button {
     width: 100%;
     margin-top: 5px;

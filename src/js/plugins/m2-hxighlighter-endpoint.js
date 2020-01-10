@@ -79,15 +79,19 @@
                     return ann;
                 }
             });
+            foundAnn.push(successCallback, errorCallback);
+            console.log("Deleting: ", foundAnn);
             Hxighlighter.publishEvent('StorageAnnotationDelete', self.instance_id, foundAnn);
             self.eventEmitter.publish('catchAnnotationDeleted.' + self.windowID, annotationID);
         },
-        update: function(oaAnnotation, successCallback, errorCallback){},
+        update: function(oaAnnotation, successCallback, errorCallback){
+            console.log("Calls Update in m2-hxighlighter-endpoint")
+        },
         create: function(oaAnnotation, successCallback, errorCallback){
             var self = this;
-            console.log(oaAnnotation);
+            console.log('1. Mirador creates OA: ', oaAnnotation);
             var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
-            console.log("original annotation", endpointAnnotation);
+            console.log("2. Endpoint converts to Hxighlighter data model", endpointAnnotation);
             Hxighlighter.publishEvent('StorageAnnotationSave', self.instance_id, [endpointAnnotation, function(data) {
                 console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data));
                 self.eventEmitter.publish('catchAnnotationCreated.' + self.windowID, data);
@@ -228,21 +232,31 @@
                 type: "Choice",
                 items: []
             }
+            var thumbnail_url = "";
+            var uri = "";
+            var svgVal = "";
+            var annotation_id = Hxighlighter.getUniqueId();
             var rangeVals = oaAnnotation.on.forEach(function(targetItem) {
-                var uri = targetItem.full;
+                uri = targetItem.full;
                 target.items.push({
                     type: "Image",
                     source: uri,
                     selector: {
                         items: [targetItem],
-                        type: "List"
+                        type: "Choice"
                     }
                 });
+
+                thumbnail_url = self.getThumbnailFromFragmentSelector(targetItem.selector.default.value, uri)
+                svgVal = targetItem.selector.item.value
+                svgVal = svgVal.replace('svg xmlns', 'svg class="thumbnail-svg-' + annotation_id + '" viewBox="' + targetItem.selector.default.value.replace('xywh=', '').split(',').join(' ') + '"')
+
                 target.items.push({
                     type: "Thumbnail",
                     format: "image/jpg",
-                    source: self.getThumbnailFromFragmentSelector(targetItem.selector.default.value, uri)
-                })
+                    source: thumbnail_url
+                });
+                console.log("Found: " + target.items)
             });
 
             var text = [];
@@ -263,7 +277,7 @@
                     name: self.username,
                 },
                 exact: "",
-                id: Hxighlighter.getUniqueId(),
+                id: annotation_id,
                 media: "Image",
                 permissions: {
                     can_read: [],
@@ -271,10 +285,14 @@
                     can_delete: [self.userid],
                     can_admin: [self.userid]
                 },
+                thumbnail: thumbnail_url,
+                source_url: uri,
                 ranges: [target],
                 tags: tags,
+                svg: svgVal,
                 totalReplies: 0
             }
+            console.log("Should return following:", annotation);
             return annotation;
         },
     }
