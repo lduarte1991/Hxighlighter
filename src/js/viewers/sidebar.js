@@ -360,13 +360,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             }
         });
 
-        $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
-            jQuery('.item-' + annotation.id).remove();
-            if (jQuery('.annotationItem').length == 0) {
-                jQuery('#empty-alert').css('display', 'block');
-            } 
-        });
-
         $.subscribeEvent('searchTag', self.instance_id, function(_, tag) {
             var options = {
                 'type': self.options.mediaType,
@@ -486,6 +479,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 content: 'Would you like to delete your annotation? This is permanent.',
                 buttons: {
                     confirm: function() {
+                        console.log("I got to the delete from sidebar.")
                         $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
                     },
                     cancel: function () {
@@ -496,7 +490,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 self.ViewerEditorOpen(event, ann, true);
             });
 
-            jQuery('.side.item-' + ann.id).click(function() {
+            jQuery('.side.item-' + ann.id).click(function(e) {
                 if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
                     var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
                     jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140)});
@@ -510,6 +504,18 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         jQuery('#first-node-' + ann.id)[0].focus();
                         $.publishEvent('focusOnContext', self.instance_id, [ann]);
                     }, 350);
+                } else if (self.options.mediaType.toLowerCase() === "image") {
+                    var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
+                    var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
+                    var bounds = {
+                        x: boundSplit[0],
+                        y: boundSplit[1],
+                        width: boundSplit[2],
+                        height: boundSplit[3]
+                    };
+                    $.publishEvent('zoomTo', self.inst_id, [bounds]);
+                    console.log("Yup!");
+                    $.pauseEvent(e);
                 }
             });
 
@@ -644,8 +650,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
     };
     
-    $.Sidebar.prototype.StorageAnnotationDelete = function(annotations) {
-
+    $.Sidebar.prototype.StorageAnnotationDelete = function(annotation) {
+        jQuery('.item-' + annotation.id).remove();
+        if (jQuery('.annotationItem').length == 0) {
+            jQuery('#empty-alert').css('display', 'block');
+        } 
     };
 
     $.Sidebar.prototype.StorageAnnotationLoad = function(annotations) {

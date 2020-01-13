@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Thursday, January 9th, 2020, 4:40:29 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Monday, January 13th, 2020, 2:55:46 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -10738,7 +10738,7 @@ Hxighlighter.requiredEvents = [// all components should deal with being enabled/
 "ComponentEnable", "ComponentDisable", // targets should be sure that they have a way to make selection and show/hide annotations
 "TargetSelectionMade", "TargetAnnotationDraw", "TargetAnnotationUndraw", // viewers should handle a way to 1) make annotations and 2) display the text
 "ViewerEditorOpen", "ViewerEditorClose", "ViewerDisplayOpen", "ViewerDisplayClose", // storage should handle keeping track of the annotations made
-"StorageAnnotationSave", "StorageAnnotationLoad", "StorageAnnotationEdit", "StorageAnnotationDelete", // though replies are not mandatory, they are annotations and should be treated similarly
+"StorageAnnotationSave", "StorageAnnotationLoad", "StorageAnnotationEdit", "StorageAnnotationDelete", "StorageAnnotationUpdate", // though replies are not mandatory, they are annotations and should be treated similarly
 // the line below can be commented out should it not be relevant to your usecase.
 "StorageAnnotationSearch"];
 /**
@@ -39715,13 +39715,6 @@ __webpack_require__(9);
         $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
       }
     });
-    $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function (_, annotation, updating) {
-      jQuery('.item-' + annotation.id).remove();
-
-      if (jQuery('.annotationItem').length == 0) {
-        jQuery('#empty-alert').css('display', 'block');
-      }
-    });
     $.subscribeEvent('searchTag', self.instance_id, function (_, tag) {
       var options = {
         'type': self.options.mediaType,
@@ -39840,6 +39833,7 @@ __webpack_require__(9);
         content: 'Would you like to delete your annotation? This is permanent.',
         buttons: {
           confirm: function confirm() {
+            console.log("I got to the delete from sidebar.");
             $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
           },
           cancel: function cancel() {}
@@ -39848,7 +39842,7 @@ __webpack_require__(9);
       jQuery('.side.item-' + ann.id).find('.edit').click(function (event) {
         self.ViewerEditorOpen(event, ann, true);
       });
-      jQuery('.side.item-' + ann.id).click(function () {
+      jQuery('.side.item-' + ann.id).click(function (e) {
         if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
           var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
           jQuery(self.element).parent().animate({
@@ -39871,6 +39865,20 @@ __webpack_require__(9);
             jQuery('#first-node-' + ann.id)[0].focus();
             $.publishEvent('focusOnContext', self.instance_id, [ann]);
           }, 350);
+        } else if (self.options.mediaType.toLowerCase() === "image") {
+          var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
+          var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
+            return parseInt(val, 10);
+          });
+          var bounds = {
+            x: boundSplit[0],
+            y: boundSplit[1],
+            width: boundSplit[2],
+            height: boundSplit[3]
+          };
+          $.publishEvent('zoomTo', self.inst_id, [bounds]);
+          console.log("Yup!");
+          $.pauseEvent(e);
         }
       });
       jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function (e) {
@@ -40001,7 +40009,13 @@ __webpack_require__(9);
 
   $.Sidebar.prototype.StorageAnnotationSave = function (annotations) {};
 
-  $.Sidebar.prototype.StorageAnnotationDelete = function (annotations) {};
+  $.Sidebar.prototype.StorageAnnotationDelete = function (annotation) {
+    jQuery('.item-' + annotation.id).remove();
+
+    if (jQuery('.annotationItem').length == 0) {
+      jQuery('#empty-alert').css('display', 'block');
+    }
+  };
 
   $.Sidebar.prototype.StorageAnnotationLoad = function (annotations) {};
 
@@ -41863,6 +41877,11 @@ __webpack_require__(42);
   $.Core.prototype.StorageAnnotationSave = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'StorageAnnotationSave', message);
+  };
+
+  $.Core.prototype.StorageAnnotationUpdate = function (message) {
+    var self = this;
+    self.callFuncInList(this.targets, 'StorageAnnotationUpdate', message);
   };
 
   $.Core.prototype.StorageAnnotationDelete = function (message) {

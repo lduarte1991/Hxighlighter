@@ -153,7 +153,7 @@ var hrange = require('../h-range.js');
         })
     };
 
-    $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem) {
+    $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem, callBack, errCallBack) {
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
@@ -168,6 +168,10 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
+                console.log("Yup");
+                if (typeof callBack === "function") {
+                    callBack(self.convertFromWebAnnotation(result));
+                }
                 //console.log('ANNOTATION_UPDATED', result)
             },
             error: function(xhr, status, error) {
@@ -177,6 +181,9 @@ var hrange = require('../h-range.js');
                     $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
                 } else {
                     $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                }
+                if (typeof errCallBack === "function") {
+                    errCallBack();
                 }
             }
         })

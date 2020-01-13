@@ -79,13 +79,42 @@
                     return ann;
                 }
             });
-            foundAnn.push(successCallback, errorCallback);
-            console.log("Deleting: ", foundAnn);
-            Hxighlighter.publishEvent('StorageAnnotationDelete', self.instance_id, foundAnn);
-            self.eventEmitter.publish('catchAnnotationDeleted.' + self.windowID, annotationID);
+            console.log(self.annotationsListCatch, foundAnn);
+
+            self.annotationsList = self.annotationsList.filter(function(oaAnn) {
+                if (oaAnn['@id'] !== annotationID) {
+                    return oaAnn;
+                }
+            });
+
+            //foundAnn.push(successCallback, errorCallback);
+            console.log("Deleting: ", annotationID, self.annotationsList, foundAnn);
+            //Hxighlighter.publishEvent('StorageAnnotationDelete', self.instance_id, foundAnn);
+            self.eventEmitter.publish('catchAnnotationDeleted.' + self.windowID, {
+                annotation: foundAnn[0],
+                success: successCallback,
+                error: errorCallback
+            });
         },
         update: function(oaAnnotation, successCallback, errorCallback){
             console.log("Calls Update in m2-hxighlighter-endpoint")
+            var self = this;
+            console.log('1. Mirador creates OA: ', oaAnnotation);
+            var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
+            console.log('2. Endpoint converts to Hxighlighter data model: ', endpointAnnotation)
+            Hxighlighter.publishEvent('StorageAnnotationUpdate', self.instance_id, [endpointAnnotation, function(data) {
+                console.log("Successful callback for Storage Annotation Save", data);
+                self.eventEmitter.publish('catchAnnotationUpdated.' + self.windowID, data);
+                console.log("Should have drawn annotation");
+                if (typeof successCallback === "function") {
+                    successCallback(data);
+                }
+            }, function() {
+                console.log("Something went terribly wrong");
+                if (typeof errorCallback === "function") {
+                    errorCallback();
+                }
+            }]);
         },
         create: function(oaAnnotation, successCallback, errorCallback){
             var self = this;
@@ -96,8 +125,11 @@
                 console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data));
                 self.eventEmitter.publish('catchAnnotationCreated.' + self.windowID, data);
                 console.log("Should have drawn annotation");
+                self.annotationsList.push(self.getAnnotationInOA(data));
+                self.annotationsListCatch.push(data);
                 if (typeof successCallback === "function") {
                     successCallback(self.getAnnotationInOA(data));
+                    
                 }
             }, function() {
                 console.log("Something went terribly wrong");
@@ -235,7 +267,7 @@
             var thumbnail_url = "";
             var uri = "";
             var svgVal = "";
-            var annotation_id = Hxighlighter.getUniqueId();
+            var annotation_id = oaAnnotation['@id'] || Hxighlighter.getUniqueId();
             var rangeVals = oaAnnotation.on.forEach(function(targetItem) {
                 uri = targetItem.full;
                 target.items.push({

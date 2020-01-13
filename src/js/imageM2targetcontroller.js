@@ -166,16 +166,16 @@ require('./storage/catchpy.js');
                     }
                 });
             });
-            self.mir.eventEmitter.subscribe('annotationEditSave.' + self.windowId, function(event, miradorAnnotation) {
-                console.log("what");
-                var endpointAnnotation = miradorAnnotation.endpoint.getAnnotationInEndpoint(miradorAnnotation)[0];
-                endpointAnnotation = endpointAnnotation || miradorAnnotation; 
-                console.log('~', endpointAnnotation, miradorAnnotation);
-                var annotation = self.convertFromOA(endpointAnnotation);
-                jQuery.each(self.viewers, function(_, viewer) {
-                    viewer.addAnnotation(annotation, true, false);
-                });
-            });
+            // self.mir.eventEmitter.subscribe('annotationEditSave.' + self.windowId, function(event, miradorAnnotation) {
+            //     console.log("what");
+            //     var endpointAnnotation = miradorAnnotation.endpoint.getAnnotationInEndpoint(miradorAnnotation)[0];
+            //     endpointAnnotation = endpointAnnotation || miradorAnnotation; 
+            //     console.log('~', endpointAnnotation, miradorAnnotation);
+            //     var annotation = self.convertFromOA(endpointAnnotation);
+            //     jQuery.each(self.viewers, function(_, viewer) {
+            //         viewer.addAnnotation(annotation, true, false);
+            //     });
+            // });
 
             // self.mir.eventEmitter.subscribe('catchAnnotationDeleted.' + self.windowId, function(event, annotationId) {
             //         $.publishEvent('StorageAnnotationDelete', self.instance_id, [{id: annotationId}, false]);
@@ -187,7 +187,25 @@ require('./storage/catchpy.js');
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.addAnnotation(catchAnnotation, false, false);
                 });
-            })
+            });
+            self.mir.eventEmitter.subscribe('catchAnnotationUpdated.' + self.windowId, function(event, catchAnnotation) {
+                console.log("annotation Updated", catchAnnotation);
+                
+                jQuery.each(self.viewers, function(_, viewer) {
+                    viewer.addAnnotation(catchAnnotation, true, false);
+                });
+            });
+
+            self.mir.eventEmitter.subscribe('catchAnnotationDeleted.' + self.windowId, function(event, response) {
+                console.log("annotation Deleted", response);
+
+                jQuery.each(self.viewers, function(_, viewer) {
+                    viewer.StorageAnnotationDelete(response['annotation']);
+                });
+                jQuery.each(self.storage, function(_, store) {
+                    store.StorageAnnotationDelete(response['annotation'], response['success'], response['error']);
+                });
+            });
 
         });
     };
@@ -297,6 +315,10 @@ require('./storage/catchpy.js');
             });
         });
 
+        $.subscribeEvent('zoomTo', self.instance_id, function(_, bounds) {
+            self.mir.eventEmitter.publish('fitBounds.' + self.windowId, bounds);
+        })
+
     };
 
     $.ImageTarget.prototype.setUpViewers = function(element) {
@@ -339,16 +361,19 @@ require('./storage/catchpy.js');
         });
     };
 
+    $.ImageTarget.prototype.StorageAnnotationUpdate = function(ann, callBack, errorCallback) {
+        var self = this;
+        console.log("Reached here");
+        jQuery.each(self.storage, function(_, store) {
+            console.log("3. Sending it to store to save", store, ann);
+            store.StorageAnnotationUpdate(ann, self.element, callBack, errorCallback);
+        });
+    };
+
     $.ImageTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
         var self = this;
-        console.log("DELETING", arguments);
-        // self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());
-        jQuery.each(self.viewers, function(_, viewer) {
-            viewer.StorageAnnotationDelete(ann);
-        });
-        jQuery.each(self.storage, function(_, store) {
-            store.StorageAnnotationDelete(ann, callBack, errorCallback);
-        });
+        console.log("DELETING", arguments, ann.id);
+        self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());  
     };
 
     $.ImageTarget.prototype.ViewerEditorClose = function(ann, is_new_annotation, hit_cancel) {

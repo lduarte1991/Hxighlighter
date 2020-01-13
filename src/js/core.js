@@ -98,6 +98,11 @@
         self.callFuncInList(this.targets, 'StorageAnnotationSave', message);
     };
 
+    $.Core.prototype.StorageAnnotationUpdate = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'StorageAnnotationUpdate', message);
+    };
+
     $.Core.prototype.StorageAnnotationDelete = function(message) {
         var self = this;
         self.callFuncInList(this.targets, 'StorageAnnotationDelete', message);
