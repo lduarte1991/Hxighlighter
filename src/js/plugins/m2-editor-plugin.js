@@ -40,6 +40,9 @@
       var tags = [];
       this.editorContainer = jQuery(selector)
         .prepend(this.editorMarkup);
+      
+      window.jQuery(selector).closest('.ui-draggable').draggable({'handle': '.annotation-editor-nav-bar', 'containment': '.mirador-viewer'});
+
       this.selector = jQuery(selector);
       if (!jQuery.isEmptyObject(_this.annotation)) {
         if (jQuery.isArray(_this.annotation.resource)) {
@@ -55,7 +58,14 @@
         }
       }
       this.annotation.annotationText = annoText;
-      Hxighlighter.publishEvent('editorShown', '', [jQuery(selector), this.annotation]);
+      window.jQuery('.annotation-editor-nav-bar .cancel').click(function() { setTimeout(function() { window.jQuery('.annotation-editor .button-container .cancel').click(); }, 250)});
+      if (this.annotation.endpoint) {
+        var hx_annotation = this.annotation.endpoint.getAnnotationInEndpoint(this.annotation);
+        Hxighlighter.publishEvent('editorShown', '', [jQuery(selector), hx_annotation]);
+      } else {
+        Hxighlighter.publishEvent('editorShown', '', [jQuery(selector), this.annotation]);
+      }
+      
     },
 
     isDirty: function() {
@@ -285,6 +295,7 @@
     },
 
     editorTemplate: $.Handlebars.compile([
+      '<nav class="annotation-editor-nav-bar"><a href="#cancel" class="cancel"><i class="fa fa-times-circle-o fa-fw"></i></a></nav>',
       '<textarea id="annotation-text-field"></textarea>',
       '<div class="plugin-area"></div>'
     ].join(''))

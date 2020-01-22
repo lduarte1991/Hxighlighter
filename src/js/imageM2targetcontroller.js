@@ -13,7 +13,9 @@ require('./plugins/hx-simpletags-plugin.js');
 require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/m2-editor-plugin.js');
+require('./plugins/m2-viewer-plugin.js');
 require('./plugins/m2-hxighlighter-endpoint.js');
+require('./plugins/hx-reply.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -29,7 +31,7 @@ require('./storage/catchpy.js');
         this.options = options;
         this.instance_id = inst_id;
         this.guid = undefined;
-        console.log("should be loading image");
+        // console.log("should be loading image");
         this.annotation_selector = 'hx-annotation-hl';
         this.init();
     };
@@ -44,7 +46,7 @@ require('./storage/catchpy.js');
         this.setUpListeners();
 
         if (this.options.method == "manifest") {
-            console.log("Loading manifest...", this.options.manifest_url)
+            // console.log("Loading manifest...", this.options.manifest_url)
             this.createImageSlotFromManifest(this.options.manifest_url);
         }
 
@@ -110,12 +112,13 @@ require('./storage/catchpy.js');
                 "fullScreen" : false,
                 "displayLayout": false,
                 "annotationEditorVisible": false,
-                
+
             }],
             'annotationBodyEditor': {
               'module': 'SummernoteAnnotationBodyEditor',
               'options': {
                 config: {
+                    dialogInBody: false,
                 }
               }
             },
@@ -133,6 +136,8 @@ require('./storage/catchpy.js');
                     context_id: self.options.context_id,
                     instance_id: self.instance_id,
                     manifest_url: self.options.manifest_url,
+                    instructors: self.options.instructors,
+                    common_name: self.options.common_instructor_name
                 }
             }
             // 'annotationEndpoint': {
@@ -154,10 +159,33 @@ require('./storage/catchpy.js');
 
         self.mir.eventEmitter.subscribe('windowAdded', function(event, windowId, slotAddress) {
             self.windowId = windowId.id;
+            self.mir.eventEmitter.subscribe('annotationsRendered.' + self.windowId, function(e) {
+                var overlay = window.paper.projects[0].getItem();
+                if (!overlay) {
+                    return;
+                }
+                var drawnPaths = overlay._children;
+                var m2area = self.mir.viewer.workspace.slots[0].window;
+                var annotationsList = m2area.annotationsList.map(function(x) {
+                    return m2area.endpoint.getAnnotationInEndpoint(x);
+                });
+                jQuery.each(drawnPaths, function(_, path) {
+                    jQuery.each(annotationsList, function(_, ann) {
+                        if (ann.svg.indexOf(path._name) > -1) {
+                            var tag = ann.tags.pop();
+                            ann.tags.push(tag);
+                            $.publishEvent('changeColorOfElement', self.instance_id, [tag, function(color) {
+                                if (color) {
+                                    path.strokeColor = color;
+                                }
+                            }])
+                        }
+                    });
+                });
+            });
             self.mir.eventEmitter.subscribe('catchAnnotationsLoaded.' + self.windowId , function (event) {
                 var miradorAnnotations = Array.from(arguments);
                 miradorAnnotations.shift();
-                console.log(miradorAnnotations);
                 jQuery.each(self.viewers, function(_, viewer) {
                     if (typeof(viewer.StorageAnnotationLoad) === "function") {
                         jQuery.each(miradorAnnotations, function(idx, hxAnnotation) {
@@ -182,14 +210,14 @@ require('./storage/catchpy.js');
             // });
 
             self.mir.eventEmitter.subscribe('catchAnnotationCreated.' + self.windowId, function(event, catchAnnotation) {
-                console.log("annotation Created", catchAnnotation);
+                // console.log("annotation Created", catchAnnotation);
                 
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.addAnnotation(catchAnnotation, false, false);
                 });
             });
             self.mir.eventEmitter.subscribe('catchAnnotationUpdated.' + self.windowId, function(event, catchAnnotation) {
-                console.log("annotation Updated", catchAnnotation);
+                // console.log("annotation Updated", catchAnnotation);
                 
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.addAnnotation(catchAnnotation, true, false);
@@ -197,7 +225,7 @@ require('./storage/catchpy.js');
             });
 
             self.mir.eventEmitter.subscribe('catchAnnotationDeleted.' + self.windowId, function(event, response) {
-                console.log("annotation Deleted", response);
+                // console.log("annotation Deleted", response);
 
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.StorageAnnotationDelete(response['annotation']);
@@ -207,12 +235,18 @@ require('./storage/catchpy.js');
                 });
             });
 
+            // self.mir.eventEmitter.subscribe('annotationsRendered.' + self.windowId, function(e) {
+            //     var annotations = self.mir.viewer.workspace.slots[0].window.annotationsList;
+            //     if (annotations !== undefined && annotations !== null && annotations.length > 0) {
+            //         window.paper.
+            //     };
+            // });
+
         });
     };
 
     $.ImageTarget.prototype.convertFromOA = function(miradorAnnotation) {
         var self = this;
-        console.log(self.mir, miradorAnnotation);
         var annotation = {
             annotationText: [miradorAnnotation.text],
             created: miradorAnnotation.created,
@@ -274,14 +308,19 @@ require('./storage/catchpy.js');
                 jQuery(this).addClass('on');
                 jQuery('.sr-alert').attr('aria-live', 'polite');
             }
-        })
+        });
+
+        jQuery('body').on('click', '.annotation-display', function(event) {
+            var annotation_id = event.currentTarget.getAttribute('data-anno-id');
+            jQuery('.side.item-' + annotation_id)[0].scrollIntoView();
+        });
         
         // once the target has been loaded, the selector can be instantiated
         $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
             // console.log("LOADING TARGET");
             //annotation element gets data that may be needed later
             self.element = element;
-            console.log("Target loaded");
+            // console.log("Target loaded");
             // finish setting up selectors
             // self.setUpDrawers(self.element[0]);
 
@@ -295,7 +334,7 @@ require('./storage/catchpy.js');
             self.setUpStorage(self.element[0]);
 
             // if (!self.options.viewerOptions.readonly) {
-            //     self.setUpSelectors(self.element[0]);
+            //     self.setUpSelectorsƒ(self.element[0]);
             // }
         });
 
@@ -315,9 +354,44 @@ require('./storage/catchpy.js');
             });
         });
 
-        $.subscribeEvent('zoomTo', self.instance_id, function(_, bounds) {
+        $.subscribeEvent('zoomTo', self.instance_id, function(_, bounds, ann) {
             self.mir.eventEmitter.publish('fitBounds.' + self.windowId, bounds);
-        })
+            var overlay = window.paper.projects[0].getItem();
+            if (!overlay) {
+                return;
+            }
+            var drawnPaths = overlay._children;
+            jQuery.each(drawnPaths, function(_, path) {
+                if (ann.svg.indexOf(path._name) > -1) {
+                    jQuery(path).animate({
+                        strokeWidth: "10px"
+                    }, 600).animate({
+                        strokeWidth: "2px"
+                    }, 600)
+                }
+            });
+        });
+
+        $.subscribeEvent('GetSpecificAnnotationData', self.windowId, function(_, id, callBack) {
+            // console.log(self.mir.viewer.workspace.slots[0].window.endpoint);
+            callBack(self.mir.viewer.workspace.slots[0].window.endpoint.annotationsListCatch.find(function(ann) {
+                return ann['id'] === id;
+            }));
+        });
+
+
+        // $.subscribeEvent('changeDrawnColor', self.inst_id, function(_, ann, color) {
+        //     console.log(ann, color);
+        //     var path_id_regex = /id="(.*?)"/g;
+        //     let results = [...ann.svg.matchAll(path_id_regex)];
+        //     jQuery.each(results, function(_, path_id) {
+        //         jQuery.each(window.paper.projects[0].getItem()._children, function(__, drawnShape) {
+        //             if (drawnShape._name === path_id) {
+        //                 console.log(drawnShape);
+        //             }
+        //         })
+        //     });
+        // })
 
     };
 
@@ -356,34 +430,34 @@ require('./storage/catchpy.js');
     $.ImageTarget.prototype.StorageAnnotationSave = function(ann, callBack, errorCallback) {
         var self = this;
         jQuery.each(self.storage, function(_, store) {
-            console.log("3. Sending it to store to save", store, ann);
+            // console.log("3. Sending it to store to save", store, ann);
             store.StorageAnnotationSave(ann, self.element, false, callBack, errorCallback);
         });
     };
 
     $.ImageTarget.prototype.StorageAnnotationUpdate = function(ann, callBack, errorCallback) {
         var self = this;
-        console.log("Reached here");
+        //console.log("Reached here");
         jQuery.each(self.storage, function(_, store) {
-            console.log("3. Sending it to store to save", store, ann);
+            // console.log("3. Sending it to store to save", store, ann);
             store.StorageAnnotationUpdate(ann, self.element, callBack, errorCallback);
         });
     };
 
     $.ImageTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
         var self = this;
-        console.log("DELETING", arguments, ann.id);
+        // console.log("DELETING", arguments, ann.id);
         self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());  
     };
 
     $.ImageTarget.prototype.ViewerEditorClose = function(ann, is_new_annotation, hit_cancel) {
         var self = this;
-        console.log("EDITING", arguments);
+        // console.log("EDITING", arguments);
 
         if (!hit_cancel && !is_new_annotation) {
             var annotation = ann;
-            console.log("Should update", ann, self.mir);
-            
+            // console.log("Should update", ann, self.mir);
+            ann = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
             var annotationInOA = self.mir.viewer.workspace.slots[0].window.annotationsList.filter(function(mirAnn) {
                 if (ann.id.toString() === mirAnn["@id"].toString()) {
                     return mirAnn;
@@ -429,9 +503,31 @@ require('./storage/catchpy.js');
      */
     $.ImageTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun) {
         var self = this;
+        if (self.windowId && search_options.media !== "Annotation") {
+            self.mir.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
+                windowId: self.windowId,
+                annotationsList: []
+            });
+        }
+        
         jQuery.each(self.storage, function(_, store) {
             store.search(search_options, callback, errfun);
         });
+    };
+
+    $.ImageTarget.prototype.StorageAnnotationLoad = function(annotations, converter, undrawOld) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            if (typeof(viewer.StorageAnnotationLoad) === "function") {
+                viewer.StorageAnnotationLoad(annotations);
+            }
+        });
+
+        annotations.forEach(function(ann) {
+            var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
+            $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
+        });
+        self.mir.viewer.workspace.slots[0].window.endpoint.drawFromSearch(annotations, converter);
     };
 
     $.ImageTarget.prototype.setUpStorage = function(element, options) {

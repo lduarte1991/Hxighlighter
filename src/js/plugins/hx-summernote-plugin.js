@@ -19,7 +19,7 @@ require('./hx-summernote-plugin.css');
         var maxLength = 1000;
         // console.log("SummernoteRichText Options Sent:", options);
         this.options = options;
-        this.summernoteOpts = {
+        this.summernoteOpts = jQuery.extend({
             height: 150,
             focus: true,
             width: 435,
@@ -27,7 +27,6 @@ require('./hx-summernote-plugin.css');
             maximumImageFileSize: 262144,
             maxHeight: 400,
             minHeight: 100,
-            minwidth: 435,
             maxTextLength: maxLength,
             dialogsInBody: true,
             disableResizeEditor: true,
@@ -77,7 +76,7 @@ require('./hx-summernote-plugin.css');
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['insert', ['table', 'link', 'hr']],
             ],
-        };
+        }, this.options);
         // console.log("After init options", this.options);
         this.init();
         this.instanceID = instanceID;
@@ -106,8 +105,11 @@ require('./hx-summernote-plugin.css');
 
         // adds the summernote WYSIWIG to the editor to the selector's location
         self.elementObj = element.find(selector);
-        self.options.width = self.elementObj.parent().width();
-        // console.log(self.options);
+        if(self.elementObj.closest('.side').length > 0) {
+            self.summernoteOpts.width = self.elementObj.parent().width();
+        } else {
+            self.summernoteOpts.width = 435;
+        }
         self.elementObj.summernote(self.summernoteOpts);
 
         // removes summernote's ability to tab within the editor so users can tab through items

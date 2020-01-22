@@ -10,7 +10,6 @@ var hrange = require('../h-range.js');
         //console.log(this.url_base);
     };
 
-
     $.CatchPy.prototype.onLoad = function(element, opts) {
         var self = this;
         self.element = element;
@@ -53,6 +52,7 @@ var hrange = require('../h-range.js');
             },
             success: function(result) {
                 $.totalAnnotations = result.total;
+                // console.log('Result: ', result)
                 callBack(result, self.convertFromWebAnnotation.bind(self));
             },
             error: function(xhr, status, error) {
@@ -86,7 +86,7 @@ var hrange = require('../h-range.js');
             return;
         }
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
-        console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
+        // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
@@ -168,7 +168,7 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                console.log("Yup");
+                // console.log("Yup");
                 if (typeof callBack === "function") {
                     callBack(self.convertFromWebAnnotation(result));
                 }
@@ -367,7 +367,7 @@ var hrange = require('../h-range.js');
                 found = item['type'];
             }
         });
-        console.log("FOUND IT", found);
+        // console.log("FOUND IT", found);
         return found;
     };
 
@@ -392,7 +392,7 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element, media) {
         var self = this;
         try {
-            console.log(media);
+            // console.log(media);
             if (media.toLowerCase() === "text") {
                 var ranges = [];
                 var xpathRanges = [];
@@ -456,7 +456,7 @@ var hrange = require('../h-range.js');
                     ranges.push(rangeFound)
                 }
             } else if (media.toLowerCase() == "image") {
-                console.log(webAnn['target'])
+                // console.log(webAnn['target'])
                 return webAnn['target']['items'];
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {

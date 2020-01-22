@@ -32,6 +32,20 @@
                     'admin': [this.userid]
                 }
             };
+            this.setUpListeners();
+        },
+        setUpListeners: function() {
+            var self = this;
+            Hxighlighter.subscribeEvent('convertToEndpoint', '', function(_, oAnnotation, callBack) {
+                var found = self.annotationsListCatch.find(function(ann) {
+                    return oAnnotation['@id'] === ann.id;
+                })
+                if (found) {
+                    return callBack(found);
+                } else {
+                    callBack(self.getAnnotationInEndpoint(oAnnotation));
+                }
+            });
         },
         set: function(prop, value, options){
             if (options) {
@@ -50,18 +64,7 @@
                 if (typeof successCallback === "function") {
                     successCallback(result);
                 } else {
-                    self.annotationsListCatch = result.rows;
-                    console.log(result.rows);
-                    jQuery.each(self.annotationsListCatch, function(index, value) {
-                        self.annotationsList.push(self.getAnnotationInOA(value));
-                    });
-                    console.log(self.annotationsList);
-                    self.dfd.resolve(true);
-                    self.eventEmitter.publish('catchAnnotationsLoaded.' + self.windowID, self.annotationsListCatch.map(converter));
-                    self.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
-                        windowId: self.windowID,
-                        annotationsList: self.annotationsList,
-                    });
+                    self.drawFromSearch(result.rows, converter);
                 }
                 
             }, function() {
@@ -79,7 +82,7 @@
                     return ann;
                 }
             });
-            console.log(self.annotationsListCatch, foundAnn);
+            // console.log(self.annotationsListCatch, foundAnn);
 
             self.annotationsList = self.annotationsList.filter(function(oaAnn) {
                 if (oaAnn['@id'] !== annotationID) {
@@ -88,7 +91,7 @@
             });
 
             //foundAnn.push(successCallback, errorCallback);
-            console.log("Deleting: ", annotationID, self.annotationsList, foundAnn);
+            // console.log("Deleting: ", annotationID, self.annotationsList, foundAnn);
             //Hxighlighter.publishEvent('StorageAnnotationDelete', self.instance_id, foundAnn);
             self.eventEmitter.publish('catchAnnotationDeleted.' + self.windowID, {
                 annotation: foundAnn[0],
@@ -97,20 +100,20 @@
             });
         },
         update: function(oaAnnotation, successCallback, errorCallback){
-            console.log("Calls Update in m2-hxighlighter-endpoint")
+            // console.log("Calls Update in m2-hxighlighter-endpoint")
             var self = this;
-            console.log('1. Mirador creates OA: ', oaAnnotation);
+            // console.log('1. Mirador creates OA: ', oaAnnotation);
             var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
-            console.log('2. Endpoint converts to Hxighlighter data model: ', endpointAnnotation)
+            // console.log('2. Endpoint converts to Hxighlighter data model: ', endpointAnnotation)
             Hxighlighter.publishEvent('StorageAnnotationUpdate', self.instance_id, [endpointAnnotation, function(data) {
-                console.log("Successful callback for Storage Annotation Save", data);
+                // console.log("Successful callback for Storage Annotation Save", data);
                 self.eventEmitter.publish('catchAnnotationUpdated.' + self.windowID, data);
-                console.log("Should have drawn annotation");
+                // console.log("Should have drawn annotation");
                 if (typeof successCallback === "function") {
                     successCallback(data);
                 }
             }, function() {
-                console.log("Something went terribly wrong");
+                // console.log("Something went terribly wrong");
                 if (typeof errorCallback === "function") {
                     errorCallback();
                 }
@@ -118,13 +121,13 @@
         },
         create: function(oaAnnotation, successCallback, errorCallback){
             var self = this;
-            console.log('1. Mirador creates OA: ', oaAnnotation);
+            // console.log('1. Mirador creates OA: ', oaAnnotation);
             var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
-            console.log("2. Endpoint converts to Hxighlighter data model", endpointAnnotation);
+            // console.log("2. Endpoint converts to Hxighlighter data model", endpointAnnotation);
             Hxighlighter.publishEvent('StorageAnnotationSave', self.instance_id, [endpointAnnotation, function(data) {
-                console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data));
+                // console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data));
                 self.eventEmitter.publish('catchAnnotationCreated.' + self.windowID, data);
-                console.log("Should have drawn annotation");
+                // console.log("Should have drawn annotation");
                 self.annotationsList.push(self.getAnnotationInOA(data));
                 self.annotationsListCatch.push(data);
                 if (typeof successCallback === "function") {
@@ -192,11 +195,10 @@
                 var default_value = "";
                 var item_value = "";
                 jQuery.each(targetItem[0].selector.items, function(idx, choice) {
-                    console.log(choice);
                     if (choice.type === "FragmentSelector") {
                         default_value = choice.value;
                     } else if (choice.type === "SvgSelector") {
-                        item_value = choice.value;
+                        item_value = choice.value.replace('&quot;strokeWidth&quot;:1,&quot;', '&quot;strokeWidth&quot;:2.5,&quot;');
                     } else if (choice["@type"] === "oa:SpecificResource") {
                         default_value = choice.selector.default.value;
                         item_value = choice.selector.item.value;
@@ -252,7 +254,6 @@
             var self = this;
             var nums = fragmentSelector.replace('xywh=', '');
             split_nums = nums.split(',');
-            console.log(self.imagesList, uri);
             var canvas = self.imagesList[$.getImageIndexById(self.imagesList, uri)];
             var imageUrl = $.getThumbnailForCanvas(canvas, 300);
             imageUrl = imageUrl.replace('full', split_nums[0] +','+ split_nums[1] +','+ split_nums[2] +','+ split_nums[3]);
@@ -288,7 +289,7 @@
                     format: "image/jpg",
                     source: thumbnail_url
                 });
-                console.log("Found: " + target.items)
+                // console.log("Found: " + target.items)
             });
 
             var text = [];
@@ -324,8 +325,23 @@
                 svg: svgVal,
                 totalReplies: 0
             }
-            console.log("Should return following:", annotation);
+            // console.log("Should return following:", annotation);
             return annotation;
         },
+        drawFromSearch: function(result, converter) {
+            var self = this;
+            self.annotationsListCatch = [];
+            self.annotationsList = [];
+            jQuery.each(result, function(index, value) {
+                self.annotationsList.push(self.getAnnotationInOA(value));
+            });
+            self.annotationsListCatch = result.map(converter);
+            self.dfd.resolve(true);
+            self.eventEmitter.publish('catchAnnotationsLoaded.' + self.windowID, self.annotationsListCatch);
+            self.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
+                windowId: self.windowID,
+                annotationsList: self.annotationsList,
+            });
+        }
     }
 }(Mirador));

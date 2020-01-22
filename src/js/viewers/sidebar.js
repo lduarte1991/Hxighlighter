@@ -116,7 +116,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             var doit = self.latestOpenedTabs;
             self.latestOpenedTabs = [];
             jQuery.each(doit, function(_, tab) {
-                console.log(tab);
+                // console.log(tab);
                 jQuery('#' + tab).trigger('click');
             });
             
@@ -214,11 +214,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             jQuery('.annotationsHolder').removeClass('search-opened');
                 jQuery('.search-bar.search-toggle').hide();
             var search_options = {
-                type: self.media
+                type: self.options.mediaType
             }
             
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
-
+            // console.log('filter options', filteroptions)
             if (this.id === "search") {
                 jQuery('.annotationsHolder').addClass('search-opened');
                 jQuery('.annotation-filter-buttons').hide();
@@ -243,6 +243,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             } else {
                 possible_exclude = possible_exclude.concat(self.options.instructors);
             }
+            // console.log(possible_include, possible_exclude, self.options, self.options.instructors);
             if (filteroptions.indexOf('peer') > -1) {
                 if (possible_exclude.length > 0) {
                     search_options['exclude_userid'] = possible_exclude
@@ -350,7 +351,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         var self = this;
 
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
-            console.log("6. Got Annotation in Viewer", annotation, self.options);
+            // console.log("6. Got Annotation in Viewer", annotation, self.options);
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
             if (filteroptions.indexOf('mine') > -1  || (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1))) {
                 self.addAnnotation(annotation, updating, false);
@@ -377,8 +378,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         });
 
         if(self.options.mediaType == "image") {
-            $.subscribeEvent('tryLazyLoad', self.instance_id, function() {
-                self.lazyLoadImages();
+            $.subscribeEvent('tryLazyLoad', self.instance_id, function(_, scrollElement) {
+                self.lazyLoadImages(scrollElement);
             });
 
             jQuery('.annotationsHolder.side').scroll(function() {  
@@ -387,17 +388,17 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         }
     };
 
-    $.Sidebar.prototype.lazyLoadImages = function() {
+    $.Sidebar.prototype.lazyLoadImages = function(scrollEl) {
         var self = this;
-        var thumbnails = Array.from(document.querySelectorAll('.side.annotationsHolder img.annotation-thumbnail'));
+        var scrolly = scrollEl || '.side.annotationsHolder';
+        var thumbnails = Array.from(document.querySelectorAll(scrolly + ' img.annotation-thumbnail'));
         var unloaded_images = thumbnails.filter(function(x) {
             if (!x.dataset['loaded'] || x.dataset['loaded'] == "false") {
                 return true;
             }
         });
-        var scrollableViewer = jQuery('.side.annotationsHolder')[0];
+        var scrollableViewer = jQuery(scrolly)[0];
         var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight;
-        
         //console.log(currentViewPortLimit);
         unloaded_images.forEach(function(img) {
             if (img.getBoundingClientRect().y <= currentViewPortLimit) {    
@@ -412,6 +413,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     // } else {
                     //     img.nextElementSibling.style.left = "";
                     // }
+                    img.style = "display: inline-block;"
                     if (img.nextElementSibling.tagName.toLowerCase() === "svg") {
                         var w = img.getBoundingClientRect().width;
                         var h = img.getBoundingClientRect().height;
@@ -453,13 +455,13 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
     $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
         var self = this;
-        console.log("7. Should add Annotation to viewer", annotation)
+        // console.log("7. Should add Annotation to viewer", annotation)
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
             ann.index = jQuery('.ann-item').length;
             ann.instructor_ids = self.options.instructors;
             ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
-            console.log('ann', ann);
+            // console.log('ann', ann);
             var annHTML = self.options.TEMPLATES.annotationItem(ann);
             if (self.options.viewer_options.readonly) {
                 annHTML = annHTML.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '')
@@ -479,7 +481,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 content: 'Would you like to delete your annotation? This is permanent.',
                 buttons: {
                     confirm: function() {
-                        console.log("I got to the delete from sidebar.")
+                        // console.log("I got to the delete from sidebar.")
                         $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
                     },
                     cancel: function () {
@@ -513,8 +515,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         width: boundSplit[2],
                         height: boundSplit[3]
                     };
-                    $.publishEvent('zoomTo', self.inst_id, [bounds]);
-                    console.log("Yup!");
+                    $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+                    // console.log("Yup!");
                     $.pauseEvent(e);
                 }
             });
@@ -570,6 +572,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     };
 
     $.Sidebar.prototype.search = function(options) {
+        // console.log('sidebar search', options);
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
             jQuery('.annotationsHolder.side').html('');

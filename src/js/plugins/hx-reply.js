@@ -29,6 +29,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }, options);
         this.init();
         this.instanceID = instanceID;
+        this.jq_backup = jQuery;
         return this;
     };
 
@@ -51,14 +52,13 @@ import 'jquery-confirm/css/jquery-confirm.css'
      */
     $.Reply.prototype.addWYSIWYG = function(element, selector) {
         var self = this;
-        if (this.elementObj != undefined) {
+        if (self.elementObj != undefined) {
             return;
         }
-
         // adds the summernote WYSIWIG to the editor to the selector's location
-        this.elementObj = element.find(selector);
-        var newOptions = jQuery.extend({}, this.options, {'width': element.outerWidth()-24});
-        this.elementObj.summernote(newOptions);
+        self.elementObj = self.jq_backup(element).find(selector);
+        var newOptions = jQuery.extend({}, self.options, {'width': element.outerWidth()-24});
+        self.elementObj.summernote(newOptions);
 
         // removes summernote's ability to tab within the editor so users can tab through items
         delete jQuery.summernote.options.keyMap.pc.TAB;
@@ -86,9 +86,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
      * @param      {String}  selector  The selector containing the area in the editor where to insert the WYSIWYG
      */
     $.Reply.prototype.destroy = function(element, selector) {
-        console.log(jQuery('.summernote').each(function() {
+        jQuery('.summernote').each(function() {
             jQuery(this).summernote('destroy');
-        }));
+        });
         if (this.elementObj) {
             this.elementObj.val('');
             this.elementObj.summernote('destroy');
@@ -106,7 +106,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
         var self = this;
 
         $.subscribeEvent('displayHidden', self.instanceID, function() {
-            console.log('reached here, but nothing to destroy');
             self.destroy();
         });
     };
@@ -131,8 +130,16 @@ import 'jquery-confirm/css/jquery-confirm.css'
         var self = this;
         if (Array.isArray(annotations)) {
             jQuery.each(annotations, function(_, annotation) {
-                var ann_display = viewer.find('.item-'+annotation.id);
-                self.annotationShown(viewer.find('.item-'+annotation.id), annotation, false);
+                if (typeof(annotation.id) === "undefined") {
+                    $.publishEvent('convertToEndpoint', self.instanceID, [annotation, function(ann) {
+                        var ann_display = viewer.find('.item-'+ann.id);
+                        self.annotationShown(viewer.find('.item-'+ann.id), ann, false);
+                    }.bind(self)]);
+                } else {
+                    var ann_display = viewer.find('.item-'+annotation.id);
+                    self.annotationShown(viewer.find('.item-'+annotation.id), annotation, false);
+                }
+                
             });
         } else {
             self.annotationShown(viewer, annotations, true);
@@ -210,9 +217,11 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 $.publishEvent('StorageAnnotationSave', self.instanceID, [reply, false]);
                 annotation.totalReplies++;
                 (typeof(annotation.replies) == "undefined")  ? annotation.replies = [reply] : annotation.replies.push(reply);
-                annotation._local.highlights.forEach(function(high) {
-                    jQuery(high).data('annotation', annotation);
-                });
+                if (annotation._local && annotation._local.highlighter) {
+                    annotation._local.highlights.forEach(function(high) {
+                        jQuery(high).data('annotation', annotation);
+                    });
+                }
                 self.addReplyToViewer(viewer, reply, prefix, annotation);
                 self.destroy();
                 if (prefix === "other-") {
@@ -267,29 +276,32 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }, function(results, converter) {
             jQuery('.loading-obj').remove();
             results.rows.reverse().forEach(function(reply) {
-                var rep = converter(reply)
+                var rep = converter(reply);
                 self.addReplyToViewer(viewer, rep, prefix, annotation);
                 annotation.replies ? (annotation.replies.push(rep)) : (annotation.replies = [rep])
             });
             if (annotation.totalReplies !== results.rows.length) {
                 annotation.totalReplies = results.rows.length;
             }
-            annotation._local.highlights.forEach(function(high) {
-                jQuery(high).data('annotation', annotation);
-            });
+            if (annotation._local && annotation._local.highlighter) {
+                annotation._local.highlights.forEach(function(high) {
+                    jQuery(high).data('annotation', annotation);
+                });
+            }
         }, function() {
-            
+            console.log("Didn't work exactly");
         }])
     };
 
     $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix, annotation) {
         var self = this;
-        console.log(annotation, self.options);
         var delete_option = '';
+        var display_name = reply.creator.name;
         if ((self.options.HxPermissions && self.options.HxPermissions.has_staff_permissions) || (annotation.permissions && annotation.permissions.can_delete && annotation.permissions.can_delete.indexOf(self.options.user_id) > -1)) {
             delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
+            display_name = self.options.common_instructor_name;
         }
-        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+        jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + display_name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
         jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
             'title': 'Delete Reply?',
             'content': 'Would you like to delete your reply? This is permanent.',
