@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Wednesday, January 22nd, 2020, 4:15:54 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Wednesday, January 22nd, 2020, 4:33:34 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39750,8 +39750,7 @@ __webpack_require__(9);
       }
     });
     var scrollableViewer = jQuery(scrolly)[0];
-    var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight;
-    console.log(scrollableViewer, currentViewPortLimit, unloaded_images); //console.log(currentViewPortLimit);
+    var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight; //console.log(currentViewPortLimit);
 
     unloaded_images.forEach(function (img) {
       if (img.getBoundingClientRect().y <= currentViewPortLimit) {
@@ -41148,7 +41147,6 @@ __webpack_require__(33);
   $.DropdownTags.prototype.saving = function (annotation) {
     var self = this;
     annotation.tags = self.returnValue() || [];
-    console.log('is this right?', annotation);
     return annotation;
   };
   /**
@@ -41191,8 +41189,6 @@ __webpack_require__(33);
         });
       });
     }
-
-    console.log('whatthe', annotation);
   };
 
   $.DropdownTags.prototype.destroy = function () {
@@ -42540,7 +42536,6 @@ __webpack_require__(41);
 
   $.TextTarget.prototype.StorageAnnotationSearch = function (search_options, callback, errfun) {
     var self = this;
-    console.log(search_options);
     jQuery.each(self.storage, function (_, store) {
       store.search(search_options, callback, errfun);
     });

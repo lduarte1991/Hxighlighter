@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Wednesday, January 22nd, 2020, 4:15:54 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Wednesday, January 22nd, 2020, 4:33:34 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39750,8 +39750,7 @@ __webpack_require__(9);
       }
     });
     var scrollableViewer = jQuery(scrolly)[0];
-    var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight;
-    console.log(scrollableViewer, currentViewPortLimit, unloaded_images); //console.log(currentViewPortLimit);
+    var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight; //console.log(currentViewPortLimit);
 
     unloaded_images.forEach(function (img) {
       if (img.getBoundingClientRect().y <= currentViewPortLimit) {
@@ -41148,7 +41147,6 @@ __webpack_require__(33);
   $.DropdownTags.prototype.saving = function (annotation) {
     var self = this;
     annotation.tags = self.returnValue() || [];
-    console.log('is this right?', annotation);
     return annotation;
   };
   /**
@@ -41191,8 +41189,6 @@ __webpack_require__(33);
         });
       });
     }
-
-    console.log('whatthe', annotation);
   };
 
   $.DropdownTags.prototype.destroy = function () {
@@ -42041,12 +42037,10 @@ __webpack_require__(46);
 
     if (self.elementObj != undefined) {
       return;
-    }
+    } // adds the summernote WYSIWIG to the editor to the selector's location
 
-    console.log(self, jQuery.summernote); // adds the summernote WYSIWIG to the editor to the selector's location
 
     self.elementObj = self.jq_backup(element).find(selector);
-    console.log(self.elementObj.summernote, selector);
     var newOptions = jQuery.extend({}, self.options, {
       'width': element.outerWidth() - 24
     });
@@ -42081,9 +42075,9 @@ __webpack_require__(46);
 
 
   $.Reply.prototype.destroy = function (element, selector) {
-    console.log(jQuery('.summernote').each(function () {
+    jQuery('.summernote').each(function () {
       jQuery(this).summernote('destroy');
-    }));
+    });
 
     if (this.elementObj) {
       this.elementObj.val('');
@@ -42100,7 +42094,6 @@ __webpack_require__(46);
   $.Reply.prototype.annotationListeners = function () {
     var self = this;
     $.subscribeEvent('displayHidden', self.instanceID, function () {
-      console.log('reached here, but nothing to destroy');
       self.destroy();
     });
   };
@@ -42146,7 +42139,6 @@ __webpack_require__(46);
   $.Reply.prototype.annotationShown = function (viewer, annotation, isSidebar) {
     var self = this;
     var prefix = isSidebar ? "sidebar-" : "other-";
-    console.log(annotation, viewer);
     jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button aria-label="Close Reply List" title="Close Reply List" class="close-list-reply"><span class="fa fa-times-circle"></span></button><button aria-label="Toggle Visual Order of Replies" title="Reverse Replies Order" class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-' + annotation.id + '"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-' + annotation.id + '">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="' + prefix + 'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-' + annotation.id + '" style="display:none;"><textarea id="' + prefix + 'reply-textarea-' + annotation.id + '"></textarea><button id="' + prefix + 'save-reply-' + annotation.id + '">Save</button><button id="' + prefix + 'cancel-reply-' + annotation.id + '">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-' + annotation.id + '">Reply to Annotation</button></div>');
 
     if ('totalReplies' in annotation && annotation.totalReplies > 0) {
@@ -42928,7 +42920,6 @@ __webpack_require__(41);
 
   $.TextTarget.prototype.StorageAnnotationSearch = function (search_options, callback, errfun) {
     var self = this;
-    console.log(search_options);
     jQuery.each(self.storage, function (_, store) {
       store.search(search_options, callback, errfun);
     });
@@ -44862,8 +44853,8 @@ var hrange = __webpack_require__(4);
         'x-annotator-auth-token': self.options.storageOptions.token
       },
       success: function success(result) {
-        $.totalAnnotations = result.total;
-        console.log('Result: ', result);
+        $.totalAnnotations = result.total; // console.log('Result: ', result)
+
         callBack(result, self.convertFromWebAnnotation.bind(self));
       },
       error: function error(xhr, status, _error) {
