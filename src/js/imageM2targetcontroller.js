@@ -93,7 +93,7 @@ require('./storage/catchpy.js');
             "mainMenuSettings" : {
                 'show' : false
             },
-            buildPath: "dist/",
+            buildPath: self.options.mirador_build_path,
             "layout" : "1x1",
             "saveSession" : false,
             "data": [{'manifestUri': self.options.manifest_url, 'location': "Harvard University"}],
