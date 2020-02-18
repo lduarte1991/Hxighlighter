@@ -104,7 +104,6 @@ require('./storage/catchpy.js');
             "windowObjects": [{
                 "loadedManifest": self.options.manifest_url,
                 "viewType" : "ImageView",
-                "canvasID" : self.options.object_id,
                 "annotationLayer" : true,
                 "annotationCreation" : true,
                 "sidePanel" : false,
@@ -235,6 +234,43 @@ require('./storage/catchpy.js');
                 });
             });
 
+            self.mir.eventEmitter.subscribe('imageRectangleUpdated', function(event, options){
+                self.imageLimits = {}
+                jQuery.each(self.mir.saveController.slots[0].window.imagesList, function(index, value) {
+                    if (value["@id"] == self.mir.saveController.slots[0].window.canvasID) {
+                        self.imageLimits = {
+                            'height': value.height,
+                            'width': value.width
+                        }
+                    }
+                });
+                var xChecked = options.osdBounds.x;
+                var yChecked = options.osdBounds.y;
+                var heightChecked = options.osdBounds.height;
+                var widthChecked = options.osdBounds.width;
+                if (xChecked < 0) {
+                    xChecked = 0;
+                }
+                if(heightChecked > self.imageLimits.height){
+                    heightChecked = self.imageLimits.height;
+                }
+                if (yChecked < 0) {
+                    yChecked = 0;
+                }
+                if(widthChecked > self.imageLimits.width){
+                    widthChecked = self.imageLimits.width;
+                }
+
+                self.currentImageBounds = {
+                    "height": heightChecked.toString(),
+                    "width": widthChecked.toString(),
+                    "x": xChecked.toString(),
+                    "y": yChecked.toString(),
+                };
+            });
+
+            self.setUpKeyboardInput();
+
             // self.mir.eventEmitter.subscribe('annotationsRendered.' + self.windowId, function(e) {
             //     var annotations = self.mir.viewer.workspace.slots[0].window.annotationsList;
             //     if (annotations !== undefined && annotations !== null && annotations.length > 0) {
@@ -244,6 +280,102 @@ require('./storage/catchpy.js');
 
         });
     };
+
+    $.ImageTarget.prototype.setUpKeyboardInput = function() {
+        var self = this;
+        var snapshot = function() {
+            var segs = [];
+            var x = parseInt(self.currentImageBounds.x, 10);
+            var y = parseInt(self.currentImageBounds.y, 10);
+            var w = parseInt(self.currentImageBounds.width, 10);
+            var h = parseInt(self.currentImageBounds.height, 10);
+
+            segs.push(new window.paper.Point(x,y));
+            segs.push(new window.paper.Point(x + 0.5*w, y));
+            segs.push(new window.paper.Point(x + 0.5*w, y));
+            segs.push(new window.paper.Point(x + w, y));
+            segs.push(new window.paper.Point(x + w, y + 0.5 * h));
+            segs.push(new window.paper.Point(x + w, y + h));
+            segs.push(new window.paper.Point(x + 0.5*w, y + h));
+            segs.push(new window.paper.Point(x, y + h));
+            segs.push(new window.paper.Point(x, y + 0.5*h));
+
+            var shape = new window.paper.Path({
+                segments: segs,
+                fullySelected: true,
+                name: 'rectangle_' + Hxighlighter.getUniqueId()
+            });
+
+            var overlay = self.mir.viewer.workspace.slots[0].window.focusModules.ImageView.annotationsLayer.drawTool.svgOverlay;
+            overlay.path = shape;
+            overlay.onDrawFinish();
+        }
+        jQuery(document).on('keydown', function(event){
+            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
+                snapshot();
+                return false;
+            } else if (event.key == 'Escape') {
+            }
+
+            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
+                var currentInst = jQuery('.sr-alert').html();
+                if (currentInst.trim() === "") {
+                    currentInst = 'Hit "Ctrl + 1" to annotate part of the image currently shown in the window.';
+                }
+                jQuery('.sr-alert').html('');
+                setTimeout(function() {
+                    jQuery('.sr-alert').html(currentInst);
+                }, 250);
+            }
+            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+                var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
+                var newVal = (currVal == "off") ? 'assertive' : 'off';
+                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+                if (newVal == "off") {
+                    jQuery('.sr-real-alert').html(newAlert);
+                    setTimeout(function() {
+                        jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+                        jQuery('.sr-real-alert').html('');
+                    }, 500);
+                    var currVal = jQuery('.sr-alert').html();
+                    jQuery('.sr-alert').html('');
+                    jQuery('.sr-alert').data('old', currVal);
+                } else {
+                    jQuery('.sr-alert').html(jQuery('.sr-alert').data('old'));
+                    jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+                    jQuery('.sr-real-alert').html(newAlert);
+
+                }
+                
+                event.preventDefault();
+            }
+        });
+        jQuery(document).on('keyup', '*[role="button"]', function(evt) {
+            if (evt.key == 'Enter' || evt.key == ' ') {
+                jQuery(evt.currentTarget).click();
+                return $.pauseEvent(evt);;
+            }
+        });
+        jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+            jQuery('#key-help').toggleClass('sr-only');
+            jQuery(this).toggleClass('selected');
+            jQuery(self.element).closest('main').animate({
+                scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
+            });
+        });
+        jQuery(document).on('click', 'button[class*="make-annotation-button"]', function(evt) {
+            snapshot();
+        });
+
+        $.subscribeEvent('wysiwygOpened', self.instance_id, function(e) {
+            setTimeout(function() {
+                jQuery('.note-editable.card-block')[0].focus();
+                console.log('opened!');
+            }, 500);
+        });
+    }
 
     $.ImageTarget.prototype.convertFromOA = function(miradorAnnotation) {
         var self = this;
@@ -313,6 +445,13 @@ require('./storage/catchpy.js');
         jQuery('body').on('click', '.annotation-display', function(event) {
             var annotation_id = event.currentTarget.getAttribute('data-anno-id');
             jQuery('.side.item-' + annotation_id)[0].scrollIntoView();
+        });
+
+        jQuery('body').on('click', '.focus-on-location', function(event) {
+            var location = event.currentTarget.getAttribute('data-link-to');
+            jQuery(location).attr('tabindex', '0');
+            jQuery(location)[0].focus();
+            console.log(location, jQuery(location));
         });
         
         // once the target has been loaded, the selector can be instantiated
