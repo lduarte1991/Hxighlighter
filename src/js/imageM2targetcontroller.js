@@ -305,6 +305,11 @@ require('./storage/catchpy.js');
                 fullySelected: true,
                 name: 'rectangle_' + Hxighlighter.getUniqueId()
             });
+            shape.data.strokeWidth = 3;
+            shape.strokeWidth = 3;
+            shape.strokeColor = '#00bfff';
+            shape.closed = true;
+            shape.data.rotation = 0;
 
             var overlay = self.mir.viewer.workspace.slots[0].window.focusModules.ImageView.annotationsLayer.drawTool.svgOverlay;
             overlay.path = shape;

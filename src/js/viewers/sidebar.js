@@ -425,7 +425,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                             img.style="display: none;";
                             var img_url = img.src;
                             var viewBox = sv.getAttribute('viewBox').split(' ');
-                            jQuery(sv)[0].innerHTML += '<image x="'+viewBox[0]+'" y="'+viewBox[1]+'" width="'+viewBox[2]+'" height="'+viewBox[3]+'" clip-path="url(#'+img_id+'-clippath)" class="annotation-thumbnail" href="'+img_url+'" />';
+                            jQuery(sv)[0].innerHTML += '<image x="'+viewBox[0]+'" y="'+viewBox[1]+'" width="'+viewBox[2]+'" height="'+viewBox[3]+'" clip-path="url(#'+img_id+'-clippath)" class="annotation-thumbnail" href="'+img_url+'" xlink:href="'+img_url+'" />';
                             sv.style['max-width'] = w + "px";
                             sv.style['max-height'] = w + "px";
                             sv.style['margin-left'] = "auto";
