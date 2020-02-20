@@ -284,6 +284,7 @@ require('./storage/catchpy.js');
     $.ImageTarget.prototype.setUpKeyboardInput = function() {
         var self = this;
         var snapshot = function() {
+
             var segs = [];
             var x = parseInt(self.currentImageBounds.x, 10);
             var y = parseInt(self.currentImageBounds.y, 10);
@@ -312,6 +313,11 @@ require('./storage/catchpy.js');
             shape.data.rotation = 0;
 
             var overlay = self.mir.viewer.workspace.slots[0].window.focusModules.ImageView.annotationsLayer.drawTool.svgOverlay;
+            overlay.mode = 'create';
+            overlay.inEditOrCreateMode = true;
+            overlay.currentTool = overlay.tools[0];
+            overlay.eventEmitter.publish('modeChange.' + self.windowId, 'creatingAnnotation');
+            overlay.eventEmitter.publish('toggleDrawingTool.' + self.windowId, "check_box_outline_blank");
             overlay.path = shape;
             overlay.onDrawFinish();
         }
