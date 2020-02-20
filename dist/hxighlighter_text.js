@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Thursday, February 20th, 2020, 11:58:51 AM  
+// [AIV_SHORT]  Version: 1.0.0 - Thursday, February 20th, 2020, 2:19:47 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39622,6 +39622,7 @@ __webpack_require__(9);
     jQuery('.sidebar-button#hide_label').click(function () {
       jQuery(':root').css('--sidebar-width', '0px');
       jQuery('.annotationSection').hide();
+      $.publishEvent('resizeWindow', self.instance_id, []);
       self.showSidebarTab(self.options.viewer_options.sidebarversion);
     });
     jQuery('.side.annotationsHolder').on('scroll', function () {
@@ -39691,7 +39692,7 @@ __webpack_require__(9);
 
   $.Sidebar.prototype.showSidebarTab = function (type) {
     // if (type === "smalltab") {
-    jQuery(':root').css('--sidebar-width', '55px');
+    jQuery(':root').css('--sidebar-width', '40px');
     jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-comments"></span></div>'); // }
 
     jQuery('.open-sidebar').click(function () {

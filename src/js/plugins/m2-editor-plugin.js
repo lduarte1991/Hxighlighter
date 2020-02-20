@@ -66,6 +66,8 @@
         Hxighlighter.publishEvent('editorShown', '', [jQuery(selector), this.annotation]);
       }
       jQuery('.button-container a').attr('tabindex', '0');
+      setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('You have selected a region of the image. You are now in an editor to input in your annotation.')}, 500);
+
     },
 
     isDirty: function() {

@@ -246,3 +246,16 @@ img.annotation-thumbnail {
 .mirador-viewer .plus, .mirador-viewer .addItemText {
     display: none!important;
 }
+
+.image-scrollable-helper {
+    margin-left: 300px;
+    overflow: scroll;
+    height: 167px;
+}
+
+.image-viewer-keyboard-help {
+    height: calc(100% - 167px)!important;
+    height: -webkit-calc(100% - 167px)!important;
+    height: -moz-calc(100% - 167px)!important;
+    top: 167px!important;
+}

@@ -369,21 +369,21 @@ require('./storage/catchpy.js');
                 return $.pauseEvent(evt);;
             }
         });
-        jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
-            jQuery('#key-help').toggleClass('sr-only');
-            jQuery(this).toggleClass('selected');
-            jQuery(self.element).closest('main').animate({
-                scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
-            });
-        });
         jQuery(document).on('click', 'button[class*="make-annotation-button"]', function(evt) {
             snapshot();
+        });
+
+        jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+            jQuery('#key-help').toggleClass('sr-only');
+            jQuery('#key-help').toggleClass('image-scrollable-helper');
+            jQuery('#viewer').toggleClass('image-viewer-keyboard-help');
+            jQuery(this).toggleClass('selected');
+            $.publishEvent('resizeWindow', self.instance_id, []);
         });
 
         $.subscribeEvent('wysiwygOpened', self.instance_id, function(e) {
             setTimeout(function() {
                 jQuery('.note-editable.card-block')[0].focus();
-                console.log('opened!');
             }, 500);
         });
     }
@@ -529,6 +529,10 @@ require('./storage/catchpy.js');
             }));
         });
 
+        $.subscribeEvent('resizeWindow', self.instance_id, function() {
+            self.mir.eventEmitter.publish('resizeMirador');
+        });
+
 
         // $.subscribeEvent('changeDrawnColor', self.inst_id, function(_, ann, color) {
         //     console.log(ann, color);
@@ -581,7 +585,10 @@ require('./storage/catchpy.js');
         var self = this;
         jQuery.each(self.storage, function(_, store) {
             // console.log("3. Sending it to store to save", store, ann);
-            store.StorageAnnotationSave(ann, self.element, false, callBack, errorCallback);
+            store.StorageAnnotationSave(ann, self.element, false, function(x){
+                setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('Annotation was created and added to top of Annotation List')}, 500);
+                callBack(x)
+            }, errorCallback);
         });
     };
 
