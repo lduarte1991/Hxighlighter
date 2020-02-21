@@ -309,6 +309,8 @@ require('./storage/catchpy.js');
             shape.data.strokeWidth = 3;
             shape.strokeWidth = 3;
             shape.strokeColor = '#00bfff';
+            shape.fillColor = '#00bfff';
+            shape.fillColor.alpha = 0.0;
             shape.closed = true;
             shape.data.rotation = 0;
 
