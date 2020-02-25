@@ -259,3 +259,7 @@ img.annotation-thumbnail {
     height: -moz-calc(100% - 167px)!important;
     top: 167px!important;
 }
+
+.button-container a i.fa {
+    display: none;
+}

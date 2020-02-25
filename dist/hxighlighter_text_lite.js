@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Friday, February 21st, 2020, 11:51:17 AM  
+// [AIV_SHORT]  Version: 1.0.0 - Tuesday, February 25th, 2020, 12:46:32 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40695,6 +40695,7 @@ __webpack_require__(31);
       maxTextLength: maxLength,
       dialogsInBody: true,
       disableResizeEditor: true,
+      disableDragAndDrop: true,
       callbacks: {
         onKeydown: function onKeydown(e) {
           var t = e.currentTarget.innerText;

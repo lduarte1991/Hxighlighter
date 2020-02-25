@@ -283,7 +283,13 @@
                 thumbnail_url = self.getThumbnailFromFragmentSelector(targetItem.selector.default.value, uri)
                 svgVal = targetItem.selector.item.value
                 svgVal = svgVal.replace('svg xmlns', 'svg class="thumbnail-svg-' + annotation_id + '" viewBox="' + targetItem.selector.default.value.replace('xywh=', '').split(',').join(' ') + '"')
-
+                var re = /\/([0-9-]+,[0-9-]+,[0-9-]+,[0-9-]+)\//;
+                var matches = thumbnail_url.match(re)
+                var coords = matches[1].split(',');
+                coords.map(function(x){
+                    return x < 0 ? 0 : x;
+                });
+                thumbnail_url = thumbnail_url.replace(matches[0], "/" + coords.join(',') + "/");
                 target.items.push({
                     type: "Thumbnail",
                     format: "image/jpg",

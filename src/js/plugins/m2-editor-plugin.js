@@ -183,6 +183,9 @@
         "motivation": motivation,
         "resource": resource
       };
+      setTimeout(function() {
+        jQuery('.note-link-popover').remove();
+      }, 1000);
     },
 
     updateAnnotation: function(oaAnno) {
@@ -294,6 +297,9 @@
           value.chars = resourceText;
         }
       });
+      setTimeout(function() {
+        jQuery('.note-link-popover').remove();
+      }, 1000);
     },
 
     editorTemplate: $.Handlebars.compile([

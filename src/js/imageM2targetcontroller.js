@@ -80,7 +80,7 @@ require('./storage/catchpy.js');
         self.mir = Mirador({
             "id": "viewer",
             'windowSettings' : {
-                "availableViews" : ['ThumbnailsView', 'ImageView', 'ScrollView', 'BookView'], //any subset removes others
+                "availableViews" : ['ImageView'], //any subset removes others
                 "viewType" : 'ImageView', //one of [_'ThumbnailsView'_, 'ImageView', 'ScrollView', 'BookView'] - if using availableViews, must be in subset
                 "canvasControls": {
                     "annotations": {
@@ -714,7 +714,6 @@ require('./storage/catchpy.js');
                     'exclude_userid': exclusion
                 }
             }
-
             self.storage[idx].onLoad(element, options);
         });
     };

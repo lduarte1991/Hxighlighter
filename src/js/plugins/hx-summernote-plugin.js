@@ -30,6 +30,7 @@ require('./hx-summernote-plugin.css');
             maxTextLength: maxLength,
             dialogsInBody: true,
             disableResizeEditor: true,
+            disableDragAndDrop: true,
             callbacks: {
                 onKeydown:  function (e) {
                     var t = e.currentTarget.innerText;
