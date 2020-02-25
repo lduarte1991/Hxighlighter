@@ -1,11 +1,10 @@
 /**
- *  [[Skeleton]] Annotations Plugin
+ *  Summernote Annotation Body Editor Mirador Plugin
  *  
  *
  */
 
 //uncomment to add css file
-//require('./filaname.css');
 
 (function($){
   $.SummernoteAnnotationBodyEditor = function(options) {
@@ -67,7 +66,11 @@
       }
       jQuery('.button-container a').attr('tabindex', '0');
       setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('You have selected a region of the image. You are now in an editor to input in your annotation.')}, 500);
-
+      window.jQuery('.annotation-editor .cancel').click(function(e) {
+        setTimeout(function() {
+          window.jQuery('.note-link-popover').remove();
+        }, 1000);
+      })
     },
 
     isDirty: function() {
@@ -76,6 +79,10 @@
 
     createAnnotation: function() {
       var resourceText = this.selector.find('#annotation-text-field').summernote('code');
+      if (resourceText.length > 1000) {
+        alert('Your annotation was rejected and not saved as the annotation was too long.');
+        return;
+      }
       var tags = jQuery('.token-input-token-facebook p').map(function(_, token) {
           return jQuery(token).html();
       });
@@ -177,22 +184,26 @@
         "format": "text/html",
         "chars": resourceText
       });
+      setTimeout(function() {
+        window.jQuery('.note-link-popover').remove();
+      }, 1000);
       return {
         "@context": "http://iiif.io/api/presentation/2/context.json",
         "@type": "oa:Annotation",
         "motivation": motivation,
         "resource": resource
       };
-      setTimeout(function() {
-        jQuery('.note-link-popover').remove();
-      }, 1000);
     },
 
     updateAnnotation: function(oaAnno) {
+      setTimeout(function() {
+        window.jQuery('.note-link-popover').remove();
+      }, 1000);
       var resourceText = this.selector.find('#annotation-text-field').summernote('code');
       var tags = jQuery('.token-input-token-facebook p').map(function(_, token) {
           return jQuery(token).html();
       });
+      
       // Thanks to https://stackoverflow.com/questions/36810940/array-from-on-the-internet-explorer
       if (!Array.from) {
         Array.from = (function () {
@@ -297,9 +308,6 @@
           value.chars = resourceText;
         }
       });
-      setTimeout(function() {
-        jQuery('.note-link-popover').remove();
-      }, 1000);
     },
 
     editorTemplate: $.Handlebars.compile([

@@ -86,10 +86,13 @@
 
                         window.jQuery(selector + ' a.cancel').on("click", function(event) {
                             event.preventDefault();
+                             setTimeout(function() {
+                                jQuery('.note-link-popover').remove();
+                            }, 1000);
 
                             var cancelCallback = function(){
                                 api.destroy();
-                            };
+                            };                           
 
                             _this.eventEmitter.publish('onAnnotationCreatedCanceled.'+_this.windowId,[cancelCallback,!_this.activeEditor.isDirty()]);
 
@@ -175,6 +178,9 @@
                         setTimeout(function() {
                             if (params.onTooltipHidden) { params.onTooltipHidden(event, api); }
                             _this.removeAllEvents(api, params);
+                            setTimeout(function() {
+                                jQuery('.note-link-popover').remove();
+                            }, 500);
                             api.cache.hidden = true;
                             window.jQuery(api.tooltip).hide();
                         }, 500);

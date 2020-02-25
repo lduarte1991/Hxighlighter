@@ -19,6 +19,23 @@ require('./hx-summernote-plugin.css');
         var maxLength = 1000;
         // console.log("SummernoteRichText Options Sent:", options);
         this.options = options;
+        var toolbar = [
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['table', 'link', 'hr']],
+        ];
+        if (self.options.instructors.indexOf(self.options.user_id) > -1) {
+            toolbar = [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+                ['view', ['codeview']]
+            ]
+        }
+
         this.summernoteOpts = jQuery.extend({
             height: 150,
             focus: true,
@@ -66,19 +83,20 @@ require('./hx-summernote-plugin.css');
                         }, 10)
                     }
                 },
+                onChange: function(contents, $editable) {
+                    console.log($editable);
+                    if (contents.length > maxLength) {
+                        console.log("Yup, too big", $editable.html(contents.trim().substring(0, maxLength)));
+                    }
+                },
                 onFocus: function(e) {
                     $.publishEvent('wysiwygOpened', self.instanceID, [e]);
                 },
             },
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['table', 'link', 'hr']],
-            ],
+            toolbar: toolbar,
         }, this.options);
         // console.log("After init options", this.options);
+        console.log('SUMMERNOTE', this.options);
         this.init();
         this.instanceID = instanceID;
         return this;

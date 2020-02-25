@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Tuesday, February 25th, 2020, 2:27:44 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Tuesday, February 25th, 2020, 3:27:44 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40688,6 +40688,12 @@ __webpack_require__(31);
     var maxLength = 1000; // console.log("SummernoteRichText Options Sent:", options);
 
     this.options = options;
+    var toolbar = [['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr']]];
+
+    if (self.options.instructors.indexOf(self.options.user_id) > -1) {
+      toolbar = [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr', 'picture', 'video']], ['view', ['codeview']]];
+    }
+
     this.summernoteOpts = jQuery.extend({
       height: 150,
       focus: true,
@@ -40736,13 +40742,21 @@ __webpack_require__(31);
             }, 10);
           }
         },
+        onChange: function onChange(contents, $editable) {
+          console.log($editable);
+
+          if (contents.length > maxLength) {
+            console.log("Yup, too big", $editable.html(contents.trim().substring(0, maxLength)));
+          }
+        },
         onFocus: function onFocus(e) {
           $.publishEvent('wysiwygOpened', self.instanceID, [e]);
         }
       },
-      toolbar: [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr']]]
+      toolbar: toolbar
     }, this.options); // console.log("After init options", this.options);
 
+    console.log('SUMMERNOTE', this.options);
     this.init();
     this.instanceID = instanceID;
     return this;
