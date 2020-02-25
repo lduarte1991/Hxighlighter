@@ -464,7 +464,6 @@ require('./storage/catchpy.js');
             var location = event.currentTarget.getAttribute('data-link-to');
             jQuery(location).attr('tabindex', '0');
             jQuery(location)[0].focus();
-            console.log(location, jQuery(location));
         });
         
         // once the target has been loaded, the selector can be instantiated

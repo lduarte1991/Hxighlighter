@@ -286,8 +286,8 @@
                 var re = /\/([0-9-]+,[0-9-]+,[0-9-]+,[0-9-]+)\//;
                 var matches = thumbnail_url.match(re)
                 var coords = matches[1].split(',');
-                coords.map(function(x){
-                    return x < 0 ? 0 : x;
+                coords = coords.map(function(x){
+                    return parseInt(x, 10) < 0 ? 0 : x;
                 });
                 thumbnail_url = thumbnail_url.replace(matches[0], "/" + coords.join(',') + "/");
                 target.items.push({

@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Tuesday, February 25th, 2020, 12:46:32 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Tuesday, February 25th, 2020, 2:27:44 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39709,12 +39709,14 @@ __webpack_require__(9);
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
       });
+      console.log(filteroptions, filteroptions.indexOf('mine') > -1, filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1));
 
-      if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)) {
+      if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor') > -1 && self.options.instructors.indexOf(self.options.user_id) > -1) {
         self.addAnnotation(annotation, updating, false);
       } else {
         jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
         $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+        self.search(self.lastSearchOption);
       }
     });
     $.subscribeEvent('searchTag', self.instance_id, function (_, tag) {
@@ -39939,7 +39941,9 @@ __webpack_require__(9);
   };
 
   $.Sidebar.prototype.search = function (options) {
-    // console.log('sidebar search', options);
+    var self = this; // console.log('sidebar search', options);
+
+    self.lastSearchOption = options;
     jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
       jQuery('.annotationsHolder.side').html('');
@@ -41971,20 +41975,22 @@ __webpack_require__(42);
 /***/ }),
 /* 45 */,
 /* 46 */,
-/* 47 */
+/* 47 */,
+/* 48 */,
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * 
  */
 //during deployment, this is what decides what gets instantiated, should be moved elsewhere
-__webpack_require__(48);
+__webpack_require__(50);
 
-__webpack_require__(49);
+__webpack_require__(51);
 
 __webpack_require__(22);
 
-__webpack_require__(50);
+__webpack_require__(52);
 
 __webpack_require__(30);
 
@@ -41994,15 +42000,15 @@ __webpack_require__(32);
 
 __webpack_require__(34);
 
-__webpack_require__(54);
-
 __webpack_require__(56);
 
 __webpack_require__(58);
 
-__webpack_require__(59);
+__webpack_require__(60);
 
 __webpack_require__(61);
+
+__webpack_require__(63);
 
 __webpack_require__(36);
 
@@ -42546,7 +42552,7 @@ __webpack_require__(41);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42669,7 +42675,7 @@ var hrange = __webpack_require__(4);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
@@ -42884,12 +42890,12 @@ var hrange = __webpack_require__(4);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(51);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(53);
 /* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
@@ -42910,8 +42916,8 @@ var annotator = annotator ? annotator : __webpack_require__(7);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(52),
-        viewer: __webpack_require__(53)
+        editor: __webpack_require__(54),
+        viewer: __webpack_require__(55)
       },
       template_suffix: "floating",
       template_urls: ""
@@ -43346,13 +43352,13 @@ var annotator = annotator ? annotator : __webpack_require__(7);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -43369,7 +43375,7 @@ return __p
 
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -43426,7 +43432,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -43435,7 +43441,7 @@ return __p
  *
  */
 //uncomment to add css file
-__webpack_require__(55);
+__webpack_require__(57);
 
 (function ($) {
   /**
@@ -43492,13 +43498,13 @@ __webpack_require__(55);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -43506,7 +43512,7 @@ __webpack_require__(55);
  *  
  *
  */
-__webpack_require__(57);
+__webpack_require__(59);
 
 (function ($) {
   /**
@@ -43626,13 +43632,13 @@ __webpack_require__(57);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
@@ -44216,7 +44222,7 @@ __webpack_require__(57);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44224,7 +44230,7 @@ __webpack_require__(57);
  *  
  *
  */
-__webpack_require__(60);
+__webpack_require__(62);
 
 (function ($) {
   /**
@@ -44294,13 +44300,13 @@ __webpack_require__(60);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44310,7 +44316,7 @@ __webpack_require__(60);
  */
 var annotator = annotator ? annotator : __webpack_require__(7); //uncomment to add css file
 
-__webpack_require__(62);
+__webpack_require__(64);
 
 (function ($) {
   /**
@@ -44408,14 +44414,12 @@ __webpack_require__(62);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 63 */,
-/* 64 */,
 /* 65 */,
 /* 66 */,
 /* 67 */,
@@ -44456,7 +44460,7 @@ __webpack_require__(1);
 
 __webpack_require__(20);
 
-__webpack_require__(47);
+__webpack_require__(49);
 
 __webpack_require__(43);
 

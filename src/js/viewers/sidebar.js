@@ -262,7 +262,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     //search_options['userid'] = [];
                 }
             }
-
             self.search(search_options)
         });
 
@@ -354,11 +353,13 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
             // console.log("6. Got Annotation in Viewer", annotation, self.options);
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
-            if (filteroptions.indexOf('mine') > -1  || (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1))) {
+            console.log(filteroptions, filteroptions.indexOf('mine') > -1, (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)))
+            if (filteroptions.indexOf('mine') > -1  || ((filteroptions.indexOf('instructor') > -1) && (self.options.instructors.indexOf(self.options.user_id) > -1))) {
                 self.addAnnotation(annotation, updating, false);
             } else {
                 jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
                 $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+                self.search(self.lastSearchOption);
             }
         });
 
@@ -573,7 +574,10 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     };
 
     $.Sidebar.prototype.search = function(options) {
+        var self = this;
         // console.log('sidebar search', options);
+        self.lastSearchOption = options;
+
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
             jQuery('.annotationsHolder.side').html('');
