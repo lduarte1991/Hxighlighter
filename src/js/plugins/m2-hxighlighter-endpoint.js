@@ -255,8 +255,23 @@
             var nums = fragmentSelector.replace('xywh=', '');
             split_nums = nums.split(',');
             var canvas = self.imagesList[$.getImageIndexById(self.imagesList, uri)];
+            var scale = '/300,/'
+            var fragmentwidth = parseInt(split_nums[2], 10);
+            var fragmentHeight = parseInt(split_nums[3], 10);
+            if (fragmentwidth > fragmentHeight) {
+                if (fragmentwidth < 300) {
+                    scale = '/' + fragmentwidth + ',/';
+                }
+            } else {
+                scale = '/,150/'
+                if (fragmentHeight < 150) {
+                    scale = '/,' + fragmentHeight + '/';
+                }
+            }
+            if (parseInt)
             var imageUrl = $.getThumbnailForCanvas(canvas, 300);
             imageUrl = imageUrl.replace('full', split_nums[0] +','+ split_nums[1] +','+ split_nums[2] +','+ split_nums[3]);
+            imageUrl = imageUrl.replace('/,150/', scale);
             return imageUrl;
         },
         getAnnotationInEndpoint: function(oaAnnotation){
