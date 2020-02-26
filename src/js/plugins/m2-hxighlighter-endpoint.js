@@ -268,10 +268,9 @@
                     scale = '/,' + fragmentHeight + '/';
                 }
             }
-            if (parseInt)
             var imageUrl = $.getThumbnailForCanvas(canvas, 300);
             imageUrl = imageUrl.replace('full', split_nums[0] +','+ split_nums[1] +','+ split_nums[2] +','+ split_nums[3]);
-            imageUrl = imageUrl.replace('/,150/', scale);
+            imageUrl = imageUrl.replace('/,150/', scale).replace('/300,/', scale);
             return imageUrl;
         },
         getAnnotationInEndpoint: function(oaAnnotation){
