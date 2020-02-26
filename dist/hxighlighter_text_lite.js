@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Tuesday, February 25th, 2020, 3:27:44 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Wednesday, February 26th, 2020, 1:18:37 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39872,6 +39872,7 @@ __webpack_require__(9);
             $.publishEvent('focusOnContext', self.instance_id, [ann]);
           }, 350);
         } else if (self.options.mediaType.toLowerCase() === "image") {
+          console.log(e);
           var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
           var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
             return parseInt(val, 10);
@@ -39883,8 +39884,7 @@ __webpack_require__(9);
             height: boundSplit[3]
           };
           $.publishEvent('zoomTo', self.inst_id, [bounds, ann]); // console.log("Yup!");
-
-          $.pauseEvent(e);
+          // $.pauseEvent(e);
         }
       });
       jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function (e) {
@@ -40706,6 +40706,17 @@ __webpack_require__(31);
       dialogsInBody: true,
       disableResizeEditor: true,
       disableDragAndDrop: true,
+      onCreateLink: function onCreateLink(link) {
+        var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/;
+
+        if (link.match(linkValidator)) {
+          linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link) ? link : 'http://' + link;
+          return linkUrl;
+        } else {
+          alert("You did not enter a valid URL, it has been removed.");
+          return 'http://example.org';
+        }
+      },
       callbacks: {
         onKeydown: function onKeydown(e) {
           var t = e.currentTarget.innerText;
@@ -40729,7 +40740,25 @@ __webpack_require__(31);
         },
         onPaste: function onPaste(e) {
           var t = e.currentTarget.innerText;
-          var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+          var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
+          var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
+
+          if (bufferHTML.indexOf('<img') > -1 && self.options.instructors.indexOf(self.options.user_id) == -1) {
+            var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
+            var inside = bufferHTML.match(regex);
+            jQuery.each(inside, function (_, image_tags) {
+              new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
+              bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href=\"' + new_img_url + "\">[External Image Link]</a>");
+            }); // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
+
+            console.log(bufferHTML);
+            setTimeout(function () {
+              // wrap in a timer to prevent issues in Firefox
+              self.elementObj.summernote('code', bufferHTML);
+              jQuery('#maxContentPost').text(maxLength);
+              alert('You may have pasted an image. It will be converted to a link.');
+            }, 100);
+          }
 
           if (t.length + bufferText.length >= maxLength) {
             e.preventDefault();
@@ -40745,8 +40774,8 @@ __webpack_require__(31);
         onChange: function onChange(contents, $editable) {
           console.log($editable);
 
-          if (contents.length > maxLength) {
-            console.log("Yup, too big", $editable.html(contents.trim().substring(0, maxLength)));
+          if ($editable && contents.length > maxLength) {
+            $editable.html(contents.trim().substring(0, maxLength));
           }
         },
         onFocus: function onFocus(e) {
@@ -40876,20 +40905,18 @@ __webpack_require__(31);
     }.bind(self));
     $.subscribeEvent('editorHidden', self.instanceID, function () {
       self.destroy();
-    }.bind(self));
-    jQuery('body').on('mouseover', '.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function () {
-      var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
-      input.prop('type', 'url');
-      var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
-      var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
-      var regex = new RegExp(expression);
-
-      if (chosen.match(regex)) {
-        jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', false);
-      } else {
-        jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', true);
-      }
-    });
+    }.bind(self)); // jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
+    //     var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
+    //     input.prop('type', 'url');
+    //     var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
+    //     var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+    //     var regex = new RegExp(expression);
+    //     if (chosen.match(regex)){
+    //         jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', false);
+    //     } else {
+    //         jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', true);
+    //     }
+    // });
   };
   /**
    * Code to run just before the annotation is saved to storage

@@ -86,9 +86,7 @@
 
                         window.jQuery(selector + ' a.cancel').on("click", function(event) {
                             event.preventDefault();
-                             setTimeout(function() {
-                                jQuery('.note-link-popover').remove();
-                            }, 1000);
+                            Hxighlighter.publishEvent('editorToBeHidden', '', []);
 
                             var cancelCallback = function(){
                                 api.destroy();
@@ -178,9 +176,7 @@
                         setTimeout(function() {
                             if (params.onTooltipHidden) { params.onTooltipHidden(event, api); }
                             _this.removeAllEvents(api, params);
-                            setTimeout(function() {
-                                jQuery('.note-link-popover').remove();
-                            }, 500);
+                            Hxighlighter.publishEvent('editorToBeHidden', '', []);
                             api.cache.hidden = true;
                             window.jQuery(api.tooltip).hide();
                         }, 500);
@@ -444,7 +440,7 @@
                 var svg = catchAnn.svg;
 
                 htmlAnnotations.push({
-                    annoText : $.sanitizeHtml(annoText),
+                    annoText : annoText,
                     tags : tags,
                     id : annotation['@id'],
                     username : username,

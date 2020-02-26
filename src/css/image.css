@@ -263,3 +263,12 @@ img.annotation-thumbnail {
 .button-container a i.fa {
     display: none;
 }
+
+.body.field a, .annotation-tooltip a{
+    color: #337ab7;
+    border-bottom: 1px dotted #005ebd;
+}
+
+.modal-open .modal {
+    position: relative;
+}
