@@ -67,7 +67,9 @@
       jQuery('.button-container a').attr('tabindex', '0');
       setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('You have selected a region of the image. You are now in an editor to input in your annotation.')}, 500);
       window.jQuery('.annotation-editor .cancel').click(function(e) {
-        Hxighlighter.publishEvent('editorToBeHidden', '', []);
+        setTimeout(function() {
+            Hxighlighter.publishEvent('editorToBeHidden', '', []);
+        }, 500);
       })
     },
 
@@ -183,7 +185,9 @@
         "format": "text/html",
         "chars": resourceText
       });
-      Hxighlighter.publishEvent('editorToBeHidden', '', []);
+      setTimeout(function() {
+          Hxighlighter.publishEvent('editorToBeHidden', '', []);
+      }, 500);
       return {
         "@context": "http://iiif.io/api/presentation/2/context.json",
         "@type": "oa:Annotation",
@@ -193,7 +197,9 @@
     },
 
     updateAnnotation: function(oaAnno) {
-      Hxighlighter.publishEvent('editorToBeHidden', '', []);
+      setTimeout(function() {
+          Hxighlighter.publishEvent('editorToBeHidden', '', []);
+      }, 500);
       var resourceText = this.selector.find('#annotation-text-field').summernote('code');
       var plainText = resourceText.replace(/<\/?[^>]+(>|$)/g, "");
       if (plainText.length > 1000) {

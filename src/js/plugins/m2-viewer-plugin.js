@@ -86,7 +86,9 @@
 
                         window.jQuery(selector + ' a.cancel').on("click", function(event) {
                             event.preventDefault();
-                            Hxighlighter.publishEvent('editorToBeHidden', '', []);
+                            setTimeout(function() {
+                                Hxighlighter.publishEvent('editorToBeHidden', '', []);
+                            }, 500);
 
                             var cancelCallback = function(){
                                 api.destroy();
@@ -176,9 +178,15 @@
                         setTimeout(function() {
                             if (params.onTooltipHidden) { params.onTooltipHidden(event, api); }
                             _this.removeAllEvents(api, params);
-                            Hxighlighter.publishEvent('editorToBeHidden', '', []);
-                            api.cache.hidden = true;
-                            window.jQuery(api.tooltip).hide();
+                            setTimeout(function() {
+                                Hxighlighter.publishEvent('editorToBeHidden', '', []);
+                            }, 500);
+                            if (api && api.cache) {
+                                api.cache.hidden = true;
+                            }
+                            if (api && api.tooltip) {
+                                window.jQuery(api.tooltip).hide();
+                            }
                         }, 500);
                     },
                     visible: function (event, api) {
