@@ -59,7 +59,7 @@
                     "context_id": "fake-course-id.2",
                     "collection_id": "e-a-poe-section",
                     "object_id": "https://oculus.harvardx.harvard.edu/manifests/drs:3690472/canvas/canvas-3690328.json",
-                    "username": "Instructor",
+                    "username": "Student",
                     "user_id": "fake-anonymous-id-student",
                     "instructors": ['fake-anonymous-id-inst'],
                     "common_instructor_name": "HxStaff"
@@ -87,11 +87,11 @@
                         'tagList': ['test1', 'test2', 'parallelism', 'imagery']
                     },
                     "HxPermissions": {
-                        has_staff_permissions: true
+                        has_staff_permissions: false
                     },
                     viewerOptions: {
                         filterTabCount: 4,
-                        defaultTab: 'minepeer',
+                        defaultTab: 'mine',
                         tabsAvailable: [ 'search', 'mine', 'instructor', 'peer' ],
                         sidebarversion: 'sidemenu',
                         pagination: 100,
@@ -110,7 +110,10 @@
                         external_url: {
                             catchpy: 'https://devo.catchpy.harvardx.harvard.edu/annos/'
                         },
-                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLXN0dWRlbnQiLCJpc3N1ZWRBdCI6IjIwMjAtMDItMjVUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.bmu9M4yKWk1iy75lalHtWNRKsrDK1-twnIFkZe0YsZ4",
+                        //student
+                        // token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLXN0dWRlbnQiLCJpc3N1ZWRBdCI6IjIwMjAtMDMtMDJUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.Lc1c_aEeGbtHXG9IuvfL_dEcN4xWU173UfQcJTSNfJE",
+                        //instructor
+                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLWluc3QiLCJpc3N1ZWRBdCI6IjIwMjAtMDMtMDJUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.leR1FN20AKiWdJzRAyYONzYMFYkINI4bLZwuYvqcXds",
                         pagination: 100,
                         database_params: {
                             resource_link_id: "",

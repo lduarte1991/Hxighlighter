@@ -162,6 +162,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         jQuery('#search-submit').click(function() {
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
+            console.log(searchValue, searchType);
             var ops = self.filterByType(searchValue, searchType, undefined);
             self.search(ops);
         });
@@ -337,7 +338,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     $.Sidebar.prototype.showSidebarTab = function(type) {
         // if (type === "smalltab") {
             jQuery(':root').css('--sidebar-width', '40px');
-            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-comments"></span></div>');
+            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>');
         // }
 
         jQuery('.open-sidebar').click(function() {
@@ -476,7 +477,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 } else {
                     jQuery('.annotationsHolder').prepend(annHTML);
                 }
-                
             }
             jQuery('.item-' + ann.id).find('.delete').confirm({
                 title: 'Delete Annotation?',

@@ -111,7 +111,6 @@ require('./storage/catchpy.js');
                 "fullScreen" : false,
                 "displayLayout": false,
                 "annotationEditorVisible": false,
-
             }],
             'annotationBodyEditor': {
               'module': 'SummernoteAnnotationBodyEditor',
@@ -588,7 +587,6 @@ require('./storage/catchpy.js');
             // console.log("3. Sending it to store to save", store, ann);
             store.StorageAnnotationSave(ann, self.element, false, function(x){
                 setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('Annotation was created and added to top of Annotation List')}, 500);
-                callBack(x)
             }, errorCallback);
         });
     };
@@ -661,7 +659,7 @@ require('./storage/catchpy.js');
      */
     $.ImageTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun) {
         var self = this;
-        if (self.windowId && search_options.media !== "Annotation") {
+        if (self.windowId && search_options && search_options.media !== "Annotation") {
             self.mir.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
                 windowId: self.windowId,
                 annotationsList: []
@@ -701,7 +699,7 @@ require('./storage/catchpy.js');
             self.storage.push(new storage(optionsForStorage, self.instance_id));
             if (self.options.viewerOptions.defaultTab === "mine") {
                 options = {
-                    'username': self.options.username
+                    'userid': self.options.user_id
                 }
             } else if (self.options.viewerOptions.defaultTab === "instructor") {
                 options = {

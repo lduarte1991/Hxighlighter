@@ -54,11 +54,11 @@
             return;
         }
         // hide edit if the person does not have can_update permissions
-        if (!self.options.has_staff_permissions && ann.permissions.can_update.indexOf(self.options.user_id) == -1) {
+        if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) == -1 && ann.permissions.can_update.indexOf(self.options.user_id) == -1) {
             loc.find('#edit-' + ann.id).remove();  
         }
         // hide delete if the person does not have can_delete permissions
-        if (!self.options.has_staff_permissions && ann.permissions.can_delete.indexOf(self.options.user_id) == -1) {
+        if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) == -1 && ann.permissions.can_delete.indexOf(self.options.user_id) == -1) {
             loc.find('#delete-' + ann.id).remove();  
         }
     }

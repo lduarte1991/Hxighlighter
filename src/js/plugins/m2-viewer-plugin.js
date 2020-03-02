@@ -178,9 +178,9 @@
                         setTimeout(function() {
                             if (params.onTooltipHidden) { params.onTooltipHidden(event, api); }
                             _this.removeAllEvents(api, params);
-                            setTimeout(function() {
-                                Hxighlighter.publishEvent('editorToBeHidden', '', []);
-                            }, 500);
+                            // setTimeout(function() {
+                            //     Hxighlighter.publishEvent('editorToBeHidden', '', []);
+                            // }, 500);
                             if (api && api.cache) {
                                 api.cache.hidden = true;
                             }

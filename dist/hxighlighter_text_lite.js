@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Wednesday, February 26th, 2020, 2:01:51 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Monday, March 2nd, 2020, 11:13:36 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39510,6 +39510,7 @@ __webpack_require__(9);
     jQuery('#search-submit').click(function () {
       var searchValue = jQuery('#srch-term').val().trim();
       var searchType = jQuery('.search-bar select').val();
+      console.log(searchValue, searchType);
       var ops = self.filterByType(searchValue, searchType, undefined);
       self.search(ops);
     }); // trigger new filter tab
@@ -39693,7 +39694,7 @@ __webpack_require__(9);
   $.Sidebar.prototype.showSidebarTab = function (type) {
     // if (type === "smalltab") {
     jQuery(':root').css('--sidebar-width', '40px');
-    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-comments"></span></div>'); // }
+    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>'); // }
 
     jQuery('.open-sidebar').click(function () {
       jQuery('.open-sidebar').remove();
@@ -41723,12 +41724,12 @@ __webpack_require__(39);
     } // hide edit if the person does not have can_update permissions
 
 
-    if (!self.options.has_staff_permissions && ann.permissions.can_update.indexOf(self.options.user_id) == -1) {
+    if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) == -1 && ann.permissions.can_update.indexOf(self.options.user_id) == -1) {
       loc.find('#edit-' + ann.id).remove();
     } // hide delete if the person does not have can_delete permissions
 
 
-    if (!self.options.has_staff_permissions && ann.permissions.can_delete.indexOf(self.options.user_id) == -1) {
+    if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) == -1 && ann.permissions.can_delete.indexOf(self.options.user_id) == -1) {
       loc.find('#delete-' + ann.id).remove();
     }
   };

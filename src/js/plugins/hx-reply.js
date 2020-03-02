@@ -297,7 +297,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         var self = this;
         var delete_option = '';
         var display_name = reply.creator.name;
-        if ((self.options.HxPermissions && self.options.HxPermissions.has_staff_permissions) || (annotation.permissions && annotation.permissions.can_delete && annotation.permissions.can_delete.indexOf(self.options.user_id) > -1)) {
+        if (self.options.instructors.indexOf(reply.creator.id) > -1) {
             delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
             display_name = self.options.common_instructor_name;
         }

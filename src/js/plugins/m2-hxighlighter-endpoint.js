@@ -12,7 +12,8 @@
             annotationsList: [],        //OA list for Mirador use
             annotationsListCatch: null,  //internal list for module use
             windowID: null,
-            eventEmitter: null
+            eventEmitter: null,
+            first: true,
         }, options);
 
         this.init();
@@ -55,6 +56,12 @@
             }
         },
         search: function(searchOptions, successCallback, errorCallback){
+            var self = this;
+            if (self.first) {
+                self.first = false;
+                return;
+            }
+            console.log("MAKING A SEARCH", searchOptions);
             var self = this;
             var options = searchOptions;
             if (options.uri) {
@@ -144,7 +151,15 @@
         },
         createCatchpyAnnotation: function(catchAnnotation, successCallback, errorCallback){},
         userAuthorize: function(action, annotation) {
+            var self = this;
             return true;
+            if (typeof(annotation) !== undefined && typeof(annotation.permissions) !== "undefined")  {
+                var permissions = annotation.permissions;
+                return self.instructors.indexOf(self.userid) > -1 || permissions['can_' + action].indexOf(self.userid) > -1;
+            } else {
+                return true;
+            }
+            
         },
         getAnnotationInOA: function(annotation) {
             var id,
