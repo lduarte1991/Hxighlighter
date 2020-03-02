@@ -276,6 +276,7 @@ require('./storage/catchpy.js');
             //         window.paper.
             //     };
             // });
+            self.populateStorage(self.element[0])
 
         });
     };
@@ -697,22 +698,31 @@ require('./storage/catchpy.js');
                 optionsForStorage = {};
             }
             self.storage.push(new storage(optionsForStorage, self.instance_id));
-            if (self.options.viewerOptions.defaultTab === "mine") {
-                options = {
-                    'userid': self.options.user_id
-                }
-            } else if (self.options.viewerOptions.defaultTab === "instructor") {
-                options = {
-                    'userid': self.options.instructors
-                }
-            } else {
-                var exclusion = [self.options.user_id].concat(self.options.instructors)
-                options = {
-                    'exclude_userid': exclusion
-                }
-            }
-            self.storage[idx].onLoad(element, options);
         });
     };
+
+    $.ImageTarget.prototype.populateStorage = function(element) {
+        var self = this;
+        var options = {};
+        if (self.options.viewerOptions.defaultTab === "mine") {
+            options = {
+                'userid': self.options.user_id
+            }
+        } else if (self.options.viewerOptions.defaultTab === "instructor") {
+            options = {
+                'userid': self.options.instructors
+            }
+        } else {
+            var exclusion = [self.options.user_id].concat(self.options.instructors)
+            options = {
+                'exclude_userid': exclusion
+            }
+        }
+        jQuery.each(self.storage, function(idx, store){
+            store.onLoad(element, options, function(anns, converter) {
+                $.publishEvent('drawFromSearch', self.instance_id, [anns, converter]);
+            });
+        });
+    }
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

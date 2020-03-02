@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Monday, March 2nd, 2020, 11:13:36 AM  
+// [AIV_SHORT]  Version: 1.0.0 - Monday, March 2nd, 2020, 12:54:25 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -44958,7 +44958,7 @@ var hrange = __webpack_require__(4);
     this.url_base = options.storageOptions.external_url.catchpy; //console.log(this.url_base);
   };
 
-  $.CatchPy.prototype.onLoad = function (element, opts) {
+  $.CatchPy.prototype.onLoad = function (element, opts, callBack) {
     var self = this;
     self.element = element;
 
@@ -44972,6 +44972,14 @@ var hrange = __webpack_require__(4);
           $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
         }, 250);
       });
+
+      if (typeof callBack !== "undefined") {
+        var wrapperFunc = function wrapperFunc(ann) {
+          return self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
+        };
+
+        callBack(result.rows, wrapperFunc);
+      }
     };
 
     self.search(opts, callB, function (errs) {//console.log("Error", errs);

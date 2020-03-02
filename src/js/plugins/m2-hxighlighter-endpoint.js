@@ -47,6 +47,9 @@
                     callBack(self.getAnnotationInEndpoint(oAnnotation));
                 }
             });
+            Hxighlighter.subscribeEvent('drawFromSearch', '', function(_, anns, converter) {
+                self.drawFromSearch(anns, converter);
+            });
         },
         set: function(prop, value, options){
             if (options) {
@@ -61,7 +64,6 @@
                 self.first = false;
                 return;
             }
-            console.log("MAKING A SEARCH", searchOptions);
             var self = this;
             var options = searchOptions;
             if (options.uri) {
@@ -370,6 +372,7 @@
             jQuery.each(result, function(index, value) {
                 self.annotationsList.push(self.getAnnotationInOA(value));
             });
+
             self.annotationsListCatch = result.map(converter);
             self.dfd.resolve(true);
             self.eventEmitter.publish('catchAnnotationsLoaded.' + self.windowID, self.annotationsListCatch);

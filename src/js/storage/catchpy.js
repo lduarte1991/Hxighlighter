@@ -10,7 +10,7 @@ var hrange = require('../h-range.js');
         //console.log(this.url_base);
     };
 
-    $.CatchPy.prototype.onLoad = function(element, opts) {
+    $.CatchPy.prototype.onLoad = function(element, opts, callBack) {
         var self = this;
         self.element = element;
         var callB = function(result) {
@@ -21,8 +21,15 @@ var hrange = require('../h-range.js');
                     // console.log('definitely getting to here');
                     $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
                     $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+                    
                 }, 250);
             });
+            if (typeof(callBack) !== "undefined") {
+                var wrapperFunc = function(ann) {
+                    return self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
+                }
+                callBack(result.rows, wrapperFunc);
+            }
         }
         self.search(opts, callB, function(errs) {
             //console.log("Error", errs);
