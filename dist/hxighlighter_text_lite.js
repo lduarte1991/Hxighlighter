@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Monday, March 2nd, 2020, 12:54:25 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Monday, March 2nd, 2020, 4:28:07 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39873,19 +39873,22 @@ __webpack_require__(9);
             $.publishEvent('focusOnContext', self.instance_id, [ann]);
           }, 350);
         } else if (self.options.mediaType.toLowerCase() === "image") {
-          console.log(e);
-          var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
-          var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
-            return parseInt(val, 10);
-          });
-          var bounds = {
-            x: boundSplit[0],
-            y: boundSplit[1],
-            width: boundSplit[2],
-            height: boundSplit[3]
-          };
-          $.publishEvent('zoomTo', self.inst_id, [bounds, ann]); // console.log("Yup!");
+          if (e.target.tagName.toLowerCase() === "image") {
+            var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
+            var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
+              return parseInt(val, 10);
+            });
+            var bounds = {
+              x: boundSplit[0] - boundSplit[2] * .167,
+              y: boundSplit[1] - boundSplit[3] * .167,
+              width: boundSplit[2] + boundSplit[2] / 3.0,
+              height: boundSplit[3] + boundSplit[3] / 3.0
+            };
+            console.log(bounds, boundSplit);
+            $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+          } // console.log("Yup!");
           // $.pauseEvent(e);
+
         }
       });
       jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function (e) {

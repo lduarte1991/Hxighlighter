@@ -509,16 +509,17 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         $.publishEvent('focusOnContext', self.instance_id, [ann]);
                     }, 350);
                 } else if (self.options.mediaType.toLowerCase() === "image") {
-                    console.log(e);
-                    var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
-                    var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
-                    var bounds = {
-                        x: boundSplit[0],
-                        y: boundSplit[1],
-                        width: boundSplit[2],
-                        height: boundSplit[3]
-                    };
-                    $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+                    if (e.target.tagName.toLowerCase() === "image"){
+                        var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
+                        var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
+                        var bounds = {
+                            x: boundSplit[0] - (boundSplit[2] * .167),
+                            y: boundSplit[1] - (boundSplit[3] * .167),
+                            width: boundSplit[2] + (boundSplit[2] / 3.0),
+                            height: boundSplit[3] + (boundSplit[3] / 3.0)
+                        };
+                        $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+                    }
                     // console.log("Yup!");
                     // $.pauseEvent(e);
                 }
