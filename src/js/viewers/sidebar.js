@@ -168,7 +168,13 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         });
 
         // trigger new filter tab
-        jQuery('.btn.user-filter').click(function() {
+        jQuery('.btn.user-filter').click(function(event) {
+            // hitting enter apparently also triggers a mouse click event in html
+            // the difference between a real click event and a fake one is that real
+            // has originalEvent.detail set to 1 and a fake one is left to 0 (might be more nuanced?)
+            if (event && event.originalEvent && event.originalEvent.detail === 0) {
+                return;
+            }
             if (this.id === "search") {
                 jQuery('.btn.user-filter').removeClass('active');
                 jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');
@@ -199,7 +205,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                             pluralMessage = '<br><br>Note: You can select multiple tabs at a time to view those annotations together!</div>'
                         }
                         jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;"><strong>No Annotations Selected</strong><br>Use the filter buttons above to view ' + messageVals + '.' + pluralMessage)
-
+                        self.searchRequest = $.getUniqueId();
                         return;
                     }
                     jQuery(this).removeClass('active');
@@ -358,9 +364,12 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             if (filteroptions.indexOf('mine') > -1  || ((filteroptions.indexOf('instructor') > -1) && (self.options.instructors.indexOf(self.options.user_id) > -1))) {
                 self.addAnnotation(annotation, updating, false);
             } else {
-                jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
-                $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
-                self.search(self.lastSearchOption);
+                console.log(annotation);
+                if (annotation.media !== "comment") {
+                    jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+                    self.search(self.lastSearchOption);
+                }
             }
         });
 
@@ -509,7 +518,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         $.publishEvent('focusOnContext', self.instance_id, [ann]);
                     }, 350);
                 } else if (self.options.mediaType.toLowerCase() === "image") {
-                    if (e.target.tagName.toLowerCase() === "image"){
+                    if (e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path"){
                         var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
                         var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
                         var bounds = {
@@ -579,9 +588,18 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         var self = this;
         // console.log('sidebar search', options);
         self.lastSearchOption = options;
-
+        if (jQuery('.loading-obj').is(':visible')) {
+            jQuery('.loading-obj').remove();
+        }
+        self.searchRequest = $.getUniqueId();
+        console.log(self.searchRequest, options);
+        var tempRequest = self.searchRequest;
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
+            if (tempRequest !== self.searchRequest) {
+                return;
+            }
+            console.log("RETURN: ", tempRequest, self.searchRequest)
             jQuery('.annotationsHolder.side').html('');
             $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, true]);
             jQuery('.loading-obj').remove();
@@ -661,6 +679,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     };
     
     $.Sidebar.prototype.StorageAnnotationDelete = function(annotation) {
+        console.log(arguments, annotation);
         jQuery('.item-' + annotation.id).remove();
         if (jQuery('.annotationItem').length == 0) {
             jQuery('#empty-alert').css('display', 'block');

@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Monday, March 2nd, 2020, 4:28:07 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Friday, March 6th, 2020, 1:11:32 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,7 +82,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 66);
+/******/ 	return __webpack_require__(__webpack_require__.s = 68);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -27864,7 +27864,7 @@ Hxighlighter.storage = []; // comment out following line when not webpacking
   else {}
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(23)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(24)(module)))
 
 /***/ }),
 /* 3 */
@@ -39342,17 +39342,494 @@ module.exports = __webpack_amd_options__;
 
 /***/ }),
 /* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ * Toastr
+ * Copyright 2012-2015
+ * Authors: John Papa, Hans Fjällemark, and Tim Ferrell.
+ * All Rights Reserved.
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and
+ * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
+ *
+ * ARIA Support: Greta Krafsig
+ *
+ * Project: https://github.com/CodeSeven/toastr
+ */
+/* global define */
+(function (define) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_RESULT__ = (function ($) {
+        return (function () {
+            var $container;
+            var listener;
+            var toastId = 0;
+            var toastType = {
+                error: 'error',
+                info: 'info',
+                success: 'success',
+                warning: 'warning'
+            };
+
+            var toastr = {
+                clear: clear,
+                remove: remove,
+                error: error,
+                getContainer: getContainer,
+                info: info,
+                options: {},
+                subscribe: subscribe,
+                success: success,
+                version: '2.1.4',
+                warning: warning
+            };
+
+            var previousToast;
+
+            return toastr;
+
+            ////////////////
+
+            function error(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.error,
+                    iconClass: getOptions().iconClasses.error,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function getContainer(options, create) {
+                if (!options) { options = getOptions(); }
+                $container = $('#' + options.containerId);
+                if ($container.length) {
+                    return $container;
+                }
+                if (create) {
+                    $container = createContainer(options);
+                }
+                return $container;
+            }
+
+            function info(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.info,
+                    iconClass: getOptions().iconClasses.info,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function subscribe(callback) {
+                listener = callback;
+            }
+
+            function success(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.success,
+                    iconClass: getOptions().iconClasses.success,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function warning(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.warning,
+                    iconClass: getOptions().iconClasses.warning,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function clear($toastElement, clearOptions) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if (!clearToast($toastElement, options, clearOptions)) {
+                    clearContainer(options);
+                }
+            }
+
+            function remove($toastElement) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if ($toastElement && $(':focus', $toastElement).length === 0) {
+                    removeToast($toastElement);
+                    return;
+                }
+                if ($container.children().length) {
+                    $container.remove();
+                }
+            }
+
+            // internal functions
+
+            function clearContainer (options) {
+                var toastsToClear = $container.children();
+                for (var i = toastsToClear.length - 1; i >= 0; i--) {
+                    clearToast($(toastsToClear[i]), options);
+                }
+            }
+
+            function clearToast ($toastElement, options, clearOptions) {
+                var force = clearOptions && clearOptions.force ? clearOptions.force : false;
+                if ($toastElement && (force || $(':focus', $toastElement).length === 0)) {
+                    $toastElement[options.hideMethod]({
+                        duration: options.hideDuration,
+                        easing: options.hideEasing,
+                        complete: function () { removeToast($toastElement); }
+                    });
+                    return true;
+                }
+                return false;
+            }
+
+            function createContainer(options) {
+                $container = $('<div/>')
+                    .attr('id', options.containerId)
+                    .addClass(options.positionClass);
+
+                $container.appendTo($(options.target));
+                return $container;
+            }
+
+            function getDefaults() {
+                return {
+                    tapToDismiss: true,
+                    toastClass: 'toast',
+                    containerId: 'toast-container',
+                    debug: false,
+
+                    showMethod: 'fadeIn', //fadeIn, slideDown, and show are built into jQuery
+                    showDuration: 300,
+                    showEasing: 'swing', //swing and linear are built into jQuery
+                    onShown: undefined,
+                    hideMethod: 'fadeOut',
+                    hideDuration: 1000,
+                    hideEasing: 'swing',
+                    onHidden: undefined,
+                    closeMethod: false,
+                    closeDuration: false,
+                    closeEasing: false,
+                    closeOnHover: true,
+
+                    extendedTimeOut: 1000,
+                    iconClasses: {
+                        error: 'toast-error',
+                        info: 'toast-info',
+                        success: 'toast-success',
+                        warning: 'toast-warning'
+                    },
+                    iconClass: 'toast-info',
+                    positionClass: 'toast-top-right',
+                    timeOut: 5000, // Set timeOut and extendedTimeOut to 0 to make it sticky
+                    titleClass: 'toast-title',
+                    messageClass: 'toast-message',
+                    escapeHtml: false,
+                    target: 'body',
+                    closeHtml: '<button type="button">&times;</button>',
+                    closeClass: 'toast-close-button',
+                    newestOnTop: true,
+                    preventDuplicates: false,
+                    progressBar: false,
+                    progressClass: 'toast-progress',
+                    rtl: false
+                };
+            }
+
+            function publish(args) {
+                if (!listener) { return; }
+                listener(args);
+            }
+
+            function notify(map) {
+                var options = getOptions();
+                var iconClass = map.iconClass || options.iconClass;
+
+                if (typeof (map.optionsOverride) !== 'undefined') {
+                    options = $.extend(options, map.optionsOverride);
+                    iconClass = map.optionsOverride.iconClass || iconClass;
+                }
+
+                if (shouldExit(options, map)) { return; }
+
+                toastId++;
+
+                $container = getContainer(options, true);
+
+                var intervalId = null;
+                var $toastElement = $('<div/>');
+                var $titleElement = $('<div/>');
+                var $messageElement = $('<div/>');
+                var $progressElement = $('<div/>');
+                var $closeElement = $(options.closeHtml);
+                var progressBar = {
+                    intervalId: null,
+                    hideEta: null,
+                    maxHideTime: null
+                };
+                var response = {
+                    toastId: toastId,
+                    state: 'visible',
+                    startTime: new Date(),
+                    options: options,
+                    map: map
+                };
+
+                personalizeToast();
+
+                displayToast();
+
+                handleEvents();
+
+                publish(response);
+
+                if (options.debug && console) {
+                    console.log(response);
+                }
+
+                return $toastElement;
+
+                function escapeHtml(source) {
+                    if (source == null) {
+                        source = '';
+                    }
+
+                    return source
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                }
+
+                function personalizeToast() {
+                    setIcon();
+                    setTitle();
+                    setMessage();
+                    setCloseButton();
+                    setProgressBar();
+                    setRTL();
+                    setSequence();
+                    setAria();
+                }
+
+                function setAria() {
+                    var ariaValue = '';
+                    switch (map.iconClass) {
+                        case 'toast-success':
+                        case 'toast-info':
+                            ariaValue =  'polite';
+                            break;
+                        default:
+                            ariaValue = 'assertive';
+                    }
+                    $toastElement.attr('aria-live', ariaValue);
+                }
+
+                function handleEvents() {
+                    if (options.closeOnHover) {
+                        $toastElement.hover(stickAround, delayedHideToast);
+                    }
+
+                    if (!options.onclick && options.tapToDismiss) {
+                        $toastElement.click(hideToast);
+                    }
+
+                    if (options.closeButton && $closeElement) {
+                        $closeElement.click(function (event) {
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            } else if (event.cancelBubble !== undefined && event.cancelBubble !== true) {
+                                event.cancelBubble = true;
+                            }
+
+                            if (options.onCloseClick) {
+                                options.onCloseClick(event);
+                            }
+
+                            hideToast(true);
+                        });
+                    }
+
+                    if (options.onclick) {
+                        $toastElement.click(function (event) {
+                            options.onclick(event);
+                            hideToast();
+                        });
+                    }
+                }
+
+                function displayToast() {
+                    $toastElement.hide();
+
+                    $toastElement[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing, complete: options.onShown}
+                    );
+
+                    if (options.timeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.timeOut);
+                        progressBar.maxHideTime = parseFloat(options.timeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                        if (options.progressBar) {
+                            progressBar.intervalId = setInterval(updateProgress, 10);
+                        }
+                    }
+                }
+
+                function setIcon() {
+                    if (map.iconClass) {
+                        $toastElement.addClass(options.toastClass).addClass(iconClass);
+                    }
+                }
+
+                function setSequence() {
+                    if (options.newestOnTop) {
+                        $container.prepend($toastElement);
+                    } else {
+                        $container.append($toastElement);
+                    }
+                }
+
+                function setTitle() {
+                    if (map.title) {
+                        var suffix = map.title;
+                        if (options.escapeHtml) {
+                            suffix = escapeHtml(map.title);
+                        }
+                        $titleElement.append(suffix).addClass(options.titleClass);
+                        $toastElement.append($titleElement);
+                    }
+                }
+
+                function setMessage() {
+                    if (map.message) {
+                        var suffix = map.message;
+                        if (options.escapeHtml) {
+                            suffix = escapeHtml(map.message);
+                        }
+                        $messageElement.append(suffix).addClass(options.messageClass);
+                        $toastElement.append($messageElement);
+                    }
+                }
+
+                function setCloseButton() {
+                    if (options.closeButton) {
+                        $closeElement.addClass(options.closeClass).attr('role', 'button');
+                        $toastElement.prepend($closeElement);
+                    }
+                }
+
+                function setProgressBar() {
+                    if (options.progressBar) {
+                        $progressElement.addClass(options.progressClass);
+                        $toastElement.prepend($progressElement);
+                    }
+                }
+
+                function setRTL() {
+                    if (options.rtl) {
+                        $toastElement.addClass('rtl');
+                    }
+                }
+
+                function shouldExit(options, map) {
+                    if (options.preventDuplicates) {
+                        if (map.message === previousToast) {
+                            return true;
+                        } else {
+                            previousToast = map.message;
+                        }
+                    }
+                    return false;
+                }
+
+                function hideToast(override) {
+                    var method = override && options.closeMethod !== false ? options.closeMethod : options.hideMethod;
+                    var duration = override && options.closeDuration !== false ?
+                        options.closeDuration : options.hideDuration;
+                    var easing = override && options.closeEasing !== false ? options.closeEasing : options.hideEasing;
+                    if ($(':focus', $toastElement).length && !override) {
+                        return;
+                    }
+                    clearTimeout(progressBar.intervalId);
+                    return $toastElement[method]({
+                        duration: duration,
+                        easing: easing,
+                        complete: function () {
+                            removeToast($toastElement);
+                            clearTimeout(intervalId);
+                            if (options.onHidden && response.state !== 'hidden') {
+                                options.onHidden();
+                            }
+                            response.state = 'hidden';
+                            response.endTime = new Date();
+                            publish(response);
+                        }
+                    });
+                }
+
+                function delayedHideToast() {
+                    if (options.timeOut > 0 || options.extendedTimeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.extendedTimeOut);
+                        progressBar.maxHideTime = parseFloat(options.extendedTimeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                    }
+                }
+
+                function stickAround() {
+                    clearTimeout(intervalId);
+                    progressBar.hideEta = 0;
+                    $toastElement.stop(true, true)[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing}
+                    );
+                }
+
+                function updateProgress() {
+                    var percentage = ((progressBar.hideEta - (new Date().getTime())) / progressBar.maxHideTime) * 100;
+                    $progressElement.width(percentage + '%');
+                }
+            }
+
+            function getOptions() {
+                return $.extend({}, getDefaults(), toastr.options);
+            }
+
+            function removeToast($toastElement) {
+                if (!$container) { $container = getContainer(); }
+                if ($toastElement.is(':visible')) {
+                    return;
+                }
+                $toastElement.remove();
+                $toastElement = null;
+                if ($container.children().length === 0) {
+                    $container.remove();
+                    previousToast = undefined;
+                }
+            }
+
+        })();
+    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+}(__webpack_require__(49)));
+
+
+/***/ }),
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(24);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
 /* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
 /* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
+/* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(26);
 /* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(timeago__WEBPACK_IMPORTED_MODULE_3__);
 /**
  * 
@@ -39374,10 +39851,10 @@ __webpack_require__(9);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(26),
-        viewer: __webpack_require__(27),
-        annotationSection: __webpack_require__(28),
-        annotationItem: __webpack_require__(29)
+        editor: __webpack_require__(27),
+        viewer: __webpack_require__(28),
+        annotationSection: __webpack_require__(29),
+        annotationItem: __webpack_require__(30)
       },
       template_suffix: "sidebar",
       template_urls: ""
@@ -39515,7 +39992,14 @@ __webpack_require__(9);
       self.search(ops);
     }); // trigger new filter tab
 
-    jQuery('.btn.user-filter').click(function () {
+    jQuery('.btn.user-filter').click(function (event) {
+      // hitting enter apparently also triggers a mouse click event in html
+      // the difference between a real click event and a fake one is that real
+      // has originalEvent.detail set to 1 and a fake one is left to 0 (might be more nuanced?)
+      if (event && event.originalEvent && event.originalEvent.detail === 0) {
+        return;
+      }
+
       if (this.id === "search") {
         jQuery('.btn.user-filter').removeClass('active');
         jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //.removeClass('fa-toggle-on').addClass('fa-toggle-off');
@@ -39550,6 +40034,7 @@ __webpack_require__(9);
             }
 
             jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;"><strong>No Annotations Selected</strong><br>Use the filter buttons above to view ' + messageVals + '.' + pluralMessage);
+            self.searchRequest = $.getUniqueId();
             return;
           }
 
@@ -39715,9 +40200,13 @@ __webpack_require__(9);
       if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor') > -1 && self.options.instructors.indexOf(self.options.user_id) > -1) {
         self.addAnnotation(annotation, updating, false);
       } else {
-        jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
-        $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
-        self.search(self.lastSearchOption);
+        console.log(annotation);
+
+        if (annotation.media !== "comment") {
+          jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
+          $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+          self.search(self.lastSearchOption);
+        }
       }
     });
     $.subscribeEvent('searchTag', self.instance_id, function (_, tag) {
@@ -39873,7 +40362,7 @@ __webpack_require__(9);
             $.publishEvent('focusOnContext', self.instance_id, [ann]);
           }, 350);
         } else if (self.options.mediaType.toLowerCase() === "image") {
-          if (e.target.tagName.toLowerCase() === "image") {
+          if (e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path") {
             var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
             var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
               return parseInt(val, 10);
@@ -39884,7 +40373,6 @@ __webpack_require__(9);
               width: boundSplit[2] + boundSplit[2] / 3.0,
               height: boundSplit[3] + boundSplit[3] / 3.0
             };
-            console.log(bounds, boundSplit);
             $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
           } // console.log("Yup!");
           // $.pauseEvent(e);
@@ -39948,8 +40436,21 @@ __webpack_require__(9);
     var self = this; // console.log('sidebar search', options);
 
     self.lastSearchOption = options;
+
+    if (jQuery('.loading-obj').is(':visible')) {
+      jQuery('.loading-obj').remove();
+    }
+
+    self.searchRequest = $.getUniqueId();
+    console.log(self.searchRequest, options);
+    var tempRequest = self.searchRequest;
     jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
+      if (tempRequest !== self.searchRequest) {
+        return;
+      }
+
+      console.log("RETURN: ", tempRequest, self.searchRequest);
       jQuery('.annotationsHolder.side').html('');
       $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, true]);
       jQuery('.loading-obj').remove();
@@ -40023,6 +40524,7 @@ __webpack_require__(9);
   $.Sidebar.prototype.StorageAnnotationSave = function (annotations) {};
 
   $.Sidebar.prototype.StorageAnnotationDelete = function (annotation) {
+    console.log(arguments, annotation);
     jQuery('.item-' + annotation.id).remove();
 
     if (jQuery('.annotationItem').length == 0) {
@@ -40099,7 +40601,7 @@ __webpack_require__(9);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -40127,13 +40629,13 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -40369,7 +40871,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -40386,7 +40888,7 @@ return __p
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -40433,7 +40935,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -40536,7 +41038,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -40665,7 +41167,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -40680,7 +41182,7 @@ __webpack_require__(12);
 
 __webpack_require__(13);
 
-__webpack_require__(31);
+__webpack_require__(32);
 
 (function ($) {
   /**
@@ -40751,7 +41253,7 @@ __webpack_require__(31);
             var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
             var inside = bufferHTML.match(regex);
             jQuery.each(inside, function (_, image_tags) {
-              new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
+              var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
               bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href=\"' + new_img_url + "\">[External Image Link]</a>");
             }); // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
 
@@ -40776,8 +41278,6 @@ __webpack_require__(31);
           }
         },
         onChange: function onChange(contents, $editable) {
-          console.log($editable);
-
           if ($editable && contents.length > maxLength) {
             $editable.html(contents.trim().substring(0, maxLength));
           }
@@ -41009,13 +41509,13 @@ __webpack_require__(31);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41032,7 +41532,7 @@ __webpack_require__(8);
 
 __webpack_require__(9);
 
-__webpack_require__(33);
+__webpack_require__(34);
 
 (function ($) {
   /**
@@ -41256,13 +41756,13 @@ __webpack_require__(33);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41271,7 +41771,7 @@ __webpack_require__(33);
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(35);
+__webpack_require__(36);
 
 (function ($) {
   /**
@@ -41478,13 +41978,13 @@ __webpack_require__(35);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41493,7 +41993,7 @@ __webpack_require__(35);
  *
  */
 //uncomment to add css file
-__webpack_require__(37);
+__webpack_require__(38);
 
 (function ($) {
   /**
@@ -41561,7 +42061,7 @@ __webpack_require__(37);
       self.first_time = false;
     }
 
-    var tokenHTML = "<div class='tag-token-list'><span>Available Tags:</span><br>";
+    var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br>";
     self.options.tagList.forEach(function (tag) {
       tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
     });
@@ -41595,13 +42095,13 @@ __webpack_require__(37);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41610,7 +42110,7 @@ __webpack_require__(37);
  *
  */
 //uncomment to add css file
-__webpack_require__(39);
+__webpack_require__(40);
 
 (function ($) {
   /**
@@ -41662,13 +42162,13 @@ __webpack_require__(39);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41745,7 +42245,7 @@ __webpack_require__(39);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41754,7 +42254,7 @@ __webpack_require__(39);
  *
  */
 //uncomment to add css file
-__webpack_require__(42);
+__webpack_require__(43);
 
 (function ($) {
   /**
@@ -41865,13 +42365,13 @@ __webpack_require__(42);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42012,13 +42512,13 @@ __webpack_require__(42);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42038,7 +42538,7 @@ __webpack_require__(12);
 
 __webpack_require__(13);
 
-__webpack_require__(46);
+__webpack_require__(47);
 
 
 
@@ -42049,14 +42549,73 @@ __webpack_require__(46);
    * @params {Object} options - specific options for this plugin
    */
   $.Reply = function (options, instanceID) {
+    var self = this;
     this.options = jQuery.extend({
       height: 70,
       focus: true,
       width: 356,
       dialogsInBody: true,
+      maximumImageFileSize: 262144,
+      maxTextLength: 1000,
       // airMode: true,
       placeholder: "Reply to annotation...",
-      toolbar: [['font', ['bold', 'italic', 'underline', 'link']]]
+      toolbar: [['font', ['bold', 'italic', 'underline', 'link']]],
+      onCreateLink: function onCreateLink(link) {
+        var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/;
+
+        if (link.match(linkValidator)) {
+          linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link) ? link : 'http://' + link;
+          return linkUrl;
+        } else {
+          alert("You did not enter a valid URL, it has been removed.");
+          return 'http://example.org';
+        }
+      },
+      callbacks: {
+        onPaste: function onPaste(e) {
+          var t = e.currentTarget.innerText;
+          var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
+          var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
+
+          if (bufferHTML.indexOf('<img') > -1 && self.options.instructors.indexOf(self.options.user_id) == -1) {
+            var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
+            var inside = bufferHTML.match(regex);
+            jQuery.each(inside, function (_, image_tags) {
+              var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
+
+              if (new_img_url.indexOf('data:image') > -1) {
+                alert('You are not allowed to paste images in annotations. Add a descriptive link instead.');
+                bufferHTML = bufferHTML.replace(image_tags, '');
+              } else {
+                bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href=\"' + new_img_url + "\">[External Image Link]</a>");
+              }
+            }); // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
+
+            console.log(bufferHTML);
+            setTimeout(function () {
+              // wrap in a timer to prevent issues in Firefox
+              self.elementObj.summernote('code', bufferHTML);
+              jQuery('#maxContentPost').text(1000);
+              alert('You may have pasted an image. It will be converted to a link.');
+            }, 100);
+          }
+
+          if (t.length + bufferText.length >= 1000) {
+            e.preventDefault();
+            var bufferTextAllowed = bufferText.trim().substring(0, 1000 - t.length);
+            setTimeout(function () {
+              // wrap in a timer to prevent issues in Firefox
+              document.execCommand('insertText', false, bufferTextAllowed);
+              jQuery('#maxContentPost').text(1000 - t.length);
+              alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.');
+            }, 10);
+          }
+        },
+        onKeyup: function onKeyup(e) {
+          var t = e.currentTarget.innerText;
+          jQuery('#maxContentPost').text(1000 - t.trim().length);
+        }
+      }
     }, options);
     this.init();
     this.instanceID = instanceID;
@@ -42354,12 +42913,17 @@ __webpack_require__(46);
       display_name = self.options.common_instructor_name;
     }
 
+    if (reply.creator.id === self.options.user_id) {
+      delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
+    }
+
     jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + delete_option + "<strong>" + display_name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
     jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
       'title': 'Delete Reply?',
       'content': 'Would you like to delete your reply? This is permanent.',
       'buttons': {
         confirm: function confirm() {
+          console.log(annotation, reply);
           $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
           annotation.replies = annotation.replies.filter(function (ann) {
             if (ann.id !== reply.id) {
@@ -42368,9 +42932,11 @@ __webpack_require__(46);
           });
           annotation.totalReplies--;
 
-          annotation._local.highlights.forEach(function (high) {
-            jQuery(high).data('annotation', annotation);
-          });
+          if (annotation._local && annotation._local.highlights) {
+            annotation._local.highlights.forEach(function (high) {
+              jQuery(high).data('annotation', annotation);
+            });
+          }
 
           jQuery('.reply.reply-item-' + reply.id).remove();
           jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
@@ -42403,22 +42969,22 @@ __webpack_require__(46);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+/* WEBPACK VAR INJECTION */(function(jQuery, toastr) {/**
  *  Badges Annotations Plugin
  *  
  *
  */
 //uncomment to add css file
-__webpack_require__(48);
+__webpack_require__(50);
 
 (function ($) {
   /**
@@ -42440,6 +43006,14 @@ __webpack_require__(48);
     var self = this; //console.log('test!');
 
     self.setUpListeners();
+    toastr.options = {
+      progressBar: true,
+      preventDuplicates: true,
+      'showDuration': '400',
+      'hideDuration': '1000',
+      timeOut: '7000',
+      'positionClass': 'toast-top-left'
+    };
   };
 
   $.Badges.prototype.setUpListeners = function () {
@@ -42452,6 +43026,7 @@ __webpack_require__(48);
       }
     });
     $.subscribeEvent('increaseBadgeCount', self.instanceID, function (_, elem) {
+      toastr.info("Annotation was created and can be seen when 'Mine' filter is turned on.");
       var count = jQuery(elem).data('hxbadge');
 
       if (count) {
@@ -42499,55 +43074,64 @@ __webpack_require__(48);
   });
   $.plugins.push($.Badges);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(22)))
 
 /***/ }),
-/* 48 */
+/* 49 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+	throw new Error("define cannot be used indirect");
+};
+
+
+/***/ }),
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * 
  */
 //during deployment, this is what decides what gets instantiated, should be moved elsewhere
-__webpack_require__(50);
-
-__webpack_require__(51);
-
-__webpack_require__(22);
-
 __webpack_require__(52);
 
-__webpack_require__(30);
+__webpack_require__(53);
+
+__webpack_require__(23);
+
+__webpack_require__(54);
+
+__webpack_require__(31);
 
 __webpack_require__(10);
 
-__webpack_require__(32);
+__webpack_require__(33);
 
-__webpack_require__(34);
-
-__webpack_require__(56);
+__webpack_require__(35);
 
 __webpack_require__(58);
 
 __webpack_require__(60);
 
-__webpack_require__(61);
+__webpack_require__(62);
 
 __webpack_require__(63);
 
-__webpack_require__(36);
+__webpack_require__(65);
 
-__webpack_require__(38);
+__webpack_require__(37);
 
-__webpack_require__(40);
+__webpack_require__(39);
 
 __webpack_require__(41);
+
+__webpack_require__(42);
 
 (function ($) {
   /**
@@ -43083,7 +43667,7 @@ __webpack_require__(41);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43206,7 +43790,7 @@ var hrange = __webpack_require__(4);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
@@ -43421,12 +44005,12 @@ var hrange = __webpack_require__(4);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(53);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(55);
 /* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
@@ -43447,8 +44031,8 @@ var annotator = annotator ? annotator : __webpack_require__(7);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(54),
-        viewer: __webpack_require__(55)
+        editor: __webpack_require__(56),
+        viewer: __webpack_require__(57)
       },
       template_suffix: "floating",
       template_urls: ""
@@ -43883,13 +44467,13 @@ var annotator = annotator ? annotator : __webpack_require__(7);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -43906,7 +44490,7 @@ return __p
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -43963,7 +44547,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -43972,7 +44556,7 @@ return __p
  *
  */
 //uncomment to add css file
-__webpack_require__(57);
+__webpack_require__(59);
 
 (function ($) {
   /**
@@ -44029,13 +44613,13 @@ __webpack_require__(57);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44043,7 +44627,7 @@ __webpack_require__(57);
  *  
  *
  */
-__webpack_require__(59);
+__webpack_require__(61);
 
 (function ($) {
   /**
@@ -44163,13 +44747,13 @@ __webpack_require__(59);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
@@ -44753,7 +45337,7 @@ __webpack_require__(59);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44761,7 +45345,7 @@ __webpack_require__(59);
  *  
  *
  */
-__webpack_require__(62);
+__webpack_require__(64);
 
 (function ($) {
   /**
@@ -44831,13 +45415,13 @@ __webpack_require__(62);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44847,7 +45431,7 @@ __webpack_require__(62);
  */
 var annotator = annotator ? annotator : __webpack_require__(7); //uncomment to add css file
 
-__webpack_require__(64);
+__webpack_require__(66);
 
 (function ($) {
   /**
@@ -44945,16 +45529,16 @@ __webpack_require__(64);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(jQuery) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
+/* WEBPACK VAR INJECTION */(function(jQuery, toastr) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 var hrange = __webpack_require__(4);
 
 (function ($) {
@@ -45022,37 +45606,20 @@ var hrange = __webpack_require__(4);
       },
       error: function error(xhr, status, _error) {
         if (xhr.status === 401) {
-          $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. If refreshing page does not work contact instructor. (Error code 401)", {
-            buttons: [],
-            time: 5
-          }]);
+          toastr.error("You do not have permission to access the database. If refreshing page does not work contact instructor.", "(Error code 401)");
         } else if (xhr.status === 500) {
-          $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {
-            time: 0,
-            modal: true
-          }]);
+          toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)");
         } else if (xhr.status == 403) {
-          $.publishEvent('HxAlert', self.instance_id, ["I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action. (Error code 403)", {
-            buttons: [],
-            time: 5
-          }]);
+          toastr.error("I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action.", "(Error code 403)");
         } else {
           if (self.options.instructors.indexOf(self.options.user_id) !== -1) {
             if (xhr.status === 409) {
-              $.publishEvent('HxAlert', self.instance_id, ["If importing annotations check that user_id of the annotation matches your own. (Error code 409)", {
-                time: 0,
-                modal: true
-              }]);
+              toastr.error("If importing annotations check that user_id of the annotation matches your own.", "(Error code 409)");
             } else if (xhr.status === 422) {
-              $.publishEvent('HxAlert', self.instance_id, ["If importing, something critical was removed in the process. (Error code 422)", {
-                time: 0,
-                modal: true
-              }]);
+              toastr.error("If importing, something critical was removed in the process.", "(Error code 422)");
             }
           } else {
-            $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor. (Error code ' + xhr.status + ')', {
-              time: 0
-            }]);
+            toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error code ' + xhr.status + ')');
           }
         }
 
@@ -45095,19 +45662,17 @@ var hrange = __webpack_require__(4);
 
 
         if (xhr.status === 401) {
-          $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {
-            buttons: [],
-            time: 5
-          }]);
+          toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)");
         } else if (xhr.status === 500) {
-          $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {
-            time: 0,
-            modal: true
-          }]);
+          toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)");
+        } else if (xhr.status === 409) {
+          if (xhr.responseJSON['payload'][0].indexOf('missing parent') > -1) {
+            toastr.error('Error: Item being annotated or replied to has been deleted so your annotation/reply was not saved.', '(Error 409)');
+          } else {
+            toastr.error("Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.", '(Error 409)');
+          }
         } else {
-          $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {
-            time: 0
-          }]);
+          toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
         }
       }
     });
@@ -45136,19 +45701,11 @@ var hrange = __webpack_require__(4);
         }
 
         if (xhr.status === 401) {
-          $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {
-            buttons: [],
-            time: 5
-          }]);
+          toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)");
         } else if (xhr.status === 500) {
-          $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {
-            time: 0,
-            modal: true
-          }]);
+          toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)");
         } else {
-          $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {
-            time: 0
-          }]);
+          toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
         }
       }
     });
@@ -45177,19 +45734,11 @@ var hrange = __webpack_require__(4);
       },
       error: function error(xhr, status, _error4) {
         if (xhr.status === 401) {
-          $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {
-            buttons: [],
-            time: 5
-          }]);
+          toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)");
         } else if (xhr.status === 500) {
-          $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {
-            time: 0,
-            modal: true
-          }]);
+          toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)");
         } else {
-          $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {
-            time: 0
-          }]);
+          toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
         }
 
         if (typeof errCallBack === "function") {
@@ -45758,17 +46307,17 @@ var hrange = __webpack_require__(4);
 
   $.storage.push($.CatchPy);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(22)))
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(67);
+module.exports = __webpack_require__(69);
 
 
 /***/ }),
-/* 67 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45779,7 +46328,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(44);
+/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(45);
 /* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_css_text_css__WEBPACK_IMPORTED_MODULE_3__);
 
 
@@ -45795,22 +46344,22 @@ __webpack_require__(1);
 
 __webpack_require__(20);
 
-__webpack_require__(45);
+__webpack_require__(46);
 
-__webpack_require__(47);
+__webpack_require__(48);
 
-__webpack_require__(49);
+__webpack_require__(51);
 
-__webpack_require__(68);
+__webpack_require__(70);
 
-__webpack_require__(43);
+__webpack_require__(44);
 
-__webpack_require__(65);
+__webpack_require__(67);
 
-__webpack_require__(69);
+__webpack_require__(71);
 
 /***/ }),
-/* 68 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -45867,7 +46416,7 @@ __webpack_require__(69);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 69 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -45876,7 +46425,7 @@ __webpack_require__(69);
  *
  */
 //uncomment to add css file
-__webpack_require__(70);
+__webpack_require__(72);
 
 (function ($) {
   /**
@@ -45935,7 +46484,7 @@ __webpack_require__(70);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 70 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin

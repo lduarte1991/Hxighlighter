@@ -88,7 +88,7 @@ require('./hx-summernote-plugin.css');
                         var regex = new RegExp(/<img([\w\W ]+?)\/?>/g)
                         var inside = bufferHTML.match(regex);
                         jQuery.each(inside, function(_, image_tags) {
-                            new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
+                            var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
                             bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href=\"' + new_img_url + "\">[External Image Link]</a>");
                         });
                         // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
@@ -111,7 +111,6 @@ require('./hx-summernote-plugin.css');
                     }
                 },
                 onChange: function(contents, $editable) {
-                    console.log($editable);
                     if ($editable && contents.length > maxLength) {
                         $editable.html(contents.trim().substring(0, maxLength));
                     }

@@ -49,6 +49,29 @@
                 <div class='annotations-section'>
                     <div id="viewer" class="hx-mirador"></div>
                 </div>
+                <footer class="hx-footer"></footer>
+                <style>
+                     .hx-footer {
+                        width: 100%;
+                        height: 15px;
+                        height: var(--footer-height);
+                        position: fixed;
+                        bottom: 0;
+                        left: 0;
+                        z-index: 9999999999999;
+                        /* background: black; */
+                        background: #ededed;
+                        /*-webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.39);
+                        -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.39);
+                        box-shadow: 0px -3px 5px 0px rgba(0,0,0,0.39);*/
+                        border: 1px solid #c0c0c0;
+                    }
+
+                    :root {
+                        --footer-height: 15px;
+                        --sidebar-footer-height: 15px;
+                    };
+                </style>
             </section>
         </main>
         <script type="text/javascript" src="./hxighlighter_image_m2.js"></script>
@@ -60,7 +83,7 @@
                     "collection_id": "e-a-poe-section",
                     "object_id": "https://oculus.harvardx.harvard.edu/manifests/chx:201501/canvas/canvas-400098039.json",
                     "username": "Student",
-                    "user_id": "fake-anonymous-id-inst",
+                    "user_id": "fake-anonymous-id-student",
                     "instructors": ['fake-anonymous-id-inst'],
                     "common_instructor_name": "HxStaff"
                 },
@@ -94,7 +117,7 @@
                         defaultTab: 'mine',
                         tabsAvailable: [ 'search', 'mine', 'instructor', 'peer' ],
                         sidebarversion: 'sidemenu',
-                        pagination: 100,
+                        pagination: 5,
                     },
                     Badges: {
                     },
@@ -111,10 +134,10 @@
                             catchpy: 'https://devo.catchpy.harvardx.harvard.edu/annos/'
                         },
                         //student
-                        // token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLXN0dWRlbnQiLCJpc3N1ZWRBdCI6IjIwMjAtMDMtMDJUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.Lc1c_aEeGbtHXG9IuvfL_dEcN4xWU173UfQcJTSNfJE",
+                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLXN0dWRlbnQiLCJpc3N1ZWRBdCI6IjIwMjAtMDMtMDVUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.BHZN9HUvW2Zn9clk05maBFkfxwRBczQ0kVF53aiUPqg",
                         //instructor
-                        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLWluc3QiLCJpc3N1ZWRBdCI6IjIwMjAtMDMtMDJUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.leR1FN20AKiWdJzRAyYONzYMFYkINI4bLZwuYvqcXds",
-                        pagination: 100,
+                        // token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6Imxhbm5pc3RlciIsInVzZXJJZCI6ImZha2UtYW5vbnltb3VzLWlkLWluc3QiLCJpc3N1ZWRBdCI6IjIwMjAtMDMtMDVUMDE6MjQ6MTYuMTgxNDA4KzAwOjAwIiwidHRsIjoyNTkyMDAsIm92ZXJyaWRlIjpbXX0.72qTdlxXS9kYUC3mL6GZOMTqZC55dGWTfnLjdV0dhE8",
+                        pagination: 5,
                         database_params: {
                             resource_link_id: "",
                             utm_source: "",

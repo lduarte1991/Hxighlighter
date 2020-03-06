@@ -72,9 +72,9 @@ span.annotation-instructor {
 #viewer { 
     position: fixed; 
     height:100%; 
-    height: calc(100% - 27px); 
-    height: -webkit-calc(100% - 27px);
-    height:-moz-calc(100% - 27px);
+    height: calc(100% - 27px - 15px); 
+    height: -webkit-calc(100% - 27px - 15px);
+    height:-moz-calc(100% - 27px - 15px);
     top: 27px;
     left: 0;
     min-width: 733px;
@@ -271,4 +271,32 @@ img.annotation-thumbnail {
 
 .modal-open .modal {
     position: relative;
+}
+
+.mirador-osd-context-controls.hud-container {
+    background: rgba(0,0,0,0.7);
+    padding-top: 5px;
+    padding-left: 5px;
+    border-radius: 10px;
+    width: 198px;
+    opacity: 0.6;
+}
+
+.mirador-osd-context-controls.hud-container:hover {
+    opacity: 1.0;
+}
+
+.mirador-pan-zoom-controls.hud-control {
+    background: rgba(0,0,0,0.7);
+    padding-top: 5px;
+    padding-left: 5px;
+    border-radius: 10px;
+}
+
+.mirador-pan-zoom-controls.hud-control a {
+    margin-right: 5px;
+}
+
+.toast {
+    opacity: 1!important;
 }

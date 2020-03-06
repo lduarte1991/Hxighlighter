@@ -64,20 +64,20 @@ var hrange = require('../h-range.js');
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. If refreshing page does not work contact instructor. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. If refreshing page does not work contact instructor.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
                 } else if (xhr.status == 403) {
-                    $.publishEvent('HxAlert', self.instance_id, ["I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action. (Error code 403)", {buttons:[], time:5}])
+                    toastr.error("I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action.", "(Error code 403)")
                 } else {
                     if (self.options.instructors.indexOf(self.options.user_id) !== -1) {
                         if (xhr.status === 409) {
-                            $.publishEvent('HxAlert', self.instance_id, ["If importing annotations check that user_id of the annotation matches your own. (Error code 409)", {time: 0, modal: true}])
+                            toastr.error("If importing annotations check that user_id of the annotation matches your own.", "(Error code 409)")
                         } else if (xhr.status === 422) {
-                            $.publishEvent('HxAlert', self.instance_id, ["If importing, something critical was removed in the process. (Error code 422)", {time: 0, modal: true}])
+                            toastr.error("If importing, something critical was removed in the process.", "(Error code 422)")
                         } 
                     } else {
-                        $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor. (Error code ' + xhr.status + ')', {time: 0}]);
+                        toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error code ' + xhr.status + ')');
                     }
                 }
                 errfun([xhr, status, error]);
@@ -118,11 +118,17 @@ var hrange = require('../h-range.js');
                 }
                 //console.log(xhr, status, error);
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
+                } else if (xhr.status === 409) {
+                    if (xhr.responseJSON['payload'][0].indexOf('missing parent') > -1) {
+                        toastr.error('Error: Item being annotated or replied to has been deleted so your annotation/reply was not saved.', '(Error 409)')
+                    } else {
+                        toastr.error("Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.", '(Error 409)');
+                    }
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
                 }
             }
         });
@@ -150,11 +156,11 @@ var hrange = require('../h-range.js');
                     errCallBack();
                 }
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
                 }
             }
         })
@@ -183,11 +189,11 @@ var hrange = require('../h-range.js');
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
                 }
                 if (typeof errCallBack === "function") {
                     errCallBack();

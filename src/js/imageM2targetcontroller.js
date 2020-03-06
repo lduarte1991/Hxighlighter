@@ -268,6 +268,41 @@ require('./storage/catchpy.js');
                 };
             });
 
+            self.mir.eventEmitter.subscribe('deleteShape.' + self.windowId, function(event, shape){
+                jQuery('.modal-dialog .modal-footer button.btn.btn-primary').click(function() {
+                    jQuery('.annotation-editor .button-container a.cancel')[0].click();
+                });
+            });
+
+            self.mir.eventEmitter.subscribe('HUD_ADD_CLASS.' + self.windowId, function(event, toggler, toggledClass) {
+                if (toggler === ".mirador-manipulation-toggle") {
+                    jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '338px'}, 150);
+                } else if (toggler === ".mirador-osd-annotations-layer") {
+                    if (jQuery('.mirador-manipulation-toggle').hasClass('selected')){
+                        jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '338px'}, 150);
+                    } else {
+                        jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '198px'}, 150);
+                    }
+                }
+            });
+
+            self.mir.eventEmitter.subscribe('HUD_REMOVE_CLASS.' + self.windowId, function(event, toggler, toggledClass) {
+                if (toggler === ".mirador-manipulation-toggle") {
+                    if (jQuery('.mirador-osd-pointer-mode').is(':visible')){
+                        console.log('')
+                        jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '198px'}, 500);
+                    } else {
+                        jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '36px'}, 500);
+                    }
+                } else if (toggler === ".mirador-osd-annotations-layer") {
+                    if (jQuery('.mirador-manipulation-toggle').hasClass('selected')){
+                        jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '338px'}, 500);
+                    } else {
+                        jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '36px'}, 500);
+                    }
+                }
+            });
+
             self.setUpKeyboardInput();
 
             // self.mir.eventEmitter.subscribe('annotationsRendered.' + self.windowId, function(e) {
@@ -514,11 +549,11 @@ require('./storage/catchpy.js');
             var drawnPaths = overlay._children;
             jQuery.each(drawnPaths, function(_, path) {
                 if (ann.svg.indexOf(path._name) > -1) {
-                    jQuery(path).animate({
+                    setTimeout(function() {
+                        jQuery(path).animate({
                         strokeWidth: "10px"
-                    }, 600).animate({
-                        strokeWidth: "2px"
                     }, 600)
+                    }, 750);
                 }
             });
         });
@@ -588,6 +623,10 @@ require('./storage/catchpy.js');
             // console.log("3. Sending it to store to save", store, ann);
             store.StorageAnnotationSave(ann, self.element, false, function(x){
                 setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('Annotation was created and added to top of Annotation List')}, 500);
+                $.totalAnnotations++;
+                if (typeof(callBack) === "function") {
+                    callBack(x)
+                }
             }, errorCallback);
         });
     };
@@ -603,8 +642,17 @@ require('./storage/catchpy.js');
 
     $.ImageTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
         var self = this;
-        // console.log("DELETING", arguments, ann.id);
-        self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());  
+        if (ann.media === "Annotation") {
+            jQuery.each(self.viewers, function(_, viewer) {
+                viewer.StorageAnnotationDelete(ann);
+            });
+            jQuery.each(self.storage, function(_, store) {
+                store.StorageAnnotationDelete(ann, callBack, errorCallback);
+            });
+        } else {
+            self.mir.eventEmitter.publish('annotationDeleted.' + self.windowId, ann.id.toString());
+            $.totalAnnotations--;
+        }
     };
 
     $.ImageTarget.prototype.ViewerEditorClose = function(ann, is_new_annotation, hit_cancel) {

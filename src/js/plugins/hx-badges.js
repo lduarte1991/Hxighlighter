@@ -7,6 +7,7 @@
 //uncomment to add css file
 require('./hx-badges.css');
 
+
 (function($){
 
     /**
@@ -27,6 +28,14 @@ require('./hx-badges.css');
         var self = this;
         //console.log('test!');
         self.setUpListeners();
+        toastr.options = {
+            progressBar: true,
+            preventDuplicates: true,
+            'showDuration': '400',
+            'hideDuration': '1000',
+            timeOut: '7000',
+            'positionClass': 'toast-top-left'
+        }
     };
 
     $.Badges.prototype.setUpListeners = function() {
@@ -39,6 +48,8 @@ require('./hx-badges.css');
             }
         });
         $.subscribeEvent('increaseBadgeCount', self.instanceID, function(_, elem) {
+            toastr.info("Annotation was created and can be seen when 'Mine' filter is turned on.")
+
             var count = jQuery(elem).data('hxbadge');
             if (count) {
                 self.updateBadge(elem, count + 1);

@@ -21,6 +21,7 @@ module.exports = {
             "$": require.resolve('jquery'),
             'jQuery': require.resolve('jquery'),
             _: require.resolve('lodash'),
+            'toastr': require.resolve('toastr')
         }),
         new MiniCssExtractPlugin({
             filename: 'dist/hxighlighter_[name].css',
