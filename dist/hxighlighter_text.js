@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Friday, March 6th, 2020, 1:11:32 PM  
+// [AIV_SHORT]  Version: 1.0.0 - Thursday, March 12th, 2020, 10:57:56 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -45897,23 +45897,32 @@ var hrange = __webpack_require__(4);
           var svgExists = false;
           var fragVal = "";
           jQuery.each(range['selector']['items'], function (index, selector) {
-            if (selector['type'].toLowerCase() === "svgselector") {
-              var svgVal = selector.value;
+            try {
+              if (selector['type'].toLowerCase() === "svgselector") {
+                var svgVal = selector.value;
 
-              if (fragFound) {
+                if (fragFound) {
+                  svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                }
+
+                annotation['svg'] = svgVal;
+                svgExists = true;
+              } else {
+                fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
+
+                if (svgExists) {
+                  annotation['svg'] = annotation['svg'].replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                }
+
+                fragFound = true;
+              }
+            } catch (e) {
+              if (typeof selector['@type'] !== "undefined") {
+                var fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
+                var svgVal = selector['selector']['item']['value'];
                 svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                annotation['svg'] = svgVal;
               }
-
-              annotation['svg'] = svgVal;
-              svgExists = true;
-            } else {
-              fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
-
-              if (svgExists) {
-                annotation['svg'] = annotation['svg'].replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
-              }
-
-              fragFound = true;
             }
           });
         }
