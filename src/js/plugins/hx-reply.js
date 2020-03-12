@@ -370,7 +370,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
             'content': 'Would you like to delete your reply? This is permanent.',
             'buttons': {
                 confirm: function() {
-                    console.log(annotation, reply);
                     $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
 
                     annotation.replies = annotation.replies.filter(function(ann) {

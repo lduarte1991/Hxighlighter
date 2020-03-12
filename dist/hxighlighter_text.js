@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Thursday, March 12th, 2020, 10:57:56 AM  
+// [AIV_SHORT]  Version: 1.0.0 - Thursday, March 12th, 2020, 4:43:35 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40164,7 +40164,7 @@ __webpack_require__(9);
               jQuery('.side.load-more').remove();
               jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
               $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, false]);
-            }, function () {}]);
+            }, function () {}, true]);
           });
         }
       } else if (self.load_more_open && jQuery(this).scrollTop() + jQuery(this).innerHeight() <= jQuery(this)[0].scrollHeight - 50) {
@@ -40271,7 +40271,14 @@ __webpack_require__(9);
               path.wrap('<clipPath id="' + img_id + '-clippath"></clipPath>');
               img.style = "display: none;";
               var img_url = img.src;
-              var viewBox = sv.getAttribute('viewBox').split(' ');
+              var viewBox;
+
+              try {
+                viewBox = sv.viewBox.split(' ');
+              } catch (e) {
+                viewBox = sv.getAttribute('viewBox').split(' ');
+              }
+
               jQuery(sv)[0].innerHTML += '<image x="' + viewBox[0] + '" y="' + viewBox[1] + '" width="' + viewBox[2] + '" height="' + viewBox[3] + '" clip-path="url(#' + img_id + '-clippath)" class="annotation-thumbnail" href="' + img_url + '" xlink:href="' + img_url + '" />';
               sv.style['max-width'] = w + "px";
               sv.style['max-height'] = w + "px";
@@ -40291,6 +40298,12 @@ __webpack_require__(9);
               }
             }
           }
+        };
+
+        img.onerror = function (e) {
+          console.log('error', e);
+          img.style = 'display: none';
+          jQuery(img).after('<button class="zoom-to-error-button" style="background:#ededed; color: black; border-radius: 5px; border: 1px solid #333;">Zoom to annotation</button>');
         };
 
         img.src = img.dataset['src'];
@@ -40362,7 +40375,9 @@ __webpack_require__(9);
             $.publishEvent('focusOnContext', self.instance_id, [ann]);
           }, 350);
         } else if (self.options.mediaType.toLowerCase() === "image") {
-          if (e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path") {
+          var elementClass = e.target.getAttribute('class');
+
+          if (elementClass && elementClass.indexOf('zoom-to-error-button') > -1 || e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path") {
             var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
             var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
               return parseInt(val, 10);
@@ -42923,7 +42938,7 @@ __webpack_require__(47);
       'content': 'Would you like to delete your reply? This is permanent.',
       'buttons': {
         confirm: function confirm() {
-          console.log(annotation, reply);
+          console.log('deleting reply: ', annotation, reply);
           $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
           annotation.replies = annotation.replies.filter(function (ann) {
             if (ann.id !== reply.id) {
@@ -45918,7 +45933,7 @@ var hrange = __webpack_require__(4);
               }
             } catch (e) {
               if (typeof selector['@type'] !== "undefined") {
-                var fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
+                fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
                 var svgVal = selector['selector']['item']['value'];
                 svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
                 annotation['svg'] = svgVal;

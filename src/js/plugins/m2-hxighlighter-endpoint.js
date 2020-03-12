@@ -10,7 +10,7 @@
             userid:    "test@mirador.org",
             username:  "mirador-test",
             annotationsList: [],        //OA list for Mirador use
-            annotationsListCatch: null,  //internal list for module use
+            annotationsListCatch: [],  //internal list for module use
             windowID: null,
             eventEmitter: null,
             first: true,
@@ -47,8 +47,8 @@
                     callBack(self.getAnnotationInEndpoint(oAnnotation));
                 }
             });
-            Hxighlighter.subscribeEvent('drawFromSearch', '', function(_, anns, converter) {
-                self.drawFromSearch(anns, converter);
+            Hxighlighter.subscribeEvent('drawFromSearch', '', function(_, anns, converter, undrawOld) {
+                self.drawFromSearch(anns, converter, undrawOld);
             });
         },
         set: function(prop, value, options){
@@ -139,8 +139,13 @@
                 // console.log("Should have drawn annotation");
                 self.annotationsList.push(self.getAnnotationInOA(data));
                 self.annotationsListCatch.push(data);
+
                 if (typeof successCallback === "function") {
                     successCallback(self.getAnnotationInOA(data));
+                    self.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
+                        windowId: self.windowID,
+                        annotationsList: self.annotationsList,
+                    });
                     
                 }
             }, function() {
@@ -365,15 +370,18 @@
             // console.log("Should return following:", annotation);
             return annotation;
         },
-        drawFromSearch: function(result, converter) {
+        drawFromSearch: function(result, converter, undrawOld) {
             var self = this;
-            self.annotationsListCatch = [];
-            self.annotationsList = [];
+            if (undrawOld) {
+                self.annotationsListCatch = [];
+                self.annotationsList = [];
+            }
             jQuery.each(result, function(index, value) {
                 self.annotationsList.push(self.getAnnotationInOA(value));
+                self.annotationsListCatch.push(converter(value));
             });
 
-            self.annotationsListCatch = result.map(converter);
+            // self.annotationsListCatch = result.map(converter);
             self.dfd.resolve(true);
             self.eventEmitter.publish('catchAnnotationsLoaded.' + self.windowID, self.annotationsListCatch);
             self.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {

@@ -642,7 +642,7 @@ require('./storage/catchpy.js');
 
     $.ImageTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
         var self = this;
-        if (ann.media === "Annotation") {
+        if (ann.media === "Annotation" || ann.media === "comment") {
             jQuery.each(self.viewers, function(_, viewer) {
                 viewer.StorageAnnotationDelete(ann);
             });
@@ -706,9 +706,9 @@ require('./storage/catchpy.js');
      *
      * @class      StorageAnnotationGetReplies (name)
      */
-    $.ImageTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun) {
+    $.ImageTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun, shouldNotErase) {
         var self = this;
-        if (self.windowId && search_options && search_options.media !== "Annotation") {
+        if (self.windowId && search_options && search_options.media !== "Annotation" && !shouldNotErase) {
             self.mir.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
                 windowId: self.windowId,
                 annotationsList: []
@@ -727,12 +727,14 @@ require('./storage/catchpy.js');
                 viewer.StorageAnnotationLoad(annotations);
             }
         });
+        var endpoint = self.mir.viewer.workspace.slots[0].window.endpoint;
 
         annotations.forEach(function(ann) {
             var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
             $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
         });
-        self.mir.viewer.workspace.slots[0].window.endpoint.drawFromSearch(annotations, converter);
+        
+        endpoint.drawFromSearch(annotations, converter, undrawOld);
     };
 
     $.ImageTarget.prototype.setUpStorage = function(element, options) {

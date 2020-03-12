@@ -361,14 +361,13 @@ var hrange = require('../h-range.js');
                             } else {
                                 fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
                                 if (svgExists) {
-                                    annotation['svg'] = annotation['svg'].replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                                    annotation['svg'] = annotation['svg'].replace('svg xmlns', ('svg ' + fragVal + ' xmlns'));
                                 }
                                 fragFound = true;
                             }
                         } catch(e) {
                             if (typeof(selector['@type']) !== "undefined") {
-
-                                var fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
+                                fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
                                 var svgVal = selector['selector']['item']['value'];
                                 svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
                                 annotation['svg'] = svgVal;
