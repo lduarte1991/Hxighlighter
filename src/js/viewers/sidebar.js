@@ -116,7 +116,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             var doit = self.latestOpenedTabs;
             self.latestOpenedTabs = [];
             jQuery.each(doit, function(_, tab) {
-                console.log(tab);
+                // console.log(tab);
                 jQuery('#' + tab).trigger('click');
             });
             
@@ -162,12 +162,19 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         jQuery('#search-submit').click(function() {
             var searchValue = jQuery('#srch-term').val().trim();
             var searchType = jQuery('.search-bar select').val();
+            // console.log(searchValue, searchType);
             var ops = self.filterByType(searchValue, searchType, undefined);
             self.search(ops);
         });
 
         // trigger new filter tab
-        jQuery('.btn.user-filter').click(function() {
+        jQuery('.btn.user-filter').click(function(event) {
+            // hitting enter apparently also triggers a mouse click event in html
+            // the difference between a real click event and a fake one is that real
+            // has originalEvent.detail set to 1 and a fake one is left to 0 (might be more nuanced?)
+            if (event && event.originalEvent && event.originalEvent.detail === 0) {
+                return;
+            }
             if (this.id === "search") {
                 jQuery('.btn.user-filter').removeClass('active');
                 jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');
@@ -198,7 +205,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                             pluralMessage = '<br><br>Note: You can select multiple tabs at a time to view those annotations together!</div>'
                         }
                         jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;"><strong>No Annotations Selected</strong><br>Use the filter buttons above to view ' + messageVals + '.' + pluralMessage)
-
+                        self.searchRequest = $.getUniqueId();
                         return;
                     }
                     jQuery(this).removeClass('active');
@@ -214,11 +221,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             jQuery('.annotationsHolder').removeClass('search-opened');
                 jQuery('.search-bar.search-toggle').hide();
             var search_options = {
-                type: self.media
+                type: self.options.mediaType
             }
             
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
-
+            // console.log('filter options', filteroptions)
             if (this.id === "search") {
                 jQuery('.annotationsHolder').addClass('search-opened');
                 jQuery('.annotation-filter-buttons').hide();
@@ -243,6 +250,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             } else {
                 possible_exclude = possible_exclude.concat(self.options.instructors);
             }
+            // console.log(possible_include, possible_exclude, self.options, self.options.instructors);
             if (filteroptions.indexOf('peer') > -1) {
                 if (possible_exclude.length > 0) {
                     search_options['exclude_userid'] = possible_exclude
@@ -261,13 +269,13 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     //search_options['userid'] = [];
                 }
             }
-
             self.search(search_options)
         });
 
         jQuery('.sidebar-button#hide_label').click(function() {
             jQuery(':root').css('--sidebar-width', '0px');
             jQuery('.annotationSection').hide();
+            $.publishEvent('resizeWindow', self.instance_id, []);
 
             self.showSidebarTab(self.options.viewer_options.sidebarversion);
         });
@@ -320,7 +328,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                             $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, false]);
                         }, function() {
                             
-                        }]);
+                        }, true]);
 
                     });
                 }
@@ -335,8 +343,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
     $.Sidebar.prototype.showSidebarTab = function(type) {
         // if (type === "smalltab") {
-            jQuery(':root').css('--sidebar-width', '55px');
-            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-comments"></span></div>');
+            jQuery(':root').css('--sidebar-width', '40px');
+            jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>');
         // }
 
         jQuery('.open-sidebar').click(function() {
@@ -350,21 +358,19 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         var self = this;
 
         $.subscribeEvent('StorageAnnotationSave', self.instance_id, function(_, annotation, updating) {
-            console.log("reached here!");
+            // console.log("6. Got Annotation in Viewer", annotation, self.options);
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
-            if (filteroptions.indexOf('mine') > -1 ) {
+            // console.log(filteroptions, filteroptions.indexOf('mine') > -1, (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)))
+            if (filteroptions.indexOf('mine') > -1  || ((filteroptions.indexOf('instructor') > -1) && (self.options.instructors.indexOf(self.options.user_id) > -1))) {
                 self.addAnnotation(annotation, updating, false);
             } else {
-                jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
-                $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+                // console.log(annotation);
+                if (annotation.media !== "comment") {
+                    jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+                    self.search(self.lastSearchOption);
+                }
             }
-        });
-
-        $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
-            jQuery('.item-' + annotation.id).remove();
-            if (jQuery('.annotationItem').length == 0) {
-                jQuery('#empty-alert').css('display', 'block');
-            } 
         });
 
         $.subscribeEvent('searchTag', self.instance_id, function(_, tag) {
@@ -381,16 +387,103 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
         $.subscribeEvent('autosearch', self.instance_id, function(_, term, type) {
             self.autosearch(term, type);
-        })
+        });
+
+        if(self.options.mediaType == "image") {
+            $.subscribeEvent('tryLazyLoad', self.instance_id, function(_, scrollElement) {
+                self.lazyLoadImages(scrollElement);
+            });
+
+            jQuery('.annotationsHolder.side').scroll(function() {  
+                self.lazyLoadImages();
+            });
+        }
+    };
+
+    $.Sidebar.prototype.lazyLoadImages = function(scrollEl) {
+        var self = this;
+        var scrolly = scrollEl || '.side.annotationsHolder';
+        var thumbnails = Array.from(document.querySelectorAll(scrolly + ' img.annotation-thumbnail'));
+        var unloaded_images = thumbnails.filter(function(x) {
+            if (!x.dataset['loaded'] || x.dataset['loaded'] == "false") {
+                return true;
+            }
+        });
+        var scrollableViewer = jQuery(scrolly)[0];
+        var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight;
+        //console.log(currentViewPortLimit);
+        unloaded_images.forEach(function(img) {
+            if (img.getBoundingClientRect().y <= currentViewPortLimit) {    
+                img.onload = function() {
+                    // if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+                    //     //console.log(img.getBoundingClientRect().y, img.nextElementSibling.getBoundingClientRect().y)
+                    //     var diff = img.getBoundingClientRect().y - img.nextElementSibling.getBoundingClientRect().y;
+                    //     img.nextElementSibling.style.top = diff + 'px';
+                    //     //img.nextElementSibling.style.left = "";
+                    //     var w = img.getBoundingClientRect().width;
+                    //     img.nextElementSibling.style['margin-left'] = w + "px";
+                    // } else {
+                    //     img.nextElementSibling.style.left = "";
+                    // }
+                    img.style = "display: inline-block;"
+                    if (img.nextElementSibling.tagName.toLowerCase() === "svg") {
+                        var w = img.getBoundingClientRect().width;
+                        var h = img.getBoundingClientRect().height;
+                        var sv = img.nextElementSibling;
+                        var img_id = sv.classList['value'].replace(' ', '.').replace('thumbnail-svg-', '');
+                        var path = jQuery(sv).find('path');
+                        if (new window.paper.Path(path.attr('d')).isClosed()) {
+                            path.wrap('<clipPath id="' + img_id + '-clippath"></clipPath>');
+                            img.style="display: none;";
+                            var img_url = img.src;
+                            var viewBox;
+                            try {
+                                viewBox = sv.viewBox.split(' ')
+                            } catch(e) {
+                                viewBox = sv.getAttribute('viewBox').split(' ');
+                            }
+                            jQuery(sv)[0].innerHTML += '<image x="'+viewBox[0]+'" y="'+viewBox[1]+'" width="'+viewBox[2]+'" height="'+viewBox[3]+'" clip-path="url(#'+img_id+'-clippath)" class="annotation-thumbnail" href="'+img_url+'" xlink:href="'+img_url+'" />';
+                            sv.style['max-width'] = w + "px";
+                            sv.style['max-height'] = w + "px";
+                            sv.style['margin-left'] = "auto";
+                            sv.style['margin-right'] = "auto";
+                            sv.style['display'] = 'block';
+                        } else {
+                            if (img.getBoundingClientRect().y !== img.nextElementSibling.getBoundingClientRect().y) {
+                                sv.style['position'] = 'absolute';
+                                sv.style['margin-left'] = '-' + w + 'px';
+                                sv.style['width'] = w + 'px';
+                                sv.style['height'] = h + 'px';
+                                sv.style['display'] = 'inline-block';
+                                sv.innerHTML = sv.innerHTML.replace('stroke-width="1"', 'stroke-width="5px"');
+
+                            } else {
+                                img.nextElementSibling.style.left = "";
+                            }
+                        }
+                    }
+                };
+                img.onerror = function(e) {
+                    console.log('error', e);
+                    img.style='display: none';
+                    jQuery(img).after('<button class="zoom-to-error-button" style="background:#ededed; color: black; border-radius: 5px; border: 1px solid #333;">Zoom to annotation</button>')
+                }
+                img.src = img.dataset['src'];
+
+                img.dataset['loaded'] = true;
+            }
+        });
     };
 
     $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
         var self = this;
+        // console.log("7. Should add Annotation to viewer", annotation)
         if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
             ann.index = jQuery('.ann-item').length;
             ann.instructor_ids = self.options.instructors;
             ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
+            // console.log('ann', ann);
             var annHTML = self.options.TEMPLATES.annotationItem(ann);
             if (self.options.viewer_options.readonly) {
                 annHTML = annHTML.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '')
@@ -403,13 +496,13 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 } else {
                     jQuery('.annotationsHolder').prepend(annHTML);
                 }
-                
             }
             jQuery('.item-' + ann.id).find('.delete').confirm({
                 title: 'Delete Annotation?',
                 content: 'Would you like to delete your annotation? This is permanent.',
                 buttons: {
                     confirm: function() {
+                        // console.log("I got to the delete from sidebar.")
                         $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
                     },
                     cancel: function () {
@@ -420,7 +513,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 self.ViewerEditorOpen(event, ann, true);
             });
 
-            jQuery('.side.item-' + ann.id).click(function() {
+            jQuery('.side.item-' + ann.id).click(function(e) {
                 if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
                     var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
                     jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140)});
@@ -434,6 +527,21 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         jQuery('#first-node-' + ann.id)[0].focus();
                         $.publishEvent('focusOnContext', self.instance_id, [ann]);
                     }, 350);
+                } else if (self.options.mediaType.toLowerCase() === "image") {
+                    var elementClass = e.target.getAttribute('class');
+                    if ((elementClass && elementClass.indexOf('zoom-to-error-button') > -1) || e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path"){
+                        var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
+                        var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
+                        var bounds = {
+                            x: boundSplit[0] - (boundSplit[2] * .167),
+                            y: boundSplit[1] - (boundSplit[3] * .167),
+                            width: boundSplit[2] + (boundSplit[2] / 3.0),
+                            height: boundSplit[3] + (boundSplit[3] / 3.0)
+                        };
+                        $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+                    }
+                    // console.log("Yup!");
+                    // $.pauseEvent(e);
                 }
             });
 
@@ -465,6 +573,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
             jQuery('#empty-alert').css('display', 'none');
+            self.lazyLoadImages();
         }
     };
 
@@ -487,8 +596,21 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     };
 
     $.Sidebar.prototype.search = function(options) {
+        var self = this;
+        // console.log('sidebar search', options);
+        self.lastSearchOption = options;
+        if (jQuery('.loading-obj').is(':visible')) {
+            jQuery('.loading-obj').remove();
+        }
+        self.searchRequest = $.getUniqueId();
+        // console.log(self.searchRequest, options);
+        var tempRequest = self.searchRequest;
         jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
+            if (tempRequest !== self.searchRequest) {
+                return;
+            }
+            // console.log("RETURN: ", tempRequest, self.searchRequest)
             jQuery('.annotationsHolder.side').html('');
             $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, true]);
             jQuery('.loading-obj').remove();
@@ -567,8 +689,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
     };
     
-    $.Sidebar.prototype.StorageAnnotationDelete = function(annotations) {
-
+    $.Sidebar.prototype.StorageAnnotationDelete = function(annotation) {
+        jQuery('.item-' + annotation.id).remove();
+        if (jQuery('.annotationItem').length == 0) {
+            jQuery('#empty-alert').css('display', 'block');
+        } 
     };
 
     $.Sidebar.prototype.StorageAnnotationLoad = function(annotations) {

@@ -1,10 +1,14 @@
 .token-input-dropdown, .token-input-dropdown-mac, .token-input-dropdown-facebook {
     z-index: 999999999999!important;
 }
-.token-input-list-facebook {
+.token-input-list-facebook, .token-input-input-token-facebook {
     width: 436px!important;
 }
 
-.side .token-input-list-facebook {
+.side .token-input-list-facebook, .side .token-input-input-token-facebook {
     width: 244px!important;
+}
+
+.token-input-list-facebook input {
+    width: 100%!important;
 }

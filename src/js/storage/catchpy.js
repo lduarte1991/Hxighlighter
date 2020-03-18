@@ -10,9 +10,9 @@ var hrange = require('../h-range.js');
         //console.log(this.url_base);
     };
 
-
-    $.CatchPy.prototype.onLoad = function(element, opts) {
+    $.CatchPy.prototype.onLoad = function(element, opts, callBack) {
         var self = this;
+        self.element = element;
         var callB = function(result) {
             jQuery.each(result.rows, function(_, ann) {
                 var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
@@ -21,8 +21,15 @@ var hrange = require('../h-range.js');
                     // console.log('definitely getting to here');
                     $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
                     $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+                    
                 }, 250);
             });
+            if (typeof(callBack) !== "undefined") {
+                var wrapperFunc = function(ann) {
+                    return self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
+                }
+                callBack(result.rows, wrapperFunc);
+            }
         }
         self.search(opts, callB, function(errs) {
             //console.log("Error", errs);
@@ -52,24 +59,25 @@ var hrange = require('../h-range.js');
             },
             success: function(result) {
                 $.totalAnnotations = result.total;
+                // console.log('Result: ', result)
                 callBack(result, self.convertFromWebAnnotation.bind(self));
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. If refreshing page does not work contact instructor. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. If refreshing page does not work contact instructor.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
                 } else if (xhr.status == 403) {
-                    $.publishEvent('HxAlert', self.instance_id, ["I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action. (Error code 403)", {buttons:[], time:5}])
+                    toastr.error("I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action.", "(Error code 403)")
                 } else {
                     if (self.options.instructors.indexOf(self.options.user_id) !== -1) {
                         if (xhr.status === 409) {
-                            $.publishEvent('HxAlert', self.instance_id, ["If importing annotations check that user_id of the annotation matches your own. (Error code 409)", {time: 0, modal: true}])
+                            toastr.error("If importing annotations check that user_id of the annotation matches your own.", "(Error code 409)")
                         } else if (xhr.status === 422) {
-                            $.publishEvent('HxAlert', self.instance_id, ["If importing, something critical was removed in the process. (Error code 422)", {time: 0, modal: true}])
+                            toastr.error("If importing, something critical was removed in the process.", "(Error code 422)")
                         } 
                     } else {
-                        $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor. (Error code ' + xhr.status + ')', {time: 0}]);
+                        toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error code ' + xhr.status + ')');
                     }
                 }
                 errfun([xhr, status, error]);
@@ -78,13 +86,14 @@ var hrange = require('../h-range.js');
 
     }
 
-    $.CatchPy.prototype.StorageAnnotationSave = function(ann_to_save, elem, updating) {
+    $.CatchPy.prototype.StorageAnnotationSave = function(ann_to_save, elem, updating, callBack, errorCallback) {
         var self = this;
         if (updating) {
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
+        // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
@@ -98,21 +107,34 @@ var hrange = require('../h-range.js');
             },
             success: function(result) {
                 //console.log('ANNOTATION SAVED', result);
+                if (typeof callBack === "function") {
+                    callBack(result);
+                    //callBack(self.convertFromWebAnnotation(result, jQuery(elem).find('.annotator-wrapper')));
+                }
             },
             error: function(xhr, status, error) {
+                if (typeof errorCallback === "function") {
+                    errorCallback();
+                }
                 //console.log(xhr, status, error);
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
+                } else if (xhr.status === 409) {
+                    if (xhr.responseJSON['payload'][0].indexOf('missing parent') > -1) {
+                        toastr.error('Error: Item being annotated or replied to has been deleted so your annotation/reply was not saved.', '(Error 409)')
+                    } else {
+                        toastr.error("Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.", '(Error 409)');
+                    }
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
                 }
             }
         });
     };
 
-    $.CatchPy.prototype.StorageAnnotationDelete = function(ann_to_delete, elem) {
+    $.CatchPy.prototype.StorageAnnotationDelete = function(ann_to_delete, callBack, errCallBack) {
         var self = this;
         var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
@@ -125,21 +147,26 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
-                //console.log('ANNOTATION_DELETED', result)
+                if (typeof callBack === "function") {
+                    callBack();
+                }
             },
             error: function(xhr, status, error) {
+                if (typeof errCallBack === "function") {
+                    errCallBack();
+                }
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
                 }
             }
         })
     };
 
-    $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem) {
+    $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem, callBack, errCallBack) {
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
@@ -154,15 +181,22 @@ var hrange = require('../h-range.js');
                 'x-annotator-auth-token': self.options.storageOptions.token,
             },
             success: function(result) {
+                // console.log("Yup");
+                if (typeof callBack === "function") {
+                    callBack(self.convertFromWebAnnotation(result));
+                }
                 //console.log('ANNOTATION_UPDATED', result)
             },
             error: function(xhr, status, error) {
                 if (xhr.status === 401) {
-                    $.publishEvent('HxAlert', self.instance_id, ["You do not have permission to access the database. Refreshing the page might reactivate your permissions. (Error code 401)", {buttons:[], time:5}])
+                    toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)")
                 } else if (xhr.status === 500) {
-                    $.publishEvent('HxAlert', self.instance_id, ["Annotations Server is down for maintanence. Wait 10 minutes and try again. (Error code 500)", {time: 0, modal: true}])
+                    toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
                 } else {
-                    $.publishEvent('HxAlert', self.instance_id, ['Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', {time: 0}]);
+                    toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
+                }
+                if (typeof errCallBack === "function") {
+                    errCallBack();
                 }
             }
         })
@@ -199,36 +233,54 @@ var hrange = require('../h-range.js');
             var serializedRanges = annotation.ranges;//self.serializeRanges(annotation.ranges, elem);
             var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
             jQuery.each(serializedRanges, function(index, range){
+                var rangeItem = range; 
+                if (mediatype === "Text") {
+                    rangeItem = [{
+                        'type': 'RangeSelector',
+                        'startSelector': {
+                            'type': 'XPathSelector',
+                            'value': range.xpath.start
+                        },
+                        'endSelector': {
+                            'type': 'XPathSelector',
+                            'value': range.xpath.end,
+                        },
+                        'refinedBy': {
+                            'type': 'TextPositionSelector',
+                            'start': range.xpath.startOffset,
+                            'end': range.xpath.endOffset,
+                        }
+                    }, {
+                        'type': 'TextPositionSelector',
+                        'start': range.position.globalStartOffset,
+                        'end': range.position.globalEndOffset,
+                    }, {
+                        'type': 'TextQuoteSelector',
+                        'exact': range.text.exact,
+                        'prefix': range.text.prefix,
+                        'suffix': range.text.suffix
+                    }]
+                } else {
+                    jQuery.each(range.items, function(idx, choice) {
+                        if (choice.type === "Image") {
+                            rangeItem = [{
+                                'type': 'FragmentSelector',
+                                'value': choice.selector.items[0].selector.default.value
+                            }, {
+                                'type': 'SvgSelector',
+                                'value': choice.selector.items[0].selector.item.value
+                            }]
+                        } else if (choice.type === "Thumbnail") {
+                            targetList.push(choice)
+                        }
+                    })
+                }
                 targetList.push({
-                    'source': 'http://sample.com/fake_content/preview',
+                    'source': source_id,
                     'type': mediatype,
                     'selector': {
                         'type': 'Choice',
-                        'items': [{
-                                'type': 'RangeSelector',
-                                'startSelector': {
-                                    'type': 'XPathSelector',
-                                    'value': range.xpath.start
-                                },
-                                'endSelector': {
-                                    'type': 'XPathSelector',
-                                    'value': range.xpath.end,
-                                },
-                                'refinedBy': {
-                                    'type': 'TextPositionSelector',
-                                    'start': range.xpath.startOffset,
-                                    'end': range.xpath.endOffset,
-                                }
-                            }, {
-                                'type': 'TextPositionSelector',
-                                'start': range.position.globalStartOffset,
-                                'end': range.position.globalEndOffset,
-                            }, {
-                                'type': 'TextQuoteSelector',
-                                'exact': range.text.exact,
-                                'prefix': range.text.prefix,
-                                'suffix': range.text.suffix
-                        }],
+                        'items': rangeItem,
                     }
                 });
             });
@@ -275,31 +327,81 @@ var hrange = require('../h-range.js');
 
     $.CatchPy.prototype.convertFromWebAnnotation = function(webAnn, element) {
         var self = this;
+        var mediaFound = self.getMediaType(webAnn);
         var annotation = {
             annotationText: self.getAnnotationText(webAnn),
             created: self.getAnnotationCreated(webAnn),
             creator: self.getAnnotationCreator(webAnn),
             exact: self.getAnnotationExact(webAnn),
             id: self.getAnnotationId(webAnn),
-            media: self.getMediaType(webAnn),
+            media: mediaFound,
             tags: self.getAnnotationTags(webAnn),
-            ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
+            ranges: self.getAnnotationTarget(webAnn, jQuery(element), mediaFound),
             totalReplies: webAnn.totalReplies,
             permissions: webAnn.permissions,
+        }
+        if (mediaFound.toLowerCase() === "image") {
+            jQuery.each(annotation['ranges'], function(index, range) {
+                if (range['type'].toLowerCase() === "thumbnail") {
+                    annotation['thumbnail'] = range.source;
+                } else if (range['type'].toLowerCase() === "image") {
+                    annotation['source_url'] = range.source;
+                    var fragFound = false;
+                    var svgExists = false;
+                    var fragVal = "";
+                    jQuery.each(range['selector']['items'], function(index, selector) {
+                        try {
+                            if (selector['type'].toLowerCase() === "svgselector") {
+                                var svgVal = selector.value
+                                if (fragFound) {
+                                    svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                                }
+                                annotation['svg'] = svgVal;
+                                svgExists = true;
+                            } else {
+                                fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
+                                if (svgExists) {
+                                    annotation['svg'] = annotation['svg'].replace('svg xmlns', ('svg ' + fragVal + ' xmlns'));
+                                }
+                                fragFound = true;
+                            }
+                        } catch(e) {
+                            if (typeof(selector['@type']) !== "undefined") {
+                                fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
+                                var svgVal = selector['selector']['item']['value'];
+                                svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                                annotation['svg'] = svgVal;
+                            }
+                        }
+                    });
+                }
+            })
         }
         return annotation;
     };
 
     $.CatchPy.prototype.getMediaType = function(webAnn, element) {
-        return webAnn['target']['items'][0]['type'];
+        var found = webAnn['target']['items'][0]['type'];
+        jQuery.each(webAnn['target']['items'], function(index, item) {
+            var m = item['type'].toLowerCase();
+
+            if (m === "image" || m === "video" || m === "text" || m === "audio") {
+                found = item['type'];
+            }
+        });
+        // console.log("FOUND IT", found);
+        return found;
     };
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
+            var annType = webAnn['target']['items'][0]['type']
             // console.log("reached getAnnotationTargetItems", webAnn);
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
+            if (annType === "Annotation") {
                 // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
+            } else if (annType === "Image" || annType === "Thumbnail") {
+                return webAnn['target']['items']
             }
             // console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
@@ -309,69 +411,75 @@ var hrange = require('../h-range.js');
         }
     };
 
-    $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element) {
+    $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element, media) {
         var self = this;
         try {
-            var ranges = [];
-            var xpathRanges = [];
-            var positionRanges = [];
-            var textRanges = [];
-            jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
-                if (!('parent' in targetItem)) {
-                    if (targetItem['type'] === "RangeSelector") {
-                        xpathRanges.push({
-                            start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
-                            startOffset: targetItem['refinedBy'][0].start,
-                            end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
-                            endOffset: targetItem['refinedBy'][0].end
+            // console.log(media);
+            if (media.toLowerCase() === "text") {
+                var ranges = [];
+                var xpathRanges = [];
+                var positionRanges = [];
+                var textRanges = [];
+                jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
+                    if (!('parent' in targetItem)) {
+                        if (targetItem['type'] === "RangeSelector") {
+                            xpathRanges.push({
+                                start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
+                                startOffset: targetItem['refinedBy'][0].start,
+                                end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
+                                endOffset: targetItem['refinedBy'][0].end
+                            });
+                        } else if (targetItem['type'] === "TextPositionSelector") {
+                            positionRanges.push({
+                                globalStartOffset: targetItem['start'],
+                                globalEndOffset: targetItem['end'] 
+                            });
+                        } else if (targetItem['type'] === "TextQuoteSelector") {
+                            textRanges.push({
+                                prefix: targetItem['prefix'] || '',
+                                exact: targetItem['exact'],
+                                suffix: targetItem['suffix'] || ''
+                            })
+                        }
+                    } else {
+                        return ranges.push(targetItem)
+                    }
+                });
+                if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
+                    for (var i = xpathRanges.length - 1; i >= 0; i--) {
+                        ranges.push({
+                            'xpath': xpathRanges[i],
+                            'position': positionRanges[i],
+                            'text': textRanges[i]
                         });
-                    } else if (targetItem['type'] === "TextPositionSelector") {
-                        positionRanges.push({
-                            globalStartOffset: targetItem['start'],
-                            globalEndOffset: targetItem['end'] 
-                        });
-                    } else if (targetItem['type'] === "TextQuoteSelector") {
-                        textRanges.push({
-                            prefix: targetItem['prefix'] || '',
-                            exact: targetItem['exact'],
-                            suffix: targetItem['suffix'] || ''
-                        })
+                    }
+                } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+                    var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+                    var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+
+                    if (startNode && endNode) {
+                        var normalizedRange = document.createRange();
+                        normalizedRange.setStart(startNode.node, startNode.offset);
+                        normalizedRange.setEnd(endNode.node, endNode.offset);
+                        var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+                        ranges.push(serializedRange);
                     }
                 } else {
-                    return ranges.push(targetItem)
+                    var rangeFound = {}
+                    if (xpathRanges.length >= 1) {
+                        rangeFound['xpath'] = xpathRanges[0];
+                    }
+                    if (positionRanges.length >= 1) {
+                        rangeFound['position'] = positionRanges[0];
+                    }
+                    if (textRanges.length >= 1) {
+                        rangeFound['text'] = textRanges[0];
+                    }
+                    ranges.push(rangeFound)
                 }
-            });
-            if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
-                for (var i = xpathRanges.length - 1; i >= 0; i--) {
-                    ranges.push({
-                        'xpath': xpathRanges[i],
-                        'position': positionRanges[i],
-                        'text': textRanges[i]
-                    });
-                }
-            } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
-                var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
-                var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
-
-                if (startNode && endNode) {
-                    var normalizedRange = document.createRange();
-                    normalizedRange.setStart(startNode.node, startNode.offset);
-                    normalizedRange.setEnd(endNode.node, endNode.offset);
-                    var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
-                    ranges.push(serializedRange);
-                }
-            } else {
-                var rangeFound = {}
-                if (xpathRanges.length >= 1) {
-                    rangeFound['xpath'] = xpathRanges[0];
-                }
-                if (positionRanges.length >= 1) {
-                    rangeFound['position'] = positionRanges[0];
-                }
-                if (textRanges.length >= 1) {
-                    rangeFound['text'] = textRanges[0];
-                }
-                ranges.push(rangeFound)
+            } else if (media.toLowerCase() == "image") {
+                // console.log(webAnn['target'])
+                return webAnn['target']['items'];
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;

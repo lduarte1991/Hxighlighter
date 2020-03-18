@@ -1,0 +1,302 @@
+/**
+ * 
+ */
+
+
+:root {
+    --text-background: #FFFFFF;
+    --text-accent-color: #687864;
+    --accent-color: #595959;
+    --light-font-color: #fff;
+    --accent-font-color: #888;
+    --dark-font-color: #000;
+    --pop-color: #2E75AF;
+    --lighter-background: #ededed;
+    --floating-button-color: #595959;
+}
+
+body {
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.annotation-slot {
+    background: white;
+    background: var(--text-background);
+    padding: 30px 50px;
+    border: 1px solid #888;
+    margin-top: 20px;
+    border-color: var(--text-accent-color);
+    -webkit-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    -moz-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    min-width: 733px;
+    min-width: calc(733px - var(--sidebar-width));
+}
+
+.btn-default {
+    background: #ededed;
+    background: var(--lighter-background);
+}
+
+.hx-selector-img {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid red;
+}
+
+.annotator-hl img {
+    border: 3px solid yellow;
+    outline: 1px solid black;
+}
+
+.inst .fa-certificate {
+    color: var(--pop-color);
+}
+
+.annotator-wrapper {
+    margin-bottom: 20px;
+}
+
+span.annotation-mine {
+    /*text-decoration: underline dashed;*/
+}
+
+span.annotation-instructor {
+    /*text-decoration: underline wavy;*/
+}
+
+#viewer { 
+    position: fixed; 
+    height:100%; 
+    height: calc(100% - 27px - 15px); 
+    height: -webkit-calc(100% - 27px - 15px);
+    height:-moz-calc(100% - 27px - 15px);
+    top: 27px;
+    left: 0;
+    min-width: 733px;
+    min-width: calc(733px - var(--sidebar-width));
+    width: calc(100% - var(--sidebar-width));
+    left: var(--sidebar-width);
+}
+
+.qtip {
+    max-width: 445px!important;
+}
+
+.qtip-content {
+    overflow-y: hidden!important;
+}
+
+.mirador-container .annotation-tooltip {
+    padding: 4px!important;
+}
+
+.note-editing-area {
+    cursor: text;
+}
+
+img.annotation-thumbnail {
+    max-width: 150px!important;
+}
+
+.annotation-editor .annotation-editor-nav-bar, .annotation-viewer .annotation-viewer-nav-bar {
+    height: 25px;
+    position: relative;
+    background: #333;
+    background: var(--floating-button-color);
+    text-align: right;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.annotation-editor .annotation-editor-nav-bar, .annotation-viewer .annotation-viewer-nav-bar {
+    cursor: move;
+}
+
+.annotation-editor {
+    cursor: default;
+}
+
+.qtip.qtip-default {
+    box-shadow: 5px 5px 3px rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+.annotation-editor .button-container .save, .annotation-editor .button-container .cancel {
+    /*background: #333;
+    background: var(--floating-button-color);*/
+    border-bottom-left-radius: 5px;
+    width: 49.5%;
+    border-radius: 0px;
+    margin: 0;
+    font-weight: bolder;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    height: 30px;
+    line-height: 30px;
+    font-size: 10pt;
+}
+
+.annotation-editor-nav-bar .cancel, .annotation-viewer-nav-bar .cancel {
+    color: white;
+    font-size: 12pt!important;
+    margin-right: 5px;
+    line-height: 25px;
+}
+
+.annotation-editor .button-container .save {
+    background: #333;
+    background: var(--floating-button-color);
+    color: white;
+}
+
+.annotation-viewer {
+    width: 438px;
+    min-height: 200px;
+    border: 1px solid black;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 5px 5px 3px #888;
+    z-index: 999;
+    max-height: 200px;
+}
+
+.annotation-viewer .all-annotations {
+    overflow-y: scroll;
+    max-height: 172px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.annotation-viewer .annotation-username {
+    font-weight: bold!important;
+    border-top: 1px solid black!important;
+    padding-top: 10px!important;
+    cursor: pointer!important;
+    color: black!important;
+    color: var(--pop-color)!important;
+    font-style: normal!important;
+    font-size: 11pt!important;
+}
+
+.mirador-container .annotation-display {
+    border-bottom: 0!important;
+}
+
+.annotation-viewer .annotation-date {
+    font-size: 8pt;
+    color: #333;
+    margin-top: -13px!important;
+}
+
+.annotation-viewer .annotation-date:before{
+    content: "(";
+}
+
+.annotation-viewer .annotation-date:after{
+    content: ")";
+}
+
+.annotation-viewer img, .annotation-text-field iframe {
+    max-width: 100%;
+    width: auto!important;
+}
+
+.annotation-viewer .annotation-tag {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.annotation-viewer .delete, .annotation-viewer .edit {
+    background-color: white;
+    border: 0!important;
+    color: black;
+    display: inline-block;
+    text-decoration: none!important;
+}
+
+.annotation-viewer .annotation-display .button-container {
+    text-align: left!important;
+    margin-left: -6px!important;
+    margin-top: -13px!important;
+    margin-bottom: 10px!important;
+}
+
+.annotation-viewer .delete:focus, .annotation-viewer .edit:focus {
+    outline: none;
+}
+
+.annotation-viewer .delete:hover, .annotation-viewer .edit:hover {
+    border: 0;
+    color: #666;
+}
+
+#srch-term {
+    height: 34px;
+}
+
+.mirador-viewer .plus, .mirador-viewer .addItemText {
+    display: none!important;
+}
+
+.image-scrollable-helper {
+    margin-left: 300px;
+    overflow: scroll;
+    height: 167px;
+}
+
+.image-viewer-keyboard-help {
+    height: calc(100% - 167px)!important;
+    height: -webkit-calc(100% - 167px)!important;
+    height: -moz-calc(100% - 167px)!important;
+    top: 167px!important;
+}
+
+.button-container a i.fa {
+    display: none;
+}
+
+.body.field a, .annotation-tooltip a{
+    color: #337ab7;
+    border-bottom: 1px dotted #005ebd;
+}
+
+.modal-open .modal {
+    position: relative;
+}
+
+.mirador-osd-context-controls.hud-container {
+    background: rgba(0,0,0,0.7);
+    padding-top: 5px;
+    padding-left: 5px;
+    border-radius: 10px;
+    width: 198px;
+    opacity: 0.6;
+}
+
+.mirador-osd-context-controls.hud-container:hover {
+    opacity: 1.0;
+}
+
+.mirador-pan-zoom-controls.hud-control {
+    background: rgba(0,0,0,0.7);
+    padding-top: 5px;
+    padding-left: 5px;
+    border-radius: 10px;
+}
+
+.mirador-pan-zoom-controls.hud-control a {
+    margin-right: 5px;
+}
+
+.toast {
+    opacity: 1!important;
+}

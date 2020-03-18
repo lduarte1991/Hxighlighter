@@ -70,7 +70,7 @@ require('./hx-sidebar-tag-tokens.css');
             jQuery('#empty-alert').hide();
             self.first_time = false;
         }
-        var tokenHTML = "<div class='tag-token-list'><span>Available Tags:</span><br>";
+        var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br>";
         self.options.tagList.forEach(function(tag) {
             tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
         });

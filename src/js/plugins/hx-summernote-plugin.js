@@ -5,7 +5,7 @@
  *
  */
 require('bs4-summernote/dist/summernote-bs4.css')
-// require('bs4-summersnote/dist/summernote-bs4.js');
+require('bs4-summernote/dist/summernote-bs4.js');
 require('./hx-summernote-plugin.css');
 
 (function($){
@@ -17,10 +17,29 @@ require('./hx-summernote-plugin.css');
     $.SummernoteRichText = function(options, instanceID) {
         var self = this;
         var maxLength = 1000;
-        this.options = jQuery.extend({
+        // console.log("SummernoteRichText Options Sent:", options);
+        this.options = options;
+        var toolbar = [
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['table', 'link', 'hr']],
+        ];
+        if (self.options.instructors.indexOf(self.options.user_id) > -1) {
+            toolbar = [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+                ['view', ['codeview']]
+            ]
+        }
+
+        this.summernoteOpts = jQuery.extend({
             height: 150,
             focus: true,
-            width: 398,
+            width: 435,
             placeholder: "Add annotation text...",
             maximumImageFileSize: 262144,
             maxHeight: 400,
@@ -28,6 +47,17 @@ require('./hx-summernote-plugin.css');
             maxTextLength: maxLength,
             dialogsInBody: true,
             disableResizeEditor: true,
+            disableDragAndDrop: true,
+            onCreateLink: function(link) {
+                var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/
+                if (link.match(linkValidator)) {
+                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link)? link : 'http://' + link;
+                    return linkUrl;
+                } else {
+                    alert("You did not enter a valid URL, it has been removed.");
+                    return 'http://example.org';
+                }
+            },
             callbacks: {
                 onKeydown:  function (e) {
                     var t = e.currentTarget.innerText;
@@ -51,7 +81,24 @@ require('./hx-summernote-plugin.css');
                 },
                 onPaste: function (e) {
                     var t = e.currentTarget.innerText;
-                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
+                    var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
+
+                    if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) == -1) ) {
+                        var regex = new RegExp(/<img([\w\W ]+?)\/?>/g)
+                        var inside = bufferHTML.match(regex);
+                        jQuery.each(inside, function(_, image_tags) {
+                            var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
+                            bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href=\"' + new_img_url + "\">[External Image Link]</a>");
+                        });
+                        // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
+                        console.log(bufferHTML)
+                        setTimeout(function() { // wrap in a timer to prevent issues in Firefox
+                            self.elementObj.summernote('code', bufferHTML);
+                            jQuery('#maxContentPost').text(maxLength);
+                            alert('You may have pasted an image. It will be converted to a link.');
+                        }, 100)
+                    }
                             
                     if (t.length + bufferText.length >= maxLength) {
                         e.preventDefault();
@@ -63,18 +110,19 @@ require('./hx-summernote-plugin.css');
                         }, 10)
                     }
                 },
+                onChange: function(contents, $editable) {
+                    if ($editable && contents.length > maxLength) {
+                        $editable.html(contents.trim().substring(0, maxLength));
+                    }
+                },
                 onFocus: function(e) {
                     $.publishEvent('wysiwygOpened', self.instanceID, [e]);
                 },
             },
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['table', 'link', 'hr']],
-            ],
-        }, options);
+            toolbar: toolbar,
+        }, this.options);
+        // console.log("After init options", this.options);
+        console.log('SUMMERNOTE', this.options);
         this.init();
         this.instanceID = instanceID;
         return this;
@@ -102,8 +150,12 @@ require('./hx-summernote-plugin.css');
 
         // adds the summernote WYSIWIG to the editor to the selector's location
         self.elementObj = element.find(selector);
-        self.options.width = this.elementObj.parent().width();
-        self.elementObj.summernote(this.options);
+        if(self.elementObj.closest('.side').length > 0) {
+            self.summernoteOpts.width = self.elementObj.parent().width();
+        } else {
+            self.summernoteOpts.width = 435;
+        }
+        self.elementObj.summernote(self.summernoteOpts);
 
         // removes summernote's ability to tab within the editor so users can tab through items
         delete jQuery.summernote.options.keyMap.pc.TAB;
@@ -122,7 +174,7 @@ require('./hx-summernote-plugin.css');
                 var newTop = parseInt(editorObj.css('top'), 10);;
                 var newLeft = parseInt(editorObj.css('left'), 10);
 
-                console.log(editorObj, newTop, newLeft);
+                // console.log(editorObj, newTop, newLeft);
 
                 if (newTop + editorObj.outerHeight() > window.innerHeight) {
                     newTop = window.innerHeight - editorObj.outerHeight();
@@ -187,18 +239,19 @@ require('./hx-summernote-plugin.css');
             self.destroy();
         }.bind(self));
 
-        jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
-            var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
-            input.prop('type', 'url');
-            var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
-            var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
-            var regex = new RegExp(expression);
-            if (chosen.match(regex)){
-                jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', false);
-            } else {
-                jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', true);
-            }
-        });
+
+        // jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
+        //     var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
+        //     input.prop('type', 'url');
+        //     var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
+        //     var expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+        //     var regex = new RegExp(expression);
+        //     if (chosen.match(regex)){
+        //         jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', false);
+        //     } else {
+        //         jQuery('.btn.btn-primary.note-btn.note-btn-primary.note-link-btn').prop('disabled', true);
+        //     }
+        // });
     };
 
     /**
@@ -235,10 +288,10 @@ require('./hx-summernote-plugin.css');
         self.addWYSIWYG(editor, '#annotation-text-field');
         self.currentAnnotation = annotation;
         var annotationText = "";
-        if (annotation.annotationText) {
+        if ($.exists(annotation.annotationText)) {
             annotationText = annotation.annotationText;
             self.elementObj.summernote('code', annotation.annotationText);
-        } else if (annotation.schema_version && annotation.schema_version === "catch_v2") {
+        } else /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/ {
             annotationText = returnWAText(annotation);
             if (typeof annotationText !== "undefined") {
                 self.elementObj.summernote('code', annotationText);

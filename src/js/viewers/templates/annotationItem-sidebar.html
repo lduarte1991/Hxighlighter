@@ -23,14 +23,14 @@
             <div class="quoteText" aria-label="Excerpt selected for this annotation:"><%= exact %></div>
         </div>
         <div class="annotation-quote-focus sr-only"><a href="#first-node-<%= id %>">Jump to quote in context</a></div>
-    <% } else if (media === 'image' && thumbnail) {%>
+    <% } else if (media.toLowerCase() === 'image' && thumbnail) {%>
         <div class="zoomToImageBounds" style='position:relative;'>
-            <img class="annotation-thumbnail" src="/static/css/images/loading.gif" data-src="<%= thumbnail %>" onError="this.onerror=null;this.src='/static/css/images/image-error.png';" data-svg=".thumbnail-<%= id %>" alt="Thumbnail Preview"/>
+            <img class="annotation-thumbnail" data-src="<%= thumbnail %>" data-svg=".thumbnail-<%= id %>" alt="Thumbnail Preview"/>
             <% if (typeof(svg) !== "undefined") { %>
                 <%= svg %>
             <% } %>
             <span class="idAnnotation" style="display:none"><%= id %></span>
-            <span class="uri" style="display:none"><%= uri %></span>
+            <span class="uri" style="display:none"><%= source_url %></span>
         </div>
     <% } else if (media === "video") {%>
         <div class="playMediaButton" style="text-align:center;">

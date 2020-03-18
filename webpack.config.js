@@ -12,14 +12,16 @@ const PATHS = {
 module.exports = {
     entry: {
         text: ['./src/text-index.js'],
-        text_lite: ['./src/author-index.js']
+        text_lite: ['./src/author-index.js'],
+        image_m2: ['./src/image-index-m2.js']
     },
     plugins: [
         new webpack.ProvidePlugin({
             "jquery": require.resolve('jquery'),
             "$": require.resolve('jquery'),
             'jQuery': require.resolve('jquery'),
-            _: require.resolve('lodash')
+            _: require.resolve('lodash'),
+            'toastr': require.resolve('toastr')
         }),
         new MiniCssExtractPlugin({
             filename: 'dist/hxighlighter_[name].css',
@@ -51,7 +53,8 @@ module.exports = {
         alias: {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
             'CodeMirror': 'codemirror',
-            'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/'
+            'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
+            'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js'
         }
     },
     optimization: {
@@ -65,7 +68,7 @@ module.exports = {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            publicPath: '../'
+                            publicPath: '../',
                         }
                     },
                     "css-loader"
@@ -80,9 +83,14 @@ module.exports = {
                 use: ["imports-loader?$=jquery&window.jQuery=jquery"]
             },
             {
+                test: /mirador\.js/,
+                use: 'script-loader'
+            },
+            {
                 test: /(floating|sidebar)\.html$/,
                 use: ['underscore-template-loader']
             },
+            { test: /\.handlebars$/, loader: "handlebars-loader" },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
