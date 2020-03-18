@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.0.0 - Thursday, March 12th, 2020, 4:43:35 PM  
+// [AIV_SHORT]  Version: 1.1.0 - Wednesday, March 18th, 2020, 9:27:34 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39510,8 +39510,8 @@ __webpack_require__(9);
     });
     jQuery('#search-submit').click(function () {
       var searchValue = jQuery('#srch-term').val().trim();
-      var searchType = jQuery('.search-bar select').val();
-      console.log(searchValue, searchType);
+      var searchType = jQuery('.search-bar select').val(); // console.log(searchValue, searchType);
+
       var ops = self.filterByType(searchValue, searchType, undefined);
       self.search(ops);
     }); // trigger new filter tab
@@ -39718,14 +39718,12 @@ __webpack_require__(9);
       // console.log("6. Got Annotation in Viewer", annotation, self.options);
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
-      });
-      console.log(filteroptions, filteroptions.indexOf('mine') > -1, filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1));
+      }); // console.log(filteroptions, filteroptions.indexOf('mine') > -1, (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)))
 
       if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor') > -1 && self.options.instructors.indexOf(self.options.user_id) > -1) {
         self.addAnnotation(annotation, updating, false);
       } else {
-        console.log(annotation);
-
+        // console.log(annotation);
         if (annotation.media !== "comment") {
           jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
           $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
@@ -39980,16 +39978,16 @@ __webpack_require__(9);
       jQuery('.loading-obj').remove();
     }
 
-    self.searchRequest = $.getUniqueId();
-    console.log(self.searchRequest, options);
+    self.searchRequest = $.getUniqueId(); // console.log(self.searchRequest, options);
+
     var tempRequest = self.searchRequest;
     jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
       if (tempRequest !== self.searchRequest) {
         return;
-      }
+      } // console.log("RETURN: ", tempRequest, self.searchRequest)
 
-      console.log("RETURN: ", tempRequest, self.searchRequest);
+
       jQuery('.annotationsHolder.side').html('');
       $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, true]);
       jQuery('.loading-obj').remove();
@@ -40063,7 +40061,6 @@ __webpack_require__(9);
   $.Sidebar.prototype.StorageAnnotationSave = function (annotations) {};
 
   $.Sidebar.prototype.StorageAnnotationDelete = function (annotation) {
-    console.log(arguments, annotation);
     jQuery('.item-' + annotation.id).remove();
 
     if (jQuery('.annotationItem').length == 0) {
