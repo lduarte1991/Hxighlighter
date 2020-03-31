@@ -64,7 +64,7 @@ require('./hx-summernote-plugin.css');
                     if ('Escape' === (e.key)) {
                         $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
                         jQuery('.sr-real-alert').html('You have closed the editor and unselected text for annotation.');
-                    } else if (t.trim().length >= maxLength) {
+                    } else if (t.trim().length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) == -1)) {
                         // prevents everything that could add a new character
                         var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
                         if (allowedKeys.indexOf(e.key) == -1 ||  (e.key == 'a' && !(e.ctrlKey || e.metaKey)) || (e.key == 'c' && !(e.ctrlKey || e.metaKey)) || (e.key == 'v' && !(e.ctrlKey || e.metaKey))){
@@ -92,7 +92,6 @@ require('./hx-summernote-plugin.css');
                             bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href=\"' + new_img_url + "\">[External Image Link]</a>");
                         });
                         // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
-                        console.log(bufferHTML)
                         setTimeout(function() { // wrap in a timer to prevent issues in Firefox
                             self.elementObj.summernote('code', bufferHTML);
                             jQuery('#maxContentPost').text(maxLength);
@@ -100,7 +99,7 @@ require('./hx-summernote-plugin.css');
                         }, 100)
                     }
                             
-                    if (t.length + bufferText.length >= maxLength) {
+                    if (t.length + bufferText.length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) == -1)) {
                         e.preventDefault();
                         var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
                         setTimeout(function() { // wrap in a timer to prevent issues in Firefox
