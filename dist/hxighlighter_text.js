@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.1.0 - Tuesday, March 31st, 2020, 2:48:02 PM  
+// [AIV_SHORT]  Version: 1.1.0 - Tuesday, April 14th, 2020, 5:06:38 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40340,7 +40340,6 @@ __webpack_require__(9);
         content: 'Would you like to delete your annotation? This is permanent.',
         buttons: {
           confirm: function confirm() {
-            // console.log("I got to the delete from sidebar.")
             $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
           },
           cancel: function cancel() {}
@@ -43654,7 +43653,7 @@ __webpack_require__(42);
   $.TextTarget.prototype.StorageAnnotationDelete = function (annotation) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
-      viewer.StorageAnnotationDelete();
+      viewer.StorageAnnotationDelete(annotation);
     });
     jQuery.each(self.storage, function (_, store) {
       store.StorageAnnotationDelete(annotation);
