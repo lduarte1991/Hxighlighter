@@ -300,3 +300,7 @@ img.annotation-thumbnail {
 .toast {
     opacity: 1!important;
 }
+
+.sidebar-navbar {
+    z-index:0!important;
+}

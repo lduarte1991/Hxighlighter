@@ -117,7 +117,8 @@ require('./storage/catchpy.js');
               'options': {
                 config: {
                     dialogInBody: false,
-                }
+                },
+                instructor_mode: (self.options.instructors.indexOf(self.options.user_id) > -1)
               }
             },
             'annotationEndpoint': {

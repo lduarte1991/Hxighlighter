@@ -521,7 +521,7 @@ require('./plugins/hx-alert.js');
     $.TextTarget.prototype.StorageAnnotationDelete = function(annotation) {
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
-            viewer.StorageAnnotationDelete();
+            viewer.StorageAnnotationDelete(annotation);
         });
         jQuery.each(self.storage, function(_, store) {
             store.StorageAnnotationDelete(annotation);

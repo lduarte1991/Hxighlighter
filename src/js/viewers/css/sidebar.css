@@ -446,6 +446,7 @@ div[class^="reply-list"] {
     padding-left: 10px;
     background: black;
     background: var(--accent-color);
+    z-index: 9;
 }
 
 .sidemenu span {

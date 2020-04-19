@@ -80,7 +80,7 @@
     createAnnotation: function() {
       var resourceText = this.selector.find('#annotation-text-field').summernote('code');
       var plainText = resourceText.replace(/<\/?[^>]+(>|$)/g, "");
-      if (plainText.length > 1000) {
+      if (plainText.length > 1000 && !this.instructor_mode) {
         alert('Your annotation was rejected and not saved as the annotation was too long.');
         return;
       }
@@ -202,7 +202,7 @@
       }, 500);
       var resourceText = this.selector.find('#annotation-text-field').summernote('code');
       var plainText = resourceText.replace(/<\/?[^>]+(>|$)/g, "");
-      if (plainText.length > 1000) {
+      if (plainText.length > 1000 && !this.instructor_mode) {
         alert('Your annotation was rejected and not saved as the annotation was too long.');
         return;
       }

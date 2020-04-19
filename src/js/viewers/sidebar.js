@@ -502,7 +502,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 content: 'Would you like to delete your annotation? This is permanent.',
                 buttons: {
                     confirm: function() {
-                        // console.log("I got to the delete from sidebar.")
                         $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
                     },
                     cancel: function () {

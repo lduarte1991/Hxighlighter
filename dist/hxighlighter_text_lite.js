@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.1.0 - Wednesday, March 18th, 2020, 9:27:34 AM  
+// [AIV_SHORT]  Version: 1.1.0 - Sunday, April 19th, 2020, 4:41:21 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -39864,7 +39864,6 @@ __webpack_require__(9);
         content: 'Would you like to delete your annotation? This is permanent.',
         buttons: {
           confirm: function confirm() {
-            // console.log("I got to the delete from sidebar.")
             $.publishEvent('StorageAnnotationDelete', self.instance_id, [annotation]);
           },
           cancel: function cancel() {}
@@ -40766,7 +40765,7 @@ __webpack_require__(32);
           if ('Escape' === e.key) {
             $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
             jQuery('.sr-real-alert').html('You have closed the editor and unselected text for annotation.');
-          } else if (t.trim().length >= maxLength) {
+          } else if (t.trim().length >= maxLength && self.options.instructors.indexOf(self.options.user_id) == -1) {
             // prevents everything that could add a new character
             var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
 
@@ -40793,7 +40792,6 @@ __webpack_require__(32);
               bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href=\"' + new_img_url + "\">[External Image Link]</a>");
             }); // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
 
-            console.log(bufferHTML);
             setTimeout(function () {
               // wrap in a timer to prevent issues in Firefox
               self.elementObj.summernote('code', bufferHTML);
@@ -40802,7 +40800,7 @@ __webpack_require__(32);
             }, 100);
           }
 
-          if (t.length + bufferText.length >= maxLength) {
+          if (t.length + bufferText.length >= maxLength && self.options.instructors.indexOf(self.options.user_id) == -1) {
             e.preventDefault();
             var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
             setTimeout(function () {
@@ -42611,7 +42609,7 @@ __webpack_require__(42);
   $.TextTarget.prototype.StorageAnnotationDelete = function (annotation) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
-      viewer.StorageAnnotationDelete();
+      viewer.StorageAnnotationDelete(annotation);
     });
     jQuery.each(self.storage, function (_, store) {
       store.StorageAnnotationDelete(annotation);
