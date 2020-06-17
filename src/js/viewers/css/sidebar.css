@@ -7,7 +7,7 @@
     --sidebar-button-color: #595959;
     --sidebar-button-color-accent: #ededed;
     --sidebar-search-bar-height-open: 73px;
-    --sidebar-footer-height: 0px;
+    --sidebar-footer-height: 15px;
 }
 
 .annotationSection.side {
