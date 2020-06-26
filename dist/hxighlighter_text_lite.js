@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Friday, June 26th, 2020, 11:33:56 AM  
+// [AIV_SHORT]  Version: 1.2.0 - Friday, June 26th, 2020, 11:41:40 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -42665,7 +42665,7 @@ __webpack_require__(67);
 
       try {
         optionsForStorage = jQuery.extend({
-          'media': self.media
+          'media': 'text'
         }, self.options, self.options[storage.name]) || {};
       } catch (e) {
         optionsForStorage = {};

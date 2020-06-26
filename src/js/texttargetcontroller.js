@@ -277,7 +277,7 @@ require('./plugins/hx-websockets.js');
         jQuery.each($.storage, function(idx, storage) {
             var optionsForStorage;
             try {
-                optionsForStorage = jQuery.extend({'media': self.media}, self.options, self.options[storage.name]) || {};
+                optionsForStorage = jQuery.extend({'media': 'text'}, self.options, self.options[storage.name]) || {};
             } catch (e) {
                 optionsForStorage = {};
             }

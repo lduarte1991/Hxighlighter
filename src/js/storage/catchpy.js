@@ -50,6 +50,7 @@ var hrange = require('../h-range.js');
         var data = jQuery.extend({}, {
             limit: self.options.storageOptions.pagination,
             offset: 0,
+            media: self.options.mediaType,
             source_id: self.options.object_id,
             context_id: self.options.context_id,
             collection_id: self.options.collection_id,
