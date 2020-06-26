@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Tuesday, June 16th, 2020, 4:08:55 PM  
+// [AIV_SHORT]  Version: 1.2.0 - Friday, June 26th, 2020, 11:33:56 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,7 +82,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 68);
+/******/ 	return __webpack_require__(__webpack_require__.s = 69);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -40496,6 +40496,10 @@ __webpack_require__(9);
       };
       self.search(options);
     });
+    $.subscribeEvent('wsAnnotationLoaded', self.instance_id, function (_, annotation) {
+      self.addAnnotation(annotation, false, false);
+      console.log("WS Annotation added");
+    });
     $.subscribeEvent('annotationLoaded', self.instance_id, function (_, annotation) {
       self.addAnnotation(annotation, false, true);
     });
@@ -40593,9 +40597,10 @@ __webpack_require__(9);
   };
 
   $.Sidebar.prototype.addAnnotation = function (annotation, updating, shouldAppend) {
-    var self = this; // console.log("7. Should add Annotation to viewer", annotation)
+    var self = this;
+    console.log("7. Should add Annotation to viewer", annotation);
 
-    if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
+    if (annotation.media !== "comment" && annotation.media !== "Annotation" && annotation.text !== "" && $.exists(annotation.tags)) {
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
@@ -40700,6 +40705,24 @@ __webpack_require__(9);
       $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
       jQuery('#empty-alert').css('display', 'none');
       self.lazyLoadImages();
+    } else {
+      try {
+        var parent_id = annotation.ranges[0].source;
+        $.publishEvent('GetSpecificAnnotationData', self.instance_id, [parent_id, function (annotation_data) {
+          annotation_data.totalReplies++;
+
+          annotation_data._local.highlights.forEach(function (high) {
+            jQuery(high).data('annotation', annotation_data);
+          });
+
+          var viewers = jQuery('.item-' + annotation_data.id);
+          jQuery.each(viewers, function (index, viewer) {
+            $.publishEvent('addReplyToViewer', self.instance_id, [viewer, annotation, '', annotation_data]);
+          });
+        }]);
+      } catch (e) {
+        console.log("Error", annotation);
+      }
     }
   };
 
@@ -40802,8 +40825,7 @@ __webpack_require__(9);
   $.Sidebar.prototype.ViewerEditorClose = function (annotation, redraw, should_erase, editor) {
     jQuery('.editor-area.side').remove();
     jQuery('.edit').prop('disabled', false);
-    jQuery('.note-link-popover').remove();
-    $.publishEvent('editorHidden', self.instance_id, []);
+    jQuery('.note-link-popover').remove(); //$.publishEvent('editorHidden', self.instance_id, []);
 
     if (editor) {
       editor.find('.side.body').show();
@@ -42735,6 +42757,11 @@ __webpack_require__(43);
     self.callFuncInList(this.targets, 'TargetAnnotationDraw', message);
   };
 
+  $.Core.prototype.TargetAnnotationUndraw = function (message) {
+    var self = this;
+    self.callFuncInList(this.targets, 'TargetAnnotationUndraw', message);
+  };
+
   $.Core.prototype.ViewerEditorOpen = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'ViewerEditorOpen', message);
@@ -42998,6 +43025,26 @@ __webpack_require__(47);
     $.subscribeEvent('displayHidden', self.instanceID, function () {
       self.destroy();
     });
+    $.subscribeEvent('addReplyToViewer', self.instanceID, function (_, viewer, reply, prefix, annotation) {
+      setTimeout(self.addReplyToViewer(viewer, reply, prefix, annotation), 500);
+    });
+    $.subscribeEvent('removeReply', self.instanceID, function (_, reply) {
+      console.log(reply);
+
+      if (reply.media === "Annotation" || reply.media === "comment") {
+        $.publishEvent('GetSpecificAnnotationData', self.instance_id, [reply.ranges[0].parent, function (annotation_data) {
+          console.log(annotation_data);
+          console.log(reply);
+          annotation_data.totalReplies--;
+
+          annotation_data._local.highlights.forEach(function (high) {
+            jQuery(high).data('annotation', annotation_data);
+          });
+
+          jQuery('.reply-area-' + annotation_data.id + ' .view-replies').html('View ' + annotation_data.totalReplies + ' Replies');
+        }]);
+      }
+    });
   };
   /**
    * Code to run just before the annotation is saved to storage
@@ -43108,6 +43155,7 @@ __webpack_require__(47);
           id: self.options.user_id
         }
       };
+      console.log("Reaching here", reply);
       $.publishEvent('StorageAnnotationSave', self.instanceID, [reply, false]);
       annotation.totalReplies++;
       typeof annotation.replies == "undefined" ? annotation.replies = [reply] : annotation.replies.push(reply);
@@ -43171,7 +43219,7 @@ __webpack_require__(47);
   $.Reply.prototype.retrieveRepliesForAnnotation = function (annotation, viewer, prefix) {
     var self = this;
     $.publishEvent('StorageAnnotationSearch', self.instanceID, [{
-      'source_id': annotation.id,
+      'target_source': annotation.id,
       'media': 'Annotation'
     }, function (results, converter) {
       jQuery('.loading-obj').remove();
@@ -43209,43 +43257,52 @@ __webpack_require__(47);
       delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
     }
 
-    jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').append("<div class='reply reply-item-" + reply.id + "'>" + delete_option + "<strong>" + display_name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
-    jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
-      'title': 'Delete Reply?',
-      'content': 'Would you like to delete your reply? This is permanent.',
-      'buttons': {
-        confirm: function confirm() {
-          $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
-          annotation.replies = annotation.replies.filter(function (ann) {
-            if (ann.id !== reply.id) {
-              return ann;
-            }
-          });
-          annotation.totalReplies--;
+    var reply_list = jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]');
 
-          if (annotation._local && annotation._local.highlights) {
-            annotation._local.highlights.forEach(function (high) {
-              jQuery(high).data('annotation', annotation);
-            });
+    if (reply_list.is(':visible')) {
+      if (reply_list.find('.reply-item-' + reply.id).length > 0) {
+        reply_list.find('.reply-item-' + reply.id + ' .reply-body').html(reply.annotationText.join('<br>'));
+      } else {
+        jQuery('.reply-area-' + annotation.id + ' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
+        reply_list.append("<div class='reply reply-item-" + reply.id + "'>" + delete_option + "<strong>" + reply.creator.name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
+        jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
+          'title': 'Delete Reply?',
+          'content': 'Would you like to delete your reply? This is permanent.',
+          'buttons': {
+            confirm: function confirm() {
+              $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
+              annotation.replies = annotation.replies.filter(function (ann) {
+                if (ann.id !== reply.id) {
+                  return ann;
+                }
+              });
+              annotation.totalReplies--;
+
+              annotation._local.highlights.forEach(function (high) {
+                jQuery(high).data('annotation', annotation);
+              });
+
+              jQuery('.reply.reply-item-' + reply.id).remove();
+              jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+
+              if (annotation.totalReplies == 0) {
+                jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').show();
+                jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').hide();
+              } else {
+                jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').hide();
+                jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').show();
+              }
+
+              jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+              jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
+            },
+            cancel: function cancel() {}
           }
-
-          jQuery('.reply.reply-item-' + reply.id).remove();
-          jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
-
-          if (annotation.totalReplies == 0) {
-            jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').show();
-            jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').hide();
-          } else {
-            jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').hide();
-            jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').show();
-          }
-
-          jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
-          jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
-        },
-        cancel: function cancel() {}
+        });
       }
-    });
+    } else {
+      jQuery('.reply-area-' + annotation.id + ' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
+    }
   };
 
   $.Reply.prototype.pluralize = function (num, singular, plural) {
@@ -43423,6 +43480,8 @@ __webpack_require__(39);
 __webpack_require__(41);
 
 __webpack_require__(42);
+
+__webpack_require__(67);
 
 (function ($) {
   /**
@@ -43679,7 +43738,9 @@ __webpack_require__(42);
       var optionsForStorage;
 
       try {
-        optionsForStorage = jQuery.extend({}, self.options, self.options[storage.name]) || {};
+        optionsForStorage = jQuery.extend({
+          'media': self.media
+        }, self.options, self.options[storage.name]) || {};
       } catch (e) {
         optionsForStorage = {};
       }
@@ -43765,6 +43826,11 @@ __webpack_require__(42);
 
   $.TextTarget.prototype.TargetAnnotationDraw = function (annotation) {
     var self = this;
+
+    if (Object.keys(annotation.ranges[0]).indexOf('parent') > -1) {
+      return;
+    }
+
     jQuery.each(self.drawers, function (_, drawer) {
       drawer.draw(annotation);
     });
@@ -43788,9 +43854,12 @@ __webpack_require__(42);
 
   $.TextTarget.prototype.TargetAnnotationUndraw = function (annotation) {
     var self = this;
-    jQuery.each(self.drawers, function (_, drawer) {
-      drawer.undraw(annotation);
-    });
+
+    if (annotation.media !== "Annotation") {
+      jQuery.each(self.drawers, function (_, drawer) {
+        drawer.undraw(annotation);
+      });
+    }
   };
   /**
    * { function_description }
@@ -43839,8 +43908,13 @@ __webpack_require__(42);
     }
 
     jQuery.each(self.viewers, function (_, viewer) {
+      var timer = new Date();
       viewer.ViewerEditorClose(annotation);
+      console.log("Finished: " + (new Date() - timer) + 'ms');
     });
+    setTimeout(function () {
+      $.publishEvent('editorHidden', self.instance_id, []);
+    }, 50);
     return annotation;
   };
   /**
@@ -44160,8 +44234,20 @@ var hrange = __webpack_require__(4);
   };
 
   $.XPathDrawer.prototype.draw = function (annotation) {
-    var self = this; // console.log(self.options, annotation);
+    var self = this;
+
+    if (annotation.media.toLowerCase() !== "text") {
+      return;
+    } // console.log(self.options, annotation);
     // console.log("Annotation Being Drawn", annotation);
+    // checks to see if annotation has already been drawn, if so it undraws it
+
+
+    var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
+
+    if (existing_drawn_annotation) {
+      self.undraw(existing_drawn_annotation);
+    }
 
     self.tempHighlights.forEach(function (hl) {
       jQuery(hl).contents().unwrap();
@@ -44445,11 +44531,11 @@ var annotator = annotator ? annotator : __webpack_require__(7);
     }); // closes the editor tool and does not save annotation
 
     self.annotation_tool.editor.find('.cancel').click(function () {
-      console.log("HERE", annotation, !updating, true);
       $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
     }); // closes the editor and does save annotations
 
     self.annotation_tool.editor.find('.save').click(function () {
+      var timer = new Date();
       var text = self.annotation_tool.editor.find('#annotation-text-field').val();
 
       if (updating) {
@@ -44457,7 +44543,10 @@ var annotator = annotator ? annotator : __webpack_require__(7);
       }
 
       annotation.annotationText.push(text);
+      var timer2 = new Date();
       $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
+      var end = new Date();
+      console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
     });
     self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
     setTimeout(function () {
@@ -44469,9 +44558,9 @@ var annotator = annotator ? annotator : __webpack_require__(7);
 
   $.FloatingViewer.prototype.ViewerEditorClose = function (annotation, redraw, should_erase) {
     var self = this;
+    var timer = new Date();
     jQuery('.edit').prop('disabled', false);
     jQuery('.note-link-popover').remove();
-    $.publishEvent('editorHidden', self.instance_id, []);
 
     if (self.annotation_tool.editor) {
       self.annotation_tool.editor.remove();
@@ -44479,7 +44568,8 @@ var annotator = annotator ? annotator : __webpack_require__(7);
 
     delete self.annotation_tool.editor;
     self.annotation_tool.editing = false;
-    self.annotation_tool.updating = false; // jQuery('body').css('overflow-y', 'scroll');
+    self.annotation_tool.updating = false; //$.publishEvent('editorHidden', self.instance_id, []);
+    // jQuery('body').css('overflow-y', 'scroll');
   };
 
   $.FloatingViewer.prototype.ViewerDisplayOpen = function (event, anns) {
@@ -44572,7 +44662,6 @@ var annotator = annotator ? annotator : __webpack_require__(7);
       return;
     }
 
-    console.log('should hide display');
     clearTimeout(self.hideTimer);
     self.hideTimer = setTimeout(function () {
       if (self.hideTimer) {
@@ -45829,6 +45918,180 @@ __webpack_require__(66);
 /* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  Websockets Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+//require('./filaname.css');
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.Websockets = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.init();
+    this.timerRetryInterval;
+    this.socket = null;
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.Websockets.prototype.init = function () {
+    var self = this;
+    self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + self.options.object_id;
+    self.setUpConnection();
+  };
+
+  $.Websockets.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  $.Websockets.prototype.setUpConnection = function () {
+    var self = this;
+    console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
+    self.socket = self.openWs(self.slot_id, self.options.Websockets.wsUrl);
+
+    self.socket.onopen = function (e) {
+      self.onWsOpen(e);
+    };
+
+    self.socket.onmessage = function (e) {
+      var data = JSON.parse(e.data);
+      self.receiveWsMessage(data);
+    };
+
+    self.socket.onclose = function (e) {
+      self.onWsClose(e);
+    };
+  };
+
+  $.Websockets.prototype.receiveWsMessage = function (response) {
+    var self = this;
+    var message = response['message'];
+    var annotation = eval("(" + message + ")");
+    console.log("WS:" + message);
+    self.convertAnnotation(annotation, function (wa) {
+      console.log("YEH", response);
+
+      if (response['type'] === 'annotation_deleted') {
+        $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
+          if (wa.media !== "Annotation") {
+            $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
+            jQuery('.item-' + wa.id).remove();
+          } else {
+            $.publishEvent('removeReply', self.instanceID, [wa]);
+            jQuery('.reply-item-' + wa.id).remove();
+          }
+        }]);
+      } else {
+        $.publishEvent('wsAnnotationLoaded', self.instanceID, [wa]);
+        console.log("HERE:", wa);
+
+        if (wa.media !== 'comment') {
+          if (response['type'] === 'annotation_updated') {
+            $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
+              $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
+              $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
+            }]);
+          } else {
+            $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
+          }
+        }
+      }
+    });
+  };
+
+  $.Websockets.prototype.openWs = function (slot_id, wsUrl) {
+    var self = this;
+    var notificationSocket = new WebSocket('wss://' + wsUrl + '/ws/notification/' + slot_id + '/?utm_source=' + self.options.Websockets.utm + '&resource_link_id=' + self.options.Websockets.resource);
+    return notificationSocket;
+  };
+
+  $.Websockets.prototype.onWsOpen = function () {
+    var self = this;
+
+    if (self.timerRetryInterval) {
+      clearInterval(self.timerRetryInterval);
+      self.timerRetryInterval = undefined;
+    }
+  };
+
+  $.Websockets.prototype.onWsClose = function () {
+    var self = this;
+
+    if (!self.timerRetryInterval) {
+      self.timerRetryInterval = setInterval(function () {
+        console.log('intervalrunning');
+        self.setUpConnection();
+      }, 5000);
+    }
+  };
+
+  Object.defineProperty($.Websockets, 'name', {
+    value: "Websockets"
+  });
+
+  $.Websockets.prototype.convertAnnotation = function (annotation, callBack) {
+    var self = this;
+
+    if (annotation && annotation.schema_version) {
+      console.log("option 1");
+      return self.convertingFromWebAnnotations(annotation, callBack);
+    } else {
+      console.log("option 2");
+      return self.convertingFromAnnotatorJS(annotation, callBack);
+    }
+  };
+
+  $.Websockets.prototype.convertingFromWebAnnotations = function (annotation, callBack) {
+    var self = this;
+    $.publishEvent('convertFromWebAnnotation', self.instanceID, [self.options.slot, annotation, callBack]);
+  };
+
+  $.Websockets.prototype.convertingFromAnnotatorJS = function (annotation, callBack) {
+    var self = this;
+    var ranges = annotation.ranges;
+    var rangeList = [];
+    ranges.forEach(function (range) {
+      rangeList.push({
+        'xpath': range,
+        'text': {
+          prefix: '',
+          exact: annotation.quote,
+          suffix: ''
+        }
+      });
+    });
+    var annotation = {
+      annotationText: [annotation.text],
+      created: annotation.created,
+      creator: annotation.user,
+      exact: annotation.quote,
+      id: annotation.id,
+      media: annotation.media,
+      tags: annotation.tags,
+      ranges: rangeList,
+      totalReplies: annotation.totalComments,
+      permissions: annotation.permissions
+    };
+    callBack(annotation);
+  };
+
+  $.plugins.push($.Websockets);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(jQuery, toastr) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 var hrange = __webpack_require__(4);
 
@@ -45839,6 +46102,16 @@ var hrange = __webpack_require__(4);
     this.instance_id = inst_id;
     this.store = [];
     this.url_base = options.storageOptions.external_url.catchpy; //console.log(this.url_base);
+
+    this.setUpListeners();
+  };
+
+  $.CatchPy.prototype.setUpListeners = function () {
+    var self = this;
+    $.subscribeEvent('convertFromWebAnnotation', self.instance_id, function (_, element, webAnnotation, callBack) {
+      console.log("Reached here!");
+      callBack(self.convertFromWebAnnotation(webAnnotation, jQuery(element).find('.annotator-wrapper')));
+    });
   };
 
   $.CatchPy.prototype.onLoad = function (element, opts, callBack) {
@@ -45927,6 +46200,7 @@ var hrange = __webpack_require__(4);
       return;
     }
 
+    console.log(ann_to_save);
     var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper')); // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
 
     var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
@@ -46053,10 +46327,11 @@ var hrange = __webpack_require__(4);
     var targetList = [];
     var source_id = this.options.object_id;
     var purpose = 'commenting';
+    console.log(annotation.media, annotation);
 
     if (annotation.media === "comment") {
-      targetList.push(annotation.ranges);
-      source_id = annotation.ranges.source; // jQuery.each(annotation.ranges, function(_, range){
+      targetList.push(annotation.ranges); //source_id = annotation.ranges.source;
+      // jQuery.each(annotation.ranges, function(_, range){
       //     targetList.push(range)
       //     source_id = range.parent;
       // });
@@ -46231,6 +46506,10 @@ var hrange = __webpack_require__(4);
       if (m === "image" || m === "video" || m === "text" || m === "audio") {
         found = item['type'];
       }
+
+      if (m === 'annotation') {
+        found = 'comment';
+      }
     }); // console.log("FOUND IT", found);
 
     return found;
@@ -46261,7 +46540,8 @@ var hrange = __webpack_require__(4);
     var self = this;
 
     try {
-      // console.log(media);
+      console.log(media);
+
       if (media.toLowerCase() === "text") {
         var ranges = [];
         var xpathRanges = [];
@@ -46332,10 +46612,8 @@ var hrange = __webpack_require__(4);
       } else if (media.toLowerCase() == "image") {
         // console.log(webAnn['target'])
         return webAnn['target']['items'];
-      }
-
-      if (webAnn['target']['items'][0]['type'] == "Annotation") {
-        return ranges;
+      } else if (media.toLowerCase() == "comment") {
+        return webAnn['target']['items'];
       } //console.log('getAnnotationTarget', ranges, element);
 
 
@@ -46610,14 +46888,14 @@ var hrange = __webpack_require__(4);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(22)))
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(69);
+module.exports = __webpack_require__(70);
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46650,16 +46928,16 @@ __webpack_require__(48);
 
 __webpack_require__(51);
 
-__webpack_require__(70);
+__webpack_require__(71);
 
 __webpack_require__(44);
 
-__webpack_require__(67);
+__webpack_require__(68);
 
-__webpack_require__(71);
+__webpack_require__(72);
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -46716,7 +46994,7 @@ __webpack_require__(71);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -46725,7 +47003,7 @@ __webpack_require__(71);
  *
  */
 //uncomment to add css file
-__webpack_require__(72);
+__webpack_require__(73);
 
 (function ($) {
   /**
@@ -46784,7 +47062,7 @@ __webpack_require__(72);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin

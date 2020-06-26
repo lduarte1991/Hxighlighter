@@ -8,6 +8,15 @@ var hrange = require('../h-range.js');
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;
         //console.log(this.url_base);
+        this.setUpListeners();
+    };
+
+    $.CatchPy.prototype.setUpListeners = function() {
+        var self = this;
+        $.subscribeEvent('convertFromWebAnnotation', self.instance_id, function(_, element, webAnnotation, callBack) {
+            console.log("Reached here!")
+            callBack(self.convertFromWebAnnotation(webAnnotation, jQuery(element).find('.annotator-wrapper')));
+        });
     };
 
     $.CatchPy.prototype.onLoad = function(element, opts, callBack) {
@@ -92,6 +101,7 @@ var hrange = require('../h-range.js');
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
+        console.log(ann_to_save);
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
@@ -219,9 +229,10 @@ var hrange = require('../h-range.js');
         var targetList = [];
         var source_id = this.options.object_id;
         var purpose = 'commenting';
+        console.log(annotation.media, annotation)
         if (annotation.media === "comment") {
             targetList.push(annotation.ranges);
-            source_id = annotation.ranges.source;
+            //source_id = annotation.ranges.source;
             // jQuery.each(annotation.ranges, function(_, range){
             //     targetList.push(range)
             //     source_id = range.parent;
@@ -388,6 +399,9 @@ var hrange = require('../h-range.js');
             if (m === "image" || m === "video" || m === "text" || m === "audio") {
                 found = item['type'];
             }
+            if (m === 'annotation') {
+                found = 'comment'
+            }
         });
         // console.log("FOUND IT", found);
         return found;
@@ -414,7 +428,7 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element, media) {
         var self = this;
         try {
-            // console.log(media);
+            console.log(media);
             if (media.toLowerCase() === "text") {
                 var ranges = [];
                 var xpathRanges = [];
@@ -480,9 +494,8 @@ var hrange = require('../h-range.js');
             } else if (media.toLowerCase() == "image") {
                 // console.log(webAnn['target'])
                 return webAnn['target']['items'];
-            }
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
-                return ranges;
+            } else if (media.toLowerCase() == "comment") {
+                return webAnn['target']['items'];
             }
             //console.log('getAnnotationTarget', ranges, element);
             return ranges;

@@ -73,6 +73,11 @@
         self.callFuncInList(this.targets, 'TargetAnnotationDraw', message);
     };
 
+    $.Core.prototype.TargetAnnotationUndraw = function(message) {
+        var self = this;
+        self.callFuncInList(this.targets, 'TargetAnnotationUndraw', message);
+    };
+
     $.Core.prototype.ViewerEditorOpen = function(message) {
         var self = this;
         self.callFuncInList(this.targets, 'ViewerEditorOpen', message);

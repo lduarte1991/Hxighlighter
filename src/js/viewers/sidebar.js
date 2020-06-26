@@ -381,6 +381,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             self.search(options);
         });
 
+        $.subscribeEvent('wsAnnotationLoaded', self.instance_id, function(_, annotation) {
+            self.addAnnotation(annotation, false, false);
+            console.log("WS Annotation added");
+        });
+
         $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
             self.addAnnotation(annotation, false, true);
         });
@@ -477,8 +482,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
     $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
         var self = this;
-        // console.log("7. Should add Annotation to viewer", annotation)
-        if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
+        console.log("7. Should add Annotation to viewer", annotation)
+        if (annotation.media !== "comment" && annotation.media !== "Annotation" && annotation.text !== "" && $.exists(annotation.tags)) {
             var ann = annotation;
             ann.index = jQuery('.ann-item').length;
             ann.instructor_ids = self.options.instructors;
@@ -572,7 +577,24 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
             jQuery('#empty-alert').css('display', 'none');
-            self.lazyLoadImages();
+            self.lazyLoadImages(); 
+        } else {
+            try {
+                var parent_id = annotation.ranges[0].source;
+
+                $.publishEvent('GetSpecificAnnotationData', self.instance_id, [parent_id, function(annotation_data) {
+                    annotation_data.totalReplies++;
+                    annotation_data._local.highlights.forEach(function(high) {
+                        jQuery(high).data('annotation', annotation_data);
+                    });
+                    var viewers = jQuery('.item-' + annotation_data.id);
+                    jQuery.each(viewers, function(index, viewer) {
+                        $.publishEvent('addReplyToViewer', self.instance_id, [viewer, annotation, '', annotation_data]);
+                    });
+                }]);
+            } catch(e) {
+                console.log("Error", annotation)
+            }
         }
     };
 
@@ -669,7 +691,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
       jQuery('.editor-area.side').remove();
       jQuery('.edit').prop('disabled', false);
       jQuery('.note-link-popover').remove();
-      $.publishEvent('editorHidden', self.instance_id, []);
+      //$.publishEvent('editorHidden', self.instance_id, []);
       if (editor) {
          editor.find('.side.body').show();
          editor.find('.tagList.side').show();

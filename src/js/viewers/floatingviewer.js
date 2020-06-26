@@ -147,18 +147,21 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // closes the editor tool and does not save annotation
         self.annotation_tool.editor.find('.cancel').click(function () {
-            console.log("HERE", annotation, !updating, true);
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
         });
 
         // closes the editor and does save annotations
         self.annotation_tool.editor.find('.save').click(function () {
+            var timer = new Date();
             var text = self.annotation_tool.editor.find('#annotation-text-field').val();
             if (updating) {
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
+            var timer2 = new Date()
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
+            var end = new Date()
+            console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
         });
 
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
@@ -170,15 +173,17 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.FloatingViewer.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
         var self = this;
+        var timer = new Date()
         jQuery('.edit').prop('disabled', false);
         jQuery('.note-link-popover').remove();
-        $.publishEvent('editorHidden', self.instance_id, []);
+        
         if (self.annotation_tool.editor) {
             self.annotation_tool.editor.remove();
         }
         delete self.annotation_tool.editor;
         self.annotation_tool.editing = false;
         self.annotation_tool.updating = false;
+        //$.publishEvent('editorHidden', self.instance_id, []);
         // jQuery('body').css('overflow-y', 'scroll');
     };
 
@@ -278,7 +283,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
             return;
         }
 
-        console.log('should hide display');
         clearTimeout(self.hideTimer);
         self.hideTimer = setTimeout(function () {
             if (self.hideTimer) {
