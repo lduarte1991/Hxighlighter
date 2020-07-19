@@ -121,7 +121,7 @@ require('./hx-summernote-plugin.css');
             toolbar: toolbar,
         }, this.options);
         // console.log("After init options", this.options);
-        console.log('SUMMERNOTE', this.options);
+        // console.log('SUMMERNOTE', this.options);
         this.init();
         this.instanceID = instanceID;
         return this;

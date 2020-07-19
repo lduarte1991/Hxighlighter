@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Friday, June 26th, 2020, 11:41:40 AM  
+// [AIV_SHORT]  Version: 1.2.0 - Tuesday, July 7th, 2020, 3:25:59 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40007,8 +40007,8 @@ __webpack_require__(9);
       } else {
         // console.log(annotation);
         if (annotation.media !== "comment") {
-          jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
-          $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+          jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.'); //$.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+
           self.search(self.lastSearchOption);
         }
       }
@@ -40021,8 +40021,29 @@ __webpack_require__(9);
       self.search(options);
     });
     $.subscribeEvent('wsAnnotationLoaded', self.instance_id, function (_, annotation) {
-      self.addAnnotation(annotation, false, false);
-      console.log("WS Annotation added");
+      var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
+        return button.id;
+      });
+      var isMine = annotation.creator.id === self.options.user_id;
+      var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
+      var isPeer = !isMine && !isInstructor;
+
+      if (isMine && filteroptions.indexOf('mine') > -1) {
+        self.addAnnotation(annotation, false, false);
+      } else if (isInstructor && filteroptions.indexOf('instructor') > -1) {
+        self.addAnnotation(annotation, false, false);
+      } else if (isPeer && filteroptions.indexOf('peer') > -1) {
+        self.addAnnotation(annotation, false, false);
+      } else {
+        if (isMine) {
+          $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+        } else if (isInstructor) {
+          $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#instructor')]);
+        } else if (isPeer) {
+          $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#peer')]);
+        }
+      } // console.log("WS Annotation added", annotation);
+
     });
     $.subscribeEvent('annotationLoaded', self.instance_id, function (_, annotation) {
       self.addAnnotation(annotation, false, true);
@@ -40121,10 +40142,9 @@ __webpack_require__(9);
   };
 
   $.Sidebar.prototype.addAnnotation = function (annotation, updating, shouldAppend) {
-    var self = this;
-    console.log("7. Should add Annotation to viewer", annotation);
+    var self = this; // console.log("7. Should add Annotation to viewer", annotation)
 
-    if (annotation.media !== "comment" && annotation.media !== "Annotation" && annotation.text !== "" && $.exists(annotation.tags)) {
+    if (annotation.media !== "comment" && annotation.media !== "Annotation" && $.exists(annotation.tags)) {
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
@@ -40230,14 +40250,27 @@ __webpack_require__(9);
       jQuery('#empty-alert').css('display', 'none');
       self.lazyLoadImages();
     } else {
+      // console.log('Trying to add a comment', annotation);
       try {
-        var parent_id = annotation.ranges[0].source;
+        var ranges = annotation.ranges;
+        var source;
+
+        if (Array.isArray(ranges)) {
+          source = ranges[0].source;
+        } else {
+          source = ranges.source;
+        }
+
+        var parent_id = source;
         $.publishEvent('GetSpecificAnnotationData', self.instance_id, [parent_id, function (annotation_data) {
+          // console.log(annotation_data);
           annotation_data.totalReplies++;
 
-          annotation_data._local.highlights.forEach(function (high) {
-            jQuery(high).data('annotation', annotation_data);
-          });
+          if (annotation_data.media === "text") {
+            annotation_data._local.highlights.forEach(function (high) {
+              jQuery(high).data('annotation', annotation_data);
+            });
+          }
 
           var viewers = jQuery('.item-' + annotation_data.id);
           jQuery.each(viewers, function (index, viewer) {
@@ -40245,7 +40278,7 @@ __webpack_require__(9);
           });
         }]);
       } catch (e) {
-        console.log("Error", annotation);
+        console.log("Error", annotation, e);
       }
     }
   };
@@ -40918,6 +40951,8 @@ __p += '" aria-label="last updated ';
 __p += '">\n            created ';
  print(jQuery.timeago(date)); ;
 __p += '\n        </div>\n    ';
+ } else { ;
+__p += '\n        <div class="saving-message"><i class="fas fa-spinner fa-spin"></i> Saving... </div>\n    ';
  } ;
 __p += '\n    </div>\n    <button class="edit" id="edit-' +
 ((__t = ( id )) == null ? '' : __t) +
@@ -40977,7 +41012,11 @@ __e( tagItem.replace(/"/g, '&quot;') ) +
  }); ;
 __p += '\n        </div>\n    ';
  } ;
-__p += '\n\n    <div class="plugin-area-bottom"></div>\n        <!-- ';
+__p += '\n    ';
+ if( typeof(created) !== 'undefined') { ;
+__p += '\n    <div class="plugin-area-bottom"></div>\n    ';
+ } ;
+__p += '\n        <!-- ';
  if (typeof(totalReplies) == "undefined" || totalReplies === 0) { ;
 __p += '\n            <button class=\'create-reply\'>Reply to Annotation</button>\n        ';
  } else { ;
@@ -41126,8 +41165,8 @@ __webpack_require__(32);
       },
       toolbar: toolbar
     }, this.options); // console.log("After init options", this.options);
+    // console.log('SUMMERNOTE', this.options);
 
-    console.log('SUMMERNOTE', this.options);
     this.init();
     this.instanceID = instanceID;
     return this;
@@ -41968,12 +42007,10 @@ __webpack_require__(40);
 
   $.AdminButton.prototype.init = function () {
     var self = this;
-    console.log("here");
 
     if (self.options.AdminButton) {
       self.url = self.options.AdminButton.homeURL;
-      self.allowed = self.options.AdminButton.has_staff_permissions;
-      console.log(self.url, self.allowed);
+      self.allowed = self.options.AdminButton.has_staff_permissions; // console.log(self.url, self.allowed);
 
       if (self.allowed && self.url && self.url != '') {
         self.setUpButtons();
@@ -42213,6 +42250,191 @@ __webpack_require__(43);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  Websockets Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+//require('./filaname.css');
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.Websockets = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.init();
+    this.timerRetryInterval;
+    this.socket = null;
+    this.maxConnections = 10;
+    this.currentConnections = 0;
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.Websockets.prototype.init = function () {
+    var self = this;
+    var valid_object_id = self.options.ws_object_id || self.options.object_id;
+    self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
+    self.setUpConnection();
+  };
+
+  $.Websockets.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  $.Websockets.prototype.setUpConnection = function () {
+    var self = this;
+    self.currentConnections += 1;
+
+    if (self.currentConnections >= self.maxConnections) {
+      clearInterval(self.timerRetryInterval);
+      console.log("Reached max connection value");
+      return;
+    } // console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
+
+
+    self.socket = self.openWs(self.slot_id, self.options.Websockets.wsUrl);
+
+    self.socket.onopen = function (e) {
+      self.onWsOpen(e);
+      self.currentConnections = 0;
+    };
+
+    self.socket.onmessage = function (e) {
+      var data = JSON.parse(e.data);
+      self.receiveWsMessage(data);
+    };
+
+    self.socket.onclose = function (e) {
+      self.onWsClose(e);
+    };
+  };
+
+  $.Websockets.prototype.receiveWsMessage = function (response) {
+    var self = this;
+    var message = response['message'];
+    var annotation = eval("(" + message + ")"); // console.log("WS:" + message)
+
+    self.convertAnnotation(annotation, function (wa) {
+      // console.log("YEH", response)
+      if (response['type'] === 'annotation_deleted') {
+        $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
+          // console.log(wa);
+          if (wa.media !== 'comment') {
+            $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
+            jQuery('.item-' + wa.id).remove();
+          } else {
+            $.publishEvent('removeReply', self.instanceID, [wa]);
+            jQuery('.reply-item-' + wa.id).remove();
+          }
+        }]);
+      } else {
+        $.publishEvent('wsAnnotationLoaded', self.instanceID, [wa]); // console.log("HERE:", wa)
+
+        if (wa.media !== 'comment') {
+          if (response['type'] === 'annotation_updated') {
+            $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
+              $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
+              $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
+            }]);
+          } else {
+            $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
+          }
+        }
+      }
+    });
+  };
+
+  $.Websockets.prototype.openWs = function (slot_id, wsUrl) {
+    var self = this;
+    var notificationSocket = new WebSocket('wss://' + wsUrl + '/ws/notification/' + slot_id + '/?utm_source=' + self.options.Websockets.utm + '&resource_link_id=' + self.options.Websockets.resource);
+    return notificationSocket;
+  };
+
+  $.Websockets.prototype.onWsOpen = function () {
+    var self = this;
+
+    if (self.timerRetryInterval) {
+      clearInterval(self.timerRetryInterval);
+      self.timerRetryInterval = undefined;
+    }
+  };
+
+  $.Websockets.prototype.onWsClose = function () {
+    var self = this;
+
+    if (!self.timerRetryInterval) {
+      self.timerRetryInterval = setInterval(function () {
+        // console.log('intervalrunning');
+        self.setUpConnection();
+      }, 30000);
+    }
+  };
+
+  Object.defineProperty($.Websockets, 'name', {
+    value: "Websockets"
+  });
+
+  $.Websockets.prototype.convertAnnotation = function (annotation, callBack) {
+    var self = this;
+
+    if (annotation && annotation.schema_version) {
+      // console.log("option 1");
+      return self.convertingFromWebAnnotations(annotation, callBack);
+    } else {
+      // console.log("option 2");
+      return self.convertingFromAnnotatorJS(annotation, callBack);
+    }
+  };
+
+  $.Websockets.prototype.convertingFromWebAnnotations = function (annotation, callBack) {
+    var self = this;
+    $.publishEvent('convertFromWebAnnotation', self.instanceID, [self.options.slot, annotation, callBack]);
+  };
+
+  $.Websockets.prototype.convertingFromAnnotatorJS = function (annotation, callBack) {
+    var self = this;
+    var ranges = annotation.ranges;
+    var rangeList = [];
+    ranges.forEach(function (range) {
+      rangeList.push({
+        'xpath': range,
+        'text': {
+          prefix: '',
+          exact: annotation.quote,
+          suffix: ''
+        }
+      });
+    });
+    var annotation = {
+      annotationText: [annotation.text],
+      created: annotation.created,
+      creator: annotation.user,
+      exact: annotation.quote,
+      id: annotation.id,
+      media: annotation.media,
+      tags: annotation.tags,
+      ranges: rangeList,
+      totalReplies: annotation.totalComments,
+      permissions: annotation.permissions
+    };
+    callBack(annotation);
+  };
+
+  $.plugins.push($.Websockets);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * 
  */
 (function ($) {
@@ -42355,31 +42577,31 @@ __webpack_require__(43);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 46 */,
 /* 47 */,
 /* 48 */,
 /* 49 */,
 /* 50 */,
-/* 51 */
+/* 51 */,
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * 
  */
 //during deployment, this is what decides what gets instantiated, should be moved elsewhere
-__webpack_require__(52);
-
 __webpack_require__(53);
+
+__webpack_require__(54);
 
 __webpack_require__(23);
 
-__webpack_require__(54);
+__webpack_require__(55);
 
 __webpack_require__(31);
 
@@ -42389,15 +42611,15 @@ __webpack_require__(33);
 
 __webpack_require__(35);
 
-__webpack_require__(58);
+__webpack_require__(59);
 
-__webpack_require__(60);
-
-__webpack_require__(62);
+__webpack_require__(61);
 
 __webpack_require__(63);
 
-__webpack_require__(65);
+__webpack_require__(64);
+
+__webpack_require__(66);
 
 __webpack_require__(37);
 
@@ -42407,7 +42629,7 @@ __webpack_require__(41);
 
 __webpack_require__(42);
 
-__webpack_require__(67);
+__webpack_require__(44);
 
 (function ($) {
   /**
@@ -42835,8 +43057,7 @@ __webpack_require__(67);
 
     jQuery.each(self.viewers, function (_, viewer) {
       var timer = new Date();
-      viewer.ViewerEditorClose(annotation);
-      console.log("Finished: " + (new Date() - timer) + 'ms');
+      viewer.ViewerEditorClose(annotation); // console.log("Finished: " + (new Date() - timer) + 'ms')
     });
     setTimeout(function () {
       $.publishEvent('editorHidden', self.instance_id, []);
@@ -42958,7 +43179,7 @@ __webpack_require__(67);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43081,7 +43302,7 @@ var hrange = __webpack_require__(4);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
@@ -43308,12 +43529,12 @@ var hrange = __webpack_require__(4);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(55);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56);
 /* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
@@ -43334,14 +43555,14 @@ var annotator = annotator ? annotator : __webpack_require__(7);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(56),
-        viewer: __webpack_require__(57)
+        editor: __webpack_require__(57),
+        viewer: __webpack_require__(58)
       },
       template_suffix: "floating",
       template_urls: ""
     };
-    this.options = jQuery.extend({}, defaultOptions, options);
-    console.log("Floating options", this.options);
+    this.options = jQuery.extend({}, defaultOptions, options); // console.log("Floating options", this.options);
+
     this.instance_id = inst_id;
     this.annotation_tool = {
       interactionPoint: null,
@@ -43471,8 +43692,7 @@ var annotator = annotator ? annotator : __webpack_require__(7);
       annotation.annotationText.push(text);
       var timer2 = new Date();
       $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
-      var end = new Date();
-      console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
+      var end = new Date(); // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
     });
     self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
     setTimeout(function () {
@@ -43773,13 +43993,13 @@ var annotator = annotator ? annotator : __webpack_require__(7);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -43796,7 +44016,7 @@ return __p
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -43853,7 +44073,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -43862,7 +44082,7 @@ return __p
  *
  */
 //uncomment to add css file
-__webpack_require__(59);
+__webpack_require__(60);
 
 (function ($) {
   /**
@@ -43919,13 +44139,13 @@ __webpack_require__(59);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -43933,7 +44153,7 @@ __webpack_require__(59);
  *  
  *
  */
-__webpack_require__(61);
+__webpack_require__(62);
 
 (function ($) {
   /**
@@ -44053,13 +44273,13 @@ __webpack_require__(61);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
@@ -44608,8 +44828,7 @@ __webpack_require__(61);
     return r;
   };
 
-  $.KeyboardSelector.prototype.addMarkers = function (ranges) {
-    console.log(ranges);
+  $.KeyboardSelector.prototype.addMarkers = function (ranges) {// console.log(ranges);
   };
 
   $.KeyboardSelector.prototype.removeCharacter = function (s, offset) {
@@ -44643,7 +44862,7 @@ __webpack_require__(61);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44651,7 +44870,7 @@ __webpack_require__(61);
  *  
  *
  */
-__webpack_require__(64);
+__webpack_require__(65);
 
 (function ($) {
   /**
@@ -44721,13 +44940,13 @@ __webpack_require__(64);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -44737,7 +44956,7 @@ __webpack_require__(64);
  */
 var annotator = annotator ? annotator : __webpack_require__(7); //uncomment to add css file
 
-__webpack_require__(66);
+__webpack_require__(67);
 
 (function ($) {
   /**
@@ -44835,184 +45054,10 @@ __webpack_require__(66);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
 /* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- *  Websockets Annotations Plugin
- *  
- *
- */
-//uncomment to add css file
-//require('./filaname.css');
-(function ($) {
-  /**
-   * @constructor
-   * @params {Object} options - specific options for this plugin
-   */
-  $.Websockets = function (options, instanceID) {
-    this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID;
-    this.init();
-    this.timerRetryInterval;
-    this.socket = null;
-    return this;
-  };
-  /**
-   * Initializes instance
-   */
-
-
-  $.Websockets.prototype.init = function () {
-    var self = this;
-    self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + self.options.object_id;
-    self.setUpConnection();
-  };
-
-  $.Websockets.prototype.saving = function (annotation) {
-    return annotation;
-  };
-
-  $.Websockets.prototype.setUpConnection = function () {
-    var self = this;
-    console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
-    self.socket = self.openWs(self.slot_id, self.options.Websockets.wsUrl);
-
-    self.socket.onopen = function (e) {
-      self.onWsOpen(e);
-    };
-
-    self.socket.onmessage = function (e) {
-      var data = JSON.parse(e.data);
-      self.receiveWsMessage(data);
-    };
-
-    self.socket.onclose = function (e) {
-      self.onWsClose(e);
-    };
-  };
-
-  $.Websockets.prototype.receiveWsMessage = function (response) {
-    var self = this;
-    var message = response['message'];
-    var annotation = eval("(" + message + ")");
-    console.log("WS:" + message);
-    self.convertAnnotation(annotation, function (wa) {
-      console.log("YEH", response);
-
-      if (response['type'] === 'annotation_deleted') {
-        $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
-          if (wa.media !== "Annotation") {
-            $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
-            jQuery('.item-' + wa.id).remove();
-          } else {
-            $.publishEvent('removeReply', self.instanceID, [wa]);
-            jQuery('.reply-item-' + wa.id).remove();
-          }
-        }]);
-      } else {
-        $.publishEvent('wsAnnotationLoaded', self.instanceID, [wa]);
-        console.log("HERE:", wa);
-
-        if (wa.media !== 'comment') {
-          if (response['type'] === 'annotation_updated') {
-            $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
-              $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
-              $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
-            }]);
-          } else {
-            $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
-          }
-        }
-      }
-    });
-  };
-
-  $.Websockets.prototype.openWs = function (slot_id, wsUrl) {
-    var self = this;
-    var notificationSocket = new WebSocket('wss://' + wsUrl + '/ws/notification/' + slot_id + '/?utm_source=' + self.options.Websockets.utm + '&resource_link_id=' + self.options.Websockets.resource);
-    return notificationSocket;
-  };
-
-  $.Websockets.prototype.onWsOpen = function () {
-    var self = this;
-
-    if (self.timerRetryInterval) {
-      clearInterval(self.timerRetryInterval);
-      self.timerRetryInterval = undefined;
-    }
-  };
-
-  $.Websockets.prototype.onWsClose = function () {
-    var self = this;
-
-    if (!self.timerRetryInterval) {
-      self.timerRetryInterval = setInterval(function () {
-        console.log('intervalrunning');
-        self.setUpConnection();
-      }, 5000);
-    }
-  };
-
-  Object.defineProperty($.Websockets, 'name', {
-    value: "Websockets"
-  });
-
-  $.Websockets.prototype.convertAnnotation = function (annotation, callBack) {
-    var self = this;
-
-    if (annotation && annotation.schema_version) {
-      console.log("option 1");
-      return self.convertingFromWebAnnotations(annotation, callBack);
-    } else {
-      console.log("option 2");
-      return self.convertingFromAnnotatorJS(annotation, callBack);
-    }
-  };
-
-  $.Websockets.prototype.convertingFromWebAnnotations = function (annotation, callBack) {
-    var self = this;
-    $.publishEvent('convertFromWebAnnotation', self.instanceID, [self.options.slot, annotation, callBack]);
-  };
-
-  $.Websockets.prototype.convertingFromAnnotatorJS = function (annotation, callBack) {
-    var self = this;
-    var ranges = annotation.ranges;
-    var rangeList = [];
-    ranges.forEach(function (range) {
-      rangeList.push({
-        'xpath': range,
-        'text': {
-          prefix: '',
-          exact: annotation.quote,
-          suffix: ''
-        }
-      });
-    });
-    var annotation = {
-      annotationText: [annotation.text],
-      created: annotation.created,
-      creator: annotation.user,
-      exact: annotation.quote,
-      id: annotation.id,
-      media: annotation.media,
-      tags: annotation.tags,
-      ranges: rangeList,
-      totalReplies: annotation.totalComments,
-      permissions: annotation.permissions
-    };
-    callBack(annotation);
-  };
-
-  $.plugins.push($.Websockets);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 /* 68 */,
@@ -45039,7 +45084,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(45);
+/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(46);
 /* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_css_text_css__WEBPACK_IMPORTED_MODULE_3__);
 
 
@@ -45055,9 +45100,9 @@ __webpack_require__(1);
 
 __webpack_require__(20);
 
-__webpack_require__(51);
+__webpack_require__(52);
 
-__webpack_require__(44);
+__webpack_require__(45);
 
 __webpack_require__(76);
 

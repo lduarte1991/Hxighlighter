@@ -435,7 +435,7 @@ require('./plugins/hx-websockets.js');
         jQuery.each(self.viewers, function(_, viewer) {
             var timer = new Date();
             viewer.ViewerEditorClose(annotation);
-            console.log("Finished: " + (new Date() - timer) + 'ms')
+            // console.log("Finished: " + (new Date() - timer) + 'ms')
         });
 
         setTimeout(function() {$.publishEvent('editorHidden', self.instance_id, []);}, 50);

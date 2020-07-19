@@ -19,6 +19,8 @@
         this.init();
         this.timerRetryInterval;
         this.socket = null;
+        this.maxConnections = 10;
+        this.currentConnections = 0;
         return this;
     };
 
@@ -27,7 +29,8 @@
      */
     $.Websockets.prototype.init = function() {
         var self = this;
-        self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + self.options.object_id;
+        var valid_object_id = self.options.ws_object_id || self.options.object_id
+        self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
         self.setUpConnection();
     };
 
@@ -37,10 +40,17 @@
 
     $.Websockets.prototype.setUpConnection = function() {
         var self = this;
-        console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
+        self.currentConnections += 1;
+        if (self.currentConnections >= self.maxConnections) {
+            clearInterval(self.timerRetryInterval);
+            console.log("Reached max connection value");
+            return;
+        }
+        // console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
         self.socket = self.openWs(self.slot_id, self.options.Websockets.wsUrl);
         self.socket.onopen = function(e) {
             self.onWsOpen(e);
+            self.currentConnections = 0;
         };
         self.socket.onmessage = function(e) {
             var data = JSON.parse(e.data);
@@ -55,12 +65,13 @@
         var self = this;
         var message = response['message'];
         var annotation = eval( "(" + message + ")");
-        console.log("WS:" + message)
+        // console.log("WS:" + message)
         self.convertAnnotation(annotation, function(wa) {
-            console.log("YEH", response)
+            // console.log("YEH", response)
             if (response['type'] === 'annotation_deleted') {
                 $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function(annotationFound) {
-                    if (wa.media !== "Annotation") {
+                    // console.log(wa);
+                    if (wa.media !== 'comment') {
                         $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
                         jQuery('.item-' + wa.id).remove();
                     } else {
@@ -70,7 +81,7 @@
                 }]);
             } else {
                 $.publishEvent('wsAnnotationLoaded', self.instanceID, [wa]);
-                console.log("HERE:", wa)
+                // console.log("HERE:", wa)
                 if (wa.media !== 'comment') {
                     if (response['type'] === 'annotation_updated') {
                         $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function(annotationFound) {
@@ -107,9 +118,9 @@
         var self = this;
         if (!self.timerRetryInterval) {
             self.timerRetryInterval = setInterval(function() {
-                console.log('intervalrunning');
+                // console.log('intervalrunning');
                 self.setUpConnection();
-            }, 5000)
+            }, 30000)
         }
     };
 
@@ -120,10 +131,10 @@
     $.Websockets.prototype.convertAnnotation = function(annotation, callBack) {
         var self = this;
         if (annotation && annotation.schema_version) {
-            console.log("option 1");
+            // console.log("option 1");
             return self.convertingFromWebAnnotations(annotation, callBack);
         } else {
-            console.log("option 2");
+            // console.log("option 2");
             return self.convertingFromAnnotatorJS(annotation, callBack);
         }
     };

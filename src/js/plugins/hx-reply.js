@@ -58,7 +58,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                             }
                         });
                         // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
-                        console.log(bufferHTML)
+                        // console.log(bufferHTML)
                         setTimeout(function() { // wrap in a timer to prevent issues in Firefox
                             self.elementObj.summernote('code', bufferHTML);
                             jQuery('#maxContentPost').text(1000);
@@ -86,6 +86,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
         this.init();
         this.instanceID = instanceID;
         this.jq_backup = jQuery;
+        this.last_delete = undefined;
+        this.last_added = undefined;
         return this;
     };
 
@@ -166,15 +168,17 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         $.subscribeEvent('addReplyToViewer', self.instanceID, function(_, viewer, reply, prefix, annotation) {
-            setTimeout(self.addReplyToViewer(viewer, reply, prefix, annotation), 500);
+            if (self.last_added != reply.id) {
+                setTimeout(self.addReplyToViewer(viewer, reply, prefix, annotation), 500);
+            }
         });
 
         $.subscribeEvent('removeReply', self.instanceID, function(_, reply) {
-            console.log(reply);
-            if (reply.media === "Annotation" || reply.media === "comment") {
-                $.publishEvent('GetSpecificAnnotationData', self.instance_id, [reply.ranges[0].parent, function(annotation_data) {
-                    console.log(annotation_data);
-                    console.log(reply)
+            // console.log(reply);
+            if ((reply.media === "Annotation" || reply.media === "comment") && self.last_delete != reply.id) {
+                $.publishEvent('GetSpecificAnnotationData', self.instance_id, [reply.ranges[0].source, function(annotation_data) {
+                    // console.log(annotation_data);
+                    // console.log(reply)
                     annotation_data.totalReplies--;
                     annotation_data._local.highlights.forEach(function(high) {
                         jQuery(high).data('annotation', annotation_data);
@@ -292,7 +296,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                     id: self.options.user_id
                 }
             }
-            console.log("Reaching here", reply)
+            // console.log("Reaching here", reply)
             $.publishEvent('StorageAnnotationSave', self.instanceID, [reply, false]);
             annotation.totalReplies++;
             (typeof(annotation.replies) == "undefined")  ? annotation.replies = [reply] : annotation.replies.push(reply);
@@ -301,6 +305,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                     jQuery(high).data('annotation', annotation);
                 });
             }
+            self.last_added = reply.id;
             self.addReplyToViewer(viewer, reply, prefix, annotation);
             self.destroy();
             if (prefix === "other-") {
@@ -368,7 +373,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 });
             }
         }, function() {
-            console.log("Didn't work exactly");
+            // console.log("Didn't work exactly");
         }])
     };
 
@@ -376,6 +381,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         var self = this;
         var delete_option = '';
         var display_name = reply.creator.name;
+        // console.log("DID IN FACT REACH HERE")
         if (self.options.instructors.indexOf(reply.creator.id) > -1) {
             delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
             display_name = self.options.common_instructor_name;
@@ -385,47 +391,63 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }
 
         var reply_list = jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]');
-        if (reply_list.is(':visible')) {
-            if (reply_list.find('.reply-item-' + reply.id).length > 0) {
-                reply_list.find('.reply-item-' + reply.id + ' .reply-body').html(reply.annotationText.join('<br>'));
-            } else {
-                jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
-                reply_list.append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
-                jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
-                    'title': 'Delete Reply?',
-                    'content': 'Would you like to delete your reply? This is permanent.',
-                    'buttons': {
-                        confirm: function() {
-                            $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
-                            annotation.replies = annotation.replies.filter(function(ann) {
-                                if (ann.id !== reply.id) {
-                                    return ann;
+        setTimeout(function() {
+            if (reply_list.is(':visible')) {
+                // console.log("Is visible");
+                if (reply_list.find('.reply-item-' + reply.id).length > 0) {
+                    // console.log("List has items");
+                    reply_list.find('.reply-item-' + reply.id + ' .reply-body').html(reply.annotationText.join('<br>'));
+                } else {
+                    // console.log("List is empty");
+                    jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
+                    reply_list.append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+                    jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
+                        'title': 'Delete Reply?',
+                        'content': 'Would you like to delete your reply? This is permanent.',
+                        'buttons': {
+                            confirm: function() {
+                                $.publishEvent('StorageAnnotationDelete', self.instanceID, [reply]);
+                                annotation.replies = annotation.replies.filter(function(ann) {
+                                    if (ann.id !== reply.id) {
+                                        return ann;
+                                    }
+                                });
+                                self.last_delete = reply.id;
+                                annotation.totalReplies--;
+                                annotation._local.highlights.forEach(function(high) {
+                                    jQuery(high).data('annotation', annotation);
+                                });
+                                jQuery('.reply.reply-item-' + reply.id).remove();
+                                jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+                                if (annotation.totalReplies == 0) {
+                                    jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').show();
+                                    jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').hide();
+                                } else {
+                                    jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').hide();
+                                    jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').show();
                                 }
-                            });
-                            annotation.totalReplies--;
-                            annotation._local.highlights.forEach(function(high) {
-                                jQuery(high).data('annotation', annotation);
-                            });
-                            jQuery('.reply.reply-item-' + reply.id).remove();
-                            jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
-                            if (annotation.totalReplies == 0) {
-                                jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').show();
-                                jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').hide();
-                            } else {
-                                jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').hide();
-                                jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').show();
+                                jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+                                jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
+                            },
+                            cancel: function() {
                             }
-                            jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
-                            jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
-                        },
-                        cancel: function() {
+                        }
+                    });
+                }
+            } else {
+                // console.log("not visible");
+                jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
+                setTimeout(function () {
+                    if (!reply_list.is(':visible')) {
+                        if (('totalReplies' in annotation) && annotation.totalReplies > 0) {
+                            jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
+                            jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
                         }
                     }
-                });
+                }, 500)
+                
             }
-        } else {
-            jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
-        }
+        }, 500);
     };
 
     $.Reply.prototype.pluralize = function(num, singular, plural) {

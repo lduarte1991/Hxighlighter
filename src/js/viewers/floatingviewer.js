@@ -24,7 +24,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             template_urls: ""
         };
         this.options = jQuery.extend({}, defaultOptions, options);
-        console.log("Floating options", this.options);
+        // console.log("Floating options", this.options);
         this.instance_id = inst_id;
         this.annotation_tool = {
             interactionPoint: null,
@@ -161,7 +161,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             var timer2 = new Date()
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
             var end = new Date()
-            console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
+            // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
         });
 
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);

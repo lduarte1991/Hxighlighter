@@ -16,6 +16,7 @@ require('./plugins/m2-editor-plugin.js');
 require('./plugins/m2-viewer-plugin.js');
 require('./plugins/m2-hxighlighter-endpoint.js');
 require('./plugins/hx-reply.js');
+require('./plugins/hx-websockets.js');
 require('./storage/catchpy.js');
 
 (function($) {
@@ -210,7 +211,7 @@ require('./storage/catchpy.js');
 
             self.mir.eventEmitter.subscribe('catchAnnotationCreated.' + self.windowId, function(event, catchAnnotation) {
                 // console.log("annotation Created", catchAnnotation);
-                
+                console.log("11. ", catchAnnotation);
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.addAnnotation(catchAnnotation, false, false);
                 });
@@ -290,7 +291,6 @@ require('./storage/catchpy.js');
             self.mir.eventEmitter.subscribe('HUD_REMOVE_CLASS.' + self.windowId, function(event, toggler, toggledClass) {
                 if (toggler === ".mirador-manipulation-toggle") {
                     if (jQuery('.mirador-osd-pointer-mode').is(':visible')){
-                        console.log('')
                         jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '198px'}, 500);
                     } else {
                         jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '36px'}, 500);
@@ -622,11 +622,11 @@ require('./storage/catchpy.js');
         var self = this;
         jQuery.each(self.storage, function(_, store) {
             // console.log("3. Sending it to store to save", store, ann);
-            store.StorageAnnotationSave(ann, self.element, false, function(x){
+            store.StorageAnnotationSave(ann, self.element, false, function(x, y){
                 setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('Annotation was created and added to top of Annotation List')}, 500);
                 $.totalAnnotations++;
                 if (typeof(callBack) === "function") {
-                    callBack(x)
+                    callBack(x, y)
                 }
             }, errorCallback);
         });

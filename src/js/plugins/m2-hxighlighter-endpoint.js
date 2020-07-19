@@ -50,6 +50,18 @@
             Hxighlighter.subscribeEvent('drawFromSearch', '', function(_, anns, converter, undrawOld) {
                 self.drawFromSearch(anns, converter, undrawOld);
             });
+            Hxighlighter.subscribeEvent('wsAnnotationLoaded', self.instance_id, function(_, annotation) {
+                // console.log("Reached wsAnnotationLoaded in mirador")
+                Hxighlighter.publishEvent('convertToWebAnnotation', self.instance_id, [annotation, function(wa) {
+                    // console.log("Sending to convert to webannotation", annotation, wa);
+                    self.annotationsList.push(self.getAnnotationInOA(wa));
+                    self.annotationsListCatch.push(annotation);
+                    self.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
+                        windowId: self.windowID,
+                        annotationsList: self.annotationsList,
+                    });
+                }]);
+            });
         },
         set: function(prop, value, options){
             if (options) {
@@ -133,12 +145,12 @@
             // console.log('1. Mirador creates OA: ', oaAnnotation);
             var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
             // console.log("2. Endpoint converts to Hxighlighter data model", endpointAnnotation);
-            Hxighlighter.publishEvent('StorageAnnotationSave', self.instance_id, [endpointAnnotation, function(data) {
-                // console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data));
+            Hxighlighter.publishEvent('StorageAnnotationSave', self.instance_id, [endpointAnnotation, function(data, data2) {
+                // console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data), data2);
                 self.eventEmitter.publish('catchAnnotationCreated.' + self.windowID, data);
                 // console.log("Should have drawn annotation");
                 self.annotationsList.push(self.getAnnotationInOA(data));
-                self.annotationsListCatch.push(data);
+                self.annotationsListCatch.push(data2);
 
                 if (typeof successCallback === "function") {
                     successCallback(self.getAnnotationInOA(data));
@@ -149,7 +161,7 @@
                     
                 }
             }, function() {
-                console.log("Something went terribly wrong");
+                // console.log("Something went terribly wrong");
                 if (typeof errorCallback === "function") {
                     errorCallback();
                 }

@@ -14,6 +14,8 @@
         <div class="annotatedAt field side" title="<% print(date) %>" aria-label="last updated <% print(date); %>">
             created <% print(jQuery.timeago(date)); %>
         </div>
+    <% } else { %>
+        <div class="saving-message"><i class="fas fa-spinner fa-spin"></i> Saving... </div>
     <% } %>
     </div>
     <button class="edit" id="edit-<%= id %>" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>
@@ -56,8 +58,9 @@
             <% }); %>
         </div>
     <% } %>
-
+    <% if( typeof(created) !== 'undefined') { %>
     <div class="plugin-area-bottom"></div>
+    <% } %>
         <!-- <% if (typeof(totalReplies) == "undefined" || totalReplies === 0) { %>
             <button class='create-reply'>Reply to Annotation</button>
         <% } else { %>
