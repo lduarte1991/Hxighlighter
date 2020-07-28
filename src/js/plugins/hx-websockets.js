@@ -70,7 +70,9 @@
             // console.log("YEH", response)
             if (response['type'] === 'annotation_deleted') {
                 $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function(annotationFound) {
-                    // console.log(wa);
+                    if (typeof(annotationFound) === "undefined") {
+                        return;
+                    }
                     if (wa.media !== 'comment') {
                         $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
                         jQuery('.item-' + wa.id).remove();
@@ -79,19 +81,22 @@
                         jQuery('.reply-item-' + wa.id).remove();
                     }
                 }]);
+                $.publishEvent('wsAnnotationDeleted', self.instanceID, [wa]);
             } else {
-                $.publishEvent('wsAnnotationLoaded', self.instanceID, [wa]);
-                // console.log("HERE:", wa)
-                if (wa.media !== 'comment') {
-                    if (response['type'] === 'annotation_updated') {
-                        $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function(annotationFound) {
-                            $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
+                $.publishEvent('wsAnnotationLoaded', self.instanceID, [wa, function() {
+                    if (wa.media !== 'comment') {
+                        if (response['type'] === 'annotation_updated') {
+                            $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function(annotationFound) {
+                                $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
+                                $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
+                            }]);
+                        } else {
                             $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
-                        }]);
-                    } else {
-                        $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
+                        }
                     }
-                }
+                }, response['type'] === 'annotation_updated']);
+                // console.log("HERE:", wa)
+                
             }
         });
     };

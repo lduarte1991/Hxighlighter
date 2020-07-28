@@ -211,7 +211,7 @@ require('./storage/catchpy.js');
 
             self.mir.eventEmitter.subscribe('catchAnnotationCreated.' + self.windowId, function(event, catchAnnotation) {
                 // console.log("annotation Created", catchAnnotation);
-                console.log("11. ", catchAnnotation);
+                //console.log("11. ", catchAnnotation);
                 jQuery.each(self.viewers, function(_, viewer) {
                     viewer.addAnnotation(catchAnnotation, false, false);
                 });

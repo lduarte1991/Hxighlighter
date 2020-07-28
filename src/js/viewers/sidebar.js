@@ -366,7 +366,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             } else {
                 // console.log(annotation);
                 if (annotation.media !== "comment") {
-                    jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
+                    // console.log(annotation, self.options)
+                    // console.log(annotation.creator.id == self.options.user_id);
+                    if (annotation.creator.id == self.options.user_id) {
+                        jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
+                    }
                     //$.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
                     self.search(self.lastSearchOption);
                 }
@@ -381,7 +385,23 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             self.search(options);
         });
 
-        $.subscribeEvent('wsAnnotationLoaded', self.instance_id, function(_, annotation) {
+        $.subscribeEvent('wsAnnotationDeleted', self.instance_id, function(_, annotation) {
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            var isMine = annotation.creator.id === self.options.user_id;
+            var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
+            var isPeer = !isMine && !isInstructor;
+
+            if (isMine && filteroptions.indexOf('mine') == -1) {
+                $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#mine'), annotation.id]);
+            } else if (isInstructor && filteroptions.indexOf('instructor') == -1) {
+                $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#instructor'), annotation.id]);
+            } else if (isPeer && filteroptions.indexOf('peer') == -1) {
+                $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#peer'), annotation.id]);
+            }
+        });
+
+
+        $.subscribeEvent('wsAnnotationLoaded', self.instance_id, function(_, annotation, callback, isUpdating) {
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
             var isMine = annotation.creator.id === self.options.user_id;
             var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
@@ -389,20 +409,38 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
             if (isMine && filteroptions.indexOf('mine') > -1) {
                 self.addAnnotation(annotation, false, false);
+                callback();
             } else if (isInstructor && filteroptions.indexOf('instructor') > -1) {
                 self.addAnnotation(annotation, false, false);
+                callback();
             } else if (isPeer && filteroptions.indexOf('peer') > -1) {
                 self.addAnnotation(annotation, false, false);
-            } else {
+                callback();
+            } else if (!isUpdating) {
                 if (isMine) {
-                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine'), annotation.id]);
                 } else if (isInstructor) {
-                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#instructor')]);
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#instructor'), annotation.id]);
                 } else if (isPeer) {
-                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#peer')]);
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#peer'), annotation.id]);
                 }
             }
             // console.log("WS Annotation added", annotation);
+        });
+
+        $.subscribeEvent('shouldDraw', self.instance_id, function(_, annotation, callback) {
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            var isMine = annotation.creator.id === self.options.user_id;
+            var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
+            var isPeer = !isMine && !isInstructor;
+
+            if (isMine && filteroptions.indexOf('mine') > -1) {
+                callback();
+            } else if (isInstructor && filteroptions.indexOf('instructor') > -1) {
+                callback();
+            } else if (isPeer && filteroptions.indexOf('peer') > -1) {
+                callback();
+            }
         });
 
         $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
@@ -488,7 +526,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     }
                 };
                 img.onerror = function(e) {
-                    console.log('error', e);
+                    // console.log('error', e);
                     img.style='display: none';
                     jQuery(img).after('<button class="zoom-to-error-button" style="background:#ededed; color: black; border-radius: 5px; border: 1px solid #333;">Zoom to annotation</button>')
                 }

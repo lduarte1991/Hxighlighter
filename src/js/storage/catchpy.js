@@ -18,7 +18,7 @@ var hrange = require('../h-range.js');
             callBack(self.convertFromWebAnnotation(webAnnotation, jQuery(element).find('.annotator-wrapper')));
         });
         $.subscribeEvent('convertToWebAnnotation', self.instance_id, function(_, annotation, callBack) {
-            console.log("in the To call", annotation);
+            // console.log("in the To call", annotation);
             callBack(self.convertToWebAnnotation(annotation, jQuery(self.element).find('.annotation-wrapper')))
         })
     };
@@ -277,20 +277,24 @@ var hrange = require('../h-range.js');
                         'suffix': range.text.suffix
                     }]
                 } else {
-                    // console.log('Should be here in image')
-                    jQuery.each(range.items, function(idx, choice) {
-                        if (choice.type === "Image") {
-                            rangeItem = [{
-                                'type': 'FragmentSelector',
-                                'value': choice.selector.items[0].selector.default.value
-                            }, {
-                                'type': 'SvgSelector',
-                                'value': choice.selector.items[0].selector.item.value
-                            }]
-                        } else if (choice.type === "Thumbnail") {
-                            targetList.push(choice)
-                        }
-                    })
+                    // console.log('Should be here in image', range);
+                    if (range.type === "Image") {
+                        rangeItem = range.selector.items
+                    } else {
+                        jQuery.each(range.items, function(idx, choice) {
+                            if (choice.type === "Image") {
+                                rangeItem = [{
+                                    'type': 'FragmentSelector',
+                                    'value': choice.selector.items[0].selector.default.value
+                                }, {
+                                    'type': 'SvgSelector',
+                                    'value': choice.selector.items[0].selector.item.value
+                                }]
+                            } else if (choice.type === "Thumbnail") {
+                                targetList.push(choice)
+                            }
+                        })
+                    }
                 }
                 targetList.push({
                     'source': source_id,
