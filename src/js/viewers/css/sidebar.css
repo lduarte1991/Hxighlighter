@@ -7,7 +7,7 @@
     --sidebar-button-color: #595959;
     --sidebar-button-color-accent: #ededed;
     --sidebar-search-bar-height-open: 73px;
-    --sidebar-footer-height: 0px;
+    --sidebar-footer-height: 15px;
 }
 
 .annotationSection.side {
@@ -91,6 +91,7 @@
     list-style: none!important;
     padding: 0px!important;
     margin-bottom: 0px!important;
+    padding-bottom: 25px!important;
 }
 
 .annotationSection .annotationsHolder.search-opened {
@@ -644,6 +645,11 @@ div.zoomToImageBounds {
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.saving-message {
+    text-weight: bold;
+    color: var(--pop-color)
 }
 
 /*button[id^="replies-close"], div[id^="create-reply"] button {

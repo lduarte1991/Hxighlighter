@@ -50,6 +50,22 @@
             Hxighlighter.subscribeEvent('drawFromSearch', '', function(_, anns, converter, undrawOld) {
                 self.drawFromSearch(anns, converter, undrawOld);
             });
+            Hxighlighter.subscribeEvent('wsAnnotationLoaded', self.instance_id, function(_, annotation, callback) {
+                // console.log("Reached wsAnnotationLoaded in mirador")
+                Hxighlighter.publishEvent('shouldDraw', self.insstance_id, [annotation, function() {
+                    Hxighlighter.publishEvent('convertToWebAnnotation', self.instance_id, [annotation, function(wa) {
+                        var oaAnn = self.getAnnotationInOA(wa);
+                        self.annotationsList.push(oaAnn);
+                        self.annotationsListCatch.push(annotation);
+                        self.eventEmitter.publish('ANNOTATIONS_LIST_UPDATED', {
+                            windowId: self.windowID,
+                            annotationsList: self.annotationsList,
+                        });
+                        // console.log(self.annotationsList)
+                        callback();
+                    }]);
+                }]);
+            });
         },
         set: function(prop, value, options){
             if (options) {
@@ -133,12 +149,12 @@
             // console.log('1. Mirador creates OA: ', oaAnnotation);
             var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
             // console.log("2. Endpoint converts to Hxighlighter data model", endpointAnnotation);
-            Hxighlighter.publishEvent('StorageAnnotationSave', self.instance_id, [endpointAnnotation, function(data) {
-                // console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data));
+            Hxighlighter.publishEvent('StorageAnnotationSave', self.instance_id, [endpointAnnotation, function(data, data2) {
+                // console.log("Successful callback for Storage Annotation Save", data, self.getAnnotationInOA(data), data2);
                 self.eventEmitter.publish('catchAnnotationCreated.' + self.windowID, data);
                 // console.log("Should have drawn annotation");
                 self.annotationsList.push(self.getAnnotationInOA(data));
-                self.annotationsListCatch.push(data);
+                self.annotationsListCatch.push(data2);
 
                 if (typeof successCallback === "function") {
                     successCallback(self.getAnnotationInOA(data));
@@ -149,7 +165,7 @@
                     
                 }
             }, function() {
-                console.log("Something went terribly wrong");
+                // console.log("Something went terribly wrong");
                 if (typeof errorCallback === "function") {
                     errorCallback();
                 }
@@ -216,16 +232,35 @@
                 motivation.push("oa:commenting");
                 var default_value = "";
                 var item_value = "";
-                jQuery.each(targetItem[0].selector.items, function(idx, choice) {
-                    if (choice.type === "FragmentSelector") {
-                        default_value = choice.value;
-                    } else if (choice.type === "SvgSelector") {
-                        item_value = choice.value.replace('&quot;strokeWidth&quot;:1,&quot;', '&quot;strokeWidth&quot;:2.5,&quot;');
-                    } else if (choice["@type"] === "oa:SpecificResource") {
-                        default_value = choice.selector.default.value;
-                        item_value = choice.selector.item.value;
-                    }
-                });
+                // console.log("LOOK HERE:", targetItem);
+                jQuery.each(targetItem, function(_, it) {
+                    // console.log(it, it.selector);
+                    jQuery.each(it.selector.items, function(idx, choice) {
+                        // console.log(choice);
+                        if (choice.type === "FragmentSelector") {
+                            default_value = choice.value;
+                        } else if (choice.type === "SvgSelector") {
+                            item_value = choice.value.replace('&quot;strokeWidth&quot;:1,&quot;', '&quot;strokeWidth&quot;:2.5,&quot;');
+                        } else if (choice["@type"] === "oa:SpecificResource") {
+                            default_value = choice.selector.default.value;
+                            item_value = choice.selector.item.value;
+                        } else if (choice.type === "Image") {
+                            // console.log("NEW", choice.selector.items);
+                            jQuery.each(choice.selector.items, function(idx, choice1) {
+                                // console.log(choice1);
+                                if (choice1.type === "FragmentSelector") {
+                                    default_value = choice1.value;
+                                } else if (choice1.type === "SvgSelector") {
+                                    item_value = choice1.value.replace('&quot;strokeWidth&quot;:1,&quot;', '&quot;strokeWidth&quot;:2.5,&quot;');
+                                } else if (choice1["@type"] === "oa:SpecificResource") {
+                                    default_value = choice1.selector.default.value;
+                                    item_value = choice1.selector.item.value;
+                                }
+                            });
+                        }
+                    });
+                })
+                
                 on = [{
                     "@type": "oa:SpecificResource",
                     "full": targetItem[0].source,

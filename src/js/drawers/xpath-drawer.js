@@ -84,8 +84,17 @@ var hrange = require('../h-range.js');
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
+        if (annotation.media.toLowerCase() !== "text") {
+            return;
+        }
+
         // console.log(self.options, annotation);
         // console.log("Annotation Being Drawn", annotation);
+        // checks to see if annotation has already been drawn, if so it undraws it
+        var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
+        if (existing_drawn_annotation) {
+            self.undraw(existing_drawn_annotation)
+        }
         self.tempHighlights.forEach(function(hl) {
             jQuery(hl).contents().unwrap();
         });

@@ -8,6 +8,19 @@ var hrange = require('../h-range.js');
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;
         //console.log(this.url_base);
+        this.setUpListeners();
+    };
+
+    $.CatchPy.prototype.setUpListeners = function() {
+        var self = this;
+        $.subscribeEvent('convertFromWebAnnotation', self.instance_id, function(_, element, webAnnotation, callBack) {
+            // console.log("Reached here!")
+            callBack(self.convertFromWebAnnotation(webAnnotation, jQuery(element).find('.annotator-wrapper')));
+        });
+        $.subscribeEvent('convertToWebAnnotation', self.instance_id, function(_, annotation, callBack) {
+            // console.log("in the To call", annotation);
+            callBack(self.convertToWebAnnotation(annotation, jQuery(self.element).find('.annotation-wrapper')))
+        })
     };
 
     $.CatchPy.prototype.onLoad = function(element, opts, callBack) {
@@ -35,12 +48,13 @@ var hrange = require('../h-range.js');
             //console.log("Error", errs);
         });
     };
-
+ 
     $.CatchPy.prototype.search = function(options, callBack, errfun) {
         var self = this;
         var data = jQuery.extend({}, {
             limit: self.options.storageOptions.pagination,
             offset: 0,
+            media: self.options.mediaType,
             source_id: self.options.object_id,
             context_id: self.options.context_id,
             collection_id: self.options.collection_id,
@@ -92,6 +106,7 @@ var hrange = require('../h-range.js');
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
+        // console.log(ann_to_save);
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
@@ -108,7 +123,7 @@ var hrange = require('../h-range.js');
             success: function(result) {
                 //console.log('ANNOTATION SAVED', result);
                 if (typeof callBack === "function") {
-                    callBack(result);
+                    callBack(result, ann_to_save);
                     //callBack(self.convertFromWebAnnotation(result, jQuery(elem).find('.annotator-wrapper')));
                 }
             },
@@ -215,13 +230,14 @@ var hrange = require('../h-range.js');
             tags.push(t_el);
         })
 
-       
+        // console.log('in annotation', annotation, elem)
         var targetList = [];
         var source_id = this.options.object_id;
         var purpose = 'commenting';
+        // console.log(annotation.media, annotation)
         if (annotation.media === "comment") {
             targetList.push(annotation.ranges);
-            source_id = annotation.ranges.source;
+            //source_id = annotation.ranges.source;
             // jQuery.each(annotation.ranges, function(_, range){
             //     targetList.push(range)
             //     source_id = range.parent;
@@ -261,19 +277,24 @@ var hrange = require('../h-range.js');
                         'suffix': range.text.suffix
                     }]
                 } else {
-                    jQuery.each(range.items, function(idx, choice) {
-                        if (choice.type === "Image") {
-                            rangeItem = [{
-                                'type': 'FragmentSelector',
-                                'value': choice.selector.items[0].selector.default.value
-                            }, {
-                                'type': 'SvgSelector',
-                                'value': choice.selector.items[0].selector.item.value
-                            }]
-                        } else if (choice.type === "Thumbnail") {
-                            targetList.push(choice)
-                        }
-                    })
+                    // console.log('Should be here in image', range);
+                    if (range.type === "Image") {
+                        rangeItem = range.selector.items
+                    } else {
+                        jQuery.each(range.items, function(idx, choice) {
+                            if (choice.type === "Image") {
+                                rangeItem = [{
+                                    'type': 'FragmentSelector',
+                                    'value': choice.selector.items[0].selector.default.value
+                                }, {
+                                    'type': 'SvgSelector',
+                                    'value': choice.selector.items[0].selector.item.value
+                                }]
+                            } else if (choice.type === "Thumbnail") {
+                                targetList.push(choice)
+                            }
+                        })
+                    }
                 }
                 targetList.push({
                     'source': source_id,
@@ -388,6 +409,9 @@ var hrange = require('../h-range.js');
             if (m === "image" || m === "video" || m === "text" || m === "audio") {
                 found = item['type'];
             }
+            if (m === 'annotation') {
+                found = 'comment'
+            }
         });
         // console.log("FOUND IT", found);
         return found;
@@ -480,9 +504,8 @@ var hrange = require('../h-range.js');
             } else if (media.toLowerCase() == "image") {
                 // console.log(webAnn['target'])
                 return webAnn['target']['items'];
-            }
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
-                return ranges;
+            } else if (media.toLowerCase() == "comment") {
+                return webAnn['target']['items'];
             }
             //console.log('getAnnotationTarget', ranges, element);
             return ranges;

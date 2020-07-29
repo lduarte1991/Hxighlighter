@@ -522,7 +522,7 @@ var hrange = require('../h-range.js');
     };
 
     $.KeyboardSelector.prototype.addMarkers = function(ranges) {
-        console.log(ranges);
+        // console.log(ranges);
     };
 
     $.KeyboardSelector.prototype.removeCharacter = function(s, offset) {

@@ -63,7 +63,7 @@ var hrange = require('../h-range.js');
         ann_to_save.created = new Date();
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         self.store.push(save_ann);
-        console.log(self.store);
+        // console.log(self.store);
     };
 
     $.TempJSON.prototype.StorageAnnotationDelete = function(ann_to_delete, elem) {
@@ -80,7 +80,7 @@ var hrange = require('../h-range.js');
             return ann
         });
 
-        console.log(self.store);
+        // console.log(self.store);
     };
 
     $.TempJSON.prototype.convertToWebAnnotation = function(annotation, elem) {

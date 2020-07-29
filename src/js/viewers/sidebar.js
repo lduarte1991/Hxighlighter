@@ -366,8 +366,12 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             } else {
                 // console.log(annotation);
                 if (annotation.media !== "comment") {
-                    jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
-                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
+                    // console.log(annotation, self.options)
+                    // console.log(annotation.creator.id == self.options.user_id);
+                    if (annotation.creator.id == self.options.user_id) {
+                        jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
+                    }
+                    //$.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
                     self.search(self.lastSearchOption);
                 }
             }
@@ -379,6 +383,64 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 'tag': tag
             };
             self.search(options);
+        });
+
+        $.subscribeEvent('wsAnnotationDeleted', self.instance_id, function(_, annotation) {
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            var isMine = annotation.creator.id === self.options.user_id;
+            var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
+            var isPeer = !isMine && !isInstructor;
+
+            if (isMine && filteroptions.indexOf('mine') == -1) {
+                $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#mine'), annotation.id]);
+            } else if (isInstructor && filteroptions.indexOf('instructor') == -1) {
+                $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#instructor'), annotation.id]);
+            } else if (isPeer && filteroptions.indexOf('peer') == -1) {
+                $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#peer'), annotation.id]);
+            }
+        });
+
+
+        $.subscribeEvent('wsAnnotationLoaded', self.instance_id, function(_, annotation, callback, isUpdating) {
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            var isMine = annotation.creator.id === self.options.user_id;
+            var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
+            var isPeer = !isMine && !isInstructor;
+
+            if (isMine && filteroptions.indexOf('mine') > -1) {
+                self.addAnnotation(annotation, false, false);
+                callback();
+            } else if (isInstructor && filteroptions.indexOf('instructor') > -1) {
+                self.addAnnotation(annotation, false, false);
+                callback();
+            } else if (isPeer && filteroptions.indexOf('peer') > -1) {
+                self.addAnnotation(annotation, false, false);
+                callback();
+            } else if (!isUpdating) {
+                if (isMine) {
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine'), annotation.id]);
+                } else if (isInstructor) {
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#instructor'), annotation.id]);
+                } else if (isPeer) {
+                    $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#peer'), annotation.id]);
+                }
+            }
+            // console.log("WS Annotation added", annotation);
+        });
+
+        $.subscribeEvent('shouldDraw', self.instance_id, function(_, annotation, callback) {
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            var isMine = annotation.creator.id === self.options.user_id;
+            var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
+            var isPeer = !isMine && !isInstructor;
+
+            if (isMine && filteroptions.indexOf('mine') > -1) {
+                callback();
+            } else if (isInstructor && filteroptions.indexOf('instructor') > -1) {
+                callback();
+            } else if (isPeer && filteroptions.indexOf('peer') > -1) {
+                callback();
+            }
         });
 
         $.subscribeEvent('annotationLoaded', self.instance_id, function(_, annotation) {
@@ -464,7 +526,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     }
                 };
                 img.onerror = function(e) {
-                    console.log('error', e);
+                    // console.log('error', e);
                     img.style='display: none';
                     jQuery(img).after('<button class="zoom-to-error-button" style="background:#ededed; color: black; border-radius: 5px; border: 1px solid #333;">Zoom to annotation</button>')
                 }
@@ -478,7 +540,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     $.Sidebar.prototype.addAnnotation = function(annotation, updating, shouldAppend) {
         var self = this;
         // console.log("7. Should add Annotation to viewer", annotation)
-        if (annotation.media !== "comment" && annotation.text !== "" && $.exists(annotation.tags)) {
+        if (annotation.media !== "comment" && annotation.media !== "Annotation" && $.exists(annotation.tags)) {
             var ann = annotation;
             ann.index = jQuery('.ann-item').length;
             ann.instructor_ids = self.options.instructors;
@@ -572,7 +634,35 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
             $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
             jQuery('#empty-alert').css('display', 'none');
-            self.lazyLoadImages();
+            self.lazyLoadImages(); 
+        } else {
+            // console.log('Trying to add a comment', annotation);
+            try {
+                var ranges = annotation.ranges;
+                var source;
+                if (Array.isArray(ranges)) {
+                    source = ranges[0].source;
+                } else {
+                    source = ranges.source
+                }
+                var parent_id = source;
+
+                $.publishEvent('GetSpecificAnnotationData', self.instance_id, [parent_id, function(annotation_data) {
+                    // console.log(annotation_data);
+                    annotation_data.totalReplies++;
+                    if (annotation_data.media === "text") {
+                        annotation_data._local.highlights.forEach(function(high) {
+                            jQuery(high).data('annotation', annotation_data);
+                        });
+                    }
+                    var viewers = jQuery('.item-' + annotation_data.id);
+                    jQuery.each(viewers, function(index, viewer) {
+                        $.publishEvent('addReplyToViewer', self.instance_id, [viewer, annotation, '', annotation_data]);
+                    });
+                }]);
+            } catch(e) {
+                console.log("Error", annotation, e)
+            }
         }
     };
 
@@ -669,7 +759,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
       jQuery('.editor-area.side').remove();
       jQuery('.edit').prop('disabled', false);
       jQuery('.note-link-popover').remove();
-      $.publishEvent('editorHidden', self.instance_id, []);
+      //$.publishEvent('editorHidden', self.instance_id, []);
       if (editor) {
          editor.find('.side.body').show();
          editor.find('.tagList.side').show();

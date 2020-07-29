@@ -20,6 +20,7 @@ require('./plugins/hx-sidebar-tag-tokens.js');
 require('./plugins/hx-adminbutton.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
+require('./plugins/hx-websockets.js');
 
 (function($) {
 
@@ -276,7 +277,7 @@ require('./plugins/hx-alert.js');
         jQuery.each($.storage, function(idx, storage) {
             var optionsForStorage;
             try {
-                optionsForStorage = jQuery.extend({}, self.options, self.options[storage.name]) || {};
+                optionsForStorage = jQuery.extend({'media': 'text'}, self.options, self.options[storage.name]) || {};
             } catch (e) {
                 optionsForStorage = {};
             }
@@ -359,6 +360,9 @@ require('./plugins/hx-alert.js');
      */
     $.TextTarget.prototype.TargetAnnotationDraw = function(annotation) {
         var self = this;
+        if (Object.keys(annotation.ranges[0]).indexOf('parent') > -1) {
+            return;
+        }
         jQuery.each(self.drawers, function(_, drawer) {
             drawer.draw(annotation);
         });
@@ -381,9 +385,11 @@ require('./plugins/hx-alert.js');
      */
     $.TextTarget.prototype.TargetAnnotationUndraw = function(annotation) {
         var self = this;
-        jQuery.each(self.drawers, function(_, drawer) {
-            drawer.undraw(annotation);
-        });
+        if (annotation.media !== "Annotation") {
+            jQuery.each(self.drawers, function(_, drawer) {
+                drawer.undraw(annotation);
+            });
+        }
     };
 
     /**
@@ -427,10 +433,12 @@ require('./plugins/hx-alert.js');
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
+            var timer = new Date();
             viewer.ViewerEditorClose(annotation);
+            // console.log("Finished: " + (new Date() - timer) + 'ms')
         });
 
-
+        setTimeout(function() {$.publishEvent('editorHidden', self.instance_id, []);}, 50);
         return annotation;
     };
 
