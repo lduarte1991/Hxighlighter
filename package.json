@@ -36,6 +36,7 @@
     "script-loader": "^0.7.2",
     "timeago": "^1.6.7",
     "toastr": "^2.1.4",
+    "video.js": "^7.8.4",
     "webpack": "^4.43.0",
     "webpack-auto-inject-version": "^1.2.2"
   },
