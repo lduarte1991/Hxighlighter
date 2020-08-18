@@ -1,0 +1,152 @@
+/**
+ * 
+ */
+
+:root {
+    --text-background: #FFFFFF;
+    --text-accent-color: #687864;
+    --accent-color: #595959;
+    --light-font-color: #fff;
+    --accent-font-color: #888;
+    --dark-font-color: #000;
+    --pop-color: #2E75AF;
+    --lighter-background: #ededed;
+}
+
+body {
+    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
+}
+
+#viewer video {
+    width: inherit;
+    height: inherit;
+}
+
+.annotation-slot {
+    background: white;
+    background: var(--text-background);
+    padding: 30px 50px;
+    border: 1px solid #888;
+    margin-top: 20px;
+    border-color: var(--text-accent-color);
+    -webkit-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    -moz-box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    box-shadow: 4px 4px 15px -5px rgba(97,96,97,0.79);
+    min-width: 733px;
+    min-width: calc(733px - var(--sidebar-width));
+}
+
+.btn-default {
+    background: #ededed;
+    background: var(--lighter-background);
+}
+
+.hx-selector-img {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid red;
+}
+
+.annotator-hl img {
+    border: 3px solid yellow;
+    outline: 1px solid black;
+}
+
+.inst .fa-certificate {
+    color: var(--pop-color);
+}
+
+.annotator-wrapper {
+    margin-bottom: 20px;
+}
+
+span.annotation-mine {
+    /*text-decoration: underline dashed;*/
+}
+
+span.annotation-instructor {
+    /*text-decoration: underline wavy;*/
+}
+
+#viewer { 
+    position: fixed; 
+    height:100%; 
+    height: calc(100% - 27px - 15px); 
+    height: -webkit-calc(100% - 27px - 15px);
+    height:-moz-calc(100% - 27px - 15px);
+    top: 27px;
+    left: 0;
+    min-width: 733px;
+    min-width: calc(733px - var(--sidebar-width));
+    width: calc(100% - var(--sidebar-width));
+    left: var(--sidebar-width);
+    background: black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+.toast {
+    opacity: 1!important;
+}
+
+.sidebar-navbar {
+    z-index:0!important;
+}
+
+.vjs-fullscreen-control.vjs-control.vjs-button {
+    order: 100;
+}
+
+.vjs-annotate-button.fas.fa-highlighter {
+    order: 5;
+}
+
+.video-js .vjs-big-play-button {
+    margin-left: -1.5em;
+    left: 50% !important;
+    top: 50% !important;
+    margin-top: -.75em;
+}
+
+.vjs-lrs {
+    width: 10px;
+    height: 500%;
+    top: -200%;
+    z-index: 99999999999;
+    background: blue;
+    background: var(--pop-color);
+    border: 2px solid white;
+    position: absolute;
+    border-radius: 4px;
+    display: none;
+    margin-left: -5px;
+}
+
+.vjs-rrs {
+    width: 10px;
+    height: 500%;
+    top: -200%;
+    z-index: 99999999999;
+    background: var(--pop-color);
+    border: 2px solid white;
+    position: absolute;
+    border-radius: 4px;
+    display: none;
+    margin-left: -5px;
+}
+
+.vjs-rs {
+    height: 300%;
+    top: -100%;
+    border: 1px solid white;
+    position: absolute;
+    display: none;
+    z-index: 999999;
+    background: var(--pop-color);
+}

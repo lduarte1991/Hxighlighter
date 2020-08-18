@@ -82,7 +82,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 69);
+/******/ 	return __webpack_require__(__webpack_require__.s = 72);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10686,7 +10686,7 @@ return jQuery;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _css_common_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _css_common_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony import */ var _css_common_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_common_css__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * Hxighlighter is the superclass that will contain all instances of the tool.
@@ -10750,7 +10750,8 @@ Hxighlighter.selectors = [];
 Hxighlighter.drawers = [];
 Hxighlighter.viewers = [];
 Hxighlighter.plugins = [];
-Hxighlighter.storage = []; // comment out following line when not webpacking
+Hxighlighter.storage = [];
+Hxighlighter.globals = {}; // comment out following line when not webpacking
 
 /* harmony default export */ __webpack_exports__["default"] = (Hxighlighter);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
@@ -27913,7 +27914,7 @@ Hxighlighter.storage = []; // comment out following line when not webpacking
   else {}
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(24)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(25)(module)))
 
 /***/ }),
 /* 3 */
@@ -27942,7 +27943,8 @@ module.exports = g;
 
 
 /***/ }),
-/* 4 */
+/* 4 */,
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28591,7 +28593,7 @@ exports.getNodeFromXpath = getNodeFromXpath;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28609,13 +28611,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}else{}}(function($){var w=window;$.fn.confirm=function(options,option2){if(typeof options==="undefined"){options={};}if(typeof options==="string"){options={content:options,title:(option2)?option2:false};}$(this).each(function(){var $this=$(this);if($this.attr("jc-attached")){console.warn("jConfirm has already been attached to this element ",$this[0]);return;}$this.on("click",function(e){e.preventDefault();var jcOption=$.extend({},options);if($this.attr("data-title")){jcOption.title=$this.attr("data-title");}if($this.attr("data-content")){jcOption.content=$this.attr("data-content");}if(typeof jcOption.buttons==="undefined"){jcOption.buttons={};}jcOption["$target"]=$this;if($this.attr("href")&&Object.keys(jcOption.buttons).length===0){var buttons=$.extend(true,{},w.jconfirm.pluginDefaults.defaultButtons,(w.jconfirm.defaults||{}).defaultButtons||{});var firstBtn=Object.keys(buttons)[0];jcOption.buttons=buttons;jcOption.buttons[firstBtn].action=function(){location.href=$this.attr("href");};}jcOption.closeIcon=false;var instance=$.confirm(jcOption);});$this.attr("jc-attached",true);});return $(this);};$.confirm=function(options,option2){if(typeof options==="undefined"){options={};}if(typeof options==="string"){options={content:options,title:(option2)?option2:false};}var putDefaultButtons=!(options.buttons===false);if(typeof options.buttons!=="object"){options.buttons={};}if(Object.keys(options.buttons).length===0&&putDefaultButtons){var buttons=$.extend(true,{},w.jconfirm.pluginDefaults.defaultButtons,(w.jconfirm.defaults||{}).defaultButtons||{});options.buttons=buttons;}return w.jconfirm(options);};$.alert=function(options,option2){if(typeof options==="undefined"){options={};}if(typeof options==="string"){options={content:options,title:(option2)?option2:false};}var putDefaultButtons=!(options.buttons===false);if(typeof options.buttons!=="object"){options.buttons={};}if(Object.keys(options.buttons).length===0&&putDefaultButtons){var buttons=$.extend(true,{},w.jconfirm.pluginDefaults.defaultButtons,(w.jconfirm.defaults||{}).defaultButtons||{});var firstBtn=Object.keys(buttons)[0];options.buttons[firstBtn]=buttons[firstBtn];}return w.jconfirm(options);};$.dialog=function(options,option2){if(typeof options==="undefined"){options={};}if(typeof options==="string"){options={content:options,title:(option2)?option2:false,closeIcon:function(){}};}options.buttons={};if(typeof options.closeIcon==="undefined"){options.closeIcon=function(){};}options.confirmKeys=[13];return w.jconfirm(options);};w.jconfirm=function(options){if(typeof options==="undefined"){options={};}var pluginOptions=$.extend(true,{},w.jconfirm.pluginDefaults);if(w.jconfirm.defaults){pluginOptions=$.extend(true,pluginOptions,w.jconfirm.defaults);}pluginOptions=$.extend(true,{},pluginOptions,options);var instance=new w.Jconfirm(pluginOptions);w.jconfirm.instances.push(instance);return instance;};w.Jconfirm=function(options){$.extend(this,options);this._init();};w.Jconfirm.prototype={_init:function(){var that=this;if(!w.jconfirm.instances.length){w.jconfirm.lastFocused=$("body").find(":focus");}this._id=Math.round(Math.random()*99999);this.contentParsed=$(document.createElement("div"));if(!this.lazyOpen){setTimeout(function(){that.open();},0);}},_buildHTML:function(){var that=this;this._parseAnimation(this.animation,"o");this._parseAnimation(this.closeAnimation,"c");this._parseBgDismissAnimation(this.backgroundDismissAnimation);this._parseColumnClass(this.columnClass);this._parseTheme(this.theme);this._parseType(this.type);var template=$(this.template);template.find(".jconfirm-box").addClass(this.animationParsed).addClass(this.backgroundDismissAnimationParsed).addClass(this.typeParsed);if(this.typeAnimated){template.find(".jconfirm-box").addClass("jconfirm-type-animated");}if(this.useBootstrap){template.find(".jc-bs3-row").addClass(this.bootstrapClasses.row);template.find(".jc-bs3-row").addClass("justify-content-md-center justify-content-sm-center justify-content-xs-center justify-content-lg-center");template.find(".jconfirm-box-container").addClass(this.columnClassParsed);if(this.containerFluid){template.find(".jc-bs3-container").addClass(this.bootstrapClasses.containerFluid);}else{template.find(".jc-bs3-container").addClass(this.bootstrapClasses.container);}}else{template.find(".jconfirm-box").css("width",this.boxWidth);}if(this.titleClass){template.find(".jconfirm-title-c").addClass(this.titleClass);}template.addClass(this.themeParsed);var ariaLabel="jconfirm-box"+this._id;template.find(".jconfirm-box").attr("aria-labelledby",ariaLabel).attr("tabindex",-1);template.find(".jconfirm-content").attr("id",ariaLabel);if(this.bgOpacity!==null){template.find(".jconfirm-bg").css("opacity",this.bgOpacity);}if(this.rtl){template.addClass("jconfirm-rtl");}this.$el=template.appendTo(this.container);this.$jconfirmBoxContainer=this.$el.find(".jconfirm-box-container");this.$jconfirmBox=this.$body=this.$el.find(".jconfirm-box");this.$jconfirmBg=this.$el.find(".jconfirm-bg");this.$title=this.$el.find(".jconfirm-title");this.$titleContainer=this.$el.find(".jconfirm-title-c");this.$content=this.$el.find("div.jconfirm-content");this.$contentPane=this.$el.find(".jconfirm-content-pane");this.$icon=this.$el.find(".jconfirm-icon-c");this.$closeIcon=this.$el.find(".jconfirm-closeIcon");this.$holder=this.$el.find(".jconfirm-holder");this.$btnc=this.$el.find(".jconfirm-buttons");this.$scrollPane=this.$el.find(".jconfirm-scrollpane");that.setStartingPoint();this._contentReady=$.Deferred();this._modalReady=$.Deferred();this.$holder.css({"padding-top":this.offsetTop,"padding-bottom":this.offsetBottom,});this.setTitle();this.setIcon();this._setButtons();this._parseContent();this.initDraggable();if(this.isAjax){this.showLoading(false);}$.when(this._contentReady,this._modalReady).then(function(){if(that.isAjaxLoading){setTimeout(function(){that.isAjaxLoading=false;that.setContent();that.setTitle();that.setIcon();setTimeout(function(){that.hideLoading(false);that._updateContentMaxHeight();},100);if(typeof that.onContentReady==="function"){that.onContentReady();}},50);}else{that._updateContentMaxHeight();that.setTitle();that.setIcon();if(typeof that.onContentReady==="function"){that.onContentReady();}}if(that.autoClose){that._startCountDown();}}).then(function(){that._watchContent();});if(this.animation==="none"){this.animationSpeed=1;this.animationBounce=1;}this.$body.css(this._getCSS(this.animationSpeed,this.animationBounce));this.$contentPane.css(this._getCSS(this.animationSpeed,1));this.$jconfirmBg.css(this._getCSS(this.animationSpeed,1));this.$jconfirmBoxContainer.css(this._getCSS(this.animationSpeed,1));},_typePrefix:"jconfirm-type-",typeParsed:"",_parseType:function(type){this.typeParsed=this._typePrefix+type;},setType:function(type){var oldClass=this.typeParsed;this._parseType(type);this.$jconfirmBox.removeClass(oldClass).addClass(this.typeParsed);},themeParsed:"",_themePrefix:"jconfirm-",setTheme:function(theme){var previous=this.theme;this.theme=theme||this.theme;this._parseTheme(this.theme);if(previous){this.$el.removeClass(previous);}this.$el.addClass(this.themeParsed);this.theme=theme;},_parseTheme:function(theme){var that=this;theme=theme.split(",");$.each(theme,function(k,a){if(a.indexOf(that._themePrefix)===-1){theme[k]=that._themePrefix+$.trim(a);}});this.themeParsed=theme.join(" ").toLowerCase();},backgroundDismissAnimationParsed:"",_bgDismissPrefix:"jconfirm-hilight-",_parseBgDismissAnimation:function(bgDismissAnimation){var animation=bgDismissAnimation.split(",");var that=this;$.each(animation,function(k,a){if(a.indexOf(that._bgDismissPrefix)===-1){animation[k]=that._bgDismissPrefix+$.trim(a);}});this.backgroundDismissAnimationParsed=animation.join(" ").toLowerCase();},animationParsed:"",closeAnimationParsed:"",_animationPrefix:"jconfirm-animation-",setAnimation:function(animation){this.animation=animation||this.animation;this._parseAnimation(this.animation,"o");},_parseAnimation:function(animation,which){which=which||"o";var animations=animation.split(",");var that=this;$.each(animations,function(k,a){if(a.indexOf(that._animationPrefix)===-1){animations[k]=that._animationPrefix+$.trim(a);}});var a_string=animations.join(" ").toLowerCase();if(which==="o"){this.animationParsed=a_string;}else{this.closeAnimationParsed=a_string;}return a_string;},setCloseAnimation:function(closeAnimation){this.closeAnimation=closeAnimation||this.closeAnimation;this._parseAnimation(this.closeAnimation,"c");},setAnimationSpeed:function(speed){this.animationSpeed=speed||this.animationSpeed;},columnClassParsed:"",setColumnClass:function(colClass){if(!this.useBootstrap){console.warn("cannot set columnClass, useBootstrap is set to false");return;}this.columnClass=colClass||this.columnClass;this._parseColumnClass(this.columnClass);this.$jconfirmBoxContainer.addClass(this.columnClassParsed);},_updateContentMaxHeight:function(){var height=$(window).height()-(this.$jconfirmBox.outerHeight()-this.$contentPane.outerHeight())-(this.offsetTop+this.offsetBottom);this.$contentPane.css({"max-height":height+"px"});},setBoxWidth:function(width){if(this.useBootstrap){console.warn("cannot set boxWidth, useBootstrap is set to true");return;}this.boxWidth=width;this.$jconfirmBox.css("width",width);},_parseColumnClass:function(colClass){colClass=colClass.toLowerCase();var p;switch(colClass){case"xl":case"xlarge":p="col-md-12";break;case"l":case"large":p="col-md-8 col-md-offset-2";break;case"m":case"medium":p="col-md-6 col-md-offset-3";break;case"s":case"small":p="col-md-4 col-md-offset-4";break;case"xs":case"xsmall":p="col-md-2 col-md-offset-5";break;default:p=colClass;}this.columnClassParsed=p;},initDraggable:function(){var that=this;var $t=this.$titleContainer;this.resetDrag();if(this.draggable){$t.on("mousedown",function(e){$t.addClass("jconfirm-hand");that.mouseX=e.clientX;that.mouseY=e.clientY;that.isDrag=true;});$(window).on("mousemove."+this._id,function(e){if(that.isDrag){that.movingX=e.clientX-that.mouseX+that.initialX;that.movingY=e.clientY-that.mouseY+that.initialY;that.setDrag();}});$(window).on("mouseup."+this._id,function(){$t.removeClass("jconfirm-hand");if(that.isDrag){that.isDrag=false;that.initialX=that.movingX;that.initialY=that.movingY;}});}},resetDrag:function(){this.isDrag=false;this.initialX=0;this.initialY=0;this.movingX=0;this.movingY=0;this.mouseX=0;this.mouseY=0;this.$jconfirmBoxContainer.css("transform","translate("+0+"px, "+0+"px)");},setDrag:function(){if(!this.draggable){return;}this.alignMiddle=false;var boxWidth=this.$jconfirmBox.outerWidth();var boxHeight=this.$jconfirmBox.outerHeight();var windowWidth=$(window).width();var windowHeight=$(window).height();var that=this;var dragUpdate=1;if(that.movingX%dragUpdate===0||that.movingY%dragUpdate===0){if(that.dragWindowBorder){var leftDistance=(windowWidth/2)-boxWidth/2;var topDistance=(windowHeight/2)-boxHeight/2;topDistance-=that.dragWindowGap;leftDistance-=that.dragWindowGap;if(leftDistance+that.movingX<0){that.movingX=-leftDistance;}else{if(leftDistance-that.movingX<0){that.movingX=leftDistance;}}if(topDistance+that.movingY<0){that.movingY=-topDistance;}else{if(topDistance-that.movingY<0){that.movingY=topDistance;}}}that.$jconfirmBoxContainer.css("transform","translate("+that.movingX+"px, "+that.movingY+"px)");}},_scrollTop:function(){if(typeof pageYOffset!=="undefined"){return pageYOffset;}else{var B=document.body;var D=document.documentElement;D=(D.clientHeight)?D:B;return D.scrollTop;}},_watchContent:function(){var that=this;if(this._timer){clearInterval(this._timer);}var prevContentHeight=0;this._timer=setInterval(function(){if(that.smoothContent){var contentHeight=that.$content.outerHeight()||0;if(contentHeight!==prevContentHeight){prevContentHeight=contentHeight;}var wh=$(window).height();var total=that.offsetTop+that.offsetBottom+that.$jconfirmBox.height()-that.$contentPane.height()+that.$content.height();if(total<wh){that.$contentPane.addClass("no-scroll");}else{that.$contentPane.removeClass("no-scroll");}}},this.watchInterval);},_overflowClass:"jconfirm-overflow",_hilightAnimating:false,highlight:function(){this.hiLightModal();},hiLightModal:function(){var that=this;if(this._hilightAnimating){return;}that.$body.addClass("hilight");var duration=parseFloat(that.$body.css("animation-duration"))||2;this._hilightAnimating=true;setTimeout(function(){that._hilightAnimating=false;that.$body.removeClass("hilight");},duration*1000);},_bindEvents:function(){var that=this;this.boxClicked=false;this.$scrollPane.click(function(e){if(!that.boxClicked){var buttonName=false;var shouldClose=false;var str;if(typeof that.backgroundDismiss==="function"){str=that.backgroundDismiss();}else{str=that.backgroundDismiss;}if(typeof str==="string"&&typeof that.buttons[str]!=="undefined"){buttonName=str;shouldClose=false;}else{if(typeof str==="undefined"||!!(str)===true){shouldClose=true;}else{shouldClose=false;}}if(buttonName){var btnResponse=that.buttons[buttonName].action.apply(that);shouldClose=(typeof btnResponse==="undefined")||!!(btnResponse);}if(shouldClose){that.close();}else{that.hiLightModal();}}that.boxClicked=false;});this.$jconfirmBox.click(function(e){that.boxClicked=true;});var isKeyDown=false;$(window).on("jcKeyDown."+that._id,function(e){if(!isKeyDown){isKeyDown=true;}});$(window).on("keyup."+that._id,function(e){if(isKeyDown){that.reactOnKey(e);isKeyDown=false;}});$(window).on("resize."+this._id,function(){that._updateContentMaxHeight();setTimeout(function(){that.resetDrag();},100);});},_cubic_bezier:"0.36, 0.55, 0.19",_getCSS:function(speed,bounce){return{"-webkit-transition-duration":speed/1000+"s","transition-duration":speed/1000+"s","-webkit-transition-timing-function":"cubic-bezier("+this._cubic_bezier+", "+bounce+")","transition-timing-function":"cubic-bezier("+this._cubic_bezier+", "+bounce+")"};},_setButtons:function(){var that=this;var total_buttons=0;if(typeof this.buttons!=="object"){this.buttons={};}$.each(this.buttons,function(key,button){total_buttons+=1;if(typeof button==="function"){that.buttons[key]=button={action:button};}that.buttons[key].text=button.text||key;that.buttons[key].btnClass=button.btnClass||"btn-default";that.buttons[key].action=button.action||function(){};that.buttons[key].keys=button.keys||[];that.buttons[key].isHidden=button.isHidden||false;that.buttons[key].isDisabled=button.isDisabled||false;$.each(that.buttons[key].keys,function(i,a){that.buttons[key].keys[i]=a.toLowerCase();});var button_element=$('<button type="button" class="btn"></button>').html(that.buttons[key].text).addClass(that.buttons[key].btnClass).prop("disabled",that.buttons[key].isDisabled).css("display",that.buttons[key].isHidden?"none":"").click(function(e){e.preventDefault();var res=that.buttons[key].action.apply(that,[that.buttons[key]]);that.onAction.apply(that,[key,that.buttons[key]]);that._stopCountDown();if(typeof res==="undefined"||res){that.close();}});that.buttons[key].el=button_element;that.buttons[key].setText=function(text){button_element.html(text);};that.buttons[key].addClass=function(className){button_element.addClass(className);};that.buttons[key].removeClass=function(className){button_element.removeClass(className);};that.buttons[key].disable=function(){that.buttons[key].isDisabled=true;button_element.prop("disabled",true);};that.buttons[key].enable=function(){that.buttons[key].isDisabled=false;button_element.prop("disabled",false);};that.buttons[key].show=function(){that.buttons[key].isHidden=false;button_element.css("display","");};that.buttons[key].hide=function(){that.buttons[key].isHidden=true;button_element.css("display","none");};that["$_"+key]=that["$$"+key]=button_element;that.$btnc.append(button_element);});if(total_buttons===0){this.$btnc.hide();}if(this.closeIcon===null&&total_buttons===0){this.closeIcon=true;}if(this.closeIcon){if(this.closeIconClass){var closeHtml='<i class="'+this.closeIconClass+'"></i>';this.$closeIcon.html(closeHtml);}this.$closeIcon.click(function(e){e.preventDefault();var buttonName=false;var shouldClose=false;var str;if(typeof that.closeIcon==="function"){str=that.closeIcon();}else{str=that.closeIcon;}if(typeof str==="string"&&typeof that.buttons[str]!=="undefined"){buttonName=str;shouldClose=false;}else{if(typeof str==="undefined"||!!(str)===true){shouldClose=true;}else{shouldClose=false;}}if(buttonName){var btnResponse=that.buttons[buttonName].action.apply(that);shouldClose=(typeof btnResponse==="undefined")||!!(btnResponse);}if(shouldClose){that.close();}});this.$closeIcon.show();}else{this.$closeIcon.hide();}},setTitle:function(string,force){force=force||false;if(typeof string!=="undefined"){if(typeof string==="string"){this.title=string;}else{if(typeof string==="function"){if(typeof string.promise==="function"){console.error("Promise was returned from title function, this is not supported.");}var response=string();if(typeof response==="string"){this.title=response;}else{this.title=false;}}else{this.title=false;}}}if(this.isAjaxLoading&&!force){return;}this.$title.html(this.title||"");this.updateTitleContainer();},setIcon:function(iconClass,force){force=force||false;if(typeof iconClass!=="undefined"){if(typeof iconClass==="string"){this.icon=iconClass;}else{if(typeof iconClass==="function"){var response=iconClass();if(typeof response==="string"){this.icon=response;}else{this.icon=false;}}else{this.icon=false;}}}if(this.isAjaxLoading&&!force){return;}this.$icon.html(this.icon?'<i class="'+this.icon+'"></i>':"");this.updateTitleContainer();},updateTitleContainer:function(){if(!this.title&&!this.icon){this.$titleContainer.hide();}else{this.$titleContainer.show();}},setContentPrepend:function(content,force){if(!content){return;}this.contentParsed.prepend(content);},setContentAppend:function(content){if(!content){return;}this.contentParsed.append(content);},setContent:function(content,force){force=!!force;var that=this;if(content){this.contentParsed.html("").append(content);}if(this.isAjaxLoading&&!force){return;}this.$content.html("");this.$content.append(this.contentParsed);setTimeout(function(){that.$body.find("input[autofocus]:visible:first").focus();},100);},loadingSpinner:false,showLoading:function(disableButtons){this.loadingSpinner=true;this.$jconfirmBox.addClass("loading");if(disableButtons){this.$btnc.find("button").prop("disabled",true);}},hideLoading:function(enableButtons){this.loadingSpinner=false;this.$jconfirmBox.removeClass("loading");if(enableButtons){this.$btnc.find("button").prop("disabled",false);}},ajaxResponse:false,contentParsed:"",isAjax:false,isAjaxLoading:false,_parseContent:function(){var that=this;var e="&nbsp;";if(typeof this.content==="function"){var res=this.content.apply(this);if(typeof res==="string"){this.content=res;}else{if(typeof res==="object"&&typeof res.always==="function"){this.isAjax=true;this.isAjaxLoading=true;res.always(function(data,status,xhr){that.ajaxResponse={data:data,status:status,xhr:xhr};that._contentReady.resolve(data,status,xhr);if(typeof that.contentLoaded==="function"){that.contentLoaded(data,status,xhr);}});this.content=e;}else{this.content=e;}}}if(typeof this.content==="string"&&this.content.substr(0,4).toLowerCase()==="url:"){this.isAjax=true;this.isAjaxLoading=true;var u=this.content.substring(4,this.content.length);$.get(u).done(function(html){that.contentParsed.html(html);}).always(function(data,status,xhr){that.ajaxResponse={data:data,status:status,xhr:xhr};that._contentReady.resolve(data,status,xhr);if(typeof that.contentLoaded==="function"){that.contentLoaded(data,status,xhr);}});}if(!this.content){this.content=e;}if(!this.isAjax){this.contentParsed.html(this.content);this.setContent();that._contentReady.resolve();}},_stopCountDown:function(){clearInterval(this.autoCloseInterval);if(this.$cd){this.$cd.remove();}},_startCountDown:function(){var that=this;var opt=this.autoClose.split("|");if(opt.length!==2){console.error("Invalid option for autoClose. example 'close|10000'");return false;}var button_key=opt[0];var time=parseInt(opt[1]);if(typeof this.buttons[button_key]==="undefined"){console.error("Invalid button key '"+button_key+"' for autoClose");return false;}var seconds=Math.ceil(time/1000);this.$cd=$('<span class="countdown"> ('+seconds+")</span>").appendTo(this["$_"+button_key]);this.autoCloseInterval=setInterval(function(){that.$cd.html(" ("+(seconds-=1)+") ");if(seconds<=0){that["$$"+button_key].trigger("click");that._stopCountDown();}},1000);},_getKey:function(key){switch(key){case 192:return"tilde";case 13:return"enter";case 16:return"shift";case 9:return"tab";case 20:return"capslock";case 17:return"ctrl";case 91:return"win";case 18:return"alt";case 27:return"esc";case 32:return"space";}var initial=String.fromCharCode(key);if(/^[A-z0-9]+$/.test(initial)){return initial.toLowerCase();}else{return false;}},reactOnKey:function(e){var that=this;var a=$(".jconfirm");if(a.eq(a.length-1)[0]!==this.$el[0]){return false;}var key=e.which;if(this.$content.find(":input").is(":focus")&&/13|32/.test(key)){return false;}var keyChar=this._getKey(key);if(keyChar==="esc"&&this.escapeKey){if(this.escapeKey===true){this.$scrollPane.trigger("click");}else{if(typeof this.escapeKey==="string"||typeof this.escapeKey==="function"){var buttonKey;if(typeof this.escapeKey==="function"){buttonKey=this.escapeKey();}else{buttonKey=this.escapeKey;}if(buttonKey){if(typeof this.buttons[buttonKey]==="undefined"){console.warn("Invalid escapeKey, no buttons found with key "+buttonKey);}else{this["$_"+buttonKey].trigger("click");}}}}}$.each(this.buttons,function(key,button){if(button.keys.indexOf(keyChar)!==-1){that["$_"+key].trigger("click");}});},setDialogCenter:function(){console.info("setDialogCenter is deprecated, dialogs are centered with CSS3 tables");},_unwatchContent:function(){clearInterval(this._timer);},close:function(onClosePayload){var that=this;if(typeof this.onClose==="function"){this.onClose(onClosePayload);}this._unwatchContent();$(window).unbind("resize."+this._id);$(window).unbind("keyup."+this._id);$(window).unbind("jcKeyDown."+this._id);if(this.draggable){$(window).unbind("mousemove."+this._id);$(window).unbind("mouseup."+this._id);this.$titleContainer.unbind("mousedown");}that.$el.removeClass(that.loadedClass);$("body").removeClass("jconfirm-no-scroll-"+that._id);that.$jconfirmBoxContainer.removeClass("jconfirm-no-transition");setTimeout(function(){that.$body.addClass(that.closeAnimationParsed);that.$jconfirmBg.addClass("jconfirm-bg-h");var closeTimer=(that.closeAnimation==="none")?1:that.animationSpeed;setTimeout(function(){that.$el.remove();var l=w.jconfirm.instances;var i=w.jconfirm.instances.length-1;for(i;i>=0;i--){if(w.jconfirm.instances[i]._id===that._id){w.jconfirm.instances.splice(i,1);}}if(!w.jconfirm.instances.length){if(that.scrollToPreviousElement&&w.jconfirm.lastFocused&&w.jconfirm.lastFocused.length&&$.contains(document,w.jconfirm.lastFocused[0])){var $lf=w.jconfirm.lastFocused;if(that.scrollToPreviousElementAnimate){var st=$(window).scrollTop();var ot=w.jconfirm.lastFocused.offset().top;var wh=$(window).height();if(!(ot>st&&ot<(st+wh))){var scrollTo=(ot-Math.round((wh/3)));$("html, body").animate({scrollTop:scrollTo},that.animationSpeed,"swing",function(){$lf.focus();});}else{$lf.focus();}}else{$lf.focus();}w.jconfirm.lastFocused=false;}}if(typeof that.onDestroy==="function"){that.onDestroy();}},closeTimer*0.4);},50);return true;},open:function(){if(this.isOpen()){return false;}this._buildHTML();this._bindEvents();this._open();return true;},setStartingPoint:function(){var el=false;if(this.animateFromElement!==true&&this.animateFromElement){el=this.animateFromElement;w.jconfirm.lastClicked=false;}else{if(w.jconfirm.lastClicked&&this.animateFromElement===true){el=w.jconfirm.lastClicked;w.jconfirm.lastClicked=false;}else{return false;}}if(!el){return false;}var offset=el.offset();var iTop=el.outerHeight()/2;var iLeft=el.outerWidth()/2;iTop-=this.$jconfirmBox.outerHeight()/2;iLeft-=this.$jconfirmBox.outerWidth()/2;var sourceTop=offset.top+iTop;sourceTop=sourceTop-this._scrollTop();var sourceLeft=offset.left+iLeft;var wh=$(window).height()/2;var ww=$(window).width()/2;var targetH=wh-this.$jconfirmBox.outerHeight()/2;var targetW=ww-this.$jconfirmBox.outerWidth()/2;sourceTop-=targetH;sourceLeft-=targetW;if(Math.abs(sourceTop)>wh||Math.abs(sourceLeft)>ww){return false;}this.$jconfirmBoxContainer.css("transform","translate("+sourceLeft+"px, "+sourceTop+"px)");},_open:function(){var that=this;if(typeof that.onOpenBefore==="function"){that.onOpenBefore();}this.$body.removeClass(this.animationParsed);this.$jconfirmBg.removeClass("jconfirm-bg-h");this.$body.focus();that.$jconfirmBoxContainer.css("transform","translate("+0+"px, "+0+"px)");setTimeout(function(){that.$body.css(that._getCSS(that.animationSpeed,1));that.$body.css({"transition-property":that.$body.css("transition-property")+", margin"});that.$jconfirmBoxContainer.addClass("jconfirm-no-transition");that._modalReady.resolve();if(typeof that.onOpen==="function"){that.onOpen();}that.$el.addClass(that.loadedClass);},this.animationSpeed);},loadedClass:"jconfirm-open",isClosed:function(){return !this.$el||this.$el.parent().length===0;},isOpen:function(){return !this.isClosed();},toggle:function(){if(!this.isOpen()){this.open();}else{this.close();}}};w.jconfirm.instances=[];w.jconfirm.lastFocused=false;w.jconfirm.pluginDefaults={template:'<div class="jconfirm"><div class="jconfirm-bg jconfirm-bg-h"></div><div class="jconfirm-scrollpane"><div class="jconfirm-row"><div class="jconfirm-cell"><div class="jconfirm-holder"><div class="jc-bs3-container"><div class="jc-bs3-row"><div class="jconfirm-box-container jconfirm-animated"><div class="jconfirm-box" role="dialog" aria-labelledby="labelled" tabindex="-1"><div class="jconfirm-closeIcon">&times;</div><div class="jconfirm-title-c"><span class="jconfirm-icon-c"></span><span class="jconfirm-title"></span></div><div class="jconfirm-content-pane"><div class="jconfirm-content"></div></div><div class="jconfirm-buttons"></div><div class="jconfirm-clear"></div></div></div></div></div></div></div></div></div></div>',title:"Hello",titleClass:"",type:"default",typeAnimated:true,draggable:true,dragWindowGap:15,dragWindowBorder:true,animateFromElement:true,alignMiddle:true,smoothContent:true,content:"Are you sure to continue?",buttons:{},defaultButtons:{ok:{action:function(){}},close:{action:function(){}}},contentLoaded:function(){},icon:"",lazyOpen:false,bgOpacity:null,theme:"light",animation:"scale",closeAnimation:"scale",animationSpeed:400,animationBounce:1,escapeKey:true,rtl:false,container:"body",containerFluid:false,backgroundDismiss:false,backgroundDismissAnimation:"shake",autoClose:false,closeIcon:null,closeIconClass:false,watchInterval:100,columnClass:"col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1",boxWidth:"50%",scrollToPreviousElement:true,scrollToPreviousElementAnimate:true,useBootstrap:true,offsetTop:40,offsetBottom:40,bootstrapClasses:{container:"container",containerFluid:"container-fluid",row:"row"},onContentReady:function(){},onOpenBefore:function(){},onOpen:function(){},onClose:function(){},onDestroy:function(){},onAction:function(){}};var keyDown=false;$(window).on("keydown",function(e){if(!keyDown){var $target=$(e.target);var pass=false;if($target.closest(".jconfirm-box").length){pass=true;}if(pass){$(window).trigger("jcKeyDown");}keyDown=true;}});$(window).on("keyup",function(){keyDown=false;});w.jconfirm.lastClicked=false;$(document).on("mousedown","button, a, [jc-source]",function(){w.jconfirm.lastClicked=$(this);});}));
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;/*** IMPORTS FROM imports-loader ***/
@@ -31764,13 +31766,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*! jquery.tokeninput 2019-05-06 */
@@ -31778,7 +31780,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -31787,7 +31789,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(11);
+__webpack_require__(12);
 
 (function ($) {
   /**
@@ -31873,12 +31875,6 @@ __webpack_require__(11);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31886,6 +31882,12 @@ __webpack_require__(11);
 
 /***/ }),
 /* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {/**
@@ -32501,7 +32503,7 @@ var lists = {
     unique: unique
 };
 
-var isSupportAmd =  true && __webpack_require__(21); // eslint-disable-line
+var isSupportAmd =  true && __webpack_require__(23); // eslint-disable-line
 /**
  * returns whether font is installed or not.
  *
@@ -39159,238 +39161,7 @@ $$1.summernote = $$1.extend($$1.summernote, {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/*!
- * Bootstrap v3.4.1 (https://getbootstrap.com/)
- * Copyright 2011-2019 Twitter, Inc.
- * Licensed under the MIT license
- */
-if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires jQuery");!function(t){"use strict";var e=jQuery.fn.jquery.split(" ")[0].split(".");if(e[0]<2&&e[1]<9||1==e[0]&&9==e[1]&&e[2]<1||3<e[0])throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 4")}(),function(n){"use strict";n.fn.emulateTransitionEnd=function(t){var e=!1,i=this;n(this).one("bsTransitionEnd",function(){e=!0});return setTimeout(function(){e||n(i).trigger(n.support.transition.end)},t),this},n(function(){n.support.transition=function o(){var t=document.createElement("bootstrap"),e={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var i in e)if(t.style[i]!==undefined)return{end:e[i]};return!1}(),n.support.transition&&(n.event.special.bsTransitionEnd={bindType:n.support.transition.end,delegateType:n.support.transition.end,handle:function(t){if(n(t.target).is(this))return t.handleObj.handler.apply(this,arguments)}})})}(jQuery),function(s){"use strict";var e='[data-dismiss="alert"]',a=function(t){s(t).on("click",e,this.close)};a.VERSION="3.4.1",a.TRANSITION_DURATION=150,a.prototype.close=function(t){var e=s(this),i=e.attr("data-target");i||(i=(i=e.attr("href"))&&i.replace(/.*(?=#[^\s]*$)/,"")),i="#"===i?[]:i;var o=s(document).find(i);function n(){o.detach().trigger("closed.bs.alert").remove()}t&&t.preventDefault(),o.length||(o=e.closest(".alert")),o.trigger(t=s.Event("close.bs.alert")),t.isDefaultPrevented()||(o.removeClass("in"),s.support.transition&&o.hasClass("fade")?o.one("bsTransitionEnd",n).emulateTransitionEnd(a.TRANSITION_DURATION):n())};var t=s.fn.alert;s.fn.alert=function o(i){return this.each(function(){var t=s(this),e=t.data("bs.alert");e||t.data("bs.alert",e=new a(this)),"string"==typeof i&&e[i].call(t)})},s.fn.alert.Constructor=a,s.fn.alert.noConflict=function(){return s.fn.alert=t,this},s(document).on("click.bs.alert.data-api",e,a.prototype.close)}(jQuery),function(s){"use strict";var n=function(t,e){this.$element=s(t),this.options=s.extend({},n.DEFAULTS,e),this.isLoading=!1};function i(o){return this.each(function(){var t=s(this),e=t.data("bs.button"),i="object"==typeof o&&o;e||t.data("bs.button",e=new n(this,i)),"toggle"==o?e.toggle():o&&e.setState(o)})}n.VERSION="3.4.1",n.DEFAULTS={loadingText:"loading..."},n.prototype.setState=function(t){var e="disabled",i=this.$element,o=i.is("input")?"val":"html",n=i.data();t+="Text",null==n.resetText&&i.data("resetText",i[o]()),setTimeout(s.proxy(function(){i[o](null==n[t]?this.options[t]:n[t]),"loadingText"==t?(this.isLoading=!0,i.addClass(e).attr(e,e).prop(e,!0)):this.isLoading&&(this.isLoading=!1,i.removeClass(e).removeAttr(e).prop(e,!1))},this),0)},n.prototype.toggle=function(){var t=!0,e=this.$element.closest('[data-toggle="buttons"]');if(e.length){var i=this.$element.find("input");"radio"==i.prop("type")?(i.prop("checked")&&(t=!1),e.find(".active").removeClass("active"),this.$element.addClass("active")):"checkbox"==i.prop("type")&&(i.prop("checked")!==this.$element.hasClass("active")&&(t=!1),this.$element.toggleClass("active")),i.prop("checked",this.$element.hasClass("active")),t&&i.trigger("change")}else this.$element.attr("aria-pressed",!this.$element.hasClass("active")),this.$element.toggleClass("active")};var t=s.fn.button;s.fn.button=i,s.fn.button.Constructor=n,s.fn.button.noConflict=function(){return s.fn.button=t,this},s(document).on("click.bs.button.data-api",'[data-toggle^="button"]',function(t){var e=s(t.target).closest(".btn");i.call(e,"toggle"),s(t.target).is('input[type="radio"], input[type="checkbox"]')||(t.preventDefault(),e.is("input,button")?e.trigger("focus"):e.find("input:visible,button:visible").first().trigger("focus"))}).on("focus.bs.button.data-api blur.bs.button.data-api",'[data-toggle^="button"]',function(t){s(t.target).closest(".btn").toggleClass("focus",/^focus(in)?$/.test(t.type))})}(jQuery),function(p){"use strict";var c=function(t,e){this.$element=p(t),this.$indicators=this.$element.find(".carousel-indicators"),this.options=e,this.paused=null,this.sliding=null,this.interval=null,this.$active=null,this.$items=null,this.options.keyboard&&this.$element.on("keydown.bs.carousel",p.proxy(this.keydown,this)),"hover"==this.options.pause&&!("ontouchstart"in document.documentElement)&&this.$element.on("mouseenter.bs.carousel",p.proxy(this.pause,this)).on("mouseleave.bs.carousel",p.proxy(this.cycle,this))};function r(n){return this.each(function(){var t=p(this),e=t.data("bs.carousel"),i=p.extend({},c.DEFAULTS,t.data(),"object"==typeof n&&n),o="string"==typeof n?n:i.slide;e||t.data("bs.carousel",e=new c(this,i)),"number"==typeof n?e.to(n):o?e[o]():i.interval&&e.pause().cycle()})}c.VERSION="3.4.1",c.TRANSITION_DURATION=600,c.DEFAULTS={interval:5e3,pause:"hover",wrap:!0,keyboard:!0},c.prototype.keydown=function(t){if(!/input|textarea/i.test(t.target.tagName)){switch(t.which){case 37:this.prev();break;case 39:this.next();break;default:return}t.preventDefault()}},c.prototype.cycle=function(t){return t||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(p.proxy(this.next,this),this.options.interval)),this},c.prototype.getItemIndex=function(t){return this.$items=t.parent().children(".item"),this.$items.index(t||this.$active)},c.prototype.getItemForDirection=function(t,e){var i=this.getItemIndex(e);if(("prev"==t&&0===i||"next"==t&&i==this.$items.length-1)&&!this.options.wrap)return e;var o=(i+("prev"==t?-1:1))%this.$items.length;return this.$items.eq(o)},c.prototype.to=function(t){var e=this,i=this.getItemIndex(this.$active=this.$element.find(".item.active"));if(!(t>this.$items.length-1||t<0))return this.sliding?this.$element.one("slid.bs.carousel",function(){e.to(t)}):i==t?this.pause().cycle():this.slide(i<t?"next":"prev",this.$items.eq(t))},c.prototype.pause=function(t){return t||(this.paused=!0),this.$element.find(".next, .prev").length&&p.support.transition&&(this.$element.trigger(p.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},c.prototype.next=function(){if(!this.sliding)return this.slide("next")},c.prototype.prev=function(){if(!this.sliding)return this.slide("prev")},c.prototype.slide=function(t,e){var i=this.$element.find(".item.active"),o=e||this.getItemForDirection(t,i),n=this.interval,s="next"==t?"left":"right",a=this;if(o.hasClass("active"))return this.sliding=!1;var r=o[0],l=p.Event("slide.bs.carousel",{relatedTarget:r,direction:s});if(this.$element.trigger(l),!l.isDefaultPrevented()){if(this.sliding=!0,n&&this.pause(),this.$indicators.length){this.$indicators.find(".active").removeClass("active");var h=p(this.$indicators.children()[this.getItemIndex(o)]);h&&h.addClass("active")}var d=p.Event("slid.bs.carousel",{relatedTarget:r,direction:s});return p.support.transition&&this.$element.hasClass("slide")?(o.addClass(t),"object"==typeof o&&o.length&&o[0].offsetWidth,i.addClass(s),o.addClass(s),i.one("bsTransitionEnd",function(){o.removeClass([t,s].join(" ")).addClass("active"),i.removeClass(["active",s].join(" ")),a.sliding=!1,setTimeout(function(){a.$element.trigger(d)},0)}).emulateTransitionEnd(c.TRANSITION_DURATION)):(i.removeClass("active"),o.addClass("active"),this.sliding=!1,this.$element.trigger(d)),n&&this.cycle(),this}};var t=p.fn.carousel;p.fn.carousel=r,p.fn.carousel.Constructor=c,p.fn.carousel.noConflict=function(){return p.fn.carousel=t,this};var e=function(t){var e=p(this),i=e.attr("href");i&&(i=i.replace(/.*(?=#[^\s]+$)/,""));var o=e.attr("data-target")||i,n=p(document).find(o);if(n.hasClass("carousel")){var s=p.extend({},n.data(),e.data()),a=e.attr("data-slide-to");a&&(s.interval=!1),r.call(n,s),a&&n.data("bs.carousel").to(a),t.preventDefault()}};p(document).on("click.bs.carousel.data-api","[data-slide]",e).on("click.bs.carousel.data-api","[data-slide-to]",e),p(window).on("load",function(){p('[data-ride="carousel"]').each(function(){var t=p(this);r.call(t,t.data())})})}(jQuery),function(a){"use strict";var r=function(t,e){this.$element=a(t),this.options=a.extend({},r.DEFAULTS,e),this.$trigger=a('[data-toggle="collapse"][href="#'+t.id+'"],[data-toggle="collapse"][data-target="#'+t.id+'"]'),this.transitioning=null,this.options.parent?this.$parent=this.getParent():this.addAriaAndCollapsedClass(this.$element,this.$trigger),this.options.toggle&&this.toggle()};function n(t){var e,i=t.attr("data-target")||(e=t.attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"");return a(document).find(i)}function l(o){return this.each(function(){var t=a(this),e=t.data("bs.collapse"),i=a.extend({},r.DEFAULTS,t.data(),"object"==typeof o&&o);!e&&i.toggle&&/show|hide/.test(o)&&(i.toggle=!1),e||t.data("bs.collapse",e=new r(this,i)),"string"==typeof o&&e[o]()})}r.VERSION="3.4.1",r.TRANSITION_DURATION=350,r.DEFAULTS={toggle:!0},r.prototype.dimension=function(){return this.$element.hasClass("width")?"width":"height"},r.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var t,e=this.$parent&&this.$parent.children(".panel").children(".in, .collapsing");if(!(e&&e.length&&(t=e.data("bs.collapse"))&&t.transitioning)){var i=a.Event("show.bs.collapse");if(this.$element.trigger(i),!i.isDefaultPrevented()){e&&e.length&&(l.call(e,"hide"),t||e.data("bs.collapse",null));var o=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[o](0).attr("aria-expanded",!0),this.$trigger.removeClass("collapsed").attr("aria-expanded",!0),this.transitioning=1;var n=function(){this.$element.removeClass("collapsing").addClass("collapse in")[o](""),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return n.call(this);var s=a.camelCase(["scroll",o].join("-"));this.$element.one("bsTransitionEnd",a.proxy(n,this)).emulateTransitionEnd(r.TRANSITION_DURATION)[o](this.$element[0][s])}}}},r.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var t=a.Event("hide.bs.collapse");if(this.$element.trigger(t),!t.isDefaultPrevented()){var e=this.dimension();this.$element[e](this.$element[e]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse in").attr("aria-expanded",!1),this.$trigger.addClass("collapsed").attr("aria-expanded",!1),this.transitioning=1;var i=function(){this.transitioning=0,this.$element.removeClass("collapsing").addClass("collapse").trigger("hidden.bs.collapse")};if(!a.support.transition)return i.call(this);this.$element[e](0).one("bsTransitionEnd",a.proxy(i,this)).emulateTransitionEnd(r.TRANSITION_DURATION)}}},r.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()},r.prototype.getParent=function(){return a(document).find(this.options.parent).find('[data-toggle="collapse"][data-parent="'+this.options.parent+'"]').each(a.proxy(function(t,e){var i=a(e);this.addAriaAndCollapsedClass(n(i),i)},this)).end()},r.prototype.addAriaAndCollapsedClass=function(t,e){var i=t.hasClass("in");t.attr("aria-expanded",i),e.toggleClass("collapsed",!i).attr("aria-expanded",i)};var t=a.fn.collapse;a.fn.collapse=l,a.fn.collapse.Constructor=r,a.fn.collapse.noConflict=function(){return a.fn.collapse=t,this},a(document).on("click.bs.collapse.data-api",'[data-toggle="collapse"]',function(t){var e=a(this);e.attr("data-target")||t.preventDefault();var i=n(e),o=i.data("bs.collapse")?"toggle":e.data();l.call(i,o)})}(jQuery),function(a){"use strict";var r='[data-toggle="dropdown"]',o=function(t){a(t).on("click.bs.dropdown",this.toggle)};function l(t){var e=t.attr("data-target");e||(e=(e=t.attr("href"))&&/#[A-Za-z]/.test(e)&&e.replace(/.*(?=#[^\s]*$)/,""));var i="#"!==e?a(document).find(e):null;return i&&i.length?i:t.parent()}function s(o){o&&3===o.which||(a(".dropdown-backdrop").remove(),a(r).each(function(){var t=a(this),e=l(t),i={relatedTarget:this};e.hasClass("open")&&(o&&"click"==o.type&&/input|textarea/i.test(o.target.tagName)&&a.contains(e[0],o.target)||(e.trigger(o=a.Event("hide.bs.dropdown",i)),o.isDefaultPrevented()||(t.attr("aria-expanded","false"),e.removeClass("open").trigger(a.Event("hidden.bs.dropdown",i)))))}))}o.VERSION="3.4.1",o.prototype.toggle=function(t){var e=a(this);if(!e.is(".disabled, :disabled")){var i=l(e),o=i.hasClass("open");if(s(),!o){"ontouchstart"in document.documentElement&&!i.closest(".navbar-nav").length&&a(document.createElement("div")).addClass("dropdown-backdrop").insertAfter(a(this)).on("click",s);var n={relatedTarget:this};if(i.trigger(t=a.Event("show.bs.dropdown",n)),t.isDefaultPrevented())return;e.trigger("focus").attr("aria-expanded","true"),i.toggleClass("open").trigger(a.Event("shown.bs.dropdown",n))}return!1}},o.prototype.keydown=function(t){if(/(38|40|27|32)/.test(t.which)&&!/input|textarea/i.test(t.target.tagName)){var e=a(this);if(t.preventDefault(),t.stopPropagation(),!e.is(".disabled, :disabled")){var i=l(e),o=i.hasClass("open");if(!o&&27!=t.which||o&&27==t.which)return 27==t.which&&i.find(r).trigger("focus"),e.trigger("click");var n=i.find(".dropdown-menu li:not(.disabled):visible a");if(n.length){var s=n.index(t.target);38==t.which&&0<s&&s--,40==t.which&&s<n.length-1&&s++,~s||(s=0),n.eq(s).trigger("focus")}}}};var t=a.fn.dropdown;a.fn.dropdown=function e(i){return this.each(function(){var t=a(this),e=t.data("bs.dropdown");e||t.data("bs.dropdown",e=new o(this)),"string"==typeof i&&e[i].call(t)})},a.fn.dropdown.Constructor=o,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=t,this},a(document).on("click.bs.dropdown.data-api",s).on("click.bs.dropdown.data-api",".dropdown form",function(t){t.stopPropagation()}).on("click.bs.dropdown.data-api",r,o.prototype.toggle).on("keydown.bs.dropdown.data-api",r,o.prototype.keydown).on("keydown.bs.dropdown.data-api",".dropdown-menu",o.prototype.keydown)}(jQuery),function(a){"use strict";var s=function(t,e){this.options=e,this.$body=a(document.body),this.$element=a(t),this.$dialog=this.$element.find(".modal-dialog"),this.$backdrop=null,this.isShown=null,this.originalBodyPad=null,this.scrollbarWidth=0,this.ignoreBackdropClick=!1,this.fixedContent=".navbar-fixed-top, .navbar-fixed-bottom",this.options.remote&&this.$element.find(".modal-content").load(this.options.remote,a.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};function r(o,n){return this.each(function(){var t=a(this),e=t.data("bs.modal"),i=a.extend({},s.DEFAULTS,t.data(),"object"==typeof o&&o);e||t.data("bs.modal",e=new s(this,i)),"string"==typeof o?e[o](n):i.show&&e.show(n)})}s.VERSION="3.4.1",s.TRANSITION_DURATION=300,s.BACKDROP_TRANSITION_DURATION=150,s.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},s.prototype.toggle=function(t){return this.isShown?this.hide():this.show(t)},s.prototype.show=function(i){var o=this,t=a.Event("show.bs.modal",{relatedTarget:i});this.$element.trigger(t),this.isShown||t.isDefaultPrevented()||(this.isShown=!0,this.checkScrollbar(),this.setScrollbar(),this.$body.addClass("modal-open"),this.escape(),this.resize(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.$dialog.on("mousedown.dismiss.bs.modal",function(){o.$element.one("mouseup.dismiss.bs.modal",function(t){a(t.target).is(o.$element)&&(o.ignoreBackdropClick=!0)})}),this.backdrop(function(){var t=a.support.transition&&o.$element.hasClass("fade");o.$element.parent().length||o.$element.appendTo(o.$body),o.$element.show().scrollTop(0),o.adjustDialog(),t&&o.$element[0].offsetWidth,o.$element.addClass("in"),o.enforceFocus();var e=a.Event("shown.bs.modal",{relatedTarget:i});t?o.$dialog.one("bsTransitionEnd",function(){o.$element.trigger("focus").trigger(e)}).emulateTransitionEnd(s.TRANSITION_DURATION):o.$element.trigger("focus").trigger(e)}))},s.prototype.hide=function(t){t&&t.preventDefault(),t=a.Event("hide.bs.modal"),this.$element.trigger(t),this.isShown&&!t.isDefaultPrevented()&&(this.isShown=!1,this.escape(),this.resize(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").off("click.dismiss.bs.modal").off("mouseup.dismiss.bs.modal"),this.$dialog.off("mousedown.dismiss.bs.modal"),a.support.transition&&this.$element.hasClass("fade")?this.$element.one("bsTransitionEnd",a.proxy(this.hideModal,this)).emulateTransitionEnd(s.TRANSITION_DURATION):this.hideModal())},s.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(t){document===t.target||this.$element[0]===t.target||this.$element.has(t.target).length||this.$element.trigger("focus")},this))},s.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keydown.dismiss.bs.modal",a.proxy(function(t){27==t.which&&this.hide()},this)):this.isShown||this.$element.off("keydown.dismiss.bs.modal")},s.prototype.resize=function(){this.isShown?a(window).on("resize.bs.modal",a.proxy(this.handleUpdate,this)):a(window).off("resize.bs.modal")},s.prototype.hideModal=function(){var t=this;this.$element.hide(),this.backdrop(function(){t.$body.removeClass("modal-open"),t.resetAdjustments(),t.resetScrollbar(),t.$element.trigger("hidden.bs.modal")})},s.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},s.prototype.backdrop=function(t){var e=this,i=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var o=a.support.transition&&i;if(this.$backdrop=a(document.createElement("div")).addClass("modal-backdrop "+i).appendTo(this.$body),this.$element.on("click.dismiss.bs.modal",a.proxy(function(t){this.ignoreBackdropClick?this.ignoreBackdropClick=!1:t.target===t.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus():this.hide())},this)),o&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!t)return;o?this.$backdrop.one("bsTransitionEnd",t).emulateTransitionEnd(s.BACKDROP_TRANSITION_DURATION):t()}else if(!this.isShown&&this.$backdrop){this.$backdrop.removeClass("in");var n=function(){e.removeBackdrop(),t&&t()};a.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one("bsTransitionEnd",n).emulateTransitionEnd(s.BACKDROP_TRANSITION_DURATION):n()}else t&&t()},s.prototype.handleUpdate=function(){this.adjustDialog()},s.prototype.adjustDialog=function(){var t=this.$element[0].scrollHeight>document.documentElement.clientHeight;this.$element.css({paddingLeft:!this.bodyIsOverflowing&&t?this.scrollbarWidth:"",paddingRight:this.bodyIsOverflowing&&!t?this.scrollbarWidth:""})},s.prototype.resetAdjustments=function(){this.$element.css({paddingLeft:"",paddingRight:""})},s.prototype.checkScrollbar=function(){var t=window.innerWidth;if(!t){var e=document.documentElement.getBoundingClientRect();t=e.right-Math.abs(e.left)}this.bodyIsOverflowing=document.body.clientWidth<t,this.scrollbarWidth=this.measureScrollbar()},s.prototype.setScrollbar=function(){var t=parseInt(this.$body.css("padding-right")||0,10);this.originalBodyPad=document.body.style.paddingRight||"";var n=this.scrollbarWidth;this.bodyIsOverflowing&&(this.$body.css("padding-right",t+n),a(this.fixedContent).each(function(t,e){var i=e.style.paddingRight,o=a(e).css("padding-right");a(e).data("padding-right",i).css("padding-right",parseFloat(o)+n+"px")}))},s.prototype.resetScrollbar=function(){this.$body.css("padding-right",this.originalBodyPad),a(this.fixedContent).each(function(t,e){var i=a(e).data("padding-right");a(e).removeData("padding-right"),e.style.paddingRight=i||""})},s.prototype.measureScrollbar=function(){var t=document.createElement("div");t.className="modal-scrollbar-measure",this.$body.append(t);var e=t.offsetWidth-t.clientWidth;return this.$body[0].removeChild(t),e};var t=a.fn.modal;a.fn.modal=r,a.fn.modal.Constructor=s,a.fn.modal.noConflict=function(){return a.fn.modal=t,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(t){var e=a(this),i=e.attr("href"),o=e.attr("data-target")||i&&i.replace(/.*(?=#[^\s]+$)/,""),n=a(document).find(o),s=n.data("bs.modal")?"toggle":a.extend({remote:!/#/.test(i)&&i},n.data(),e.data());e.is("a")&&t.preventDefault(),n.one("show.bs.modal",function(t){t.isDefaultPrevented()||n.one("hidden.bs.modal",function(){e.is(":visible")&&e.trigger("focus")})}),r.call(n,s,this)})}(jQuery),function(g){"use strict";var o=["sanitize","whiteList","sanitizeFn"],a=["background","cite","href","itemtype","longdesc","poster","src","xlink:href"],t={"*":["class","dir","id","lang","role",/^aria-[\w-]*$/i],a:["target","href","title","rel"],area:[],b:[],br:[],col:[],code:[],div:[],em:[],hr:[],h1:[],h2:[],h3:[],h4:[],h5:[],h6:[],i:[],img:["src","alt","title","width","height"],li:[],ol:[],p:[],pre:[],s:[],small:[],span:[],sub:[],sup:[],strong:[],u:[],ul:[]},r=/^(?:(?:https?|mailto|ftp|tel|file):|[^&:/?#]*(?:[/?#]|$))/gi,l=/^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[a-z0-9+/]+=*$/i;function u(t,e){var i=t.nodeName.toLowerCase();if(-1!==g.inArray(i,e))return-1===g.inArray(i,a)||Boolean(t.nodeValue.match(r)||t.nodeValue.match(l));for(var o=g(e).filter(function(t,e){return e instanceof RegExp}),n=0,s=o.length;n<s;n++)if(i.match(o[n]))return!0;return!1}function n(t,e,i){if(0===t.length)return t;if(i&&"function"==typeof i)return i(t);if(!document.implementation||!document.implementation.createHTMLDocument)return t;var o=document.implementation.createHTMLDocument("sanitization");o.body.innerHTML=t;for(var n=g.map(e,function(t,e){return e}),s=g(o.body).find("*"),a=0,r=s.length;a<r;a++){var l=s[a],h=l.nodeName.toLowerCase();if(-1!==g.inArray(h,n))for(var d=g.map(l.attributes,function(t){return t}),p=[].concat(e["*"]||[],e[h]||[]),c=0,f=d.length;c<f;c++)u(d[c],p)||l.removeAttribute(d[c].nodeName);else l.parentNode.removeChild(l)}return o.body.innerHTML}var m=function(t,e){this.type=null,this.options=null,this.enabled=null,this.timeout=null,this.hoverState=null,this.$element=null,this.inState=null,this.init("tooltip",t,e)};m.VERSION="3.4.1",m.TRANSITION_DURATION=150,m.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1,viewport:{selector:"body",padding:0},sanitize:!0,sanitizeFn:null,whiteList:t},m.prototype.init=function(t,e,i){if(this.enabled=!0,this.type=t,this.$element=g(e),this.options=this.getOptions(i),this.$viewport=this.options.viewport&&g(document).find(g.isFunction(this.options.viewport)?this.options.viewport.call(this,this.$element):this.options.viewport.selector||this.options.viewport),this.inState={click:!1,hover:!1,focus:!1},this.$element[0]instanceof document.constructor&&!this.options.selector)throw new Error("`selector` option must be specified when initializing "+this.type+" on the window.document object!");for(var o=this.options.trigger.split(" "),n=o.length;n--;){var s=o[n];if("click"==s)this.$element.on("click."+this.type,this.options.selector,g.proxy(this.toggle,this));else if("manual"!=s){var a="hover"==s?"mouseenter":"focusin",r="hover"==s?"mouseleave":"focusout";this.$element.on(a+"."+this.type,this.options.selector,g.proxy(this.enter,this)),this.$element.on(r+"."+this.type,this.options.selector,g.proxy(this.leave,this))}}this.options.selector?this._options=g.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},m.prototype.getDefaults=function(){return m.DEFAULTS},m.prototype.getOptions=function(t){var e=this.$element.data();for(var i in e)e.hasOwnProperty(i)&&-1!==g.inArray(i,o)&&delete e[i];return(t=g.extend({},this.getDefaults(),e,t)).delay&&"number"==typeof t.delay&&(t.delay={show:t.delay,hide:t.delay}),t.sanitize&&(t.template=n(t.template,t.whiteList,t.sanitizeFn)),t},m.prototype.getDelegateOptions=function(){var i={},o=this.getDefaults();return this._options&&g.each(this._options,function(t,e){o[t]!=e&&(i[t]=e)}),i},m.prototype.enter=function(t){var e=t instanceof this.constructor?t:g(t.currentTarget).data("bs."+this.type);if(e||(e=new this.constructor(t.currentTarget,this.getDelegateOptions()),g(t.currentTarget).data("bs."+this.type,e)),t instanceof g.Event&&(e.inState["focusin"==t.type?"focus":"hover"]=!0),e.tip().hasClass("in")||"in"==e.hoverState)e.hoverState="in";else{if(clearTimeout(e.timeout),e.hoverState="in",!e.options.delay||!e.options.delay.show)return e.show();e.timeout=setTimeout(function(){"in"==e.hoverState&&e.show()},e.options.delay.show)}},m.prototype.isInStateTrue=function(){for(var t in this.inState)if(this.inState[t])return!0;return!1},m.prototype.leave=function(t){var e=t instanceof this.constructor?t:g(t.currentTarget).data("bs."+this.type);if(e||(e=new this.constructor(t.currentTarget,this.getDelegateOptions()),g(t.currentTarget).data("bs."+this.type,e)),t instanceof g.Event&&(e.inState["focusout"==t.type?"focus":"hover"]=!1),!e.isInStateTrue()){if(clearTimeout(e.timeout),e.hoverState="out",!e.options.delay||!e.options.delay.hide)return e.hide();e.timeout=setTimeout(function(){"out"==e.hoverState&&e.hide()},e.options.delay.hide)}},m.prototype.show=function(){var t=g.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){this.$element.trigger(t);var e=g.contains(this.$element[0].ownerDocument.documentElement,this.$element[0]);if(t.isDefaultPrevented()||!e)return;var i=this,o=this.tip(),n=this.getUID(this.type);this.setContent(),o.attr("id",n),this.$element.attr("aria-describedby",n),this.options.animation&&o.addClass("fade");var s="function"==typeof this.options.placement?this.options.placement.call(this,o[0],this.$element[0]):this.options.placement,a=/\s?auto?\s?/i,r=a.test(s);r&&(s=s.replace(a,"")||"top"),o.detach().css({top:0,left:0,display:"block"}).addClass(s).data("bs."+this.type,this),this.options.container?o.appendTo(g(document).find(this.options.container)):o.insertAfter(this.$element),this.$element.trigger("inserted.bs."+this.type);var l=this.getPosition(),h=o[0].offsetWidth,d=o[0].offsetHeight;if(r){var p=s,c=this.getPosition(this.$viewport);s="bottom"==s&&l.bottom+d>c.bottom?"top":"top"==s&&l.top-d<c.top?"bottom":"right"==s&&l.right+h>c.width?"left":"left"==s&&l.left-h<c.left?"right":s,o.removeClass(p).addClass(s)}var f=this.getCalculatedOffset(s,l,h,d);this.applyPlacement(f,s);var u=function(){var t=i.hoverState;i.$element.trigger("shown.bs."+i.type),i.hoverState=null,"out"==t&&i.leave(i)};g.support.transition&&this.$tip.hasClass("fade")?o.one("bsTransitionEnd",u).emulateTransitionEnd(m.TRANSITION_DURATION):u()}},m.prototype.applyPlacement=function(t,e){var i=this.tip(),o=i[0].offsetWidth,n=i[0].offsetHeight,s=parseInt(i.css("margin-top"),10),a=parseInt(i.css("margin-left"),10);isNaN(s)&&(s=0),isNaN(a)&&(a=0),t.top+=s,t.left+=a,g.offset.setOffset(i[0],g.extend({using:function(t){i.css({top:Math.round(t.top),left:Math.round(t.left)})}},t),0),i.addClass("in");var r=i[0].offsetWidth,l=i[0].offsetHeight;"top"==e&&l!=n&&(t.top=t.top+n-l);var h=this.getViewportAdjustedDelta(e,t,r,l);h.left?t.left+=h.left:t.top+=h.top;var d=/top|bottom/.test(e),p=d?2*h.left-o+r:2*h.top-n+l,c=d?"offsetWidth":"offsetHeight";i.offset(t),this.replaceArrow(p,i[0][c],d)},m.prototype.replaceArrow=function(t,e,i){this.arrow().css(i?"left":"top",50*(1-t/e)+"%").css(i?"top":"left","")},m.prototype.setContent=function(){var t=this.tip(),e=this.getTitle();this.options.html?(this.options.sanitize&&(e=n(e,this.options.whiteList,this.options.sanitizeFn)),t.find(".tooltip-inner").html(e)):t.find(".tooltip-inner").text(e),t.removeClass("fade in top bottom left right")},m.prototype.hide=function(t){var e=this,i=g(this.$tip),o=g.Event("hide.bs."+this.type);function n(){"in"!=e.hoverState&&i.detach(),e.$element&&e.$element.removeAttr("aria-describedby").trigger("hidden.bs."+e.type),t&&t()}if(this.$element.trigger(o),!o.isDefaultPrevented())return i.removeClass("in"),g.support.transition&&i.hasClass("fade")?i.one("bsTransitionEnd",n).emulateTransitionEnd(m.TRANSITION_DURATION):n(),this.hoverState=null,this},m.prototype.fixTitle=function(){var t=this.$element;(t.attr("title")||"string"!=typeof t.attr("data-original-title"))&&t.attr("data-original-title",t.attr("title")||"").attr("title","")},m.prototype.hasContent=function(){return this.getTitle()},m.prototype.getPosition=function(t){var e=(t=t||this.$element)[0],i="BODY"==e.tagName,o=e.getBoundingClientRect();null==o.width&&(o=g.extend({},o,{width:o.right-o.left,height:o.bottom-o.top}));var n=window.SVGElement&&e instanceof window.SVGElement,s=i?{top:0,left:0}:n?null:t.offset(),a={scroll:i?document.documentElement.scrollTop||document.body.scrollTop:t.scrollTop()},r=i?{width:g(window).width(),height:g(window).height()}:null;return g.extend({},o,a,r,s)},m.prototype.getCalculatedOffset=function(t,e,i,o){return"bottom"==t?{top:e.top+e.height,left:e.left+e.width/2-i/2}:"top"==t?{top:e.top-o,left:e.left+e.width/2-i/2}:"left"==t?{top:e.top+e.height/2-o/2,left:e.left-i}:{top:e.top+e.height/2-o/2,left:e.left+e.width}},m.prototype.getViewportAdjustedDelta=function(t,e,i,o){var n={top:0,left:0};if(!this.$viewport)return n;var s=this.options.viewport&&this.options.viewport.padding||0,a=this.getPosition(this.$viewport);if(/right|left/.test(t)){var r=e.top-s-a.scroll,l=e.top+s-a.scroll+o;r<a.top?n.top=a.top-r:l>a.top+a.height&&(n.top=a.top+a.height-l)}else{var h=e.left-s,d=e.left+s+i;h<a.left?n.left=a.left-h:d>a.right&&(n.left=a.left+a.width-d)}return n},m.prototype.getTitle=function(){var t=this.$element,e=this.options;return t.attr("data-original-title")||("function"==typeof e.title?e.title.call(t[0]):e.title)},m.prototype.getUID=function(t){for(;t+=~~(1e6*Math.random()),document.getElementById(t););return t},m.prototype.tip=function(){if(!this.$tip&&(this.$tip=g(this.options.template),1!=this.$tip.length))throw new Error(this.type+" `template` option must consist of exactly 1 top-level element!");return this.$tip},m.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},m.prototype.enable=function(){this.enabled=!0},m.prototype.disable=function(){this.enabled=!1},m.prototype.toggleEnabled=function(){this.enabled=!this.enabled},m.prototype.toggle=function(t){var e=this;t&&((e=g(t.currentTarget).data("bs."+this.type))||(e=new this.constructor(t.currentTarget,this.getDelegateOptions()),g(t.currentTarget).data("bs."+this.type,e))),t?(e.inState.click=!e.inState.click,e.isInStateTrue()?e.enter(e):e.leave(e)):e.tip().hasClass("in")?e.leave(e):e.enter(e)},m.prototype.destroy=function(){var t=this;clearTimeout(this.timeout),this.hide(function(){t.$element.off("."+t.type).removeData("bs."+t.type),t.$tip&&t.$tip.detach(),t.$tip=null,t.$arrow=null,t.$viewport=null,t.$element=null})},m.prototype.sanitizeHtml=function(t){return n(t,this.options.whiteList,this.options.sanitizeFn)};var e=g.fn.tooltip;g.fn.tooltip=function i(o){return this.each(function(){var t=g(this),e=t.data("bs.tooltip"),i="object"==typeof o&&o;!e&&/destroy|hide/.test(o)||(e||t.data("bs.tooltip",e=new m(this,i)),"string"==typeof o&&e[o]())})},g.fn.tooltip.Constructor=m,g.fn.tooltip.noConflict=function(){return g.fn.tooltip=e,this}}(jQuery),function(n){"use strict";var s=function(t,e){this.init("popover",t,e)};if(!n.fn.tooltip)throw new Error("Popover requires tooltip.js");s.VERSION="3.4.1",s.DEFAULTS=n.extend({},n.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),((s.prototype=n.extend({},n.fn.tooltip.Constructor.prototype)).constructor=s).prototype.getDefaults=function(){return s.DEFAULTS},s.prototype.setContent=function(){var t=this.tip(),e=this.getTitle(),i=this.getContent();if(this.options.html){var o=typeof i;this.options.sanitize&&(e=this.sanitizeHtml(e),"string"===o&&(i=this.sanitizeHtml(i))),t.find(".popover-title").html(e),t.find(".popover-content").children().detach().end()["string"===o?"html":"append"](i)}else t.find(".popover-title").text(e),t.find(".popover-content").children().detach().end().text(i);t.removeClass("fade top bottom left right in"),t.find(".popover-title").html()||t.find(".popover-title").hide()},s.prototype.hasContent=function(){return this.getTitle()||this.getContent()},s.prototype.getContent=function(){var t=this.$element,e=this.options;return t.attr("data-content")||("function"==typeof e.content?e.content.call(t[0]):e.content)},s.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")};var t=n.fn.popover;n.fn.popover=function e(o){return this.each(function(){var t=n(this),e=t.data("bs.popover"),i="object"==typeof o&&o;!e&&/destroy|hide/.test(o)||(e||t.data("bs.popover",e=new s(this,i)),"string"==typeof o&&e[o]())})},n.fn.popover.Constructor=s,n.fn.popover.noConflict=function(){return n.fn.popover=t,this}}(jQuery),function(s){"use strict";function n(t,e){this.$body=s(document.body),this.$scrollElement=s(t).is(document.body)?s(window):s(t),this.options=s.extend({},n.DEFAULTS,e),this.selector=(this.options.target||"")+" .nav li > a",this.offsets=[],this.targets=[],this.activeTarget=null,this.scrollHeight=0,this.$scrollElement.on("scroll.bs.scrollspy",s.proxy(this.process,this)),this.refresh(),this.process()}function e(o){return this.each(function(){var t=s(this),e=t.data("bs.scrollspy"),i="object"==typeof o&&o;e||t.data("bs.scrollspy",e=new n(this,i)),"string"==typeof o&&e[o]()})}n.VERSION="3.4.1",n.DEFAULTS={offset:10},n.prototype.getScrollHeight=function(){return this.$scrollElement[0].scrollHeight||Math.max(this.$body[0].scrollHeight,document.documentElement.scrollHeight)},n.prototype.refresh=function(){var t=this,o="offset",n=0;this.offsets=[],this.targets=[],this.scrollHeight=this.getScrollHeight(),s.isWindow(this.$scrollElement[0])||(o="position",n=this.$scrollElement.scrollTop()),this.$body.find(this.selector).map(function(){var t=s(this),e=t.data("target")||t.attr("href"),i=/^#./.test(e)&&s(e);return i&&i.length&&i.is(":visible")&&[[i[o]().top+n,e]]||null}).sort(function(t,e){return t[0]-e[0]}).each(function(){t.offsets.push(this[0]),t.targets.push(this[1])})},n.prototype.process=function(){var t,e=this.$scrollElement.scrollTop()+this.options.offset,i=this.getScrollHeight(),o=this.options.offset+i-this.$scrollElement.height(),n=this.offsets,s=this.targets,a=this.activeTarget;if(this.scrollHeight!=i&&this.refresh(),o<=e)return a!=(t=s[s.length-1])&&this.activate(t);if(a&&e<n[0])return this.activeTarget=null,this.clear();for(t=n.length;t--;)a!=s[t]&&e>=n[t]&&(n[t+1]===undefined||e<n[t+1])&&this.activate(s[t])},n.prototype.activate=function(t){this.activeTarget=t,this.clear();var e=this.selector+'[data-target="'+t+'"],'+this.selector+'[href="'+t+'"]',i=s(e).parents("li").addClass("active");i.parent(".dropdown-menu").length&&(i=i.closest("li.dropdown").addClass("active")),i.trigger("activate.bs.scrollspy")},n.prototype.clear=function(){s(this.selector).parentsUntil(this.options.target,".active").removeClass("active")};var t=s.fn.scrollspy;s.fn.scrollspy=e,s.fn.scrollspy.Constructor=n,s.fn.scrollspy.noConflict=function(){return s.fn.scrollspy=t,this},s(window).on("load.bs.scrollspy.data-api",function(){s('[data-spy="scroll"]').each(function(){var t=s(this);e.call(t,t.data())})})}(jQuery),function(r){"use strict";var a=function(t){this.element=r(t)};function e(i){return this.each(function(){var t=r(this),e=t.data("bs.tab");e||t.data("bs.tab",e=new a(this)),"string"==typeof i&&e[i]()})}a.VERSION="3.4.1",a.TRANSITION_DURATION=150,a.prototype.show=function(){var t=this.element,e=t.closest("ul:not(.dropdown-menu)"),i=t.data("target");if(i||(i=(i=t.attr("href"))&&i.replace(/.*(?=#[^\s]*$)/,"")),!t.parent("li").hasClass("active")){var o=e.find(".active:last a"),n=r.Event("hide.bs.tab",{relatedTarget:t[0]}),s=r.Event("show.bs.tab",{relatedTarget:o[0]});if(o.trigger(n),t.trigger(s),!s.isDefaultPrevented()&&!n.isDefaultPrevented()){var a=r(document).find(i);this.activate(t.closest("li"),e),this.activate(a,a.parent(),function(){o.trigger({type:"hidden.bs.tab",relatedTarget:t[0]}),t.trigger({type:"shown.bs.tab",relatedTarget:o[0]})})}}},a.prototype.activate=function(t,e,i){var o=e.find("> .active"),n=i&&r.support.transition&&(o.length&&o.hasClass("fade")||!!e.find("> .fade").length);function s(){o.removeClass("active").find("> .dropdown-menu > .active").removeClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded",!1),t.addClass("active").find('[data-toggle="tab"]').attr("aria-expanded",!0),n?(t[0].offsetWidth,t.addClass("in")):t.removeClass("fade"),t.parent(".dropdown-menu").length&&t.closest("li.dropdown").addClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded",!0),i&&i()}o.length&&n?o.one("bsTransitionEnd",s).emulateTransitionEnd(a.TRANSITION_DURATION):s(),o.removeClass("in")};var t=r.fn.tab;r.fn.tab=e,r.fn.tab.Constructor=a,r.fn.tab.noConflict=function(){return r.fn.tab=t,this};var i=function(t){t.preventDefault(),e.call(r(this),"show")};r(document).on("click.bs.tab.data-api",'[data-toggle="tab"]',i).on("click.bs.tab.data-api",'[data-toggle="pill"]',i)}(jQuery),function(l){"use strict";var h=function(t,e){this.options=l.extend({},h.DEFAULTS,e);var i=this.options.target===h.DEFAULTS.target?l(this.options.target):l(document).find(this.options.target);this.$target=i.on("scroll.bs.affix.data-api",l.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",l.proxy(this.checkPositionWithEventLoop,this)),this.$element=l(t),this.affixed=null,this.unpin=null,this.pinnedOffset=null,this.checkPosition()};function i(o){return this.each(function(){var t=l(this),e=t.data("bs.affix"),i="object"==typeof o&&o;e||t.data("bs.affix",e=new h(this,i)),"string"==typeof o&&e[o]()})}h.VERSION="3.4.1",h.RESET="affix affix-top affix-bottom",h.DEFAULTS={offset:0,target:window},h.prototype.getState=function(t,e,i,o){var n=this.$target.scrollTop(),s=this.$element.offset(),a=this.$target.height();if(null!=i&&"top"==this.affixed)return n<i&&"top";if("bottom"==this.affixed)return null!=i?!(n+this.unpin<=s.top)&&"bottom":!(n+a<=t-o)&&"bottom";var r=null==this.affixed,l=r?n:s.top;return null!=i&&n<=i?"top":null!=o&&t-o<=l+(r?a:e)&&"bottom"},h.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(h.RESET).addClass("affix");var t=this.$target.scrollTop(),e=this.$element.offset();return this.pinnedOffset=e.top-t},h.prototype.checkPositionWithEventLoop=function(){setTimeout(l.proxy(this.checkPosition,this),1)},h.prototype.checkPosition=function(){if(this.$element.is(":visible")){var t=this.$element.height(),e=this.options.offset,i=e.top,o=e.bottom,n=Math.max(l(document).height(),l(document.body).height());"object"!=typeof e&&(o=i=e),"function"==typeof i&&(i=e.top(this.$element)),"function"==typeof o&&(o=e.bottom(this.$element));var s=this.getState(n,t,i,o);if(this.affixed!=s){null!=this.unpin&&this.$element.css("top","");var a="affix"+(s?"-"+s:""),r=l.Event(a+".bs.affix");if(this.$element.trigger(r),r.isDefaultPrevented())return;this.affixed=s,this.unpin="bottom"==s?this.getPinnedOffset():null,this.$element.removeClass(h.RESET).addClass(a).trigger(a.replace("affix","affixed")+".bs.affix")}"bottom"==s&&this.$element.offset({top:n-t-o})}};var t=l.fn.affix;l.fn.affix=i,l.fn.affix.Constructor=h,l.fn.affix.noConflict=function(){return l.fn.affix=t,this},l(window).on("load",function(){l('[data-spy="affix"]').each(function(){var t=l(this),e=t.data();e.offset=e.offset||{},null!=e.offsetBottom&&(e.offset.bottom=e.offsetBottom),null!=e.offsetTop&&(e.offset.top=e.offsetTop),i.call(t,e)})})}(jQuery);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/*! Tiny Pub/Sub - v0.7.0 - 2013-01-29
-* https://github.com/cowboy/jquery-tiny-pubsub
-* Copyright (c) 2013 "Cowboy" Ben Alman; Licensed MIT */
-(function(n){var u=n({});n.subscribe=function(){u.on.apply(u,arguments)},n.unsubscribe=function(){u.off.apply(u,arguments)},n.publish=function(){u.trigger.apply(u,arguments)}})(jQuery);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery, $) {(function ($$) {
-  /**
-   * Gets the current top/left position for an event (in particular your mouse pointer)
-   *
-   * @param      {Object}  event   The event
-   * @return     {Object}  { description_of_the_return_value }
-   */
-  $$.mouseFixedPosition = function (event, annotation) {
-    var body = window.document.body;
-    var offset = {
-      top: 0,
-      left: 0
-    };
-
-    if (jQuery(body).css('position') !== "static") {
-      offset = $(body).offset();
-    }
-
-    try {
-      var top = event.pageY - offset.top;
-      var left = event.pageX - offset.left; // in case user is selecting via keyboard, this sets the adder to top-left corner
-
-      if (event.type.indexOf("mouse") === -1 && event.type.indexOf('key') > -1) {
-        var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
-        top = boundingBox.top - offset.top + boundingBox.height;
-        left = boundingBox.left - offset.left + boundingBox.width;
-      }
-
-      return {
-        top: top,
-        left: left
-      };
-    } catch (e) {
-      return $$.mouseFixedPositionFromRange(event);
-    }
-  };
-
-  $$.mouseFixedPositionFromRange = function (boundingBox) {
-    return {
-      top: boundingBox.top,
-      left: boundingBox.left
-    };
-  };
-
-  $$.getQuoteFromHighlights = function (ranges) {
-    var text = [];
-    var exactText = [];
-
-    for (var i = 0, len = ranges.length; i < len; i++) {
-      text = [];
-      var r = ranges[i];
-
-      try {
-        text.push(Hxighlighter.trim(r.text()));
-      } catch (e) {
-        text.push(Hxighlighter.trim(r.toString()));
-
-        if (r.toString === "[object Object]") {
-          text.pop();
-          text.push(r.exact);
-        }
-      }
-
-      var exact = text.join(' / ').replace(/[\n\r]/g, '<br>');
-      exactText.push(exact);
-    }
-
-    return {
-      'exact': exactText,
-      'exactNoHtml': text
-    };
-  };
-  /**
-   * Gets the unique identifier.
-   * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-   * @return     {string} Unique identifier
-   */
-
-
-  $$.getUniqueId = function () {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  };
-  /**
-   * Function to determine if value exists or not
-   *
-   * @param      {Object}  obj     The object
-   * @return     {boolean}  returns whether item exists or not
-   */
-
-
-  $$.exists = function (obj) {
-    return typeof obj !== 'undefined';
-  };
-  /**
-   * trims whitespace from strings
-   *
-   * @param      {string}  s       original string
-   * @return     {string}  trimmed string
-   */
-
-
-  $$.trim = function (s) {
-    if (typeof String.prototype.trim === 'function') {
-      return String.prototype.trim.call(s);
-    } else {
-      return s.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
-    }
-  };
-  /**
-   * Publishes Event to a specific instance, if no instanceID or '' is sent, the
-   * event will be published to all instances
-   *
-   * @param      {string}  eventName   The event name
-   * @param      {string}  instanceID  The instance id
-   * @param      {array}  list        The list
-   */
-
-
-  $$.publishEvent = function (eventName, instanceID, list) {
-    // console.log(eventName, list);
-    if (!$$.exists(instanceID) || instanceID === "") {
-      jQuery.each($$._instanceIDs, function (_, inst_id) {
-        // some of the events require the core to handle calling the components in a certain order
-        if ($$.requiredEvents.indexOf(eventName) >= 0) {
-          $$._instances[inst_id].core[eventName](list);
-        }
-
-        jQuery.publish(eventName + '.' + inst_id, list);
-      });
-    } else {
-      // some of the events require the core to handle calling the components in a certain order
-      if ($$.requiredEvents.indexOf(eventName) >= 0) {
-        $$._instances[instanceID].core[eventName](list);
-      }
-
-      jQuery.publish(eventName + '.' + instanceID, list);
-    }
-  };
-  /**
-   * Subscribes Event to a specific instance, if no instanceID or '' is sent, all
-   * instances will be subscribed to event
-   *
-   * @param      {string}  eventName   The event name
-   * @param      {string}  instanceID  The instance id
-   * @param      {<type>}  callBack    The call back
-   */
-
-
-  $$.subscribeEvent = function (eventName, instanceID, callBack) {
-    if (!$$.exists(instanceID) || instanceID === "") {
-      jQuery.each($$._instanceIDs, function (_, inst_id) {
-        jQuery.subscribe(eventName + '.' + inst_id, callBack);
-      });
-    } else {
-      jQuery.subscribe(eventName + '.' + instanceID, callBack);
-    }
-  };
-
-  $$.pauseEvent = function (e) {
-    if (e.stopPropagation) e.stopPropagation();
-    if (e.preventDefault) e.preventDefault();
-    e.cancelBubble = true;
-    e.returnValue = false;
-    return false;
-  };
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(0)))
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
-module.exports = __webpack_amd_options__;
-
-/* WEBPACK VAR INJECTION */}.call(this, {}))
-
-/***/ }),
-/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -39867,31 +39638,264 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
 
 
 /***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/*!
+ * Bootstrap v3.4.1 (https://getbootstrap.com/)
+ * Copyright 2011-2019 Twitter, Inc.
+ * Licensed under the MIT license
+ */
+if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires jQuery");!function(t){"use strict";var e=jQuery.fn.jquery.split(" ")[0].split(".");if(e[0]<2&&e[1]<9||1==e[0]&&9==e[1]&&e[2]<1||3<e[0])throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 4")}(),function(n){"use strict";n.fn.emulateTransitionEnd=function(t){var e=!1,i=this;n(this).one("bsTransitionEnd",function(){e=!0});return setTimeout(function(){e||n(i).trigger(n.support.transition.end)},t),this},n(function(){n.support.transition=function o(){var t=document.createElement("bootstrap"),e={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var i in e)if(t.style[i]!==undefined)return{end:e[i]};return!1}(),n.support.transition&&(n.event.special.bsTransitionEnd={bindType:n.support.transition.end,delegateType:n.support.transition.end,handle:function(t){if(n(t.target).is(this))return t.handleObj.handler.apply(this,arguments)}})})}(jQuery),function(s){"use strict";var e='[data-dismiss="alert"]',a=function(t){s(t).on("click",e,this.close)};a.VERSION="3.4.1",a.TRANSITION_DURATION=150,a.prototype.close=function(t){var e=s(this),i=e.attr("data-target");i||(i=(i=e.attr("href"))&&i.replace(/.*(?=#[^\s]*$)/,"")),i="#"===i?[]:i;var o=s(document).find(i);function n(){o.detach().trigger("closed.bs.alert").remove()}t&&t.preventDefault(),o.length||(o=e.closest(".alert")),o.trigger(t=s.Event("close.bs.alert")),t.isDefaultPrevented()||(o.removeClass("in"),s.support.transition&&o.hasClass("fade")?o.one("bsTransitionEnd",n).emulateTransitionEnd(a.TRANSITION_DURATION):n())};var t=s.fn.alert;s.fn.alert=function o(i){return this.each(function(){var t=s(this),e=t.data("bs.alert");e||t.data("bs.alert",e=new a(this)),"string"==typeof i&&e[i].call(t)})},s.fn.alert.Constructor=a,s.fn.alert.noConflict=function(){return s.fn.alert=t,this},s(document).on("click.bs.alert.data-api",e,a.prototype.close)}(jQuery),function(s){"use strict";var n=function(t,e){this.$element=s(t),this.options=s.extend({},n.DEFAULTS,e),this.isLoading=!1};function i(o){return this.each(function(){var t=s(this),e=t.data("bs.button"),i="object"==typeof o&&o;e||t.data("bs.button",e=new n(this,i)),"toggle"==o?e.toggle():o&&e.setState(o)})}n.VERSION="3.4.1",n.DEFAULTS={loadingText:"loading..."},n.prototype.setState=function(t){var e="disabled",i=this.$element,o=i.is("input")?"val":"html",n=i.data();t+="Text",null==n.resetText&&i.data("resetText",i[o]()),setTimeout(s.proxy(function(){i[o](null==n[t]?this.options[t]:n[t]),"loadingText"==t?(this.isLoading=!0,i.addClass(e).attr(e,e).prop(e,!0)):this.isLoading&&(this.isLoading=!1,i.removeClass(e).removeAttr(e).prop(e,!1))},this),0)},n.prototype.toggle=function(){var t=!0,e=this.$element.closest('[data-toggle="buttons"]');if(e.length){var i=this.$element.find("input");"radio"==i.prop("type")?(i.prop("checked")&&(t=!1),e.find(".active").removeClass("active"),this.$element.addClass("active")):"checkbox"==i.prop("type")&&(i.prop("checked")!==this.$element.hasClass("active")&&(t=!1),this.$element.toggleClass("active")),i.prop("checked",this.$element.hasClass("active")),t&&i.trigger("change")}else this.$element.attr("aria-pressed",!this.$element.hasClass("active")),this.$element.toggleClass("active")};var t=s.fn.button;s.fn.button=i,s.fn.button.Constructor=n,s.fn.button.noConflict=function(){return s.fn.button=t,this},s(document).on("click.bs.button.data-api",'[data-toggle^="button"]',function(t){var e=s(t.target).closest(".btn");i.call(e,"toggle"),s(t.target).is('input[type="radio"], input[type="checkbox"]')||(t.preventDefault(),e.is("input,button")?e.trigger("focus"):e.find("input:visible,button:visible").first().trigger("focus"))}).on("focus.bs.button.data-api blur.bs.button.data-api",'[data-toggle^="button"]',function(t){s(t.target).closest(".btn").toggleClass("focus",/^focus(in)?$/.test(t.type))})}(jQuery),function(p){"use strict";var c=function(t,e){this.$element=p(t),this.$indicators=this.$element.find(".carousel-indicators"),this.options=e,this.paused=null,this.sliding=null,this.interval=null,this.$active=null,this.$items=null,this.options.keyboard&&this.$element.on("keydown.bs.carousel",p.proxy(this.keydown,this)),"hover"==this.options.pause&&!("ontouchstart"in document.documentElement)&&this.$element.on("mouseenter.bs.carousel",p.proxy(this.pause,this)).on("mouseleave.bs.carousel",p.proxy(this.cycle,this))};function r(n){return this.each(function(){var t=p(this),e=t.data("bs.carousel"),i=p.extend({},c.DEFAULTS,t.data(),"object"==typeof n&&n),o="string"==typeof n?n:i.slide;e||t.data("bs.carousel",e=new c(this,i)),"number"==typeof n?e.to(n):o?e[o]():i.interval&&e.pause().cycle()})}c.VERSION="3.4.1",c.TRANSITION_DURATION=600,c.DEFAULTS={interval:5e3,pause:"hover",wrap:!0,keyboard:!0},c.prototype.keydown=function(t){if(!/input|textarea/i.test(t.target.tagName)){switch(t.which){case 37:this.prev();break;case 39:this.next();break;default:return}t.preventDefault()}},c.prototype.cycle=function(t){return t||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(p.proxy(this.next,this),this.options.interval)),this},c.prototype.getItemIndex=function(t){return this.$items=t.parent().children(".item"),this.$items.index(t||this.$active)},c.prototype.getItemForDirection=function(t,e){var i=this.getItemIndex(e);if(("prev"==t&&0===i||"next"==t&&i==this.$items.length-1)&&!this.options.wrap)return e;var o=(i+("prev"==t?-1:1))%this.$items.length;return this.$items.eq(o)},c.prototype.to=function(t){var e=this,i=this.getItemIndex(this.$active=this.$element.find(".item.active"));if(!(t>this.$items.length-1||t<0))return this.sliding?this.$element.one("slid.bs.carousel",function(){e.to(t)}):i==t?this.pause().cycle():this.slide(i<t?"next":"prev",this.$items.eq(t))},c.prototype.pause=function(t){return t||(this.paused=!0),this.$element.find(".next, .prev").length&&p.support.transition&&(this.$element.trigger(p.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},c.prototype.next=function(){if(!this.sliding)return this.slide("next")},c.prototype.prev=function(){if(!this.sliding)return this.slide("prev")},c.prototype.slide=function(t,e){var i=this.$element.find(".item.active"),o=e||this.getItemForDirection(t,i),n=this.interval,s="next"==t?"left":"right",a=this;if(o.hasClass("active"))return this.sliding=!1;var r=o[0],l=p.Event("slide.bs.carousel",{relatedTarget:r,direction:s});if(this.$element.trigger(l),!l.isDefaultPrevented()){if(this.sliding=!0,n&&this.pause(),this.$indicators.length){this.$indicators.find(".active").removeClass("active");var h=p(this.$indicators.children()[this.getItemIndex(o)]);h&&h.addClass("active")}var d=p.Event("slid.bs.carousel",{relatedTarget:r,direction:s});return p.support.transition&&this.$element.hasClass("slide")?(o.addClass(t),"object"==typeof o&&o.length&&o[0].offsetWidth,i.addClass(s),o.addClass(s),i.one("bsTransitionEnd",function(){o.removeClass([t,s].join(" ")).addClass("active"),i.removeClass(["active",s].join(" ")),a.sliding=!1,setTimeout(function(){a.$element.trigger(d)},0)}).emulateTransitionEnd(c.TRANSITION_DURATION)):(i.removeClass("active"),o.addClass("active"),this.sliding=!1,this.$element.trigger(d)),n&&this.cycle(),this}};var t=p.fn.carousel;p.fn.carousel=r,p.fn.carousel.Constructor=c,p.fn.carousel.noConflict=function(){return p.fn.carousel=t,this};var e=function(t){var e=p(this),i=e.attr("href");i&&(i=i.replace(/.*(?=#[^\s]+$)/,""));var o=e.attr("data-target")||i,n=p(document).find(o);if(n.hasClass("carousel")){var s=p.extend({},n.data(),e.data()),a=e.attr("data-slide-to");a&&(s.interval=!1),r.call(n,s),a&&n.data("bs.carousel").to(a),t.preventDefault()}};p(document).on("click.bs.carousel.data-api","[data-slide]",e).on("click.bs.carousel.data-api","[data-slide-to]",e),p(window).on("load",function(){p('[data-ride="carousel"]').each(function(){var t=p(this);r.call(t,t.data())})})}(jQuery),function(a){"use strict";var r=function(t,e){this.$element=a(t),this.options=a.extend({},r.DEFAULTS,e),this.$trigger=a('[data-toggle="collapse"][href="#'+t.id+'"],[data-toggle="collapse"][data-target="#'+t.id+'"]'),this.transitioning=null,this.options.parent?this.$parent=this.getParent():this.addAriaAndCollapsedClass(this.$element,this.$trigger),this.options.toggle&&this.toggle()};function n(t){var e,i=t.attr("data-target")||(e=t.attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"");return a(document).find(i)}function l(o){return this.each(function(){var t=a(this),e=t.data("bs.collapse"),i=a.extend({},r.DEFAULTS,t.data(),"object"==typeof o&&o);!e&&i.toggle&&/show|hide/.test(o)&&(i.toggle=!1),e||t.data("bs.collapse",e=new r(this,i)),"string"==typeof o&&e[o]()})}r.VERSION="3.4.1",r.TRANSITION_DURATION=350,r.DEFAULTS={toggle:!0},r.prototype.dimension=function(){return this.$element.hasClass("width")?"width":"height"},r.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var t,e=this.$parent&&this.$parent.children(".panel").children(".in, .collapsing");if(!(e&&e.length&&(t=e.data("bs.collapse"))&&t.transitioning)){var i=a.Event("show.bs.collapse");if(this.$element.trigger(i),!i.isDefaultPrevented()){e&&e.length&&(l.call(e,"hide"),t||e.data("bs.collapse",null));var o=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[o](0).attr("aria-expanded",!0),this.$trigger.removeClass("collapsed").attr("aria-expanded",!0),this.transitioning=1;var n=function(){this.$element.removeClass("collapsing").addClass("collapse in")[o](""),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return n.call(this);var s=a.camelCase(["scroll",o].join("-"));this.$element.one("bsTransitionEnd",a.proxy(n,this)).emulateTransitionEnd(r.TRANSITION_DURATION)[o](this.$element[0][s])}}}},r.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var t=a.Event("hide.bs.collapse");if(this.$element.trigger(t),!t.isDefaultPrevented()){var e=this.dimension();this.$element[e](this.$element[e]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse in").attr("aria-expanded",!1),this.$trigger.addClass("collapsed").attr("aria-expanded",!1),this.transitioning=1;var i=function(){this.transitioning=0,this.$element.removeClass("collapsing").addClass("collapse").trigger("hidden.bs.collapse")};if(!a.support.transition)return i.call(this);this.$element[e](0).one("bsTransitionEnd",a.proxy(i,this)).emulateTransitionEnd(r.TRANSITION_DURATION)}}},r.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()},r.prototype.getParent=function(){return a(document).find(this.options.parent).find('[data-toggle="collapse"][data-parent="'+this.options.parent+'"]').each(a.proxy(function(t,e){var i=a(e);this.addAriaAndCollapsedClass(n(i),i)},this)).end()},r.prototype.addAriaAndCollapsedClass=function(t,e){var i=t.hasClass("in");t.attr("aria-expanded",i),e.toggleClass("collapsed",!i).attr("aria-expanded",i)};var t=a.fn.collapse;a.fn.collapse=l,a.fn.collapse.Constructor=r,a.fn.collapse.noConflict=function(){return a.fn.collapse=t,this},a(document).on("click.bs.collapse.data-api",'[data-toggle="collapse"]',function(t){var e=a(this);e.attr("data-target")||t.preventDefault();var i=n(e),o=i.data("bs.collapse")?"toggle":e.data();l.call(i,o)})}(jQuery),function(a){"use strict";var r='[data-toggle="dropdown"]',o=function(t){a(t).on("click.bs.dropdown",this.toggle)};function l(t){var e=t.attr("data-target");e||(e=(e=t.attr("href"))&&/#[A-Za-z]/.test(e)&&e.replace(/.*(?=#[^\s]*$)/,""));var i="#"!==e?a(document).find(e):null;return i&&i.length?i:t.parent()}function s(o){o&&3===o.which||(a(".dropdown-backdrop").remove(),a(r).each(function(){var t=a(this),e=l(t),i={relatedTarget:this};e.hasClass("open")&&(o&&"click"==o.type&&/input|textarea/i.test(o.target.tagName)&&a.contains(e[0],o.target)||(e.trigger(o=a.Event("hide.bs.dropdown",i)),o.isDefaultPrevented()||(t.attr("aria-expanded","false"),e.removeClass("open").trigger(a.Event("hidden.bs.dropdown",i)))))}))}o.VERSION="3.4.1",o.prototype.toggle=function(t){var e=a(this);if(!e.is(".disabled, :disabled")){var i=l(e),o=i.hasClass("open");if(s(),!o){"ontouchstart"in document.documentElement&&!i.closest(".navbar-nav").length&&a(document.createElement("div")).addClass("dropdown-backdrop").insertAfter(a(this)).on("click",s);var n={relatedTarget:this};if(i.trigger(t=a.Event("show.bs.dropdown",n)),t.isDefaultPrevented())return;e.trigger("focus").attr("aria-expanded","true"),i.toggleClass("open").trigger(a.Event("shown.bs.dropdown",n))}return!1}},o.prototype.keydown=function(t){if(/(38|40|27|32)/.test(t.which)&&!/input|textarea/i.test(t.target.tagName)){var e=a(this);if(t.preventDefault(),t.stopPropagation(),!e.is(".disabled, :disabled")){var i=l(e),o=i.hasClass("open");if(!o&&27!=t.which||o&&27==t.which)return 27==t.which&&i.find(r).trigger("focus"),e.trigger("click");var n=i.find(".dropdown-menu li:not(.disabled):visible a");if(n.length){var s=n.index(t.target);38==t.which&&0<s&&s--,40==t.which&&s<n.length-1&&s++,~s||(s=0),n.eq(s).trigger("focus")}}}};var t=a.fn.dropdown;a.fn.dropdown=function e(i){return this.each(function(){var t=a(this),e=t.data("bs.dropdown");e||t.data("bs.dropdown",e=new o(this)),"string"==typeof i&&e[i].call(t)})},a.fn.dropdown.Constructor=o,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=t,this},a(document).on("click.bs.dropdown.data-api",s).on("click.bs.dropdown.data-api",".dropdown form",function(t){t.stopPropagation()}).on("click.bs.dropdown.data-api",r,o.prototype.toggle).on("keydown.bs.dropdown.data-api",r,o.prototype.keydown).on("keydown.bs.dropdown.data-api",".dropdown-menu",o.prototype.keydown)}(jQuery),function(a){"use strict";var s=function(t,e){this.options=e,this.$body=a(document.body),this.$element=a(t),this.$dialog=this.$element.find(".modal-dialog"),this.$backdrop=null,this.isShown=null,this.originalBodyPad=null,this.scrollbarWidth=0,this.ignoreBackdropClick=!1,this.fixedContent=".navbar-fixed-top, .navbar-fixed-bottom",this.options.remote&&this.$element.find(".modal-content").load(this.options.remote,a.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};function r(o,n){return this.each(function(){var t=a(this),e=t.data("bs.modal"),i=a.extend({},s.DEFAULTS,t.data(),"object"==typeof o&&o);e||t.data("bs.modal",e=new s(this,i)),"string"==typeof o?e[o](n):i.show&&e.show(n)})}s.VERSION="3.4.1",s.TRANSITION_DURATION=300,s.BACKDROP_TRANSITION_DURATION=150,s.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},s.prototype.toggle=function(t){return this.isShown?this.hide():this.show(t)},s.prototype.show=function(i){var o=this,t=a.Event("show.bs.modal",{relatedTarget:i});this.$element.trigger(t),this.isShown||t.isDefaultPrevented()||(this.isShown=!0,this.checkScrollbar(),this.setScrollbar(),this.$body.addClass("modal-open"),this.escape(),this.resize(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.$dialog.on("mousedown.dismiss.bs.modal",function(){o.$element.one("mouseup.dismiss.bs.modal",function(t){a(t.target).is(o.$element)&&(o.ignoreBackdropClick=!0)})}),this.backdrop(function(){var t=a.support.transition&&o.$element.hasClass("fade");o.$element.parent().length||o.$element.appendTo(o.$body),o.$element.show().scrollTop(0),o.adjustDialog(),t&&o.$element[0].offsetWidth,o.$element.addClass("in"),o.enforceFocus();var e=a.Event("shown.bs.modal",{relatedTarget:i});t?o.$dialog.one("bsTransitionEnd",function(){o.$element.trigger("focus").trigger(e)}).emulateTransitionEnd(s.TRANSITION_DURATION):o.$element.trigger("focus").trigger(e)}))},s.prototype.hide=function(t){t&&t.preventDefault(),t=a.Event("hide.bs.modal"),this.$element.trigger(t),this.isShown&&!t.isDefaultPrevented()&&(this.isShown=!1,this.escape(),this.resize(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").off("click.dismiss.bs.modal").off("mouseup.dismiss.bs.modal"),this.$dialog.off("mousedown.dismiss.bs.modal"),a.support.transition&&this.$element.hasClass("fade")?this.$element.one("bsTransitionEnd",a.proxy(this.hideModal,this)).emulateTransitionEnd(s.TRANSITION_DURATION):this.hideModal())},s.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(t){document===t.target||this.$element[0]===t.target||this.$element.has(t.target).length||this.$element.trigger("focus")},this))},s.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keydown.dismiss.bs.modal",a.proxy(function(t){27==t.which&&this.hide()},this)):this.isShown||this.$element.off("keydown.dismiss.bs.modal")},s.prototype.resize=function(){this.isShown?a(window).on("resize.bs.modal",a.proxy(this.handleUpdate,this)):a(window).off("resize.bs.modal")},s.prototype.hideModal=function(){var t=this;this.$element.hide(),this.backdrop(function(){t.$body.removeClass("modal-open"),t.resetAdjustments(),t.resetScrollbar(),t.$element.trigger("hidden.bs.modal")})},s.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},s.prototype.backdrop=function(t){var e=this,i=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var o=a.support.transition&&i;if(this.$backdrop=a(document.createElement("div")).addClass("modal-backdrop "+i).appendTo(this.$body),this.$element.on("click.dismiss.bs.modal",a.proxy(function(t){this.ignoreBackdropClick?this.ignoreBackdropClick=!1:t.target===t.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus():this.hide())},this)),o&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!t)return;o?this.$backdrop.one("bsTransitionEnd",t).emulateTransitionEnd(s.BACKDROP_TRANSITION_DURATION):t()}else if(!this.isShown&&this.$backdrop){this.$backdrop.removeClass("in");var n=function(){e.removeBackdrop(),t&&t()};a.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one("bsTransitionEnd",n).emulateTransitionEnd(s.BACKDROP_TRANSITION_DURATION):n()}else t&&t()},s.prototype.handleUpdate=function(){this.adjustDialog()},s.prototype.adjustDialog=function(){var t=this.$element[0].scrollHeight>document.documentElement.clientHeight;this.$element.css({paddingLeft:!this.bodyIsOverflowing&&t?this.scrollbarWidth:"",paddingRight:this.bodyIsOverflowing&&!t?this.scrollbarWidth:""})},s.prototype.resetAdjustments=function(){this.$element.css({paddingLeft:"",paddingRight:""})},s.prototype.checkScrollbar=function(){var t=window.innerWidth;if(!t){var e=document.documentElement.getBoundingClientRect();t=e.right-Math.abs(e.left)}this.bodyIsOverflowing=document.body.clientWidth<t,this.scrollbarWidth=this.measureScrollbar()},s.prototype.setScrollbar=function(){var t=parseInt(this.$body.css("padding-right")||0,10);this.originalBodyPad=document.body.style.paddingRight||"";var n=this.scrollbarWidth;this.bodyIsOverflowing&&(this.$body.css("padding-right",t+n),a(this.fixedContent).each(function(t,e){var i=e.style.paddingRight,o=a(e).css("padding-right");a(e).data("padding-right",i).css("padding-right",parseFloat(o)+n+"px")}))},s.prototype.resetScrollbar=function(){this.$body.css("padding-right",this.originalBodyPad),a(this.fixedContent).each(function(t,e){var i=a(e).data("padding-right");a(e).removeData("padding-right"),e.style.paddingRight=i||""})},s.prototype.measureScrollbar=function(){var t=document.createElement("div");t.className="modal-scrollbar-measure",this.$body.append(t);var e=t.offsetWidth-t.clientWidth;return this.$body[0].removeChild(t),e};var t=a.fn.modal;a.fn.modal=r,a.fn.modal.Constructor=s,a.fn.modal.noConflict=function(){return a.fn.modal=t,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(t){var e=a(this),i=e.attr("href"),o=e.attr("data-target")||i&&i.replace(/.*(?=#[^\s]+$)/,""),n=a(document).find(o),s=n.data("bs.modal")?"toggle":a.extend({remote:!/#/.test(i)&&i},n.data(),e.data());e.is("a")&&t.preventDefault(),n.one("show.bs.modal",function(t){t.isDefaultPrevented()||n.one("hidden.bs.modal",function(){e.is(":visible")&&e.trigger("focus")})}),r.call(n,s,this)})}(jQuery),function(g){"use strict";var o=["sanitize","whiteList","sanitizeFn"],a=["background","cite","href","itemtype","longdesc","poster","src","xlink:href"],t={"*":["class","dir","id","lang","role",/^aria-[\w-]*$/i],a:["target","href","title","rel"],area:[],b:[],br:[],col:[],code:[],div:[],em:[],hr:[],h1:[],h2:[],h3:[],h4:[],h5:[],h6:[],i:[],img:["src","alt","title","width","height"],li:[],ol:[],p:[],pre:[],s:[],small:[],span:[],sub:[],sup:[],strong:[],u:[],ul:[]},r=/^(?:(?:https?|mailto|ftp|tel|file):|[^&:/?#]*(?:[/?#]|$))/gi,l=/^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[a-z0-9+/]+=*$/i;function u(t,e){var i=t.nodeName.toLowerCase();if(-1!==g.inArray(i,e))return-1===g.inArray(i,a)||Boolean(t.nodeValue.match(r)||t.nodeValue.match(l));for(var o=g(e).filter(function(t,e){return e instanceof RegExp}),n=0,s=o.length;n<s;n++)if(i.match(o[n]))return!0;return!1}function n(t,e,i){if(0===t.length)return t;if(i&&"function"==typeof i)return i(t);if(!document.implementation||!document.implementation.createHTMLDocument)return t;var o=document.implementation.createHTMLDocument("sanitization");o.body.innerHTML=t;for(var n=g.map(e,function(t,e){return e}),s=g(o.body).find("*"),a=0,r=s.length;a<r;a++){var l=s[a],h=l.nodeName.toLowerCase();if(-1!==g.inArray(h,n))for(var d=g.map(l.attributes,function(t){return t}),p=[].concat(e["*"]||[],e[h]||[]),c=0,f=d.length;c<f;c++)u(d[c],p)||l.removeAttribute(d[c].nodeName);else l.parentNode.removeChild(l)}return o.body.innerHTML}var m=function(t,e){this.type=null,this.options=null,this.enabled=null,this.timeout=null,this.hoverState=null,this.$element=null,this.inState=null,this.init("tooltip",t,e)};m.VERSION="3.4.1",m.TRANSITION_DURATION=150,m.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1,viewport:{selector:"body",padding:0},sanitize:!0,sanitizeFn:null,whiteList:t},m.prototype.init=function(t,e,i){if(this.enabled=!0,this.type=t,this.$element=g(e),this.options=this.getOptions(i),this.$viewport=this.options.viewport&&g(document).find(g.isFunction(this.options.viewport)?this.options.viewport.call(this,this.$element):this.options.viewport.selector||this.options.viewport),this.inState={click:!1,hover:!1,focus:!1},this.$element[0]instanceof document.constructor&&!this.options.selector)throw new Error("`selector` option must be specified when initializing "+this.type+" on the window.document object!");for(var o=this.options.trigger.split(" "),n=o.length;n--;){var s=o[n];if("click"==s)this.$element.on("click."+this.type,this.options.selector,g.proxy(this.toggle,this));else if("manual"!=s){var a="hover"==s?"mouseenter":"focusin",r="hover"==s?"mouseleave":"focusout";this.$element.on(a+"."+this.type,this.options.selector,g.proxy(this.enter,this)),this.$element.on(r+"."+this.type,this.options.selector,g.proxy(this.leave,this))}}this.options.selector?this._options=g.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},m.prototype.getDefaults=function(){return m.DEFAULTS},m.prototype.getOptions=function(t){var e=this.$element.data();for(var i in e)e.hasOwnProperty(i)&&-1!==g.inArray(i,o)&&delete e[i];return(t=g.extend({},this.getDefaults(),e,t)).delay&&"number"==typeof t.delay&&(t.delay={show:t.delay,hide:t.delay}),t.sanitize&&(t.template=n(t.template,t.whiteList,t.sanitizeFn)),t},m.prototype.getDelegateOptions=function(){var i={},o=this.getDefaults();return this._options&&g.each(this._options,function(t,e){o[t]!=e&&(i[t]=e)}),i},m.prototype.enter=function(t){var e=t instanceof this.constructor?t:g(t.currentTarget).data("bs."+this.type);if(e||(e=new this.constructor(t.currentTarget,this.getDelegateOptions()),g(t.currentTarget).data("bs."+this.type,e)),t instanceof g.Event&&(e.inState["focusin"==t.type?"focus":"hover"]=!0),e.tip().hasClass("in")||"in"==e.hoverState)e.hoverState="in";else{if(clearTimeout(e.timeout),e.hoverState="in",!e.options.delay||!e.options.delay.show)return e.show();e.timeout=setTimeout(function(){"in"==e.hoverState&&e.show()},e.options.delay.show)}},m.prototype.isInStateTrue=function(){for(var t in this.inState)if(this.inState[t])return!0;return!1},m.prototype.leave=function(t){var e=t instanceof this.constructor?t:g(t.currentTarget).data("bs."+this.type);if(e||(e=new this.constructor(t.currentTarget,this.getDelegateOptions()),g(t.currentTarget).data("bs."+this.type,e)),t instanceof g.Event&&(e.inState["focusout"==t.type?"focus":"hover"]=!1),!e.isInStateTrue()){if(clearTimeout(e.timeout),e.hoverState="out",!e.options.delay||!e.options.delay.hide)return e.hide();e.timeout=setTimeout(function(){"out"==e.hoverState&&e.hide()},e.options.delay.hide)}},m.prototype.show=function(){var t=g.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){this.$element.trigger(t);var e=g.contains(this.$element[0].ownerDocument.documentElement,this.$element[0]);if(t.isDefaultPrevented()||!e)return;var i=this,o=this.tip(),n=this.getUID(this.type);this.setContent(),o.attr("id",n),this.$element.attr("aria-describedby",n),this.options.animation&&o.addClass("fade");var s="function"==typeof this.options.placement?this.options.placement.call(this,o[0],this.$element[0]):this.options.placement,a=/\s?auto?\s?/i,r=a.test(s);r&&(s=s.replace(a,"")||"top"),o.detach().css({top:0,left:0,display:"block"}).addClass(s).data("bs."+this.type,this),this.options.container?o.appendTo(g(document).find(this.options.container)):o.insertAfter(this.$element),this.$element.trigger("inserted.bs."+this.type);var l=this.getPosition(),h=o[0].offsetWidth,d=o[0].offsetHeight;if(r){var p=s,c=this.getPosition(this.$viewport);s="bottom"==s&&l.bottom+d>c.bottom?"top":"top"==s&&l.top-d<c.top?"bottom":"right"==s&&l.right+h>c.width?"left":"left"==s&&l.left-h<c.left?"right":s,o.removeClass(p).addClass(s)}var f=this.getCalculatedOffset(s,l,h,d);this.applyPlacement(f,s);var u=function(){var t=i.hoverState;i.$element.trigger("shown.bs."+i.type),i.hoverState=null,"out"==t&&i.leave(i)};g.support.transition&&this.$tip.hasClass("fade")?o.one("bsTransitionEnd",u).emulateTransitionEnd(m.TRANSITION_DURATION):u()}},m.prototype.applyPlacement=function(t,e){var i=this.tip(),o=i[0].offsetWidth,n=i[0].offsetHeight,s=parseInt(i.css("margin-top"),10),a=parseInt(i.css("margin-left"),10);isNaN(s)&&(s=0),isNaN(a)&&(a=0),t.top+=s,t.left+=a,g.offset.setOffset(i[0],g.extend({using:function(t){i.css({top:Math.round(t.top),left:Math.round(t.left)})}},t),0),i.addClass("in");var r=i[0].offsetWidth,l=i[0].offsetHeight;"top"==e&&l!=n&&(t.top=t.top+n-l);var h=this.getViewportAdjustedDelta(e,t,r,l);h.left?t.left+=h.left:t.top+=h.top;var d=/top|bottom/.test(e),p=d?2*h.left-o+r:2*h.top-n+l,c=d?"offsetWidth":"offsetHeight";i.offset(t),this.replaceArrow(p,i[0][c],d)},m.prototype.replaceArrow=function(t,e,i){this.arrow().css(i?"left":"top",50*(1-t/e)+"%").css(i?"top":"left","")},m.prototype.setContent=function(){var t=this.tip(),e=this.getTitle();this.options.html?(this.options.sanitize&&(e=n(e,this.options.whiteList,this.options.sanitizeFn)),t.find(".tooltip-inner").html(e)):t.find(".tooltip-inner").text(e),t.removeClass("fade in top bottom left right")},m.prototype.hide=function(t){var e=this,i=g(this.$tip),o=g.Event("hide.bs."+this.type);function n(){"in"!=e.hoverState&&i.detach(),e.$element&&e.$element.removeAttr("aria-describedby").trigger("hidden.bs."+e.type),t&&t()}if(this.$element.trigger(o),!o.isDefaultPrevented())return i.removeClass("in"),g.support.transition&&i.hasClass("fade")?i.one("bsTransitionEnd",n).emulateTransitionEnd(m.TRANSITION_DURATION):n(),this.hoverState=null,this},m.prototype.fixTitle=function(){var t=this.$element;(t.attr("title")||"string"!=typeof t.attr("data-original-title"))&&t.attr("data-original-title",t.attr("title")||"").attr("title","")},m.prototype.hasContent=function(){return this.getTitle()},m.prototype.getPosition=function(t){var e=(t=t||this.$element)[0],i="BODY"==e.tagName,o=e.getBoundingClientRect();null==o.width&&(o=g.extend({},o,{width:o.right-o.left,height:o.bottom-o.top}));var n=window.SVGElement&&e instanceof window.SVGElement,s=i?{top:0,left:0}:n?null:t.offset(),a={scroll:i?document.documentElement.scrollTop||document.body.scrollTop:t.scrollTop()},r=i?{width:g(window).width(),height:g(window).height()}:null;return g.extend({},o,a,r,s)},m.prototype.getCalculatedOffset=function(t,e,i,o){return"bottom"==t?{top:e.top+e.height,left:e.left+e.width/2-i/2}:"top"==t?{top:e.top-o,left:e.left+e.width/2-i/2}:"left"==t?{top:e.top+e.height/2-o/2,left:e.left-i}:{top:e.top+e.height/2-o/2,left:e.left+e.width}},m.prototype.getViewportAdjustedDelta=function(t,e,i,o){var n={top:0,left:0};if(!this.$viewport)return n;var s=this.options.viewport&&this.options.viewport.padding||0,a=this.getPosition(this.$viewport);if(/right|left/.test(t)){var r=e.top-s-a.scroll,l=e.top+s-a.scroll+o;r<a.top?n.top=a.top-r:l>a.top+a.height&&(n.top=a.top+a.height-l)}else{var h=e.left-s,d=e.left+s+i;h<a.left?n.left=a.left-h:d>a.right&&(n.left=a.left+a.width-d)}return n},m.prototype.getTitle=function(){var t=this.$element,e=this.options;return t.attr("data-original-title")||("function"==typeof e.title?e.title.call(t[0]):e.title)},m.prototype.getUID=function(t){for(;t+=~~(1e6*Math.random()),document.getElementById(t););return t},m.prototype.tip=function(){if(!this.$tip&&(this.$tip=g(this.options.template),1!=this.$tip.length))throw new Error(this.type+" `template` option must consist of exactly 1 top-level element!");return this.$tip},m.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},m.prototype.enable=function(){this.enabled=!0},m.prototype.disable=function(){this.enabled=!1},m.prototype.toggleEnabled=function(){this.enabled=!this.enabled},m.prototype.toggle=function(t){var e=this;t&&((e=g(t.currentTarget).data("bs."+this.type))||(e=new this.constructor(t.currentTarget,this.getDelegateOptions()),g(t.currentTarget).data("bs."+this.type,e))),t?(e.inState.click=!e.inState.click,e.isInStateTrue()?e.enter(e):e.leave(e)):e.tip().hasClass("in")?e.leave(e):e.enter(e)},m.prototype.destroy=function(){var t=this;clearTimeout(this.timeout),this.hide(function(){t.$element.off("."+t.type).removeData("bs."+t.type),t.$tip&&t.$tip.detach(),t.$tip=null,t.$arrow=null,t.$viewport=null,t.$element=null})},m.prototype.sanitizeHtml=function(t){return n(t,this.options.whiteList,this.options.sanitizeFn)};var e=g.fn.tooltip;g.fn.tooltip=function i(o){return this.each(function(){var t=g(this),e=t.data("bs.tooltip"),i="object"==typeof o&&o;!e&&/destroy|hide/.test(o)||(e||t.data("bs.tooltip",e=new m(this,i)),"string"==typeof o&&e[o]())})},g.fn.tooltip.Constructor=m,g.fn.tooltip.noConflict=function(){return g.fn.tooltip=e,this}}(jQuery),function(n){"use strict";var s=function(t,e){this.init("popover",t,e)};if(!n.fn.tooltip)throw new Error("Popover requires tooltip.js");s.VERSION="3.4.1",s.DEFAULTS=n.extend({},n.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),((s.prototype=n.extend({},n.fn.tooltip.Constructor.prototype)).constructor=s).prototype.getDefaults=function(){return s.DEFAULTS},s.prototype.setContent=function(){var t=this.tip(),e=this.getTitle(),i=this.getContent();if(this.options.html){var o=typeof i;this.options.sanitize&&(e=this.sanitizeHtml(e),"string"===o&&(i=this.sanitizeHtml(i))),t.find(".popover-title").html(e),t.find(".popover-content").children().detach().end()["string"===o?"html":"append"](i)}else t.find(".popover-title").text(e),t.find(".popover-content").children().detach().end().text(i);t.removeClass("fade top bottom left right in"),t.find(".popover-title").html()||t.find(".popover-title").hide()},s.prototype.hasContent=function(){return this.getTitle()||this.getContent()},s.prototype.getContent=function(){var t=this.$element,e=this.options;return t.attr("data-content")||("function"==typeof e.content?e.content.call(t[0]):e.content)},s.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")};var t=n.fn.popover;n.fn.popover=function e(o){return this.each(function(){var t=n(this),e=t.data("bs.popover"),i="object"==typeof o&&o;!e&&/destroy|hide/.test(o)||(e||t.data("bs.popover",e=new s(this,i)),"string"==typeof o&&e[o]())})},n.fn.popover.Constructor=s,n.fn.popover.noConflict=function(){return n.fn.popover=t,this}}(jQuery),function(s){"use strict";function n(t,e){this.$body=s(document.body),this.$scrollElement=s(t).is(document.body)?s(window):s(t),this.options=s.extend({},n.DEFAULTS,e),this.selector=(this.options.target||"")+" .nav li > a",this.offsets=[],this.targets=[],this.activeTarget=null,this.scrollHeight=0,this.$scrollElement.on("scroll.bs.scrollspy",s.proxy(this.process,this)),this.refresh(),this.process()}function e(o){return this.each(function(){var t=s(this),e=t.data("bs.scrollspy"),i="object"==typeof o&&o;e||t.data("bs.scrollspy",e=new n(this,i)),"string"==typeof o&&e[o]()})}n.VERSION="3.4.1",n.DEFAULTS={offset:10},n.prototype.getScrollHeight=function(){return this.$scrollElement[0].scrollHeight||Math.max(this.$body[0].scrollHeight,document.documentElement.scrollHeight)},n.prototype.refresh=function(){var t=this,o="offset",n=0;this.offsets=[],this.targets=[],this.scrollHeight=this.getScrollHeight(),s.isWindow(this.$scrollElement[0])||(o="position",n=this.$scrollElement.scrollTop()),this.$body.find(this.selector).map(function(){var t=s(this),e=t.data("target")||t.attr("href"),i=/^#./.test(e)&&s(e);return i&&i.length&&i.is(":visible")&&[[i[o]().top+n,e]]||null}).sort(function(t,e){return t[0]-e[0]}).each(function(){t.offsets.push(this[0]),t.targets.push(this[1])})},n.prototype.process=function(){var t,e=this.$scrollElement.scrollTop()+this.options.offset,i=this.getScrollHeight(),o=this.options.offset+i-this.$scrollElement.height(),n=this.offsets,s=this.targets,a=this.activeTarget;if(this.scrollHeight!=i&&this.refresh(),o<=e)return a!=(t=s[s.length-1])&&this.activate(t);if(a&&e<n[0])return this.activeTarget=null,this.clear();for(t=n.length;t--;)a!=s[t]&&e>=n[t]&&(n[t+1]===undefined||e<n[t+1])&&this.activate(s[t])},n.prototype.activate=function(t){this.activeTarget=t,this.clear();var e=this.selector+'[data-target="'+t+'"],'+this.selector+'[href="'+t+'"]',i=s(e).parents("li").addClass("active");i.parent(".dropdown-menu").length&&(i=i.closest("li.dropdown").addClass("active")),i.trigger("activate.bs.scrollspy")},n.prototype.clear=function(){s(this.selector).parentsUntil(this.options.target,".active").removeClass("active")};var t=s.fn.scrollspy;s.fn.scrollspy=e,s.fn.scrollspy.Constructor=n,s.fn.scrollspy.noConflict=function(){return s.fn.scrollspy=t,this},s(window).on("load.bs.scrollspy.data-api",function(){s('[data-spy="scroll"]').each(function(){var t=s(this);e.call(t,t.data())})})}(jQuery),function(r){"use strict";var a=function(t){this.element=r(t)};function e(i){return this.each(function(){var t=r(this),e=t.data("bs.tab");e||t.data("bs.tab",e=new a(this)),"string"==typeof i&&e[i]()})}a.VERSION="3.4.1",a.TRANSITION_DURATION=150,a.prototype.show=function(){var t=this.element,e=t.closest("ul:not(.dropdown-menu)"),i=t.data("target");if(i||(i=(i=t.attr("href"))&&i.replace(/.*(?=#[^\s]*$)/,"")),!t.parent("li").hasClass("active")){var o=e.find(".active:last a"),n=r.Event("hide.bs.tab",{relatedTarget:t[0]}),s=r.Event("show.bs.tab",{relatedTarget:o[0]});if(o.trigger(n),t.trigger(s),!s.isDefaultPrevented()&&!n.isDefaultPrevented()){var a=r(document).find(i);this.activate(t.closest("li"),e),this.activate(a,a.parent(),function(){o.trigger({type:"hidden.bs.tab",relatedTarget:t[0]}),t.trigger({type:"shown.bs.tab",relatedTarget:o[0]})})}}},a.prototype.activate=function(t,e,i){var o=e.find("> .active"),n=i&&r.support.transition&&(o.length&&o.hasClass("fade")||!!e.find("> .fade").length);function s(){o.removeClass("active").find("> .dropdown-menu > .active").removeClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded",!1),t.addClass("active").find('[data-toggle="tab"]').attr("aria-expanded",!0),n?(t[0].offsetWidth,t.addClass("in")):t.removeClass("fade"),t.parent(".dropdown-menu").length&&t.closest("li.dropdown").addClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded",!0),i&&i()}o.length&&n?o.one("bsTransitionEnd",s).emulateTransitionEnd(a.TRANSITION_DURATION):s(),o.removeClass("in")};var t=r.fn.tab;r.fn.tab=e,r.fn.tab.Constructor=a,r.fn.tab.noConflict=function(){return r.fn.tab=t,this};var i=function(t){t.preventDefault(),e.call(r(this),"show")};r(document).on("click.bs.tab.data-api",'[data-toggle="tab"]',i).on("click.bs.tab.data-api",'[data-toggle="pill"]',i)}(jQuery),function(l){"use strict";var h=function(t,e){this.options=l.extend({},h.DEFAULTS,e);var i=this.options.target===h.DEFAULTS.target?l(this.options.target):l(document).find(this.options.target);this.$target=i.on("scroll.bs.affix.data-api",l.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",l.proxy(this.checkPositionWithEventLoop,this)),this.$element=l(t),this.affixed=null,this.unpin=null,this.pinnedOffset=null,this.checkPosition()};function i(o){return this.each(function(){var t=l(this),e=t.data("bs.affix"),i="object"==typeof o&&o;e||t.data("bs.affix",e=new h(this,i)),"string"==typeof o&&e[o]()})}h.VERSION="3.4.1",h.RESET="affix affix-top affix-bottom",h.DEFAULTS={offset:0,target:window},h.prototype.getState=function(t,e,i,o){var n=this.$target.scrollTop(),s=this.$element.offset(),a=this.$target.height();if(null!=i&&"top"==this.affixed)return n<i&&"top";if("bottom"==this.affixed)return null!=i?!(n+this.unpin<=s.top)&&"bottom":!(n+a<=t-o)&&"bottom";var r=null==this.affixed,l=r?n:s.top;return null!=i&&n<=i?"top":null!=o&&t-o<=l+(r?a:e)&&"bottom"},h.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(h.RESET).addClass("affix");var t=this.$target.scrollTop(),e=this.$element.offset();return this.pinnedOffset=e.top-t},h.prototype.checkPositionWithEventLoop=function(){setTimeout(l.proxy(this.checkPosition,this),1)},h.prototype.checkPosition=function(){if(this.$element.is(":visible")){var t=this.$element.height(),e=this.options.offset,i=e.top,o=e.bottom,n=Math.max(l(document).height(),l(document.body).height());"object"!=typeof e&&(o=i=e),"function"==typeof i&&(i=e.top(this.$element)),"function"==typeof o&&(o=e.bottom(this.$element));var s=this.getState(n,t,i,o);if(this.affixed!=s){null!=this.unpin&&this.$element.css("top","");var a="affix"+(s?"-"+s:""),r=l.Event(a+".bs.affix");if(this.$element.trigger(r),r.isDefaultPrevented())return;this.affixed=s,this.unpin="bottom"==s?this.getPinnedOffset():null,this.$element.removeClass(h.RESET).addClass(a).trigger(a.replace("affix","affixed")+".bs.affix")}"bottom"==s&&this.$element.offset({top:n-t-o})}};var t=l.fn.affix;l.fn.affix=i,l.fn.affix.Constructor=h,l.fn.affix.noConflict=function(){return l.fn.affix=t,this},l(window).on("load",function(){l('[data-spy="affix"]').each(function(){var t=l(this),e=t.data();e.offset=e.offset||{},null!=e.offsetBottom&&(e.offset.bottom=e.offsetBottom),null!=e.offsetTop&&(e.offset.top=e.offsetTop),i.call(t,e)})})}(jQuery);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/*! Tiny Pub/Sub - v0.7.0 - 2013-01-29
+* https://github.com/cowboy/jquery-tiny-pubsub
+* Copyright (c) 2013 "Cowboy" Ben Alman; Licensed MIT */
+(function(n){var u=n({});n.subscribe=function(){u.on.apply(u,arguments)},n.unsubscribe=function(){u.off.apply(u,arguments)},n.publish=function(){u.trigger.apply(u,arguments)}})(jQuery);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery, $) {(function ($$) {
+  /**
+   * Gets the current top/left position for an event (in particular your mouse pointer)
+   *
+   * @param      {Object}  event   The event
+   * @return     {Object}  { description_of_the_return_value }
+   */
+  $$.mouseFixedPosition = function (event, annotation) {
+    var body = window.document.body;
+    var offset = {
+      top: 0,
+      left: 0
+    };
+
+    if (jQuery(body).css('position') !== "static") {
+      offset = $(body).offset();
+    }
+
+    try {
+      var top = event.pageY - offset.top;
+      var left = event.pageX - offset.left; // in case user is selecting via keyboard, this sets the adder to top-left corner
+
+      if (event.type.indexOf("mouse") === -1 && event.type.indexOf('key') > -1) {
+        var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
+        top = boundingBox.top - offset.top + boundingBox.height;
+        left = boundingBox.left - offset.left + boundingBox.width;
+      }
+
+      return {
+        top: top,
+        left: left
+      };
+    } catch (e) {
+      return $$.mouseFixedPositionFromRange(event);
+    }
+  };
+
+  $$.mouseFixedPositionFromRange = function (boundingBox) {
+    return {
+      top: boundingBox.top,
+      left: boundingBox.left
+    };
+  };
+
+  $$.getQuoteFromHighlights = function (ranges) {
+    var text = [];
+    var exactText = [];
+
+    for (var i = 0, len = ranges.length; i < len; i++) {
+      text = [];
+      var r = ranges[i];
+
+      try {
+        text.push(Hxighlighter.trim(r.text()));
+      } catch (e) {
+        text.push(Hxighlighter.trim(r.toString()));
+
+        if (r.toString === "[object Object]") {
+          text.pop();
+          text.push(r.exact);
+        }
+      }
+
+      var exact = text.join(' / ').replace(/[\n\r]/g, '<br>');
+      exactText.push(exact);
+    }
+
+    return {
+      'exact': exactText,
+      'exactNoHtml': text
+    };
+  };
+  /**
+   * Gets the unique identifier.
+   * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+   * @return     {string} Unique identifier
+   */
+
+
+  $$.getUniqueId = function () {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  };
+  /**
+   * Function to determine if value exists or not
+   *
+   * @param      {Object}  obj     The object
+   * @return     {boolean}  returns whether item exists or not
+   */
+
+
+  $$.exists = function (obj) {
+    return typeof obj !== 'undefined';
+  };
+  /**
+   * trims whitespace from strings
+   *
+   * @param      {string}  s       original string
+   * @return     {string}  trimmed string
+   */
+
+
+  $$.trim = function (s) {
+    if (typeof String.prototype.trim === 'function') {
+      return String.prototype.trim.call(s);
+    } else {
+      return s.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
+    }
+  };
+  /**
+   * Publishes Event to a specific instance, if no instanceID or '' is sent, the
+   * event will be published to all instances
+   *
+   * @param      {string}  eventName   The event name
+   * @param      {string}  instanceID  The instance id
+   * @param      {array}  list        The list
+   */
+
+
+  $$.publishEvent = function (eventName, instanceID, list) {
+    // console.log(eventName, list);
+    if (!$$.exists(instanceID) || instanceID === "") {
+      jQuery.each($$._instanceIDs, function (_, inst_id) {
+        // some of the events require the core to handle calling the components in a certain order
+        if ($$.requiredEvents.indexOf(eventName) >= 0) {
+          $$._instances[inst_id].core[eventName](list);
+        }
+
+        console.log("publish: ", eventName + '.' + inst_id);
+        jQuery.publish(eventName + '.' + inst_id, list);
+      });
+    } else {
+      // some of the events require the core to handle calling the components in a certain order
+      if ($$.requiredEvents.indexOf(eventName) >= 0) {
+        $$._instances[instanceID].core[eventName](list);
+      }
+
+      jQuery.publish(eventName + '.' + instanceID, list);
+    }
+  };
+  /**
+   * Subscribes Event to a specific instance, if no instanceID or '' is sent, all
+   * instances will be subscribed to event
+   *
+   * @param      {string}  eventName   The event name
+   * @param      {string}  instanceID  The instance id
+   * @param      {<type>}  callBack    The call back
+   */
+
+
+  $$.subscribeEvent = function (eventName, instanceID, callBack) {
+    if (!$$.exists(instanceID) || instanceID === "") {
+      jQuery.each($$._instanceIDs, function (_, inst_id) {
+        console.log("subscribe:", eventName + '.' + inst_id);
+        jQuery.subscribe(eventName + '.' + inst_id, callBack);
+      });
+    } else {
+      jQuery.subscribe(eventName + '.' + instanceID, callBack);
+    }
+  };
+
+  $$.pauseEvent = function (e) {
+    if (e.stopPropagation) e.stopPropagation();
+    if (e.preventDefault) e.preventDefault();
+    e.cancelBubble = true;
+    e.returnValue = false;
+    return false;
+  };
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(0)))
+
+/***/ }),
 /* 23 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(this, {}))
+
+/***/ }),
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(26);
 /* harmony import */ var _css_sidebar_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_sidebar_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
+/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 /* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(26);
+/* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(27);
 /* harmony import */ var timeago__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(timeago__WEBPACK_IMPORTED_MODULE_3__);
 /**
  * 
  */
-var annotator = annotator ? annotator : __webpack_require__(7);
+var annotator = annotator ? annotator : __webpack_require__(8);
 
 
 
 
-
-__webpack_require__(8);
 
 __webpack_require__(9);
+
+__webpack_require__(10);
 
 (function ($) {
   $.Sidebar = function (options, inst_id) {
@@ -39900,10 +39904,10 @@ __webpack_require__(9);
       // set up template names that will be pulled
       TEMPLATENAMES: ["editor", "viewer"],
       TEMPLATES: {
-        editor: __webpack_require__(27),
-        viewer: __webpack_require__(28),
-        annotationSection: __webpack_require__(29),
-        annotationItem: __webpack_require__(30)
+        editor: __webpack_require__(28),
+        viewer: __webpack_require__(29),
+        annotationSection: __webpack_require__(30),
+        annotationItem: __webpack_require__(31)
       },
       template_suffix: "sidebar",
       template_urls: ""
@@ -40756,7 +40760,7 @@ __webpack_require__(9);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -40784,13 +40788,13 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -41026,7 +41030,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = function(obj) {
@@ -41043,7 +41047,7 @@ return __p
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -41090,7 +41094,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -41193,7 +41197,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
@@ -41328,7 +41332,7 @@ return __p
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -41339,11 +41343,11 @@ return __p
  *  Should be generic, but its main purpose is to be used in tandem with annotations.
  *
  */
-__webpack_require__(12);
-
 __webpack_require__(13);
 
-__webpack_require__(32);
+__webpack_require__(14);
+
+__webpack_require__(33);
 
 (function ($) {
   /**
@@ -41669,13 +41673,13 @@ __webpack_require__(32);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41684,15 +41688,15 @@ __webpack_require__(32);
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(10);
-
 __webpack_require__(11);
 
-__webpack_require__(8);
+__webpack_require__(12);
 
 __webpack_require__(9);
 
-__webpack_require__(34);
+__webpack_require__(10);
+
+__webpack_require__(35);
 
 (function ($) {
   /**
@@ -41916,13 +41920,13 @@ __webpack_require__(34);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -41931,7 +41935,7 @@ __webpack_require__(34);
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(36);
+__webpack_require__(37);
 
 (function ($) {
   /**
@@ -42138,13 +42142,13 @@ __webpack_require__(36);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42153,7 +42157,7 @@ __webpack_require__(36);
  *
  */
 //uncomment to add css file
-__webpack_require__(38);
+__webpack_require__(39);
 
 (function ($) {
   /**
@@ -42255,13 +42259,13 @@ __webpack_require__(38);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42270,7 +42274,7 @@ __webpack_require__(38);
  *
  */
 //uncomment to add css file
-__webpack_require__(40);
+__webpack_require__(41);
 
 (function ($) {
   /**
@@ -42320,13 +42324,13 @@ __webpack_require__(40);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42403,7 +42407,7 @@ __webpack_require__(40);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42412,7 +42416,7 @@ __webpack_require__(40);
  *
  */
 //uncomment to add css file
-__webpack_require__(43);
+__webpack_require__(44);
 
 (function ($) {
   /**
@@ -42523,13 +42527,13 @@ __webpack_require__(43);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42718,7 +42722,7 @@ __webpack_require__(43);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -42864,20 +42868,14 @@ __webpack_require__(43);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
 /* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_1__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -42886,9 +42884,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
  *  
  *
  */
-__webpack_require__(12);
-
 __webpack_require__(13);
+
+__webpack_require__(14);
 
 __webpack_require__(48);
 
@@ -43505,7 +43503,7 @@ __webpack_require__(51);
   });
   $.plugins.push($.Badges);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(15)))
 
 /***/ }),
 /* 50 */
@@ -43526,2480 +43524,8 @@ module.exports = function() {
 /* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- * 
- */
-//during deployment, this is what decides what gets instantiated, should be moved elsewhere
-__webpack_require__(53);
-
-__webpack_require__(54);
-
-__webpack_require__(23);
-
-__webpack_require__(55);
-
-__webpack_require__(31);
-
-__webpack_require__(10);
-
-__webpack_require__(33);
-
-__webpack_require__(35);
-
-__webpack_require__(59);
-
-__webpack_require__(61);
-
-__webpack_require__(63);
-
-__webpack_require__(64);
-
-__webpack_require__(66);
-
-__webpack_require__(37);
-
-__webpack_require__(39);
-
-__webpack_require__(41);
-
-__webpack_require__(42);
-
-__webpack_require__(44);
-
-(function ($) {
-  /**
-   * { function_description }
-   *
-   * @class      TextTarget (name)
-   * @param      {<type>}  options  The options
-   * @param      {<type>}  inst_id  The instance identifier
-   */
-  $.TextTarget = function (options, inst_id) {
-    this.options = options;
-    this.instance_id = inst_id;
-    this.guid = undefined;
-    this.annotation_selector = 'hx-annotation-hl';
-    this.init();
-  };
-  /**
-   * { function_description }
-   */
-
-
-  $.TextTarget.prototype.init = function () {
-    var self = this; // this target is only meant to work with text/html objects
-
-    this.media = "text";
-    this.setUpListeners(); // this where the target will be contained
-
-    this.target_selector = this.options.target_selector; // sets up listeners from core and other places
-
-    if (this.options.method == "url") {
-      // if the text exists externally, this will load it into the DOM
-      this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector);
-    } else if (this.options.method == "inline") {
-      // if the text is already in the DOM, this sets up what is left
-      // console.log('Loading Target via Inline');
-      this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
-    }
-
-    function areScrollbarsVisible() {
-      var scrollableElem = document.createElement('div'),
-          innerElem = document.createElement('div');
-      scrollableElem.style.width = '30px';
-      scrollableElem.style.height = '30px';
-      scrollableElem.style.overflow = 'scroll';
-      scrollableElem.style.borderWidth = '0';
-      innerElem.style.width = '30px';
-      innerElem.style.height = '60px';
-      scrollableElem.appendChild(innerElem);
-      document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
-
-      var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
-      document.body.removeChild(scrollableElem);
-      return diff > 0;
-    }
-
-    window.addEventListener('load', function () {
-      // Show scrollbars if they're hidden.
-      if (!areScrollbarsVisible()) {
-        document.body.classList.add('force-show-scrollbars');
-      }
-    });
-  };
-  /**
-   * Creates a text slot from url.
-   *
-   * @param      {string}  content      The content
-   * @param      {<type>}  selector     The selector
-   * @param      {<type>}  instance_id  The instance identifier
-   */
-
-
-  $.TextTarget.prototype.createTextSlotFromURL = function (content, selector, instance_id) {
-    this.guid = $.getUniqueId(); // each annotation target will be enclosed in a "slot"
-    //var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
-    // adds it to the page and turns on the wrapper
-
-    jQuery(selector + ' .annotations-section').append(content);
-    jQuery(selector).prop('id', this.guid);
-    jQuery(selector).addClass('annotation-slot');
-    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section'); // lets Core know that the target has finished loading on screen
-
-    $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
-  };
-  /**
-   * Creates a text slot from selector.
-   *
-   * @param      {<type>}  selector     The selector
-   * @param      {<type>}  instance_id  The instance identifier
-   */
-
-
-  $.TextTarget.prototype.createTextSlotFromSelector = function (selector, instance_id) {
-    // each annotation target will be enclosed in a "slot" with a temporary unique id
-    this.guid = $.getUniqueId();
-    var slot = jQuery(selector);
-    slot.addClass('annotation-slot');
-    slot.attr('id', this.guid);
-    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section'); // lets core know that the target has finished loading on screen
-    // console.log("Publishing TargetLoaded");
-
-    $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
-  };
-  /**
-   * Makes a query.
-   *
-   * @param      {<type>}    url       The url
-   * @param      {Function}  callback  The callback
-   * @param      {<type>}    selector  The selector
-   * @return     {<type>}    { description_of_the_return_value }
-   */
-
-
-  $.TextTarget.prototype.makeQuery = function (url, callback, selector) {
-    var self = this; // retrieves the text to be loaded onto the page and passes it to callback function
-
-    var defer = jQuery.ajax({
-      url: url,
-      type: 'GET',
-      contentType: 'charset=utf-8',
-      success: function success(data) {
-        callback(data, selector, self.instance_id);
-      },
-      async: true
-    });
-    return defer;
-  };
-  /**
-   * { function_description }
-   */
-
-
-  $.TextTarget.prototype.setUpListeners = function () {
-    var self = this;
-    jQuery('.toggle-alerts').click(function () {
-      if (jQuery(this).hasClass('on')) {
-        jQuery(this).html('Turn Alerts On');
-        jQuery(this).removeClass('on');
-        jQuery('.sr-alert').attr('aria-live', 'off');
-      } else {
-        jQuery(this).html('Turn Alerts Off');
-        jQuery(this).addClass('on');
-        jQuery('.sr-alert').attr('aria-live', 'polite');
-      }
-    }); // once the target has been loaded, the selector can be instantiated
-
-    $.subscribeEvent('targetLoaded', self.instance_id, function (_, element) {
-      // console.log("LOADING TARGET");
-      //annotation element gets data that may be needed later
-      self.element = element;
-      self.element.data('source_type', self.options.object_source);
-      self.element.data('source_type', 'text'); // finish setting up selectors
-
-      self.setUpDrawers(self.element[0]); // finish setting up viewers (which contain displays and editors)
-
-      self.setUpViewers(self.element[0]); // finish setting up extra plugins
-
-      self.setUpPlugins(self.element[0]); // finish setting up the storage containers
-
-      self.setUpStorage(self.element[0]);
-
-      if (!self.options.viewerOptions.readonly) {
-        self.setUpSelectors(self.element[0]);
-      }
-    });
-    $.subscribeEvent('editorShown', self.instance_id, function (_, editor, annotation) {
-      jQuery.each(self.plugins, function (_, plugin) {
-        if (typeof plugin.editorShown === "function") {
-          plugin.editorShown(editor, annotation);
-        }
-      });
-    });
-    $.subscribeEvent('displayShown', self.instance_id, function (_, display, annotations) {
-      jQuery.each(self.plugins, function (_, plugin) {
-        if (typeof plugin.displayShown === "function") {
-          plugin.displayShown(display, annotations);
-        }
-      });
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @param      {<type>}  element  The element
-   */
-
-
-  $.TextTarget.prototype.setUpSelectors = function (element) {
-    var self = this;
-    self.selectors = [];
-    jQuery.each($.selectors, function (_, selector) {
-      self.selectors.push(new selector(element, self.instance_id, {
-        'confirm': true
-      }));
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @param      {<type>}  element  The element
-   */
-
-
-  $.TextTarget.prototype.setUpDrawers = function (element) {
-    var self = this;
-    self.drawers = [];
-    jQuery.each($.drawers, function (_, drawer) {
-      self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
-    });
-  };
-
-  $.TextTarget.prototype.setUpViewers = function (element) {
-    var self = this;
-    self.viewers = [];
-    jQuery.each($.viewers, function (_, viewer) {
-      self.viewers.push(new viewer({
-        element: element,
-        template_urls: self.options.template_urls,
-        viewer_options: self.options.viewerOptions,
-        username: self.options.username,
-        user_id: self.options.user_id,
-        common_instructor_name: self.options.common_instructor_name,
-        instructors: self.options.instructors,
-        mediaType: self.media
-      }, self.instance_id));
-    });
-  };
-
-  $.TextTarget.prototype.setUpPlugins = function (element) {
-    var self = this;
-    self.plugins = [];
-    jQuery.each($.plugins, function (_, plugin) {
-      var optionsForPlugin;
-
-      try {
-        optionsForPlugin = jQuery.extend({
-          'slot': element
-        }, self.options, self.options[plugin.name]) || {
-          'slot': element
-        };
-      } catch (e) {
-        optionsForPlugin = {
-          'slot': element
-        };
-      }
-
-      self.plugins.push(new plugin(optionsForPlugin, self.instance_id));
-    });
-  };
-
-  $.TextTarget.prototype.setUpStorage = function (element, options) {
-    var self = this;
-    self.storage = [];
-    jQuery.each($.storage, function (idx, storage) {
-      var optionsForStorage;
-
-      try {
-        optionsForStorage = jQuery.extend({
-          'media': 'text'
-        }, self.options, self.options[storage.name]) || {};
-      } catch (e) {
-        optionsForStorage = {};
-      }
-
-      self.storage.push(new storage(optionsForStorage, self.instance_id));
-
-      if (self.options.viewerOptions.defaultTab === "mine") {
-        options = {
-          'username': self.options.username
-        };
-      } else if (self.options.viewerOptions.defaultTab === "instructor") {
-        options = {
-          'userid': self.options.instructors
-        };
-      } else {
-        var exclusion = [self.options.user_id].concat(self.options.instructors);
-        options = {
-          'exclude_userid': exclusion
-        };
-      }
-
-      self.storage[idx].onLoad(element, options);
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @class      ComponentEnable (name)
-   */
-
-
-  $.TextTarget.prototype.ComponentEnable = function () {
-    // Targets cannot technically be enabled/disabled, but 
-    // there might be cases in which the target needs to be hidden/shown
-    jQuery('#' + this.guid).show();
-  };
-  /**
-   * { function_description }
-   *
-   * @class      ComponentDisable (name)
-   */
-
-
-  $.TextTarget.prototype.ComponentDisable = function () {
-    jQuery('#') + this.guid.hide();
-  };
-  /**
-   * { function_description }
-   *
-   * @class      TargetSelectionMade (name)
-   */
-
-
-  $.TextTarget.prototype.TargetSelectionMade = function (range, event) {
-    var range = Array.isArray(range) ? range : [range];
-    var self = this;
-    var annotation = {
-      annotationText: [""],
-      ranges: range,
-      id: $.getUniqueId(),
-      exact: range.map(function (r) {
-        return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/    /g, '&nbsp;');
-      }),
-      media: "text",
-      totalReplies: 0,
-      creator: {
-        name: self.options.username,
-        id: self.options.user_id
-      }
-    };
-    jQuery.each(self.viewers, function (_, viewer) {
-      viewer.TargetSelectionMade(annotation, event);
-    }); //self.TargetAnnotationDraw(annotation);
-    // jQuery('.annotator-wrapper')[0].focus();
-    //$.publishEvent('ViewerEditorOpen', self.instance_id, [annotation]);
-  };
-  /**
-   * { function_description }
-   *
-   * @class      TargetAnnotationDraw (name)
-   */
-
-
-  $.TextTarget.prototype.TargetAnnotationDraw = function (annotation) {
-    var self = this;
-
-    if (Object.keys(annotation.ranges[0]).indexOf('parent') > -1) {
-      return;
-    }
-
-    jQuery.each(self.drawers, function (_, drawer) {
-      drawer.draw(annotation);
-    });
-    jQuery.each(self.viewers, function (_, viewer) {
-      if ($.exists(viewer.TargetAnnotationDraw)) {
-        viewer.TargetAnnotationDraw(annotation);
-      }
-    });
-    jQuery.each(self.plugins, function (_, plugin) {
-      if ($.exists(plugin.TargetAnnotationDraw)) {
-        plugin.TargetAnnotationDraw(annotation);
-      }
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @class      TargetAnnotationUndraw (name)
-   */
-
-
-  $.TextTarget.prototype.TargetAnnotationUndraw = function (annotation) {
-    var self = this;
-
-    if (annotation.media !== "Annotation") {
-      jQuery.each(self.drawers, function (_, drawer) {
-        drawer.undraw(annotation);
-      });
-    }
-  };
-  /**
-   * { function_description }
-   *
-   * @class      ViewerEditorOpen (name)
-   */
-
-
-  $.TextTarget.prototype.ViewerEditorOpen = function (event, annotation) {
-    return annotation;
-  };
-  /**
-   * { function_description }
-   *
-   * @class      ViewerEditorClose (name)
-   */
-
-
-  $.TextTarget.prototype.ViewerEditorClose = function (annotation, is_new_annotation, hit_cancel) {
-    var self = this; //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
-
-    if (hit_cancel) {
-      if (is_new_annotation) {
-        self.TargetAnnotationUndraw(annotation);
-      } // else, the annotation was already drawn, so don't touch it.
-
-    } else if (is_new_annotation) {
-      annotation = self.plugins.reduce(function (ann, plugin) {
-        return plugin.saving(ann);
-      }, annotation);
-      self.TargetAnnotationDraw(annotation);
-      jQuery('.sr-alert').html('');
-      jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
-      $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
-    } else {
-      jQuery.each(self.drawers, function (_, drawer) {
-        self.TargetAnnotationUndraw(annotation);
-        annotation = self.plugins.reduce(function (ann, plugin) {
-          return plugin.saving(ann);
-        }, annotation);
-        $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
-        jQuery('.sr-alert').html('');
-        jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
-        $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
-      });
-    }
-
-    jQuery.each(self.viewers, function (_, viewer) {
-      var timer = new Date();
-      viewer.ViewerEditorClose(annotation); // console.log("Finished: " + (new Date() - timer) + 'ms')
-    });
-    setTimeout(function () {
-      $.publishEvent('editorHidden', self.instance_id, []);
-    }, 50);
-    return annotation;
-  };
-  /**
-   * { function_description }
-   *
-   * @class      ViewerDisplayOpen (name)
-   */
-
-
-  $.TextTarget.prototype.ViewerDisplayOpen = function (event, annotations) {
-    var self = this;
-    jQuery.each(self.viewers, function (_, viewer) {
-      viewer.ViewerDisplayOpen(event, annotations);
-    });
-    return annotations;
-  };
-  /**
-   * { function_description }
-   *
-   * @class      ViewerDisplayClose (name)
-   */
-
-
-  $.TextTarget.prototype.ViewerDisplayClose = function (annotations) {
-    var self = this;
-    jQuery.each(self.viewers, function (_, viewer) {
-      viewer.ViewerDisplayClose(annotations);
-    });
-    return annotations;
-  };
-  /**
-   * { function_description }
-   *
-   * @class      StorageAnnotationSave (name)
-   */
-
-
-  $.TextTarget.prototype.StorageAnnotationSave = function (annotations, redraw) {
-    var self = this; // console.log(annotations, redraw);
-
-    jQuery.each(self.storage, function (_, store) {
-      store.StorageAnnotationSave(annotations, self.element, redraw);
-    });
-    jQuery.each(self.viewers, function (_, viewer) {
-      viewer.StorageAnnotationSave(annotations);
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @class      StorageAnnotationLoad (name)
-   */
-
-
-  $.TextTarget.prototype.StorageAnnotationLoad = function (annotations, converter, undrawOld) {
-    var self = this;
-    jQuery.each(self.viewers, function (_, viewer) {
-      if (typeof viewer.StorageAnnotationLoad === "function") {
-        viewer.StorageAnnotationLoad(annotations);
-      }
-    });
-
-    if (undrawOld) {
-      $.publishEvent('GetAnnotationsData', self.instance_id, [function (anns) {
-        anns.forEach(function (ann) {
-          self.TargetAnnotationUndraw(ann);
-        });
-      }]);
-    }
-
-    annotations.forEach(function (ann) {
-      var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
-      self.TargetAnnotationDraw(converted_ann);
-      $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @class      StorageAnnotationEdit (name)
-   */
-
-
-  $.TextTarget.prototype.StorageAnnotationEdit = function () {};
-  /**
-   * { function_description }
-   *
-   * @class      StorageAnnotationDelete (name)
-   */
-
-
-  $.TextTarget.prototype.StorageAnnotationDelete = function (annotation) {
-    var self = this;
-    jQuery.each(self.viewers, function (_, viewer) {
-      viewer.StorageAnnotationDelete(annotation);
-    });
-    jQuery.each(self.storage, function (_, store) {
-      store.StorageAnnotationDelete(annotation);
-    });
-  };
-  /**
-   * { function_description }
-   *
-   * @class      StorageAnnotationGetReplies (name)
-   */
-
-
-  $.TextTarget.prototype.StorageAnnotationSearch = function (search_options, callback, errfun) {
-    var self = this;
-    jQuery.each(self.storage, function (_, store) {
-      store.search(search_options, callback, errfun);
-    });
-  };
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * Should be listening for ways to select a text and then return an xpath 
- * object with the range that was selected.
- */
-var jQuery = __webpack_require__(0);
-
-var hrange = __webpack_require__(4);
-
-(function ($) {
-  $.MouseSelector = function (element, inst_id) {
-    var defaultOpts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    this.element = element;
-    this.instance_id = inst_id;
-    this.adder = null;
-    this.wrapperSelector = '.annotator-wrapper';
-    this.mustConfirm = !!defaultOpts.confirm;
-    this.init();
-  };
-
-  $.MouseSelector.prototype.init = function () {
-    var self = this;
-    self.setUpListeners();
-  };
-
-  $.MouseSelector.prototype.setUpListeners = function () {
-    var self = this;
-    this.element.addEventListener('mouseup', function (event) {
-      var selection = window.getSelection();
-      var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
-
-      self.onSelection(selectionRange, event);
-    });
-    document.addEventListener('keyup', function (e) {
-      var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
-
-      if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
-        var selection = window.getSelection();
-        var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
-
-        self.onSelection(selectionRange, event);
-      }
-    });
-  };
-
-  $.MouseSelector.prototype.onSelection = function (range, event) {
-    var self = this; //console.log('onSelection Ran: ', range, event);
-
-    if (range instanceof Range) {
-      //console.log('range is instance of Range', range.toString());
-      var result = self.shouldBeAnnotated(range);
-
-      if (result && (range.toString().length > 0 || range.cloneContents().querySelectorAll('img').length > 0)) {
-        if (self.mustConfirm) {
-          //console.log("Confirming...")
-          self.confirm(range, event);
-        } else {
-          //console.log("Sending TargetSelection to Hxighlighter");
-          //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
-          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(range, self.element, 'annotator-hl')], event]);
-        }
-      } else {
-        // send message to erase confirm button
-        //console.log('Either result is false or toString() returned 0')
-        self.hideConfirm();
-      }
-    }
-  };
-
-  $.MouseSelector.prototype.shouldBeAnnotated = function (range) {
-    var self = this;
-    var wrapper = self.element.querySelector(self.wrapperSelector);
-    var testingNode = range.commonAncestorContainer;
-
-    while (testingNode !== wrapper && testingNode !== null) {
-      testingNode = testingNode.parentNode;
-    }
-
-    return testingNode === wrapper;
-  };
-
-  $.MouseSelector.prototype.confirm = function (range, event) {
-    var self = this;
-    self.hideConfirm();
-
-    if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length == 0) {
-      self.interactionPoint = $.mouseFixedPosition(event); //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
-
-      self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event); //console.log("Should have loaded button to confirm annotation");
-    } else {
-      $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {
-        buttons: [],
-        time: 5
-      }]);
-    }
-  };
-
-  $.MouseSelector.prototype.hideConfirm = function () {
-    jQuery('.hx-confirm-button').remove();
-  };
-
-  $.MouseSelector.prototype.loadButton = function (range, iP, event) {
-    var self = this;
-
-    if (iP.top <= 48) {
-      iP.top = 49;
-    }
-
-    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
-    jQuery('body').append(confirmButtonTemplate);
-    jQuery('.hx-confirm-button button').click(function () {
-      $.publishEvent('drawTemp', self.instance_id, [[range]]);
-      $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event]);
-      jQuery('.hx-confirm-button').remove();
-    });
-  };
-
-  $.selectors.push($.MouseSelector);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
-
-(function ($) {
-  $.XPathDrawer = function (element, inst_id, hClass, options) {
-    this.element = element;
-    this.instance_id = inst_id;
-    this.h_class = (hClass + ' annotator-hl').trim();
-    this.init();
-    this.drawnAnnotations = [];
-    this.tempHighlights = [];
-    this.options = options || {};
-  };
-
-  $.XPathDrawer.prototype.init = function () {
-    var self = this; // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
-    //     highlightClass: (self.h_class + ' annotator-hl')
-    // });
-
-    jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function (event) {
-      $.pauseEvent(event);
-      var annotations = self.getAnnotationsFromElement(event); //console.log("MOUSEOVER", annotations);
-
-      Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
-    });
-    jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function (event) {
-      Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
-    });
-    jQuery(self.element).on('click', '.' + self.h_class.replace(' ', '.'), function (event) {
-      var annotations = self.getAnnotationsFromElement(event);
-      Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event, annotations]);
-    });
-    Hxighlighter.subscribeEvent('StorageAnnotationDelete', self.instance_id, function (_, annotation) {
-      self.undraw(annotation);
-    });
-    Hxighlighter.subscribeEvent('GetAnnotationsData', self.instance_id, function (_, callback) {
-      callback(self.getAnnotationsData());
-    });
-    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function (_, annotation_id, callback) {
-      callback(self.getSpecificAnnotationData(annotation_id));
-    });
-    Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function (_, annotation, color) {
-      if (annotation._local) {
-        jQuery.each(annotation._local.highlights, function (_, hl) {
-          setTimeout(function () {
-            jQuery(hl).css('background-color', color);
-          }, 250);
-        });
-      }
-    });
-    Hxighlighter.subscribeEvent('undrawAll', self.instance_id, function (_, callBack) {
-      var annotations = self.getAnnotationsData();
-      annotations.forEach(function (ann) {
-        self.undraw(ann);
-      });
-      callBack(annotations);
-    });
-    Hxighlighter.subscribeEvent('drawList', self.instance_id, function (_, annotations, callBack) {
-      annotations.forEach(function (ann) {
-        self.draw(ann);
-      });
-      callBack(annotations);
-    });
-    Hxighlighter.subscribeEvent('drawTemp', self.instance_id, function (_, range, callBack) {
-      var textNodes = hrange.getTextNodesFromAnnotationRanges(range, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
-
-      var spans = [];
-      textNodes.forEach(function (node) {
-        //console.log(node, jQuery(node));
-        jQuery(node).wrap('<span class="temp-ann ' + self.h_class + '"></span>');
-        spans.push(jQuery(node).parent()[0]);
-      });
-      self.tempHighlights = self.tempHighlights.concat(spans);
-    });
-  };
-
-  $.XPathDrawer.prototype.draw = function (annotation) {
-    var self = this;
-
-    if (annotation.media.toLowerCase() !== "text") {
-      return;
-    } // console.log(self.options, annotation);
-    // console.log("Annotation Being Drawn", annotation);
-    // checks to see if annotation has already been drawn, if so it undraws it
-
-
-    var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
-
-    if (existing_drawn_annotation) {
-      self.undraw(existing_drawn_annotation);
-    }
-
-    self.tempHighlights.forEach(function (hl) {
-      jQuery(hl).contents().unwrap();
-    }); // the process for drawing is divided into 4 parts
-    // 1. Retrieve all discrete text nodes associated with annotation
-
-    var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
-
-    var spans = [];
-    var otherLabel = '';
-
-    if (self.options.user_id === annotation.creator.id) {
-      otherLabel += ' annotation-mine';
-    }
-
-    if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
-      otherLabel += ' annotation-instructor';
-    }
-
-    var labelIt = true;
-    textNodes.forEach(function (node) {
-      //console.log(node, jQuery(node));
-      var node_id = "";
-
-      if (labelIt) {
-        labelIt = false;
-        node_id = ' id="first-node-' + annotation.id + '" ';
-      }
-
-      jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
-      spans.push(jQuery(node).parent()[0]);
-    }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
-
-    annotation['_local'] = {
-      'highlights': spans
-    }; // 3. Store in each span tag the value of the annotation post-saving _local.highlights
-
-    spans.forEach(function (span) {
-      jQuery(span).data('annotation', annotation);
-    }); //console.log(annotation);
-
-    $.publishEvent('annotationDrawn', self.instance_id, [annotation]); // the annotation is then saved to the current list
-
-    self.drawnAnnotations.push(annotation); // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
-    // jQuery.each(annotation._local.highlights, function(_, high) {
-    //     jQuery(high).on('mouseover', function() {
-    //          $.publishEvent('toggleViewer')
-    //     });
-    // });
-  };
-
-  $.XPathDrawer.prototype.undraw = function (annotation) {
-    var self = this; //this.highlighter.undraw(annotation);
-
-    if (annotation._local) {
-      //console.log('Undrawing...', annotation._local.highlights)
-      annotation._local.highlights.forEach(function (hl) {
-        jQuery(hl).contents().unwrap();
-      });
-
-      annotation._local.highlights = [];
-    }
-
-    self.tempHighlights.forEach(function (hl) {
-      jQuery(hl).contents().unwrap();
-    });
-    self.drawnAnnotations = self.drawnAnnotations.filter(function (ann) {
-      if (ann.id !== annotation.id) {
-        return ann;
-      }
-    }); //console.log(self.drawnAnnotations);
-
-    $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
-  };
-
-  $.XPathDrawer.prototype.redraw = function (annotation) {
-    var self = this;
-    self.undraw(annotation);
-    self.draw(annotation); //this.highlighter.redraw(annotation);
-    //$.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
-  };
-
-  $.XPathDrawer.prototype.getAnnotationsFromElement = function (event) {
-    return jQuery(event.target).parents('.annotator-hl').addBack().map(function (_, elem) {
-      return jQuery(elem).data('annotation');
-    }).toArray().sort(function (a, b) {
-      return a.created - b.created;
-    });
-  }; // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
-
-
-  $.XPathDrawer.prototype.getUnique = function (arr, comp) {
-    var unique = arr.map(function (e) {
-      return e[comp];
-    }) // store the keys of the unique objects
-    .map(function (e, i, _final) {
-      return _final.indexOf(e) === i && i;
-    }) // eliminate the dead keys & store unique objects
-    .filter(function (e) {
-      return arr[e];
-    }).map(function (e) {
-      return arr[e];
-    });
-    return unique;
-  };
-
-  $.XPathDrawer.prototype.getAnnotationsData = function () {
-    var self = this;
-    var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function (_, elem) {
-      return jQuery(elem).data('annotation');
-    }).toArray(), 'id');
-    all.sort(function (a, b) {
-      return b - a;
-    }); //console.log(all);
-
-    return all;
-  };
-
-  $.XPathDrawer.prototype.getSpecificAnnotationData = function (annotation_id) {
-    var self = this;
-    var currentAnnotations = self.getAnnotationsData();
-    var foundAnnotation = currentAnnotations.find(function (ann) {
-      if (ann.id === annotation_id) {
-        return ann;
-      }
-    });
-    return foundAnnotation;
-  };
-
-  $.drawers.push($.XPathDrawer);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 55 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56);
-/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
-/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__);
-/**
- * 
- */
-var annotator = annotator ? annotator : __webpack_require__(7);
-
-
-
-
-(function ($) {
-  $.FloatingViewer = function (options, inst_id) {
-    // sets default options
-    var defaultOptions = {
-      // set up template names that will be pulled
-      TEMPLATENAMES: ["editor", "viewer"],
-      TEMPLATES: {
-        editor: __webpack_require__(57),
-        viewer: __webpack_require__(58)
-      },
-      template_suffix: "floating",
-      template_urls: ""
-    };
-    this.options = jQuery.extend({}, defaultOptions, options); // console.log("Floating options", this.options);
-
-    this.instance_id = inst_id;
-    this.annotation_tool = {
-      interactionPoint: null,
-      editing: false,
-      updating: false,
-      editor: null,
-      viewer: null
-    };
-    this.element = jQuery(this.options.element);
-    this.hideTimer = null;
-    this.init();
-  };
-
-  $.FloatingViewer.prototype.init = function () {
-    var self = this;
-    self.setUpTemplates(self.options.template_suffix); // make sure the viewer doesn't disappear when the person moves their mouse over it
-
-    self.element.on('mouseover', '.annotation-viewer', function (event1) {
-      clearTimeout(self.hideTimer);
-    }); // once they leave the viewer hide it
-
-    self.element.on('mouseleave', '.annotation-viewer', function (event1) {
-      if (self.annotation_tool.isStatic) {
-        return;
-      }
-
-      clearTimeout(self.hideTimer);
-      self.ViewerDisplayClose();
-    });
-    Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
-      clearTimeout(self.hideTimer);
-
-      try {
-        self.annotation_tool.viewer.addClass('static');
-        self.annotation_tool.isStatic = true;
-      } catch (e) {
-        self.ViewerDisplayOpen(event1, annotations);
-        self.annotation_tool.viewer.addClass('static');
-        self.annotation_tool.isStatic = true;
-      }
-    });
-    jQuery('body').on('click', '.annotation-username', function (e) {
-      $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
-    });
-    jQuery('body').on('click', '.annotation-tag', function (e) {
-      $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
-    });
-    this.setUpPinAndMove();
-  };
-
-  $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
-    var self = this;
-    var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName) {
-      if (templateName in self.options.TEMPLATES) {
-        return;
-      }
-
-      var options = {
-        url: self.options.template_urls + templateName + '-' + suffix + '.html',
-        type: "GET",
-        contentType: "charset=utf-8",
-        success: function success(data) {
-          var template = _.template(data);
-
-          self.options.TEMPLATES[templateName] = template;
-        },
-        async: true
-      };
-      return jQuery.ajax(options);
-    });
-    jQuery.when.apply(jQuery, deferreds).done(function () {
-      self.annotation_tool.editorTemplate = self.options.TEMPLATES.editor({
-        editorid: self.instance_id.replace(/\W/g, '-')
-      });
-    });
-  };
-
-  $.FloatingViewer.prototype.TargetSelectionMade = function (annotation, event) {
-    // if (event && event instanceof MouseEvent) {
-    this.ViewerEditorOpen(event, annotation, false, $.mouseFixedPosition(event, annotation)); // }
-  };
-
-  $.FloatingViewer.prototype.ViewerEditorOpen = function (event, annotation, updating, interactionPoint) {
-    var self = this;
-
-    if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
-      // there's already an open editor window for this instance so don't do anything
-      return;
-    }
-
-    if (self.annotation_tool.viewer) {
-      jQuery('.annotation-viewer').remove();
-      delete self.annotation_tool.viewer;
-      self.annotation_tool.isStatic = false;
-      self.annotation_tool.updating = false;
-      self.annotation_tool.editing = false;
-    }
-
-    jQuery('.edit').prop('disabled', true); // set editing mode
-
-    self.annotation_tool.editing = true;
-    self.annotation_tool.updating = updating; // actually set up and draw the Editor
-
-    var wrapperElement = self.element.find('.annotator-wrapper');
-    wrapperElement.after(self.annotation_tool.editorTemplate); // save the element to call upon later
-
-    self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
-    var intPt = interactionPoint; // situate it on its proper location
-
-    self.annotation_tool.editor.css({
-      'top': intPt.top - jQuery(window).scrollTop(),
-      'left': intPt.left
-    }); // closes the editor tool and does not save annotation
-
-    self.annotation_tool.editor.find('.cancel').click(function () {
-      $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
-    }); // closes the editor and does save annotations
-
-    self.annotation_tool.editor.find('.save').click(function () {
-      var timer = new Date();
-      var text = self.annotation_tool.editor.find('#annotation-text-field').val();
-
-      if (updating) {
-        annotation.annotationText.pop();
-      }
-
-      annotation.annotationText.push(text);
-      var timer2 = new Date();
-      $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
-      var end = new Date(); // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
-    });
-    self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
-    setTimeout(function () {
-      self.annotation_tool.editor.find('#annotation-text-field')[0].focus();
-    }, 250);
-    self.checkOrientation(self.annotation_tool.editor);
-    $.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
-  };
-
-  $.FloatingViewer.prototype.ViewerEditorClose = function (annotation, redraw, should_erase) {
-    var self = this;
-    var timer = new Date();
-    jQuery('.edit').prop('disabled', false);
-    jQuery('.note-link-popover').remove();
-
-    if (self.annotation_tool.editor) {
-      self.annotation_tool.editor.remove();
-    }
-
-    delete self.annotation_tool.editor;
-    self.annotation_tool.editing = false;
-    self.annotation_tool.updating = false; //$.publishEvent('editorHidden', self.instance_id, []);
-    // jQuery('body').css('overflow-y', 'scroll');
-  };
-
-  $.FloatingViewer.prototype.ViewerDisplayOpen = function (event, anns) {
-    var self = this;
-    var annotations = anns.reverse(); // if the timer is set for the tool to be hidden, this intercepts it
-
-    if (self.hideTimer !== undefined) {
-      clearTimeout(self.hideTimer);
-    }
-
-    if (jQuery('.annotation-editor').is(':visible') || jQuery('.hx-confirm-button').is(':visible') || self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer)) {
-      // there's already an open editor window for this instance so don't do anything
-      return;
-    }
-
-    self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
-      'viewerid': self.instance_id.replace(/\W/g, '-'),
-      'annotations': annotations,
-      'instructor_ids': self.options.instructors,
-      'common_name': self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ""
-    });
-
-    if (self.options.viewer_options.readonly) {
-      self.annotation_tool.viewerTemplate = self.annotation_tool.viewerTemplate.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '');
-    } // add the viewer to the DOM
-
-
-    self.element.find('.annotator-wrapper').after(self.annotation_tool.viewerTemplate); // collect the object for manipulation and coordinates of where it should appear
-
-    if (self.annotation_tool.viewer) {
-      self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer;
-    }
-
-    self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
-    var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
-    var newLeft = annotator.util.mousePosition(event).left + 30;
-    self.annotation_tool.viewer.css({
-      'top': newTop,
-      'left': newLeft
-    });
-    self.annotation_tool.viewer.data('annotations', annotations);
-    self.annotation_tool.viewer.find('.cancel').click(function (event1) {
-      self.annotation_tool.isStatic = false;
-      self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer; // jQuery('body').css('overflow-y', 'scroll');
-    });
-    self.annotation_tool.viewer.find('.edit').click(function (event1) {
-      var annotation_id = jQuery(this).attr('id').replace('edit-', '');
-      var filtered_annotation = annotations.find(function (ann) {
-        if (ann.id === annotation_id) return ann;
-      });
-      self.ViewerEditorOpen(event1, filtered_annotation, true, {
-        top: parseInt(self.annotation_tool.viewer.css('top'), 10),
-        left: parseInt(self.annotation_tool.viewer.css('left'), 10)
-      }); //StorageAnnotationSave
-    });
-    self.annotation_tool.viewer.find('.delete').confirm({
-      title: 'Delete Annotation?',
-      content: 'Would you like to delete your annotation? This is permanent.',
-      buttons: {
-        confirm: function confirm() {
-          var annotation_id = this.$target[0].id.replace('delete-', '');
-          var filtered_annotation = annotations.find(function (ann) {
-            if (ann.id === annotation_id) return ann;
-          });
-          $.publishEvent('StorageAnnotationDelete', self.instance_id, [filtered_annotation]);
-          self.ViewerDisplayClose();
-
-          if (self.annotation_tool.viewer) {
-            jQuery('.annotation-viewer').remove();
-            delete self.annotation_tool.viewer;
-            self.annotation_tool.isStatic = false;
-            self.annotation_tool.updating = false;
-            self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
-          }
-        },
-        cancel: function cancel() {}
-      }
-    }); // console.log(annotations);        
-
-    $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
-    self.checkOrientation(self.annotation_tool.viewer);
-  };
-
-  $.FloatingViewer.prototype.ViewerDisplayClose = function (annotations) {
-    var self = this;
-
-    if (self.annotation_tool.isStatic) {
-      return;
-    }
-
-    clearTimeout(self.hideTimer);
-    self.hideTimer = setTimeout(function () {
-      if (self.hideTimer) {
-        $.publishEvent('displayHidden', self.instance_id, []);
-
-        if (self.annotation_tool.viewer) {
-          self.annotation_tool.viewer.remove();
-          delete self.annotation_tool.viewer;
-        }
-
-        self.annotation_tool.isStatic = false;
-        self.annotation_tool.updating = false;
-        self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
-      }
-    }, 500);
-  };
-
-  $.FloatingViewer.prototype.StorageAnnotationSave = function (annotations) {};
-
-  $.FloatingViewer.prototype.StorageAnnotationLoad = function (first_argument) {
-    var self = this;
-
-    if (self.annotation_tool.viewer) {
-      self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer;
-    }
-
-    self.annotation_tool.isStatic = false;
-    self.annotation_tool.updating = false;
-    self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
-  };
-
-  $.FloatingViewer.prototype.StorageAnnotationDelete = function (annotation) {
-    var self = this;
-    jQuery('.annotation-viewer').remove();
-    delete self.annotation_tool.viewer;
-    self.annotation_tool.isStatic = false;
-    self.annotation_tool.updating = false;
-    self.annotation_tool.editing = false;
-  };
-
-  $.FloatingViewer.prototype.setUpPinAndMove = function () {
-    var self = this; // keeps track of when mouse button is pressed
-
-    jQuery('body').on('mousedown', function (event) {
-      self.buttonDown = true;
-    }); // keeps track of when mouse button is let go
-
-    jQuery('body').on('mouseup', function (event) {
-      self.buttonDown = false;
-    }); // handles moving the editor by clicking and dragging
-
-    jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event) {
-      self.prepareToMove(true, event);
-    }); // handles moving the viewer by clicking and dragging
-
-    jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event) {
-      self.prepareToMove(false, event);
-    });
-    jQuery('body').on('mousemove', function (event) {
-      self.moving(event);
-    });
-    jQuery('body').on('mouseup', function (event) {
-      self.finishedMoving(event);
-    }); // jQuery('body').on('mouseover', '.annotation-editor', function(event) {
-    //     jQuery('body').css('overflow-y', 'hidden');
-    // });
-    // jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
-    //     jQuery('body').css('overflow-y', 'scroll');
-    // });
-    // jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
-    //     jQuery('body').css('overflow-y', 'hidden');
-    // });
-    // jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
-    //     jQuery('body').css('overflow-y', 'scroll');
-    // });
-
-    jQuery('body').on('mouseleave', function (event) {
-      self.finishedMoving(event);
-    });
-  };
-
-  $.FloatingViewer.prototype.prepareToMove = function (isEditor, event) {
-    var self = this;
-    self.itemMoving = isEditor ? self.annotation_tool.editor : self.annotation_tool.viewer;
-
-    if (self.itemMoving) {
-      $.pauseEvent(event); //turns on moving mode
-
-      self.itemMoving.moving = true; // set initial mouse position offset by where on the editor the user clicked
-
-      var move = annotator.util.mousePosition(event);
-      var editorTop = parseInt(self.itemMoving.css('top'), 10);
-      var editorLeft = parseInt(self.itemMoving.css('left'), 10);
-      self.itemMoving.offsetTopBy = move.top - editorTop;
-      self.itemMoving.offsetLeftBy = move.left - editorLeft;
-    }
-  };
-
-  $.FloatingViewer.prototype.moving = function (event) {
-    var self = this;
-
-    if (self.itemMoving && self.itemMoving.moving) {
-      $.pauseEvent(event); // gets the userlocation (where they've dragged to)
-
-      var move = annotator.util.mousePosition(event);
-      var newTop = move.top - self.itemMoving.offsetTopBy;
-      var newLeft = move.left - self.itemMoving.offsetLeftBy; // var borderBox = self.element[0].getBoundingClientRect();
-
-      if (newTop < 0) {
-        newTop = 0;
-      }
-
-      if (newLeft < 0) {
-        newLeft = 0;
-      }
-
-      if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
-        newTop = window.innerHeight - self.itemMoving.outerHeight();
-      }
-
-      if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
-        newLeft = window.innerWidth - self.itemMoving.outerWidth();
-      }
-      /* TODO: Set boundaries for far right and far down */
-      // sets the editor to that location (fixing offset)
-
-
-      self.itemMoving.css({
-        top: newTop,
-        left: newLeft
-      });
-    } else if (self.buttonDown && self.annotation_tool.viewer && !self.annotation_tool.viewer.hasClass('static')) {
-      self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer;
-    }
-  };
-
-  $.FloatingViewer.prototype.finishedMoving = function (event) {
-    var self = this;
-
-    if (self.itemMoving) {
-      $.pauseEvent(event); //turns on moving mode
-
-      self.itemMoving.moving = false;
-      var move = annotator.util.mousePosition(event);
-      self.annotation_tool.interactionPoint = {
-        top: move.top - self.itemMoving.offsetTopBy,
-        left: move.left - self.itemMoving.offsetLeftBy
-      };
-    }
-  };
-
-  $.FloatingViewer.prototype.checkOrientation = function (viewerElement) {
-    var self = this;
-    var newTop = parseInt(jQuery(viewerElement).css('top'), 10);
-    var newLeft = parseInt(jQuery(viewerElement).css('left'), 10);
-    var elWidth = parseInt(jQuery(viewerElement).outerWidth());
-    var elHeight = parseInt(jQuery(viewerElement).outerHeight());
-
-    if (newTop < 0) {
-      newTop = 0;
-    }
-
-    if (newLeft < 0) {
-      newLeft = 0;
-    }
-
-    if (newTop + elHeight > window.innerHeight) {
-      newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
-    }
-
-    if (newLeft + elWidth > window.innerWidth) {
-      newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
-    }
-
-    jQuery(viewerElement).css('top', newTop);
-    jQuery(viewerElement).css('left', newLeft);
-  };
-
-  $.viewers.push($.FloatingViewer);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports) {
-
-module.exports = function(obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<div class="annotation-editor" id="annotation-editor-' +
-((__t = ( editorid )) == null ? '' : __t) +
-'">\n    <nav class=\'annotation-editor-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close"><i class="fas fa-times-circle"></i></button>\n    </nav>\n    <textarea id="annotation-text-field"></textarea>\n    <div class="plugin-area">\n    </div>\n    <!-- <input type="text" id="annotation-tags-field" placeholder="Add tags..." /> -->\n    <button tabindex="0" class="btn btn-primary save action-button">Save</button>\n    <button tabindex="0" class="btn btn-default cancel action-button">Cancel</button>\n</div>\n';
-
-}
-return __p
-};
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-__p += '<div class="annotation-viewer" id="annotation-viewer-' +
-((__t = ( viewerid )) == null ? '' : __t) +
-'">\n    <nav class=\'annotation-viewer-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close Viewer" tile="Close Viewer"><i class="fas fa-times-circle"></i></button>\n    </nav>\n    <div class="plugin-area-top">\n    </div>\n    <div class="annotation-text-field">\n        ';
- _.each(annotations, function(ann){ ;
-__p += '\n            <div class="ann-item item-' +
-((__t = ( ann.id )) == null ? '' : __t) +
-' floating ';
- if (instructor_ids.indexOf(ann.creator.id) > -1) {;
-__p += 'inst';
-};
-__p += '" id="annotation-' +
-((__t = ( ann.id )) == null ? '' : __t) +
-'">\n                <div class="annotation-username">';
- if (instructor_ids.indexOf(ann.creator.id) > -1 && common_name !== "") { print(common_name);;
-__p += '&nbsp;<span class="fas fa-certificate-cap"></span>';
-} else {print(ann.creator.name);} ;
-__p += '</div>\n                <div class="annotation-date" title="' +
-((__t = ( ann.created )) == null ? '' : __t) +
-'">';
- if (ann.created){print(jQuery.timeago(ann.created));} else {print(jQuery.timeago(new Date()))} ;
-__p += '</div>\n                <button class="edit" id="edit-' +
-((__t = ( ann.id )) == null ? '' : __t) +
-'" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>\n                <button class="delete" id="delete-' +
-((__t = ( ann.id )) == null ? '' : __t) +
-'" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>\n                <div class="annotation-quote">' +
-((__t = ( ann.exact )) == null ? '' : __t) +
-'</div>\n                <div class="annotation-text">' +
-((__t = ( ann.annotationText )) == null ? '' : __t) +
-'</div>\n                ';
- if (ann.tags && ann.tags.length > 0) { ;
-__p += '\n                    <div class="annotation-tags">\n                        Tags: \n                        \n                        ';
- _.each(ann.tags, function(tag){ ;
-__p += '\n                            <div class="annotation-tag">' +
-((__t = ( tag )) == null ? '' : __t) +
-'</div>\n                        ';
- }); ;
-__p += '\n                    </div>\n                ';
- } ;
-__p += '\n                <div class="plugin-area-bottom">\n                </div>\n            </div>\n        ';
- }); ;
-__p += '\n    </div>\n</div>\n';
-
-}
-return __p
-};
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- *  InstructionPanel Annotations Plugin
- *  
- *
- */
-//uncomment to add css file
-__webpack_require__(60);
-
-(function ($) {
-  /**
-   * @constructor
-   * @params {Object} options - specific options for this plugin
-   */
-  $.InstructionPanel = function (options, instanceID) {
-    this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID; // console.log("INSTRUCTION PANEL CREATED");
-
-    this.init();
-    return this;
-  };
-  /**
-   * Initializes instance
-   */
-
-
-  $.InstructionPanel.prototype.init = function () {
-    var self = this;
-    self.setUpInstructions();
-  };
-
-  $.InstructionPanel.prototype.setUpInstructions = function () {
-    var self = this;
-
-    if (!self.options.instructions || self.options.instructions.length == 0) {
-      return;
-    } // console.log(self.options.instructions, typeof(self.options.instructions));
-
-
-    var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span href="#" class="toggle-instructions" role="button" data-toggle="collapse" data-target=".instructions-body" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse in" aria-expanded="true" aria-live="polite" id="annotation-instructions">' + self.options.instructions + '</section></div>';
-    jQuery(self.options.slot).prepend(container); // toggles the label for toggling instructions
-
-    var inst_area = jQuery(self.options.slot).find('.toggle-instructions');
-    inst_area.click(function () {
-      if (inst_area.html() == "Collapse Instructions") {
-        inst_area.html('Expand Instructions');
-      } else {
-        inst_area.html('Collapse Instructions');
-      }
-    });
-  };
-
-  $.InstructionPanel.prototype.saving = function (annotation) {
-    return annotation;
-  };
-
-  Object.defineProperty($.InstructionPanel, 'name', {
-    value: "InstructionPanel"
-  });
-  $.plugins.push($.InstructionPanel);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- *  FontResize Annotations Plugin
- *  
- *
- */
-__webpack_require__(62);
-
-(function ($) {
-  /**
-   * @constructor
-   * @params {Object} options - specific options for this plugin
-   */
-  $.FontResize = function (options, instanceID) {
-    this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID;
-    this.toggleTextSize(0);
-    this.init();
-    return this;
-  };
-  /**
-   * Initializes instance
-   */
-
-
-  $.FontResize.prototype.init = function () {
-    var self = this;
-    self.setUpButtons();
-  };
-
-  $.FontResize.prototype.setUpButtons = function () {
-    var self = this;
-    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label">(+0)</span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
-    jQuery(self.options.slot).find('.annotations-text-size-plus').click(function () {
-      self.toggleTextSize(1);
-    });
-    jQuery(self.options.slot).find('.annotations-text-size-minus').click(function () {
-      self.toggleTextSize(-1);
-    });
-  };
-
-  $.FontResize.prototype.saving = function (annotation) {
-    return annotation;
-  };
-
-  $.FontResize.prototype.toggleTextSize = function (step) {
-    var self = this;
-    step = isNaN(Number(step)) ? 0 : Number(step);
-    var $content = jQuery(self.options.slot).find('.annotator-wrapper');
-    var $label = jQuery("#annotations-text-size-label");
-    var nodes = [],
-        curnode,
-        stylesize,
-        styleunit,
-        computed;
-    var minsize = 8;
-    var sizediff = 0;
-
-    if (typeof this.defaultFontSize === "undefined") {
-      this.defaultFontSize = 14;
-    }
-
-    if (typeof this.targetFontSize === "undefined") {
-      this.targetFontSize = this.defaultFontSize;
-    }
-
-    this.targetFontSize += step;
-
-    if (this.targetFontSize < minsize) {
-      this.targetFontSize = minsize;
-    }
-
-    sizediff = this.targetFontSize - this.defaultFontSize;
-
-    if (sizediff === 0) {
-      $label.html("(+0)");
-      $content.css('fontSize', '');
-    } else {
-      $label.html("(" + (sizediff > 0 ? "+" + sizediff : sizediff) + ")");
-      $content.css('fontSize', String(this.targetFontSize) + "px");
-      nodes.push($content[0]);
-    } // walk the dom and find custom fontStyle declarations and adust as necessary
-    //console.log("updating font size to: ", this.targetFontSize, "step:", step);
-
-
-    while (nodes.length > 0) {
-      curnode = nodes.pop(); // handle case where a <font> is embedded (deprecated tag... but still out there in the wild)
-
-      if (curnode.tagName.toLowerCase() == 'font') {
-        computed = window.getComputedStyle(curnode);
-        curnode.style.fontSize = computed['font-size'];
-        curnode.size = "";
-      } // handle case where a class like "msoNormal" from an embedded stylesheet has applied a font size
-
-
-      if (curnode != $content[0] && curnode.className != "") {
-        curnode.style.fontSize = "inherit";
-      } // handle case with an inline style fontSize (only adjust absolute fontSize values)
-
-
-      stylesize = parseInt(curnode.style.fontSize, 10);
-
-      if (!isNaN(stylesize)) {
-        styleunit = curnode.style.fontSize.replace(stylesize, '');
-        stylesize += step;
-        stylesize = stylesize < minsize ? minsize : stylesize;
-
-        if (styleunit.indexOf("px") !== -1 || styleunit.indexOf("pt") !== -1) {
-          curnode.style.fontSize = stylesize + styleunit;
-        }
-      }
-
-      for (var i = curnode.children.length; i > 0; i--) {
-        nodes.push(curnode.children[i - 1]);
-      }
-    }
-  };
-
-  Object.defineProperty($.FontResize, 'name', {
-    value: "FontResize"
-  });
-  $.plugins.push($.FontResize);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(4);
-
-(function ($) {
-  $.KeyboardSelector = function (element, inst_id) {
-    this.element = element;
-
-    if (!jQuery(element).hasClass('annotator-wrapper')) {
-      this.element = jQuery(element).find('.annotator-wrapper');
-    }
-
-    this.instance_id = inst_id;
-    this.delimiter_list = ['*', '+', '#', '^'];
-    this.keyMaps = {
-      'BACKSPACE': 8,
-      'TAB': 9,
-      'ENTER': 13,
-      'SHIFT': 16,
-      'CTRL': 17,
-      'ALT': 18,
-      'ESC': 27,
-      'SPACE': 32,
-      'LEFT': 37,
-      'UP': 38,
-      'RIGHT': 39,
-      'DOWN': 40,
-      'DELETE': 46,
-      'MULTIPLY': 106,
-      'ADD': 107,
-      'PIPE': 220,
-      '*': 56,
-      '+': 187,
-      'HOME': 36,
-      'END': 35
-    };
-    this.init();
-  };
-
-  $.KeyboardSelector.prototype.init = function () {
-    var self = this;
-    this.delimiter = this.checkDelimiter(self.element);
-
-    if (!this.delimiter) {//console.log('Error in delimiter...no suitable delimiter found!');
-    }
-
-    this.start = undefined;
-    this.setUpButton();
-  };
-
-  $.KeyboardSelector.prototype.checkDelimiter = function (element) {
-    var textSearch = jQuery(element).text();
-
-    for (var i = 0; i < this.delimiter_list.length; i++) {
-      var testDelimiter = this.delimiter_list[i];
-
-      if (textSearch.indexOf(testDelimiter) == -1) {
-        return testDelimiter;
-      }
-    }
-
-    return undefined;
-  };
-
-  $.KeyboardSelector.prototype.setUpButton = function () {
-    var self = this;
-    jQuery(document).on('keydown', function (event) {
-      if (event.key == '1' && (event.altKey || event.ctrlKey) || event.key == '\'' && (event.altKey || event.ctrlKey)) {
-        event.preventDefault(); //move this to external button
-
-        if (!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')) {
-          self.turnSelectionModeOn();
-        }
-
-        return false;
-      } else if (event.key == 'Escape') {
-        //console.log("hello");
-        self.turnSelectionModeOff(); // } else if (event.key == ' ') {
-        //     event.preventDefault();
-        //     return false;
-      }
-
-      if (event.key == '2' && (event.altKey || event.ctrlKey)) {
-        event.preventDefault();
-        var currentInst = jQuery('.sr-alert').html();
-
-        if (currentInst.trim() === "") {
-          currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
-        }
-
-        jQuery('.sr-alert').html('');
-        setTimeout(function () {
-          jQuery('.sr-alert').html(currentInst);
-        }, 250);
-      }
-
-      if (event.key == '3' && (event.altKey || event.ctrlKey)) {
-        var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
-        var newVal = currVal == "off" ? 'assertive' : 'off';
-        var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-
-        if (newVal == "off") {
-          jQuery('.sr-real-alert').html(newAlert);
-          setTimeout(function () {
-            jQuery('#hx-sr-notifications').attr('aria-live', newVal);
-            jQuery('.sr-real-alert').html('');
-          }, 500);
-          var currVal = jQuery('.sr-alert').html();
-          jQuery('.sr-alert').html('');
-          jQuery('.sr-alert').data('old', currVal);
-        } else {
-          jQuery('.sr-alert').html(jQuery('.sr-alert').data('old'));
-          jQuery('#hx-sr-notifications').attr('aria-live', newVal);
-          jQuery('.sr-real-alert').html(newAlert);
-        }
-
-        event.preventDefault();
-      }
-    });
-    jQuery(document).on('keyup', '*[role="button"]', function (evt) {
-      if (evt.key == 'Enter' || evt.key == ' ') {
-        jQuery(evt.currentTarget).click();
-        return $.pauseEvent(evt);
-        ;
-      }
-    }); // var slot = self.element;
-    // if (!self.element.hasClass('annotation-slot')) {
-    //     slot = self.element.find('.annotation-slot');
-    // }
-    // if (slot.length === 0) {
-    //     slot = self.element.closest('.annotation-slot');
-    // }
-    // jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
-
-    jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function (evt) {
-      jQuery('#key-help').toggleClass('sr-only');
-      jQuery(this).toggleClass('selected');
-      jQuery(self.element).closest('main').animate({
-        scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
-      }); // if (jQuery(this).hasClass('selection-mode-on')) {
-      // self.turnSelectionModeOff();
-      //jQuery(this).removeClass('selection-mode-on');
-      // } else {
-      // self.turnSelectionModeOn();
-      //jQuery(this).addClass('selection-mode-on');
-      // }
-    });
-    jQuery(document).on('click', 'button[class*="make-annotation-button"]', function (evt) {
-      if (jQuery(this).hasClass('selection-mode-on')) {
-        self.turnSelectionModeOff();
-        jQuery(this).removeClass('selection-mode-on');
-      } else {
-        self.turnSelectionModeOn();
-        jQuery(this).addClass('selection-mode-on');
-      }
-    });
-    $.subscribeEvent('wysiwygOpened', self.instance_id, function (e) {
-      if (self.currentSelection) {
-        var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
-        jQuery('.note-editable.card-block').attr('aria-label', 'The quote you have selected is: <em>' + ser.text.exact + '</em>. You are now in a text box. Add your annotation.');
-      }
-    });
-    $.subscribeEvent('focusOnContext', self.instance_id, function (_, ann) {
-      self.addMarkers(ann.ranges);
-    });
-  };
-
-  $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
-    this.saveHTML = this.element.innerHTML;
-    var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
-
-    if (!toggleButton.hasClass('should-show')) {
-      toggleButton.click();
-    }
-
-    if (window.navigator.platform.indexOf('Mac') !== -1) {
-      jQuery('.sr-alert').html('Enter the text box until editing text (usually VoiceOver Keys + Down Arrow) then move around using arrow keys without VoiceOver keys held down.');
-    }
-
-    jQuery(this.element).attr('contenteditable', 'true');
-    jQuery(this.element).attr('role', 'textbox');
-    jQuery(this.element).attr('tabindex', "0");
-    jQuery(this.element).attr('aria-label', 'You are now in the text to be annotated. Mark selection with asterisks.');
-    jQuery(this.element).attr('aria-multiline', 'true');
-    jQuery(this.element).attr('accesskey', 't');
-    jQuery('.hx-selector-img').remove();
-    jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
-    jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
-    this.start = undefined;
-    this.currentSelection = undefined;
-    this.element.innerHTML = this.saveHTML;
-    this.element.focus();
-  };
-
-  $.KeyboardSelector.prototype.turnSelectionModeOff = function () {
-    var self = this;
-    var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
-
-    if (toggleButton.hasClass('should-show')) {
-      toggleButton.click();
-    }
-
-    jQuery(this.element).off('keydown');
-    jQuery(this.element).off('keyup');
-    jQuery(this.element).attr('contenteditable', 'false');
-    jQuery(this.element).attr('role', '');
-    jQuery(this.element).attr('tabindex', '');
-    jQuery(this.element).attr('aria-multiline', 'false');
-    jQuery(this.element).attr('outline', '0px');
-    jQuery('.hx-selector-img').remove();
-    this.start = undefined;
-    this.currentSelection = undefined;
-    setTimeout(function () {
-      self.element.blur();
-    }, 250);
-  };
-  /* Credit to Rich Caloggero
-   * https://github.com/RichCaloggero/annotator/blob/master/annotator.html
-   */
-
-
-  $.KeyboardSelector.prototype.filterKeys = function (keyPressed) {
-    var self = this;
-    var key = keyPressed.key || keypressed.keyCode;
-
-    switch (key) {
-      case self.delimiter:
-        return false;
-
-      case "ArrowUp":
-      case "ArrowDown":
-      case "ArrowLeft":
-      case "ArrowRight":
-      case "Up":
-      case "Down":
-      case "Left":
-      case "Right":
-      case 37:
-      case 38:
-      case 39:
-      case 40:
-      case "Home":
-      case "End":
-      case "Tab":
-        return true;
-
-      case "Backspace":
-        if (self.verifyBackspace()) {
-          self.start = undefined;
-          return true;
-        }
-
-      case "Escape":
-        self.turnSelectionModeOff();
-        keyPressed.preventDefault();
-        jQuery('.sr-real-alert').html("Keyboard Selection Mode is off.");
-        return false;
-
-      case "2":
-        if (keyPressed.altKey || keyPressed.ctrlKey) {
-          jQuery('.sr-alert').html(jQuery('.sr-alert').html());
-        }
-
-        keyPressed.preventDefault();
-        return false;
-
-      case "3":
-        if (keyPressed.altKey || keyPressed.ctrlKey) {
-          var currVal = jQuery('.sr-alert').attr('aria-live');
-          var newVal = currVal == "off" ? 'polite' : 'off';
-          jQuery('.sr-alert').attr('aria-live', newVal);
-          var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-          jQuery('.sr-real-alert').html(newAlert);
-        }
-
-        keyPressed.preventDefault();
-        return false;
-
-      default:
-        keyPressed.preventDefault();
-        return false;
-    } // switch
-
-  };
-
-  $.KeyboardSelector.prototype.getBoundingClientRect = function (range) {
-    var newRange = range.cloneRange();
-
-    try {
-      newRange.setStart(range.startContainer, range.startOffset);
-      newRange.setEnd(range.startContainer, range.startOffset + 1);
-      return {
-        top: newRange.getBoundingClientRect().top,
-        left: newRange.getBoundingClientRect().left
-      };
-    } catch (e) {
-      newRange.setStart(range.startContainer, range.startOffset - 1);
-      newRange.setEnd(range.startContainer, range.startOffset);
-      return {
-        top: newRange.getBoundingClientRect().top,
-        left: newRange.getBoundingClientRect().right
-      };
-    }
-  };
-
-  $.KeyboardSelector.prototype.setSelection = function (keyPressed) {
-    var self = this;
-    var key = keyPressed.key || keyPressed.keyCode;
-
-    switch (key) {
-      case self.delimiter:
-        if (!self.start || typeof self.start == "undefined") {
-          self.start = self.copySelection(getSelection());
-          var bcr = self.getBoundingClientRect(self.start); //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
-
-          jQuery('body').append('<div class="hx-selector-img"></div>');
-          jQuery('.hx-selector-img').css({
-            top: bcr.top + jQuery(window).scrollTop() - 5,
-            left: bcr.left - 5
-          });
-          jQuery('.sr-alert').html();
-          jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
-        } else {
-          var end = self.copySelection(getSelection());
-          jQuery('.hx-selector-img').remove(); //console.log("Found end", end);
-
-          if (self.currentSelection) {//console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
-          } else {
-            var end = self.copySelection(getSelection());
-            var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
-            var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
-            var boundingBox = undefined;
-            self.currentSelection = document.createRange();
-
-            if (posStart.startOffset < posEnd.startOffset) {
-              self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
-              self.currentSelection.setEnd(end.startContainer, end.startOffset);
-            } else {
-              self.currentSelection.setStart(end.startContainer, end.startOffset);
-              self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
-            }
-          }
-
-          boundingBox = {
-            top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
-            left: self.currentSelection.getBoundingClientRect().left - 5
-          };
-          var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
-          jQuery('.sr-alert').html(''); //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
-
-          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]); //console.log("Active Element", document.activeElement.className);
-
-          if (document.activeElement.className.indexOf('note-editable') == -1) {
-            //console.log("BLURRING");
-            self.element.blur();
-          } else {
-            setTimeout(function () {
-              jQuery('.note-editable.card-block')[0].focus(); //console.log("should be focusing on", document.activeElement);
-            }, 250);
-          }
-
-          self.turnSelectionModeOff(); // var startComesAfter = self.startComesAfter(self.start, end);
-          // console.log("Found other", startComesAfter);
-          // self.start = startComesAfter[0];
-          // self.processSelection(startComesAfter[0], startComesAfter[1]);
-        }
-
-        break;
-
-      case "ArrowUp":
-      case "ArrowDown":
-      case "ArrowLeft":
-      case "ArrowRight":
-      case "Up":
-      case "Down":
-      case "Left":
-      case "Right":
-      case 37:
-      case 38:
-      case 39:
-      case 40:
-        if (self.start) {
-          var end = self.copySelection(getSelection());
-          var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
-          var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
-          self.currentSelection = document.createRange();
-
-          if (posStart.startOffset < posEnd.startOffset) {
-            self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
-            self.currentSelection.setEnd(end.startContainer, end.startOffset);
-          } else {
-            self.currentSelection.setStart(end.startContainer, end.startOffset);
-            self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
-          } // console.log(self.start, end);
-          // console.log(self.currentSelection, self.currentSelection.toString());
-          // var sel = window.getSelection();
-          // sel.removeAllRanges();
-          // sel.addRange(self.currentSelection);
-
-        }
-
-    }
-  };
-
-  $.KeyboardSelector.prototype.copySelection = function (selection) {
-    // const sel = {
-    //     anchorNode: selection.anchorNode,
-    //     anchorOffset: selection.anchorOffset,
-    //     focusNode: selection.focusNode,
-    //     focusOffset: selection.focusOffset,
-    //     parentElement: selection.anchorNode.parentElement
-    // };
-    return selection.getRangeAt(0);
-  };
-
-  $.KeyboardSelector.prototype.processSelection = function (start, end) {
-    var self = this;
-    var s = getSelection(); //console.log("LOOK HERE", start, end);
-
-    var r = this.removeMarkers(start, end);
-    self.start = undefined; //console.log("R!", r);
-
-    try {
-      var boundingBox = r.end.parentElement.getBoundingClientRect();
-    } catch (e) {
-      var boundingBox = r.endContainer.parentElement.getBoundingClientRect();
-    } //console.log(boundingBox);
-    // publish selection made
-
-
-    Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]); //console.log("Element Focused", document.activeElement);
-
-    if (document.activeElement.className.indexOf('note-editable') == -1) {
-      self.element.blur();
-    }
-
-    self.turnSelectionModeOff(); // this.element.focus();
-  };
-
-  $.KeyboardSelector.prototype.startComesAfter = function (start, end) {
-    if (start.anchorNode == end.anchorNode) {
-      if (start.anchorOffset > end.anchorOffset) {
-        start.anchorOffset += 1;
-        return [end, start];
-      } else {
-        return [start, end];
-      }
-    } // TODO: Handle other use cases (i.e. starting several nodes instead of within the same one)
-
-
-    var commonAncestor = this.getCommonAncestor(start.anchorNode, end.anchorNode);
-    var children = jQuery(commonAncestor).children();
-    var startCounter = 0;
-    jQuery.each(children, function (_, el) {
-      if (el == start.parentElement) {
-        startCounter += start.anchorOffset;
-        return false;
-      } else {
-        startCounter += jQuery(el).text().length;
-      }
-    });
-    var endCounter = 0;
-    jQuery.each(children, function (_, el) {
-      if (el == end.parentElement) {
-        endCounter += end.anchorOffset;
-        return false;
-      } else {
-        endCounter += jQuery(el).text().length;
-      }
-    });
-
-    if (startCounter > endCounter) {
-      return [end, start];
-    } else {
-      return [start, end];
-    }
-  };
-  /**
-   * Gets the common ancestor.
-   * Credit: https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
-   *
-   * @param      {<type>}  a       { parameter_description }
-   * @param      {<type>}  b       { parameter_description }
-   * @return     {Object}  The common ancestor.
-   */
-
-
-  $.KeyboardSelector.prototype.getCommonAncestor = function (a, b) {
-    $parentsa = jQuery(a).parents();
-    $parentsb = jQuery(b).parents();
-    var found = null;
-    $parentsa.each(function () {
-      var thisa = this;
-      $parentsb.each(function () {
-        if (thisa == this) {
-          found = this;
-          return false;
-        }
-      });
-      if (found) return false;
-    });
-    return found;
-  };
-
-  $.KeyboardSelector.prototype.removeMarkers = function (start, end) {
-    var self = this;
-    var _start = start.anchorNode;
-
-    var _startOffset = start.anchorOffset - 1;
-
-    var _end = end.anchorNode;
-
-    var _endOffset = end.anchorOffset - 1; //console.log(_start, _startOffset, _end, _endOffset);
-
-
-    var t2 = this.removeCharacter(_end.textContent, _endOffset);
-    _end.textContent = t2;
-    var t1 = this.removeCharacter(_start.textContent, _startOffset);
-    _start.textContent = t1;
-    var r = document.createRange();
-    r.setStart(_start, _startOffset);
-    var realRange = {
-      startContainer: _start,
-      startOffset: _startOffset,
-      endContainer: _end
-    };
-
-    if (start.anchorNode === end.anchorNode) {
-      realRange['endOffset'] = _endOffset - 1;
-      r.setEnd(_start, _endOffset - 1);
-    } else {
-      realRange['endOffset'] = _endOffset;
-      r.setEnd(_start, _endOffset);
-    } // getting common ancestors
-    // lonesomeday @ https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
-
-
-    realRange['commonAncestorContainer'] = jQuery(_start).parents().has(_end).first()[0];
-    realRange['exact'] = [r.toString()];
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(r); // convert to xpath and then back to a range
-    // var sR = hrange.serializeRange(r, self.element, 'annotator-hl');
-    //var nR = hrange.normalizeRange(sR, self.element, 'annotator-hl');
-    // console.log(sR, nR);
-
-    return r;
-  };
-
-  $.KeyboardSelector.prototype.addMarkers = function (ranges) {// console.log(ranges);
-  };
-
-  $.KeyboardSelector.prototype.removeCharacter = function (s, offset) {
-    if (offset === 0) {
-      s = s.slice(1);
-    } else if (offset === s.length - 1) {
-      s = s.slice(0, -1);
-    } else {
-      s = s.slice(0, offset) + s.slice(offset + 1);
-    }
-
-    return s;
-  };
-
-  $.KeyboardSelector.prototype.verifyBackspace = function () {
-    var s = getSelection();
-    var r = document.createRange();
-    var startOffset = s.anchorOffset;
-
-    if (startOffset > 0) {
-      startOffset -= 1;
-    }
-
-    r.setStart(s.anchorNode, startOffset);
-    r.setEnd(s.anchorNode, startOffset + 1);
-    return r.toString() == this.delimiter;
-  };
-
-  $.selectors.push($.KeyboardSelector);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- *  Toggle Annotations Plugin
- *  
- *
- */
-__webpack_require__(65);
-
-(function ($) {
-  /**
-   * @constructor
-   * @params {Object} options - specific options for this plugin
-   */
-  $.ToggleAnnotations = function (options, instanceID) {
-    this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID;
-    this.on = true;
-    this.init();
-    return this;
-  };
-  /**
-   * Initializes instance
-   */
-
-
-  $.ToggleAnnotations.prototype.init = function () {
-    var self = this;
-    self.setUpButton();
-  };
-
-  $.ToggleAnnotations.prototype.setUpButton = function () {
-    var self = this;
-    jQuery(self.options.slot).prepend('<button class="hx-toggle-annotations btn btn-default"></button>');
-    jQuery(self.options.slot).find('.hx-toggle-annotations').click(function () {
-      var toggleButton = jQuery(this);
-
-      if (!toggleButton.hasClass('should-show')) {
-        $.publishEvent('undrawAll', self.instanceID, [function (annList) {
-          self.tempAnnotationList = annList;
-          self.on = false;
-          toggleButton.addClass('should-show');
-        }]);
-      } else {
-        $.publishEvent('drawList', self.instanceID, [self.tempAnnotationList, function () {
-          self.tempAnnotationList = [];
-          self.on = true;
-          toggleButton.removeClass('should-show');
-        }]);
-      }
-    });
-  };
-
-  $.ToggleAnnotations.prototype.editorShown = function () {
-    var self = this;
-
-    if (!self.on) {
-      $.publishEvent('drawList', self.instanceID, [self.tempAnnotationList, function () {
-        self.tempAnnotationList = [];
-        self.on = true;
-        jQuery(self.options.slot).find('.hx-toggle-annotations').removeClass('should-show');
-      }]);
-    }
-  };
-
-  $.ToggleAnnotations.prototype.saving = function (annotation) {
-    return annotation;
-  };
-
-  Object.defineProperty($.ToggleAnnotations, 'name', {
-    value: "ToggleAnnotations"
-  });
-  $.plugins.push($.ToggleAnnotations);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- *  DisplayResize Annotations Plugin
- *  
- *
- */
-var annotator = annotator ? annotator : __webpack_require__(7); //uncomment to add css file
-
-__webpack_require__(67);
-
-(function ($) {
-  /**
-   * @constructor
-   * @params {Object} options - specific options for this plugin
-   */
-  $.DisplayResize = function (options, instanceID) {
-    this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID;
-    self.itemStretching = false;
-    this.init();
-    return this;
-  };
-  /**
-   * Initializes instance
-   */
-
-
-  $.DisplayResize.prototype.init = function () {
-    var self = this;
-    self.setUpListeners();
-  };
-
-  $.DisplayResize.prototype.setUpListeners = function () {
-    var self = this;
-    Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
-      self.currentViewer.append('<div class="hx-resize resize-bar"></div>');
-      self.currentViewer.find('.hx-resize.resize-bar').on('mousedown', function (event) {
-        self.prepareToStretch(event);
-      });
-      jQuery(self.options.slot).on('mousemove', function (event) {
-        self.stretch(event);
-
-        if (self.itemStretching) {// jQuery('body').css('overflow', 'hidden');
-        }
-      });
-      jQuery(self.options.slot).on('mouseup', function (event) {
-        if (self.itemStretching) {// jQuery('body').css('overflow', 'inherit');
-        }
-
-        self.finishedStretching(event);
-      });
-      jQuery(self.options.slot).on('mouseleave', function (event) {
-        self.finishedStretching(event);
-      });
-    });
-  };
-
-  $.DisplayResize.prototype.prepareToStretch = function (event) {
-    var self = this;
-    self.itemStretching = true;
-    $.pauseEvent(event);
-    self.initialPoint = annotator.util.mousePosition(event);
-    self.initialHeight = self.currentViewer.height(); // self.initialInnerHeight = self.currentViewer.find('.annotation-text-field').outerHeight() - 10;
-  };
-
-  $.DisplayResize.prototype.stretch = function (event) {
-    var self = this;
-
-    if (self.itemStretching) {
-      var newPoint = annotator.util.mousePosition(event);
-      var diff = newPoint.top - self.initialPoint.top;
-      var newHeight = self.initialHeight + diff;
-      var innerHeight = self.initialHeight + diff - 30;
-      self.currentViewer.css('height', newHeight);
-      self.currentViewer.find('.annotation-text-field').css({
-        'max-height': innerHeight,
-        'height': innerHeight
-      });
-    }
-  };
-
-  $.DisplayResize.prototype.finishedStretching = function (event) {
-    var self = this;
-    self.itemStretching = false;
-  };
-
-  $.DisplayResize.prototype.saving = function (annotation) {
-    return annotation;
-  };
-
-  $.DisplayResize.prototype.displayShown = function (viewer, annotations) {
-    var self = this;
-
-    if (Array.isArray(annotations)) {
-      self.currentViewer = jQuery(viewer);
-    }
-  };
-
-  Object.defineProperty($.DisplayResize, 'name', {
-    value: "DisplayResize"
-  });
-  $.plugins.push($.DisplayResize);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(jQuery, toastr) {//var xpathrange = xpathrange ? xpathrange : require('xpath-range');
-var hrange = __webpack_require__(4);
+var hrange = __webpack_require__(5);
 
 (function ($) {
   $.CatchPy = function (options, inst_id) {
@@ -46800,59 +44326,2539 @@ var hrange = __webpack_require__(4);
 
   $.storage.push($.CatchPy);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(15)))
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ * 
+ */
+//during deployment, this is what decides what gets instantiated, should be moved elsewhere
+__webpack_require__(55);
+
+__webpack_require__(56);
+
+__webpack_require__(24);
+
+__webpack_require__(57);
+
+__webpack_require__(32);
+
+__webpack_require__(11);
+
+__webpack_require__(34);
+
+__webpack_require__(36);
+
+__webpack_require__(61);
+
+__webpack_require__(63);
+
+__webpack_require__(65);
+
+__webpack_require__(66);
+
+__webpack_require__(68);
+
+__webpack_require__(38);
+
+__webpack_require__(40);
+
+__webpack_require__(42);
+
+__webpack_require__(43);
+
+__webpack_require__(45);
+
+(function ($) {
+  /**
+   * { function_description }
+   *
+   * @class      TextTarget (name)
+   * @param      {<type>}  options  The options
+   * @param      {<type>}  inst_id  The instance identifier
+   */
+  $.TextTarget = function (options, inst_id) {
+    this.options = options;
+    this.instance_id = inst_id;
+    this.guid = undefined;
+    this.annotation_selector = 'hx-annotation-hl';
+    this.init();
+  };
+  /**
+   * { function_description }
+   */
+
+
+  $.TextTarget.prototype.init = function () {
+    var self = this; // this target is only meant to work with text/html objects
+
+    this.media = "text";
+    this.setUpListeners(); // this where the target will be contained
+
+    this.target_selector = this.options.target_selector; // sets up listeners from core and other places
+
+    if (this.options.method == "url") {
+      // if the text exists externally, this will load it into the DOM
+      this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector);
+    } else if (this.options.method == "inline") {
+      // if the text is already in the DOM, this sets up what is left
+      // console.log('Loading Target via Inline');
+      this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
+    }
+
+    function areScrollbarsVisible() {
+      var scrollableElem = document.createElement('div'),
+          innerElem = document.createElement('div');
+      scrollableElem.style.width = '30px';
+      scrollableElem.style.height = '30px';
+      scrollableElem.style.overflow = 'scroll';
+      scrollableElem.style.borderWidth = '0';
+      innerElem.style.width = '30px';
+      innerElem.style.height = '60px';
+      scrollableElem.appendChild(innerElem);
+      document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
+
+      var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
+      document.body.removeChild(scrollableElem);
+      return diff > 0;
+    }
+
+    window.addEventListener('load', function () {
+      // Show scrollbars if they're hidden.
+      if (!areScrollbarsVisible()) {
+        document.body.classList.add('force-show-scrollbars');
+      }
+    });
+  };
+  /**
+   * Creates a text slot from url.
+   *
+   * @param      {string}  content      The content
+   * @param      {<type>}  selector     The selector
+   * @param      {<type>}  instance_id  The instance identifier
+   */
+
+
+  $.TextTarget.prototype.createTextSlotFromURL = function (content, selector, instance_id) {
+    this.guid = $.getUniqueId(); // each annotation target will be enclosed in a "slot"
+    //var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
+    // adds it to the page and turns on the wrapper
+
+    jQuery(selector + ' .annotations-section').append(content);
+    jQuery(selector).prop('id', this.guid);
+    jQuery(selector).addClass('annotation-slot');
+    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section'); // lets Core know that the target has finished loading on screen
+
+    $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
+  };
+  /**
+   * Creates a text slot from selector.
+   *
+   * @param      {<type>}  selector     The selector
+   * @param      {<type>}  instance_id  The instance identifier
+   */
+
+
+  $.TextTarget.prototype.createTextSlotFromSelector = function (selector, instance_id) {
+    // each annotation target will be enclosed in a "slot" with a temporary unique id
+    this.guid = $.getUniqueId();
+    var slot = jQuery(selector);
+    slot.addClass('annotation-slot');
+    slot.attr('id', this.guid);
+    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section'); // lets core know that the target has finished loading on screen
+    // console.log("Publishing TargetLoaded");
+
+    $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
+  };
+  /**
+   * Makes a query.
+   *
+   * @param      {<type>}    url       The url
+   * @param      {Function}  callback  The callback
+   * @param      {<type>}    selector  The selector
+   * @return     {<type>}    { description_of_the_return_value }
+   */
+
+
+  $.TextTarget.prototype.makeQuery = function (url, callback, selector) {
+    var self = this; // retrieves the text to be loaded onto the page and passes it to callback function
+
+    var defer = jQuery.ajax({
+      url: url,
+      type: 'GET',
+      contentType: 'charset=utf-8',
+      success: function success(data) {
+        callback(data, selector, self.instance_id);
+      },
+      async: true
+    });
+    return defer;
+  };
+  /**
+   * { function_description }
+   */
+
+
+  $.TextTarget.prototype.setUpListeners = function () {
+    var self = this;
+    jQuery('.toggle-alerts').click(function () {
+      if (jQuery(this).hasClass('on')) {
+        jQuery(this).html('Turn Alerts On');
+        jQuery(this).removeClass('on');
+        jQuery('.sr-alert').attr('aria-live', 'off');
+      } else {
+        jQuery(this).html('Turn Alerts Off');
+        jQuery(this).addClass('on');
+        jQuery('.sr-alert').attr('aria-live', 'polite');
+      }
+    }); // once the target has been loaded, the selector can be instantiated
+
+    $.subscribeEvent('targetLoaded', self.instance_id, function (_, element) {
+      // console.log("LOADING TARGET");
+      //annotation element gets data that may be needed later
+      self.element = element;
+      self.element.data('source_type', self.options.object_source);
+      self.element.data('source_type', 'text'); // finish setting up selectors
+
+      self.setUpDrawers(self.element[0]); // finish setting up viewers (which contain displays and editors)
+
+      self.setUpViewers(self.element[0]); // finish setting up extra plugins
+
+      self.setUpPlugins(self.element[0]); // finish setting up the storage containers
+
+      self.setUpStorage(self.element[0]);
+
+      if (!self.options.viewerOptions.readonly) {
+        self.setUpSelectors(self.element[0]);
+      }
+    });
+    $.subscribeEvent('editorShown', self.instance_id, function (_, editor, annotation) {
+      jQuery.each(self.plugins, function (_, plugin) {
+        if (typeof plugin.editorShown === "function") {
+          plugin.editorShown(editor, annotation);
+        }
+      });
+    });
+    $.subscribeEvent('displayShown', self.instance_id, function (_, display, annotations) {
+      jQuery.each(self.plugins, function (_, plugin) {
+        if (typeof plugin.displayShown === "function") {
+          plugin.displayShown(display, annotations);
+        }
+      });
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @param      {<type>}  element  The element
+   */
+
+
+  $.TextTarget.prototype.setUpSelectors = function (element) {
+    var self = this;
+    self.selectors = [];
+    jQuery.each($.selectors, function (_, selector) {
+      self.selectors.push(new selector(element, self.instance_id, {
+        'confirm': true
+      }));
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @param      {<type>}  element  The element
+   */
+
+
+  $.TextTarget.prototype.setUpDrawers = function (element) {
+    var self = this;
+    self.drawers = [];
+    jQuery.each($.drawers, function (_, drawer) {
+      self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
+    });
+  };
+
+  $.TextTarget.prototype.setUpViewers = function (element) {
+    var self = this;
+    self.viewers = [];
+    jQuery.each($.viewers, function (_, viewer) {
+      self.viewers.push(new viewer({
+        element: element,
+        template_urls: self.options.template_urls,
+        viewer_options: self.options.viewerOptions,
+        username: self.options.username,
+        user_id: self.options.user_id,
+        common_instructor_name: self.options.common_instructor_name,
+        instructors: self.options.instructors,
+        mediaType: self.media
+      }, self.instance_id));
+    });
+  };
+
+  $.TextTarget.prototype.setUpPlugins = function (element) {
+    var self = this;
+    self.plugins = [];
+    jQuery.each($.plugins, function (_, plugin) {
+      var optionsForPlugin;
+
+      try {
+        optionsForPlugin = jQuery.extend({
+          'slot': element
+        }, self.options, self.options[plugin.name]) || {
+          'slot': element
+        };
+      } catch (e) {
+        optionsForPlugin = {
+          'slot': element
+        };
+      }
+
+      self.plugins.push(new plugin(optionsForPlugin, self.instance_id));
+    });
+  };
+
+  $.TextTarget.prototype.setUpStorage = function (element, options) {
+    var self = this;
+    self.storage = [];
+    jQuery.each($.storage, function (idx, storage) {
+      var optionsForStorage;
+
+      try {
+        optionsForStorage = jQuery.extend({
+          'media': 'text'
+        }, self.options, self.options[storage.name]) || {};
+      } catch (e) {
+        optionsForStorage = {};
+      }
+
+      self.storage.push(new storage(optionsForStorage, self.instance_id));
+
+      if (self.options.viewerOptions.defaultTab === "mine") {
+        options = {
+          'username': self.options.username
+        };
+      } else if (self.options.viewerOptions.defaultTab === "instructor") {
+        options = {
+          'userid': self.options.instructors
+        };
+      } else {
+        var exclusion = [self.options.user_id].concat(self.options.instructors);
+        options = {
+          'exclude_userid': exclusion
+        };
+      }
+
+      self.storage[idx].onLoad(element, options);
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @class      ComponentEnable (name)
+   */
+
+
+  $.TextTarget.prototype.ComponentEnable = function () {
+    // Targets cannot technically be enabled/disabled, but 
+    // there might be cases in which the target needs to be hidden/shown
+    jQuery('#' + this.guid).show();
+  };
+  /**
+   * { function_description }
+   *
+   * @class      ComponentDisable (name)
+   */
+
+
+  $.TextTarget.prototype.ComponentDisable = function () {
+    jQuery('#') + this.guid.hide();
+  };
+  /**
+   * { function_description }
+   *
+   * @class      TargetSelectionMade (name)
+   */
+
+
+  $.TextTarget.prototype.TargetSelectionMade = function (range, event) {
+    var range = Array.isArray(range) ? range : [range];
+    var self = this;
+    var annotation = {
+      annotationText: [""],
+      ranges: range,
+      id: $.getUniqueId(),
+      exact: range.map(function (r) {
+        return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/    /g, '&nbsp;');
+      }),
+      media: "text",
+      totalReplies: 0,
+      creator: {
+        name: self.options.username,
+        id: self.options.user_id
+      }
+    };
+    jQuery.each(self.viewers, function (_, viewer) {
+      viewer.TargetSelectionMade(annotation, event);
+    }); //self.TargetAnnotationDraw(annotation);
+    // jQuery('.annotator-wrapper')[0].focus();
+    //$.publishEvent('ViewerEditorOpen', self.instance_id, [annotation]);
+  };
+  /**
+   * { function_description }
+   *
+   * @class      TargetAnnotationDraw (name)
+   */
+
+
+  $.TextTarget.prototype.TargetAnnotationDraw = function (annotation) {
+    var self = this;
+
+    if (Object.keys(annotation.ranges[0]).indexOf('parent') > -1) {
+      return;
+    }
+
+    jQuery.each(self.drawers, function (_, drawer) {
+      drawer.draw(annotation);
+    });
+    jQuery.each(self.viewers, function (_, viewer) {
+      if ($.exists(viewer.TargetAnnotationDraw)) {
+        viewer.TargetAnnotationDraw(annotation);
+      }
+    });
+    jQuery.each(self.plugins, function (_, plugin) {
+      if ($.exists(plugin.TargetAnnotationDraw)) {
+        plugin.TargetAnnotationDraw(annotation);
+      }
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @class      TargetAnnotationUndraw (name)
+   */
+
+
+  $.TextTarget.prototype.TargetAnnotationUndraw = function (annotation) {
+    var self = this;
+
+    if (annotation.media !== "Annotation") {
+      jQuery.each(self.drawers, function (_, drawer) {
+        drawer.undraw(annotation);
+      });
+    }
+  };
+  /**
+   * { function_description }
+   *
+   * @class      ViewerEditorOpen (name)
+   */
+
+
+  $.TextTarget.prototype.ViewerEditorOpen = function (event, annotation) {
+    return annotation;
+  };
+  /**
+   * { function_description }
+   *
+   * @class      ViewerEditorClose (name)
+   */
+
+
+  $.TextTarget.prototype.ViewerEditorClose = function (annotation, is_new_annotation, hit_cancel) {
+    var self = this; //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+
+    if (hit_cancel) {
+      if (is_new_annotation) {
+        self.TargetAnnotationUndraw(annotation);
+      } // else, the annotation was already drawn, so don't touch it.
+
+    } else if (is_new_annotation) {
+      annotation = self.plugins.reduce(function (ann, plugin) {
+        return plugin.saving(ann);
+      }, annotation);
+      self.TargetAnnotationDraw(annotation);
+      jQuery('.sr-alert').html('');
+      jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
+      $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
+    } else {
+      jQuery.each(self.drawers, function (_, drawer) {
+        self.TargetAnnotationUndraw(annotation);
+        annotation = self.plugins.reduce(function (ann, plugin) {
+          return plugin.saving(ann);
+        }, annotation);
+        $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+        jQuery('.sr-alert').html('');
+        jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
+        $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
+      });
+    }
+
+    jQuery.each(self.viewers, function (_, viewer) {
+      var timer = new Date();
+      viewer.ViewerEditorClose(annotation); // console.log("Finished: " + (new Date() - timer) + 'ms')
+    });
+    setTimeout(function () {
+      $.publishEvent('editorHidden', self.instance_id, []);
+    }, 50);
+    return annotation;
+  };
+  /**
+   * { function_description }
+   *
+   * @class      ViewerDisplayOpen (name)
+   */
+
+
+  $.TextTarget.prototype.ViewerDisplayOpen = function (event, annotations) {
+    var self = this;
+    jQuery.each(self.viewers, function (_, viewer) {
+      viewer.ViewerDisplayOpen(event, annotations);
+    });
+    return annotations;
+  };
+  /**
+   * { function_description }
+   *
+   * @class      ViewerDisplayClose (name)
+   */
+
+
+  $.TextTarget.prototype.ViewerDisplayClose = function (annotations) {
+    var self = this;
+    jQuery.each(self.viewers, function (_, viewer) {
+      viewer.ViewerDisplayClose(annotations);
+    });
+    return annotations;
+  };
+  /**
+   * { function_description }
+   *
+   * @class      StorageAnnotationSave (name)
+   */
+
+
+  $.TextTarget.prototype.StorageAnnotationSave = function (annotations, redraw) {
+    var self = this; // console.log(annotations, redraw);
+
+    jQuery.each(self.storage, function (_, store) {
+      store.StorageAnnotationSave(annotations, self.element, redraw);
+    });
+    jQuery.each(self.viewers, function (_, viewer) {
+      viewer.StorageAnnotationSave(annotations);
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @class      StorageAnnotationLoad (name)
+   */
+
+
+  $.TextTarget.prototype.StorageAnnotationLoad = function (annotations, converter, undrawOld) {
+    var self = this;
+    jQuery.each(self.viewers, function (_, viewer) {
+      if (typeof viewer.StorageAnnotationLoad === "function") {
+        viewer.StorageAnnotationLoad(annotations);
+      }
+    });
+
+    if (undrawOld) {
+      $.publishEvent('GetAnnotationsData', self.instance_id, [function (anns) {
+        anns.forEach(function (ann) {
+          self.TargetAnnotationUndraw(ann);
+        });
+      }]);
+    }
+
+    annotations.forEach(function (ann) {
+      var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
+      self.TargetAnnotationDraw(converted_ann);
+      $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @class      StorageAnnotationEdit (name)
+   */
+
+
+  $.TextTarget.prototype.StorageAnnotationEdit = function () {};
+  /**
+   * { function_description }
+   *
+   * @class      StorageAnnotationDelete (name)
+   */
+
+
+  $.TextTarget.prototype.StorageAnnotationDelete = function (annotation) {
+    var self = this;
+    jQuery.each(self.viewers, function (_, viewer) {
+      viewer.StorageAnnotationDelete(annotation);
+    });
+    jQuery.each(self.storage, function (_, store) {
+      store.StorageAnnotationDelete(annotation);
+    });
+  };
+  /**
+   * { function_description }
+   *
+   * @class      StorageAnnotationGetReplies (name)
+   */
+
+
+  $.TextTarget.prototype.StorageAnnotationSearch = function (search_options, callback, errfun) {
+    var self = this;
+    jQuery.each(self.storage, function (_, store) {
+      store.search(search_options, callback, errfun);
+    });
+  };
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Should be listening for ways to select a text and then return an xpath 
+ * object with the range that was selected.
+ */
+var jQuery = __webpack_require__(0);
+
+var hrange = __webpack_require__(5);
+
+(function ($) {
+  $.MouseSelector = function (element, inst_id) {
+    var defaultOpts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    this.element = element;
+    this.instance_id = inst_id;
+    this.adder = null;
+    this.wrapperSelector = '.annotator-wrapper';
+    this.mustConfirm = !!defaultOpts.confirm;
+    this.init();
+  };
+
+  $.MouseSelector.prototype.init = function () {
+    var self = this;
+    self.setUpListeners();
+  };
+
+  $.MouseSelector.prototype.setUpListeners = function () {
+    var self = this;
+    this.element.addEventListener('mouseup', function (event) {
+      var selection = window.getSelection();
+      var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
+
+      self.onSelection(selectionRange, event);
+    });
+    document.addEventListener('keyup', function (e) {
+      var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
+
+      if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
+        var selection = window.getSelection();
+        var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
+
+        self.onSelection(selectionRange, event);
+      }
+    });
+  };
+
+  $.MouseSelector.prototype.onSelection = function (range, event) {
+    var self = this; //console.log('onSelection Ran: ', range, event);
+
+    if (range instanceof Range) {
+      //console.log('range is instance of Range', range.toString());
+      var result = self.shouldBeAnnotated(range);
+
+      if (result && (range.toString().length > 0 || range.cloneContents().querySelectorAll('img').length > 0)) {
+        if (self.mustConfirm) {
+          //console.log("Confirming...")
+          self.confirm(range, event);
+        } else {
+          //console.log("Sending TargetSelection to Hxighlighter");
+          //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [hrange.serializeRange(range, self.element, 'annotator-hl')], event]);
+        }
+      } else {
+        // send message to erase confirm button
+        //console.log('Either result is false or toString() returned 0')
+        self.hideConfirm();
+      }
+    }
+  };
+
+  $.MouseSelector.prototype.shouldBeAnnotated = function (range) {
+    var self = this;
+    var wrapper = self.element.querySelector(self.wrapperSelector);
+    var testingNode = range.commonAncestorContainer;
+
+    while (testingNode !== wrapper && testingNode !== null) {
+      testingNode = testingNode.parentNode;
+    }
+
+    return testingNode === wrapper;
+  };
+
+  $.MouseSelector.prototype.confirm = function (range, event) {
+    var self = this;
+    self.hideConfirm();
+
+    if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length == 0) {
+      self.interactionPoint = $.mouseFixedPosition(event); //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+
+      self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event); //console.log("Should have loaded button to confirm annotation");
+    } else {
+      $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {
+        buttons: [],
+        time: 5
+      }]);
+    }
+  };
+
+  $.MouseSelector.prototype.hideConfirm = function () {
+    jQuery('.hx-confirm-button').remove();
+  };
+
+  $.MouseSelector.prototype.loadButton = function (range, iP, event) {
+    var self = this;
+
+    if (iP.top <= 48) {
+      iP.top = 49;
+    }
+
+    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
+    jQuery('body').append(confirmButtonTemplate);
+    jQuery('.hx-confirm-button button').click(function () {
+      $.publishEvent('drawTemp', self.instance_id, [[range]]);
+      $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event]);
+      jQuery('.hx-confirm-button').remove();
+    });
+  };
+
+  $.selectors.push($.MouseSelector);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(5);
+
+(function ($) {
+  $.XPathDrawer = function (element, inst_id, hClass, options) {
+    this.element = element;
+    this.instance_id = inst_id;
+    this.h_class = (hClass + ' annotator-hl').trim();
+    this.init();
+    this.drawnAnnotations = [];
+    this.tempHighlights = [];
+    this.options = options || {};
+  };
+
+  $.XPathDrawer.prototype.init = function () {
+    var self = this; // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
+    //     highlightClass: (self.h_class + ' annotator-hl')
+    // });
+
+    jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function (event) {
+      $.pauseEvent(event);
+      var annotations = self.getAnnotationsFromElement(event); //console.log("MOUSEOVER", annotations);
+
+      Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
+    });
+    jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function (event) {
+      Hxighlighter.publishEvent('ViewerDisplayClose', self.instance_id, [event]);
+    });
+    jQuery(self.element).on('click', '.' + self.h_class.replace(' ', '.'), function (event) {
+      var annotations = self.getAnnotationsFromElement(event);
+      Hxighlighter.publishEvent('DrawnSelectionClicked', self.instance_id, [event, annotations]);
+    });
+    Hxighlighter.subscribeEvent('StorageAnnotationDelete', self.instance_id, function (_, annotation) {
+      self.undraw(annotation);
+    });
+    Hxighlighter.subscribeEvent('GetAnnotationsData', self.instance_id, function (_, callback) {
+      callback(self.getAnnotationsData());
+    });
+    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function (_, annotation_id, callback) {
+      callback(self.getSpecificAnnotationData(annotation_id));
+    });
+    Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function (_, annotation, color) {
+      if (annotation._local) {
+        jQuery.each(annotation._local.highlights, function (_, hl) {
+          setTimeout(function () {
+            jQuery(hl).css('background-color', color);
+          }, 250);
+        });
+      }
+    });
+    Hxighlighter.subscribeEvent('undrawAll', self.instance_id, function (_, callBack) {
+      var annotations = self.getAnnotationsData();
+      annotations.forEach(function (ann) {
+        self.undraw(ann);
+      });
+      callBack(annotations);
+    });
+    Hxighlighter.subscribeEvent('drawList', self.instance_id, function (_, annotations, callBack) {
+      annotations.forEach(function (ann) {
+        self.draw(ann);
+      });
+      callBack(annotations);
+    });
+    Hxighlighter.subscribeEvent('drawTemp', self.instance_id, function (_, range, callBack) {
+      var textNodes = hrange.getTextNodesFromAnnotationRanges(range, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+
+      var spans = [];
+      textNodes.forEach(function (node) {
+        //console.log(node, jQuery(node));
+        jQuery(node).wrap('<span class="temp-ann ' + self.h_class + '"></span>');
+        spans.push(jQuery(node).parent()[0]);
+      });
+      self.tempHighlights = self.tempHighlights.concat(spans);
+    });
+  };
+
+  $.XPathDrawer.prototype.draw = function (annotation) {
+    var self = this;
+
+    if (annotation.media.toLowerCase() !== "text") {
+      return;
+    } // console.log(self.options, annotation);
+    // console.log("Annotation Being Drawn", annotation);
+    // checks to see if annotation has already been drawn, if so it undraws it
+
+
+    var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
+
+    if (existing_drawn_annotation) {
+      self.undraw(existing_drawn_annotation);
+    }
+
+    self.tempHighlights.forEach(function (hl) {
+      jQuery(hl).contents().unwrap();
+    }); // the process for drawing is divided into 4 parts
+    // 1. Retrieve all discrete text nodes associated with annotation
+
+    var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+
+    var spans = [];
+    var otherLabel = '';
+
+    if (self.options.user_id === annotation.creator.id) {
+      otherLabel += ' annotation-mine';
+    }
+
+    if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
+      otherLabel += ' annotation-instructor';
+    }
+
+    var labelIt = true;
+    textNodes.forEach(function (node) {
+      //console.log(node, jQuery(node));
+      var node_id = "";
+
+      if (labelIt) {
+        labelIt = false;
+        node_id = ' id="first-node-' + annotation.id + '" ';
+      }
+
+      jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
+      spans.push(jQuery(node).parent()[0]);
+    }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
+
+    annotation['_local'] = {
+      'highlights': spans
+    }; // 3. Store in each span tag the value of the annotation post-saving _local.highlights
+
+    spans.forEach(function (span) {
+      jQuery(span).data('annotation', annotation);
+    }); //console.log(annotation);
+
+    $.publishEvent('annotationDrawn', self.instance_id, [annotation]); // the annotation is then saved to the current list
+
+    self.drawnAnnotations.push(annotation); // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
+    // jQuery.each(annotation._local.highlights, function(_, high) {
+    //     jQuery(high).on('mouseover', function() {
+    //          $.publishEvent('toggleViewer')
+    //     });
+    // });
+  };
+
+  $.XPathDrawer.prototype.undraw = function (annotation) {
+    var self = this; //this.highlighter.undraw(annotation);
+
+    if (annotation._local) {
+      //console.log('Undrawing...', annotation._local.highlights)
+      annotation._local.highlights.forEach(function (hl) {
+        jQuery(hl).contents().unwrap();
+      });
+
+      annotation._local.highlights = [];
+    }
+
+    self.tempHighlights.forEach(function (hl) {
+      jQuery(hl).contents().unwrap();
+    });
+    self.drawnAnnotations = self.drawnAnnotations.filter(function (ann) {
+      if (ann.id !== annotation.id) {
+        return ann;
+      }
+    }); //console.log(self.drawnAnnotations);
+
+    $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
+  };
+
+  $.XPathDrawer.prototype.redraw = function (annotation) {
+    var self = this;
+    self.undraw(annotation);
+    self.draw(annotation); //this.highlighter.redraw(annotation);
+    //$.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
+  };
+
+  $.XPathDrawer.prototype.getAnnotationsFromElement = function (event) {
+    return jQuery(event.target).parents('.annotator-hl').addBack().map(function (_, elem) {
+      return jQuery(elem).data('annotation');
+    }).toArray().sort(function (a, b) {
+      return a.created - b.created;
+    });
+  }; // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
+
+
+  $.XPathDrawer.prototype.getUnique = function (arr, comp) {
+    var unique = arr.map(function (e) {
+      return e[comp];
+    }) // store the keys of the unique objects
+    .map(function (e, i, _final) {
+      return _final.indexOf(e) === i && i;
+    }) // eliminate the dead keys & store unique objects
+    .filter(function (e) {
+      return arr[e];
+    }).map(function (e) {
+      return arr[e];
+    });
+    return unique;
+  };
+
+  $.XPathDrawer.prototype.getAnnotationsData = function () {
+    var self = this;
+    var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function (_, elem) {
+      return jQuery(elem).data('annotation');
+    }).toArray(), 'id');
+    all.sort(function (a, b) {
+      return b - a;
+    }); //console.log(all);
+
+    return all;
+  };
+
+  $.XPathDrawer.prototype.getSpecificAnnotationData = function (annotation_id) {
+    var self = this;
+    var currentAnnotations = self.getAnnotationsData();
+    var foundAnnotation = currentAnnotations.find(function (ann) {
+      if (ann.id === annotation_id) {
+        return ann;
+      }
+    });
+    return foundAnnotation;
+  };
+
+  $.drawers.push($.XPathDrawer);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 57 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(jQuery, _) {/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
+/* harmony import */ var _css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_floatingviewer_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
+/* harmony import */ var jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm_css_jquery_confirm_css__WEBPACK_IMPORTED_MODULE_2__);
+/**
+ * 
+ */
+var annotator = annotator ? annotator : __webpack_require__(8);
+
+
+
+
+(function ($) {
+  $.FloatingViewer = function (options, inst_id) {
+    // sets default options
+    var defaultOptions = {
+      // set up template names that will be pulled
+      TEMPLATENAMES: ["editor", "viewer"],
+      TEMPLATES: {
+        editor: __webpack_require__(59),
+        viewer: __webpack_require__(60)
+      },
+      template_suffix: "floating",
+      template_urls: ""
+    };
+    this.options = jQuery.extend({}, defaultOptions, options); // console.log("Floating options", this.options);
+
+    this.instance_id = inst_id;
+    this.annotation_tool = {
+      interactionPoint: null,
+      editing: false,
+      updating: false,
+      editor: null,
+      viewer: null
+    };
+    this.element = jQuery(this.options.element);
+    this.hideTimer = null;
+    this.init();
+  };
+
+  $.FloatingViewer.prototype.init = function () {
+    var self = this;
+    self.setUpTemplates(self.options.template_suffix); // make sure the viewer doesn't disappear when the person moves their mouse over it
+
+    self.element.on('mouseover', '.annotation-viewer', function (event1) {
+      clearTimeout(self.hideTimer);
+    }); // once they leave the viewer hide it
+
+    self.element.on('mouseleave', '.annotation-viewer', function (event1) {
+      if (self.annotation_tool.isStatic) {
+        return;
+      }
+
+      clearTimeout(self.hideTimer);
+      self.ViewerDisplayClose();
+    });
+    Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
+      clearTimeout(self.hideTimer);
+
+      try {
+        self.annotation_tool.viewer.addClass('static');
+        self.annotation_tool.isStatic = true;
+      } catch (e) {
+        self.ViewerDisplayOpen(event1, annotations);
+        self.annotation_tool.viewer.addClass('static');
+        self.annotation_tool.isStatic = true;
+      }
+    });
+    jQuery('body').on('click', '.annotation-username', function (e) {
+      $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
+    });
+    jQuery('body').on('click', '.annotation-tag', function (e) {
+      $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
+    });
+    this.setUpPinAndMove();
+  };
+
+  $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
+    var self = this;
+    var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName) {
+      if (templateName in self.options.TEMPLATES) {
+        return;
+      }
+
+      var options = {
+        url: self.options.template_urls + templateName + '-' + suffix + '.html',
+        type: "GET",
+        contentType: "charset=utf-8",
+        success: function success(data) {
+          var template = _.template(data);
+
+          self.options.TEMPLATES[templateName] = template;
+        },
+        async: true
+      };
+      return jQuery.ajax(options);
+    });
+    jQuery.when.apply(jQuery, deferreds).done(function () {
+      self.annotation_tool.editorTemplate = self.options.TEMPLATES.editor({
+        editorid: self.instance_id.replace(/\W/g, '-')
+      });
+    });
+  };
+
+  $.FloatingViewer.prototype.TargetSelectionMade = function (annotation, event) {
+    // if (event && event instanceof MouseEvent) {
+    this.ViewerEditorOpen(event, annotation, false, $.mouseFixedPosition(event, annotation)); // }
+  };
+
+  $.FloatingViewer.prototype.ViewerEditorOpen = function (event, annotation, updating, interactionPoint) {
+    var self = this;
+
+    if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
+      // there's already an open editor window for this instance so don't do anything
+      return;
+    }
+
+    if (self.annotation_tool.viewer) {
+      jQuery('.annotation-viewer').remove();
+      delete self.annotation_tool.viewer;
+      self.annotation_tool.isStatic = false;
+      self.annotation_tool.updating = false;
+      self.annotation_tool.editing = false;
+    }
+
+    jQuery('.edit').prop('disabled', true); // set editing mode
+
+    self.annotation_tool.editing = true;
+    self.annotation_tool.updating = updating; // actually set up and draw the Editor
+
+    var wrapperElement = self.element.find('.annotator-wrapper');
+    wrapperElement.after(self.annotation_tool.editorTemplate); // save the element to call upon later
+
+    self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
+    var intPt = interactionPoint; // situate it on its proper location
+
+    self.annotation_tool.editor.css({
+      'top': intPt.top - jQuery(window).scrollTop(),
+      'left': intPt.left
+    }); // closes the editor tool and does not save annotation
+
+    self.annotation_tool.editor.find('.cancel').click(function () {
+      $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
+    }); // closes the editor and does save annotations
+
+    self.annotation_tool.editor.find('.save').click(function () {
+      var timer = new Date();
+      var text = self.annotation_tool.editor.find('#annotation-text-field').val();
+
+      if (updating) {
+        annotation.annotationText.pop();
+      }
+
+      annotation.annotationText.push(text);
+      var timer2 = new Date();
+      $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
+      var end = new Date(); // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
+    });
+    self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
+    setTimeout(function () {
+      self.annotation_tool.editor.find('#annotation-text-field')[0].focus();
+    }, 250);
+    self.checkOrientation(self.annotation_tool.editor);
+    $.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
+  };
+
+  $.FloatingViewer.prototype.ViewerEditorClose = function (annotation, redraw, should_erase) {
+    var self = this;
+    var timer = new Date();
+    jQuery('.edit').prop('disabled', false);
+    jQuery('.note-link-popover').remove();
+
+    if (self.annotation_tool.editor) {
+      self.annotation_tool.editor.remove();
+    }
+
+    delete self.annotation_tool.editor;
+    self.annotation_tool.editing = false;
+    self.annotation_tool.updating = false; //$.publishEvent('editorHidden', self.instance_id, []);
+    // jQuery('body').css('overflow-y', 'scroll');
+  };
+
+  $.FloatingViewer.prototype.ViewerDisplayOpen = function (event, anns) {
+    var self = this;
+    var annotations = anns.reverse(); // if the timer is set for the tool to be hidden, this intercepts it
+
+    if (self.hideTimer !== undefined) {
+      clearTimeout(self.hideTimer);
+    }
+
+    if (jQuery('.annotation-editor').is(':visible') || jQuery('.hx-confirm-button').is(':visible') || self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer)) {
+      // there's already an open editor window for this instance so don't do anything
+      return;
+    }
+
+    self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
+      'viewerid': self.instance_id.replace(/\W/g, '-'),
+      'annotations': annotations,
+      'instructor_ids': self.options.instructors,
+      'common_name': self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ""
+    });
+
+    if (self.options.viewer_options.readonly) {
+      self.annotation_tool.viewerTemplate = self.annotation_tool.viewerTemplate.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '');
+    } // add the viewer to the DOM
+
+
+    self.element.find('.annotator-wrapper').after(self.annotation_tool.viewerTemplate); // collect the object for manipulation and coordinates of where it should appear
+
+    if (self.annotation_tool.viewer) {
+      self.annotation_tool.viewer.remove();
+      delete self.annotation_tool.viewer;
+    }
+
+    self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
+    var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
+    var newLeft = annotator.util.mousePosition(event).left + 30;
+    self.annotation_tool.viewer.css({
+      'top': newTop,
+      'left': newLeft
+    });
+    self.annotation_tool.viewer.data('annotations', annotations);
+    self.annotation_tool.viewer.find('.cancel').click(function (event1) {
+      self.annotation_tool.isStatic = false;
+      self.annotation_tool.viewer.remove();
+      delete self.annotation_tool.viewer; // jQuery('body').css('overflow-y', 'scroll');
+    });
+    self.annotation_tool.viewer.find('.edit').click(function (event1) {
+      var annotation_id = jQuery(this).attr('id').replace('edit-', '');
+      var filtered_annotation = annotations.find(function (ann) {
+        if (ann.id === annotation_id) return ann;
+      });
+      self.ViewerEditorOpen(event1, filtered_annotation, true, {
+        top: parseInt(self.annotation_tool.viewer.css('top'), 10),
+        left: parseInt(self.annotation_tool.viewer.css('left'), 10)
+      }); //StorageAnnotationSave
+    });
+    self.annotation_tool.viewer.find('.delete').confirm({
+      title: 'Delete Annotation?',
+      content: 'Would you like to delete your annotation? This is permanent.',
+      buttons: {
+        confirm: function confirm() {
+          var annotation_id = this.$target[0].id.replace('delete-', '');
+          var filtered_annotation = annotations.find(function (ann) {
+            if (ann.id === annotation_id) return ann;
+          });
+          $.publishEvent('StorageAnnotationDelete', self.instance_id, [filtered_annotation]);
+          self.ViewerDisplayClose();
+
+          if (self.annotation_tool.viewer) {
+            jQuery('.annotation-viewer').remove();
+            delete self.annotation_tool.viewer;
+            self.annotation_tool.isStatic = false;
+            self.annotation_tool.updating = false;
+            self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
+          }
+        },
+        cancel: function cancel() {}
+      }
+    }); // console.log(annotations);        
+
+    $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
+    self.checkOrientation(self.annotation_tool.viewer);
+  };
+
+  $.FloatingViewer.prototype.ViewerDisplayClose = function (annotations) {
+    var self = this;
+
+    if (self.annotation_tool.isStatic) {
+      return;
+    }
+
+    clearTimeout(self.hideTimer);
+    self.hideTimer = setTimeout(function () {
+      if (self.hideTimer) {
+        $.publishEvent('displayHidden', self.instance_id, []);
+
+        if (self.annotation_tool.viewer) {
+          self.annotation_tool.viewer.remove();
+          delete self.annotation_tool.viewer;
+        }
+
+        self.annotation_tool.isStatic = false;
+        self.annotation_tool.updating = false;
+        self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
+      }
+    }, 500);
+  };
+
+  $.FloatingViewer.prototype.StorageAnnotationSave = function (annotations) {};
+
+  $.FloatingViewer.prototype.StorageAnnotationLoad = function (first_argument) {
+    var self = this;
+
+    if (self.annotation_tool.viewer) {
+      self.annotation_tool.viewer.remove();
+      delete self.annotation_tool.viewer;
+    }
+
+    self.annotation_tool.isStatic = false;
+    self.annotation_tool.updating = false;
+    self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
+  };
+
+  $.FloatingViewer.prototype.StorageAnnotationDelete = function (annotation) {
+    var self = this;
+    jQuery('.annotation-viewer').remove();
+    delete self.annotation_tool.viewer;
+    self.annotation_tool.isStatic = false;
+    self.annotation_tool.updating = false;
+    self.annotation_tool.editing = false;
+  };
+
+  $.FloatingViewer.prototype.setUpPinAndMove = function () {
+    var self = this; // keeps track of when mouse button is pressed
+
+    jQuery('body').on('mousedown', function (event) {
+      self.buttonDown = true;
+    }); // keeps track of when mouse button is let go
+
+    jQuery('body').on('mouseup', function (event) {
+      self.buttonDown = false;
+    }); // handles moving the editor by clicking and dragging
+
+    jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event) {
+      self.prepareToMove(true, event);
+    }); // handles moving the viewer by clicking and dragging
+
+    jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event) {
+      self.prepareToMove(false, event);
+    });
+    jQuery('body').on('mousemove', function (event) {
+      self.moving(event);
+    });
+    jQuery('body').on('mouseup', function (event) {
+      self.finishedMoving(event);
+    }); // jQuery('body').on('mouseover', '.annotation-editor', function(event) {
+    //     jQuery('body').css('overflow-y', 'hidden');
+    // });
+    // jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
+    //     jQuery('body').css('overflow-y', 'scroll');
+    // });
+    // jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
+    //     jQuery('body').css('overflow-y', 'hidden');
+    // });
+    // jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
+    //     jQuery('body').css('overflow-y', 'scroll');
+    // });
+
+    jQuery('body').on('mouseleave', function (event) {
+      self.finishedMoving(event);
+    });
+  };
+
+  $.FloatingViewer.prototype.prepareToMove = function (isEditor, event) {
+    var self = this;
+    self.itemMoving = isEditor ? self.annotation_tool.editor : self.annotation_tool.viewer;
+
+    if (self.itemMoving) {
+      $.pauseEvent(event); //turns on moving mode
+
+      self.itemMoving.moving = true; // set initial mouse position offset by where on the editor the user clicked
+
+      var move = annotator.util.mousePosition(event);
+      var editorTop = parseInt(self.itemMoving.css('top'), 10);
+      var editorLeft = parseInt(self.itemMoving.css('left'), 10);
+      self.itemMoving.offsetTopBy = move.top - editorTop;
+      self.itemMoving.offsetLeftBy = move.left - editorLeft;
+    }
+  };
+
+  $.FloatingViewer.prototype.moving = function (event) {
+    var self = this;
+
+    if (self.itemMoving && self.itemMoving.moving) {
+      $.pauseEvent(event); // gets the userlocation (where they've dragged to)
+
+      var move = annotator.util.mousePosition(event);
+      var newTop = move.top - self.itemMoving.offsetTopBy;
+      var newLeft = move.left - self.itemMoving.offsetLeftBy; // var borderBox = self.element[0].getBoundingClientRect();
+
+      if (newTop < 0) {
+        newTop = 0;
+      }
+
+      if (newLeft < 0) {
+        newLeft = 0;
+      }
+
+      if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
+        newTop = window.innerHeight - self.itemMoving.outerHeight();
+      }
+
+      if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
+        newLeft = window.innerWidth - self.itemMoving.outerWidth();
+      }
+      /* TODO: Set boundaries for far right and far down */
+      // sets the editor to that location (fixing offset)
+
+
+      self.itemMoving.css({
+        top: newTop,
+        left: newLeft
+      });
+    } else if (self.buttonDown && self.annotation_tool.viewer && !self.annotation_tool.viewer.hasClass('static')) {
+      self.annotation_tool.viewer.remove();
+      delete self.annotation_tool.viewer;
+    }
+  };
+
+  $.FloatingViewer.prototype.finishedMoving = function (event) {
+    var self = this;
+
+    if (self.itemMoving) {
+      $.pauseEvent(event); //turns on moving mode
+
+      self.itemMoving.moving = false;
+      var move = annotator.util.mousePosition(event);
+      self.annotation_tool.interactionPoint = {
+        top: move.top - self.itemMoving.offsetTopBy,
+        left: move.left - self.itemMoving.offsetLeftBy
+      };
+    }
+  };
+
+  $.FloatingViewer.prototype.checkOrientation = function (viewerElement) {
+    var self = this;
+    var newTop = parseInt(jQuery(viewerElement).css('top'), 10);
+    var newLeft = parseInt(jQuery(viewerElement).css('left'), 10);
+    var elWidth = parseInt(jQuery(viewerElement).outerWidth());
+    var elHeight = parseInt(jQuery(viewerElement).outerHeight());
+
+    if (newTop < 0) {
+      newTop = 0;
+    }
+
+    if (newLeft < 0) {
+      newLeft = 0;
+    }
+
+    if (newTop + elHeight > window.innerHeight) {
+      newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+    }
+
+    if (newLeft + elWidth > window.innerWidth) {
+      newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
+    }
+
+    jQuery(viewerElement).css('top', newTop);
+    jQuery(viewerElement).css('left', newLeft);
+  };
+
+  $.viewers.push($.FloatingViewer);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports) {
+
+module.exports = function(obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<div class="annotation-editor" id="annotation-editor-' +
+((__t = ( editorid )) == null ? '' : __t) +
+'">\n    <nav class=\'annotation-editor-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close"><i class="fas fa-times-circle"></i></button>\n    </nav>\n    <textarea id="annotation-text-field"></textarea>\n    <div class="plugin-area">\n    </div>\n    <!-- <input type="text" id="annotation-tags-field" placeholder="Add tags..." /> -->\n    <button tabindex="0" class="btn btn-primary save action-button">Save</button>\n    <button tabindex="0" class="btn btn-default cancel action-button">Cancel</button>\n</div>\n';
+
+}
+return __p
+};
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(_, jQuery) {module.exports = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class="annotation-viewer" id="annotation-viewer-' +
+((__t = ( viewerid )) == null ? '' : __t) +
+'">\n    <nav class=\'annotation-viewer-nav-bar\'>\n        <button class="cancel" tabindex="0" aria-label="Close Viewer" tile="Close Viewer"><i class="fas fa-times-circle"></i></button>\n    </nav>\n    <div class="plugin-area-top">\n    </div>\n    <div class="annotation-text-field">\n        ';
+ _.each(annotations, function(ann){ ;
+__p += '\n            <div class="ann-item item-' +
+((__t = ( ann.id )) == null ? '' : __t) +
+' floating ';
+ if (instructor_ids.indexOf(ann.creator.id) > -1) {;
+__p += 'inst';
+};
+__p += '" id="annotation-' +
+((__t = ( ann.id )) == null ? '' : __t) +
+'">\n                <div class="annotation-username">';
+ if (instructor_ids.indexOf(ann.creator.id) > -1 && common_name !== "") { print(common_name);;
+__p += '&nbsp;<span class="fas fa-certificate-cap"></span>';
+} else {print(ann.creator.name);} ;
+__p += '</div>\n                <div class="annotation-date" title="' +
+((__t = ( ann.created )) == null ? '' : __t) +
+'">';
+ if (ann.created){print(jQuery.timeago(ann.created));} else {print(jQuery.timeago(new Date()))} ;
+__p += '</div>\n                <button class="edit" id="edit-' +
+((__t = ( ann.id )) == null ? '' : __t) +
+'" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>\n                <button class="delete" id="delete-' +
+((__t = ( ann.id )) == null ? '' : __t) +
+'" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>\n                <div class="annotation-quote">' +
+((__t = ( ann.exact )) == null ? '' : __t) +
+'</div>\n                <div class="annotation-text">' +
+((__t = ( ann.annotationText )) == null ? '' : __t) +
+'</div>\n                ';
+ if (ann.tags && ann.tags.length > 0) { ;
+__p += '\n                    <div class="annotation-tags">\n                        Tags: \n                        \n                        ';
+ _.each(ann.tags, function(tag){ ;
+__p += '\n                            <div class="annotation-tag">' +
+((__t = ( tag )) == null ? '' : __t) +
+'</div>\n                        ';
+ }); ;
+__p += '\n                    </div>\n                ';
+ } ;
+__p += '\n                <div class="plugin-area-bottom">\n                </div>\n            </div>\n        ';
+ }); ;
+__p += '\n    </div>\n</div>\n';
+
+}
+return __p
+};
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  InstructionPanel Annotations Plugin
+ *  
+ *
+ */
+//uncomment to add css file
+__webpack_require__(62);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.InstructionPanel = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID; // console.log("INSTRUCTION PANEL CREATED");
+
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.InstructionPanel.prototype.init = function () {
+    var self = this;
+    self.setUpInstructions();
+  };
+
+  $.InstructionPanel.prototype.setUpInstructions = function () {
+    var self = this;
+
+    if (!self.options.instructions || self.options.instructions.length == 0) {
+      return;
+    } // console.log(self.options.instructions, typeof(self.options.instructions));
+
+
+    var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span href="#" class="toggle-instructions" role="button" data-toggle="collapse" data-target=".instructions-body" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse in" aria-expanded="true" aria-live="polite" id="annotation-instructions">' + self.options.instructions + '</section></div>';
+    jQuery(self.options.slot).prepend(container); // toggles the label for toggling instructions
+
+    var inst_area = jQuery(self.options.slot).find('.toggle-instructions');
+    inst_area.click(function () {
+      if (inst_area.html() == "Collapse Instructions") {
+        inst_area.html('Expand Instructions');
+      } else {
+        inst_area.html('Collapse Instructions');
+      }
+    });
+  };
+
+  $.InstructionPanel.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  Object.defineProperty($.InstructionPanel, 'name', {
+    value: "InstructionPanel"
+  });
+  $.plugins.push($.InstructionPanel);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  FontResize Annotations Plugin
+ *  
+ *
+ */
+__webpack_require__(64);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.FontResize = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.toggleTextSize(0);
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.FontResize.prototype.init = function () {
+    var self = this;
+    self.setUpButtons();
+  };
+
+  $.FontResize.prototype.setUpButtons = function () {
+    var self = this;
+    jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label">(+0)</span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
+    jQuery(self.options.slot).find('.annotations-text-size-plus').click(function () {
+      self.toggleTextSize(1);
+    });
+    jQuery(self.options.slot).find('.annotations-text-size-minus').click(function () {
+      self.toggleTextSize(-1);
+    });
+  };
+
+  $.FontResize.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  $.FontResize.prototype.toggleTextSize = function (step) {
+    var self = this;
+    step = isNaN(Number(step)) ? 0 : Number(step);
+    var $content = jQuery(self.options.slot).find('.annotator-wrapper');
+    var $label = jQuery("#annotations-text-size-label");
+    var nodes = [],
+        curnode,
+        stylesize,
+        styleunit,
+        computed;
+    var minsize = 8;
+    var sizediff = 0;
+
+    if (typeof this.defaultFontSize === "undefined") {
+      this.defaultFontSize = 14;
+    }
+
+    if (typeof this.targetFontSize === "undefined") {
+      this.targetFontSize = this.defaultFontSize;
+    }
+
+    this.targetFontSize += step;
+
+    if (this.targetFontSize < minsize) {
+      this.targetFontSize = minsize;
+    }
+
+    sizediff = this.targetFontSize - this.defaultFontSize;
+
+    if (sizediff === 0) {
+      $label.html("(+0)");
+      $content.css('fontSize', '');
+    } else {
+      $label.html("(" + (sizediff > 0 ? "+" + sizediff : sizediff) + ")");
+      $content.css('fontSize', String(this.targetFontSize) + "px");
+      nodes.push($content[0]);
+    } // walk the dom and find custom fontStyle declarations and adust as necessary
+    //console.log("updating font size to: ", this.targetFontSize, "step:", step);
+
+
+    while (nodes.length > 0) {
+      curnode = nodes.pop(); // handle case where a <font> is embedded (deprecated tag... but still out there in the wild)
+
+      if (curnode.tagName.toLowerCase() == 'font') {
+        computed = window.getComputedStyle(curnode);
+        curnode.style.fontSize = computed['font-size'];
+        curnode.size = "";
+      } // handle case where a class like "msoNormal" from an embedded stylesheet has applied a font size
+
+
+      if (curnode != $content[0] && curnode.className != "") {
+        curnode.style.fontSize = "inherit";
+      } // handle case with an inline style fontSize (only adjust absolute fontSize values)
+
+
+      stylesize = parseInt(curnode.style.fontSize, 10);
+
+      if (!isNaN(stylesize)) {
+        styleunit = curnode.style.fontSize.replace(stylesize, '');
+        stylesize += step;
+        stylesize = stylesize < minsize ? minsize : stylesize;
+
+        if (styleunit.indexOf("px") !== -1 || styleunit.indexOf("pt") !== -1) {
+          curnode.style.fontSize = stylesize + styleunit;
+        }
+      }
+
+      for (var i = curnode.children.length; i > 0; i--) {
+        nodes.push(curnode.children[i - 1]);
+      }
+    }
+  };
+
+  Object.defineProperty($.FontResize, 'name', {
+    value: "FontResize"
+  });
+  $.plugins.push($.FontResize);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {var hrange = __webpack_require__(5);
+
+(function ($) {
+  $.KeyboardSelector = function (element, inst_id) {
+    this.element = element;
+
+    if (!jQuery(element).hasClass('annotator-wrapper')) {
+      this.element = jQuery(element).find('.annotator-wrapper');
+    }
+
+    this.instance_id = inst_id;
+    this.delimiter_list = ['*', '+', '#', '^'];
+    this.keyMaps = {
+      'BACKSPACE': 8,
+      'TAB': 9,
+      'ENTER': 13,
+      'SHIFT': 16,
+      'CTRL': 17,
+      'ALT': 18,
+      'ESC': 27,
+      'SPACE': 32,
+      'LEFT': 37,
+      'UP': 38,
+      'RIGHT': 39,
+      'DOWN': 40,
+      'DELETE': 46,
+      'MULTIPLY': 106,
+      'ADD': 107,
+      'PIPE': 220,
+      '*': 56,
+      '+': 187,
+      'HOME': 36,
+      'END': 35
+    };
+    this.init();
+  };
+
+  $.KeyboardSelector.prototype.init = function () {
+    var self = this;
+    this.delimiter = this.checkDelimiter(self.element);
+
+    if (!this.delimiter) {//console.log('Error in delimiter...no suitable delimiter found!');
+    }
+
+    this.start = undefined;
+    this.setUpButton();
+  };
+
+  $.KeyboardSelector.prototype.checkDelimiter = function (element) {
+    var textSearch = jQuery(element).text();
+
+    for (var i = 0; i < this.delimiter_list.length; i++) {
+      var testDelimiter = this.delimiter_list[i];
+
+      if (textSearch.indexOf(testDelimiter) == -1) {
+        return testDelimiter;
+      }
+    }
+
+    return undefined;
+  };
+
+  $.KeyboardSelector.prototype.setUpButton = function () {
+    var self = this;
+    jQuery(document).on('keydown', function (event) {
+      if (event.key == '1' && (event.altKey || event.ctrlKey) || event.key == '\'' && (event.altKey || event.ctrlKey)) {
+        event.preventDefault(); //move this to external button
+
+        if (!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')) {
+          self.turnSelectionModeOn();
+        }
+
+        return false;
+      } else if (event.key == 'Escape') {
+        //console.log("hello");
+        self.turnSelectionModeOff(); // } else if (event.key == ' ') {
+        //     event.preventDefault();
+        //     return false;
+      }
+
+      if (event.key == '2' && (event.altKey || event.ctrlKey)) {
+        event.preventDefault();
+        var currentInst = jQuery('.sr-alert').html();
+
+        if (currentInst.trim() === "") {
+          currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
+        }
+
+        jQuery('.sr-alert').html('');
+        setTimeout(function () {
+          jQuery('.sr-alert').html(currentInst);
+        }, 250);
+      }
+
+      if (event.key == '3' && (event.altKey || event.ctrlKey)) {
+        var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
+        var newVal = currVal == "off" ? 'assertive' : 'off';
+        var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+
+        if (newVal == "off") {
+          jQuery('.sr-real-alert').html(newAlert);
+          setTimeout(function () {
+            jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+            jQuery('.sr-real-alert').html('');
+          }, 500);
+          var currVal = jQuery('.sr-alert').html();
+          jQuery('.sr-alert').html('');
+          jQuery('.sr-alert').data('old', currVal);
+        } else {
+          jQuery('.sr-alert').html(jQuery('.sr-alert').data('old'));
+          jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+          jQuery('.sr-real-alert').html(newAlert);
+        }
+
+        event.preventDefault();
+      }
+    });
+    jQuery(document).on('keyup', '*[role="button"]', function (evt) {
+      if (evt.key == 'Enter' || evt.key == ' ') {
+        jQuery(evt.currentTarget).click();
+        return $.pauseEvent(evt);
+        ;
+      }
+    }); // var slot = self.element;
+    // if (!self.element.hasClass('annotation-slot')) {
+    //     slot = self.element.find('.annotation-slot');
+    // }
+    // if (slot.length === 0) {
+    //     slot = self.element.closest('.annotation-slot');
+    // }
+    // jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
+
+    jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function (evt) {
+      jQuery('#key-help').toggleClass('sr-only');
+      jQuery(this).toggleClass('selected');
+      jQuery(self.element).closest('main').animate({
+        scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
+      }); // if (jQuery(this).hasClass('selection-mode-on')) {
+      // self.turnSelectionModeOff();
+      //jQuery(this).removeClass('selection-mode-on');
+      // } else {
+      // self.turnSelectionModeOn();
+      //jQuery(this).addClass('selection-mode-on');
+      // }
+    });
+    jQuery(document).on('click', 'button[class*="make-annotation-button"]', function (evt) {
+      if (jQuery(this).hasClass('selection-mode-on')) {
+        self.turnSelectionModeOff();
+        jQuery(this).removeClass('selection-mode-on');
+      } else {
+        self.turnSelectionModeOn();
+        jQuery(this).addClass('selection-mode-on');
+      }
+    });
+    $.subscribeEvent('wysiwygOpened', self.instance_id, function (e) {
+      if (self.currentSelection) {
+        var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+        jQuery('.note-editable.card-block').attr('aria-label', 'The quote you have selected is: <em>' + ser.text.exact + '</em>. You are now in a text box. Add your annotation.');
+      }
+    });
+    $.subscribeEvent('focusOnContext', self.instance_id, function (_, ann) {
+      self.addMarkers(ann.ranges);
+    });
+  };
+
+  $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
+    this.saveHTML = this.element.innerHTML;
+    var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
+
+    if (!toggleButton.hasClass('should-show')) {
+      toggleButton.click();
+    }
+
+    if (window.navigator.platform.indexOf('Mac') !== -1) {
+      jQuery('.sr-alert').html('Enter the text box until editing text (usually VoiceOver Keys + Down Arrow) then move around using arrow keys without VoiceOver keys held down.');
+    }
+
+    jQuery(this.element).attr('contenteditable', 'true');
+    jQuery(this.element).attr('role', 'textbox');
+    jQuery(this.element).attr('tabindex', "0");
+    jQuery(this.element).attr('aria-label', 'You are now in the text to be annotated. Mark selection with asterisks.');
+    jQuery(this.element).attr('aria-multiline', 'true');
+    jQuery(this.element).attr('accesskey', 't');
+    jQuery('.hx-selector-img').remove();
+    jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
+    jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
+    this.start = undefined;
+    this.currentSelection = undefined;
+    this.element.innerHTML = this.saveHTML;
+    this.element.focus();
+  };
+
+  $.KeyboardSelector.prototype.turnSelectionModeOff = function () {
+    var self = this;
+    var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
+
+    if (toggleButton.hasClass('should-show')) {
+      toggleButton.click();
+    }
+
+    jQuery(this.element).off('keydown');
+    jQuery(this.element).off('keyup');
+    jQuery(this.element).attr('contenteditable', 'false');
+    jQuery(this.element).attr('role', '');
+    jQuery(this.element).attr('tabindex', '');
+    jQuery(this.element).attr('aria-multiline', 'false');
+    jQuery(this.element).attr('outline', '0px');
+    jQuery('.hx-selector-img').remove();
+    this.start = undefined;
+    this.currentSelection = undefined;
+    setTimeout(function () {
+      self.element.blur();
+    }, 250);
+  };
+  /* Credit to Rich Caloggero
+   * https://github.com/RichCaloggero/annotator/blob/master/annotator.html
+   */
+
+
+  $.KeyboardSelector.prototype.filterKeys = function (keyPressed) {
+    var self = this;
+    var key = keyPressed.key || keypressed.keyCode;
+
+    switch (key) {
+      case self.delimiter:
+        return false;
+
+      case "ArrowUp":
+      case "ArrowDown":
+      case "ArrowLeft":
+      case "ArrowRight":
+      case "Up":
+      case "Down":
+      case "Left":
+      case "Right":
+      case 37:
+      case 38:
+      case 39:
+      case 40:
+      case "Home":
+      case "End":
+      case "Tab":
+        return true;
+
+      case "Backspace":
+        if (self.verifyBackspace()) {
+          self.start = undefined;
+          return true;
+        }
+
+      case "Escape":
+        self.turnSelectionModeOff();
+        keyPressed.preventDefault();
+        jQuery('.sr-real-alert').html("Keyboard Selection Mode is off.");
+        return false;
+
+      case "2":
+        if (keyPressed.altKey || keyPressed.ctrlKey) {
+          jQuery('.sr-alert').html(jQuery('.sr-alert').html());
+        }
+
+        keyPressed.preventDefault();
+        return false;
+
+      case "3":
+        if (keyPressed.altKey || keyPressed.ctrlKey) {
+          var currVal = jQuery('.sr-alert').attr('aria-live');
+          var newVal = currVal == "off" ? 'polite' : 'off';
+          jQuery('.sr-alert').attr('aria-live', newVal);
+          var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+          jQuery('.sr-real-alert').html(newAlert);
+        }
+
+        keyPressed.preventDefault();
+        return false;
+
+      default:
+        keyPressed.preventDefault();
+        return false;
+    } // switch
+
+  };
+
+  $.KeyboardSelector.prototype.getBoundingClientRect = function (range) {
+    var newRange = range.cloneRange();
+
+    try {
+      newRange.setStart(range.startContainer, range.startOffset);
+      newRange.setEnd(range.startContainer, range.startOffset + 1);
+      return {
+        top: newRange.getBoundingClientRect().top,
+        left: newRange.getBoundingClientRect().left
+      };
+    } catch (e) {
+      newRange.setStart(range.startContainer, range.startOffset - 1);
+      newRange.setEnd(range.startContainer, range.startOffset);
+      return {
+        top: newRange.getBoundingClientRect().top,
+        left: newRange.getBoundingClientRect().right
+      };
+    }
+  };
+
+  $.KeyboardSelector.prototype.setSelection = function (keyPressed) {
+    var self = this;
+    var key = keyPressed.key || keyPressed.keyCode;
+
+    switch (key) {
+      case self.delimiter:
+        if (!self.start || typeof self.start == "undefined") {
+          self.start = self.copySelection(getSelection());
+          var bcr = self.getBoundingClientRect(self.start); //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
+
+          jQuery('body').append('<div class="hx-selector-img"></div>');
+          jQuery('.hx-selector-img').css({
+            top: bcr.top + jQuery(window).scrollTop() - 5,
+            left: bcr.left - 5
+          });
+          jQuery('.sr-alert').html();
+          jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
+        } else {
+          var end = self.copySelection(getSelection());
+          jQuery('.hx-selector-img').remove(); //console.log("Found end", end);
+
+          if (self.currentSelection) {//console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
+          } else {
+            var end = self.copySelection(getSelection());
+            var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
+            var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
+            var boundingBox = undefined;
+            self.currentSelection = document.createRange();
+
+            if (posStart.startOffset < posEnd.startOffset) {
+              self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
+              self.currentSelection.setEnd(end.startContainer, end.startOffset);
+            } else {
+              self.currentSelection.setStart(end.startContainer, end.startOffset);
+              self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
+            }
+          }
+
+          boundingBox = {
+            top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
+            left: self.currentSelection.getBoundingClientRect().left - 5
+          };
+          var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
+          jQuery('.sr-alert').html(''); //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+
+          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]); //console.log("Active Element", document.activeElement.className);
+
+          if (document.activeElement.className.indexOf('note-editable') == -1) {
+            //console.log("BLURRING");
+            self.element.blur();
+          } else {
+            setTimeout(function () {
+              jQuery('.note-editable.card-block')[0].focus(); //console.log("should be focusing on", document.activeElement);
+            }, 250);
+          }
+
+          self.turnSelectionModeOff(); // var startComesAfter = self.startComesAfter(self.start, end);
+          // console.log("Found other", startComesAfter);
+          // self.start = startComesAfter[0];
+          // self.processSelection(startComesAfter[0], startComesAfter[1]);
+        }
+
+        break;
+
+      case "ArrowUp":
+      case "ArrowDown":
+      case "ArrowLeft":
+      case "ArrowRight":
+      case "Up":
+      case "Down":
+      case "Left":
+      case "Right":
+      case 37:
+      case 38:
+      case 39:
+      case 40:
+        if (self.start) {
+          var end = self.copySelection(getSelection());
+          var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
+          var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
+          self.currentSelection = document.createRange();
+
+          if (posStart.startOffset < posEnd.startOffset) {
+            self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
+            self.currentSelection.setEnd(end.startContainer, end.startOffset);
+          } else {
+            self.currentSelection.setStart(end.startContainer, end.startOffset);
+            self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
+          } // console.log(self.start, end);
+          // console.log(self.currentSelection, self.currentSelection.toString());
+          // var sel = window.getSelection();
+          // sel.removeAllRanges();
+          // sel.addRange(self.currentSelection);
+
+        }
+
+    }
+  };
+
+  $.KeyboardSelector.prototype.copySelection = function (selection) {
+    // const sel = {
+    //     anchorNode: selection.anchorNode,
+    //     anchorOffset: selection.anchorOffset,
+    //     focusNode: selection.focusNode,
+    //     focusOffset: selection.focusOffset,
+    //     parentElement: selection.anchorNode.parentElement
+    // };
+    return selection.getRangeAt(0);
+  };
+
+  $.KeyboardSelector.prototype.processSelection = function (start, end) {
+    var self = this;
+    var s = getSelection(); //console.log("LOOK HERE", start, end);
+
+    var r = this.removeMarkers(start, end);
+    self.start = undefined; //console.log("R!", r);
+
+    try {
+      var boundingBox = r.end.parentElement.getBoundingClientRect();
+    } catch (e) {
+      var boundingBox = r.endContainer.parentElement.getBoundingClientRect();
+    } //console.log(boundingBox);
+    // publish selection made
+
+
+    Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]); //console.log("Element Focused", document.activeElement);
+
+    if (document.activeElement.className.indexOf('note-editable') == -1) {
+      self.element.blur();
+    }
+
+    self.turnSelectionModeOff(); // this.element.focus();
+  };
+
+  $.KeyboardSelector.prototype.startComesAfter = function (start, end) {
+    if (start.anchorNode == end.anchorNode) {
+      if (start.anchorOffset > end.anchorOffset) {
+        start.anchorOffset += 1;
+        return [end, start];
+      } else {
+        return [start, end];
+      }
+    } // TODO: Handle other use cases (i.e. starting several nodes instead of within the same one)
+
+
+    var commonAncestor = this.getCommonAncestor(start.anchorNode, end.anchorNode);
+    var children = jQuery(commonAncestor).children();
+    var startCounter = 0;
+    jQuery.each(children, function (_, el) {
+      if (el == start.parentElement) {
+        startCounter += start.anchorOffset;
+        return false;
+      } else {
+        startCounter += jQuery(el).text().length;
+      }
+    });
+    var endCounter = 0;
+    jQuery.each(children, function (_, el) {
+      if (el == end.parentElement) {
+        endCounter += end.anchorOffset;
+        return false;
+      } else {
+        endCounter += jQuery(el).text().length;
+      }
+    });
+
+    if (startCounter > endCounter) {
+      return [end, start];
+    } else {
+      return [start, end];
+    }
+  };
+  /**
+   * Gets the common ancestor.
+   * Credit: https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
+   *
+   * @param      {<type>}  a       { parameter_description }
+   * @param      {<type>}  b       { parameter_description }
+   * @return     {Object}  The common ancestor.
+   */
+
+
+  $.KeyboardSelector.prototype.getCommonAncestor = function (a, b) {
+    $parentsa = jQuery(a).parents();
+    $parentsb = jQuery(b).parents();
+    var found = null;
+    $parentsa.each(function () {
+      var thisa = this;
+      $parentsb.each(function () {
+        if (thisa == this) {
+          found = this;
+          return false;
+        }
+      });
+      if (found) return false;
+    });
+    return found;
+  };
+
+  $.KeyboardSelector.prototype.removeMarkers = function (start, end) {
+    var self = this;
+    var _start = start.anchorNode;
+
+    var _startOffset = start.anchorOffset - 1;
+
+    var _end = end.anchorNode;
+
+    var _endOffset = end.anchorOffset - 1; //console.log(_start, _startOffset, _end, _endOffset);
+
+
+    var t2 = this.removeCharacter(_end.textContent, _endOffset);
+    _end.textContent = t2;
+    var t1 = this.removeCharacter(_start.textContent, _startOffset);
+    _start.textContent = t1;
+    var r = document.createRange();
+    r.setStart(_start, _startOffset);
+    var realRange = {
+      startContainer: _start,
+      startOffset: _startOffset,
+      endContainer: _end
+    };
+
+    if (start.anchorNode === end.anchorNode) {
+      realRange['endOffset'] = _endOffset - 1;
+      r.setEnd(_start, _endOffset - 1);
+    } else {
+      realRange['endOffset'] = _endOffset;
+      r.setEnd(_start, _endOffset);
+    } // getting common ancestors
+    // lonesomeday @ https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
+
+
+    realRange['commonAncestorContainer'] = jQuery(_start).parents().has(_end).first()[0];
+    realRange['exact'] = [r.toString()];
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r); // convert to xpath and then back to a range
+    // var sR = hrange.serializeRange(r, self.element, 'annotator-hl');
+    //var nR = hrange.normalizeRange(sR, self.element, 'annotator-hl');
+    // console.log(sR, nR);
+
+    return r;
+  };
+
+  $.KeyboardSelector.prototype.addMarkers = function (ranges) {// console.log(ranges);
+  };
+
+  $.KeyboardSelector.prototype.removeCharacter = function (s, offset) {
+    if (offset === 0) {
+      s = s.slice(1);
+    } else if (offset === s.length - 1) {
+      s = s.slice(0, -1);
+    } else {
+      s = s.slice(0, offset) + s.slice(offset + 1);
+    }
+
+    return s;
+  };
+
+  $.KeyboardSelector.prototype.verifyBackspace = function () {
+    var s = getSelection();
+    var r = document.createRange();
+    var startOffset = s.anchorOffset;
+
+    if (startOffset > 0) {
+      startOffset -= 1;
+    }
+
+    r.setStart(s.anchorNode, startOffset);
+    r.setEnd(s.anchorNode, startOffset + 1);
+    return r.toString() == this.delimiter;
+  };
+
+  $.selectors.push($.KeyboardSelector);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  Toggle Annotations Plugin
+ *  
+ *
+ */
+__webpack_require__(67);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.ToggleAnnotations = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    this.on = true;
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.ToggleAnnotations.prototype.init = function () {
+    var self = this;
+    self.setUpButton();
+  };
+
+  $.ToggleAnnotations.prototype.setUpButton = function () {
+    var self = this;
+    jQuery(self.options.slot).prepend('<button class="hx-toggle-annotations btn btn-default"></button>');
+    jQuery(self.options.slot).find('.hx-toggle-annotations').click(function () {
+      var toggleButton = jQuery(this);
+
+      if (!toggleButton.hasClass('should-show')) {
+        $.publishEvent('undrawAll', self.instanceID, [function (annList) {
+          self.tempAnnotationList = annList;
+          self.on = false;
+          toggleButton.addClass('should-show');
+        }]);
+      } else {
+        $.publishEvent('drawList', self.instanceID, [self.tempAnnotationList, function () {
+          self.tempAnnotationList = [];
+          self.on = true;
+          toggleButton.removeClass('should-show');
+        }]);
+      }
+    });
+  };
+
+  $.ToggleAnnotations.prototype.editorShown = function () {
+    var self = this;
+
+    if (!self.on) {
+      $.publishEvent('drawList', self.instanceID, [self.tempAnnotationList, function () {
+        self.tempAnnotationList = [];
+        self.on = true;
+        jQuery(self.options.slot).find('.hx-toggle-annotations').removeClass('should-show');
+      }]);
+    }
+  };
+
+  $.ToggleAnnotations.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  Object.defineProperty($.ToggleAnnotations, 'name', {
+    value: "ToggleAnnotations"
+  });
+  $.plugins.push($.ToggleAnnotations);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ *  DisplayResize Annotations Plugin
+ *  
+ *
+ */
+var annotator = annotator ? annotator : __webpack_require__(8); //uncomment to add css file
+
+__webpack_require__(69);
+
+(function ($) {
+  /**
+   * @constructor
+   * @params {Object} options - specific options for this plugin
+   */
+  $.DisplayResize = function (options, instanceID) {
+    this.options = jQuery.extend({}, options);
+    this.instanceID = instanceID;
+    self.itemStretching = false;
+    this.init();
+    return this;
+  };
+  /**
+   * Initializes instance
+   */
+
+
+  $.DisplayResize.prototype.init = function () {
+    var self = this;
+    self.setUpListeners();
+  };
+
+  $.DisplayResize.prototype.setUpListeners = function () {
+    var self = this;
+    Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
+      self.currentViewer.append('<div class="hx-resize resize-bar"></div>');
+      self.currentViewer.find('.hx-resize.resize-bar').on('mousedown', function (event) {
+        self.prepareToStretch(event);
+      });
+      jQuery(self.options.slot).on('mousemove', function (event) {
+        self.stretch(event);
+
+        if (self.itemStretching) {// jQuery('body').css('overflow', 'hidden');
+        }
+      });
+      jQuery(self.options.slot).on('mouseup', function (event) {
+        if (self.itemStretching) {// jQuery('body').css('overflow', 'inherit');
+        }
+
+        self.finishedStretching(event);
+      });
+      jQuery(self.options.slot).on('mouseleave', function (event) {
+        self.finishedStretching(event);
+      });
+    });
+  };
+
+  $.DisplayResize.prototype.prepareToStretch = function (event) {
+    var self = this;
+    self.itemStretching = true;
+    $.pauseEvent(event);
+    self.initialPoint = annotator.util.mousePosition(event);
+    self.initialHeight = self.currentViewer.height(); // self.initialInnerHeight = self.currentViewer.find('.annotation-text-field').outerHeight() - 10;
+  };
+
+  $.DisplayResize.prototype.stretch = function (event) {
+    var self = this;
+
+    if (self.itemStretching) {
+      var newPoint = annotator.util.mousePosition(event);
+      var diff = newPoint.top - self.initialPoint.top;
+      var newHeight = self.initialHeight + diff;
+      var innerHeight = self.initialHeight + diff - 30;
+      self.currentViewer.css('height', newHeight);
+      self.currentViewer.find('.annotation-text-field').css({
+        'max-height': innerHeight,
+        'height': innerHeight
+      });
+    }
+  };
+
+  $.DisplayResize.prototype.finishedStretching = function (event) {
+    var self = this;
+    self.itemStretching = false;
+  };
+
+  $.DisplayResize.prototype.saving = function (annotation) {
+    return annotation;
+  };
+
+  $.DisplayResize.prototype.displayShown = function (viewer, annotations) {
+    var self = this;
+
+    if (Array.isArray(annotations)) {
+      self.currentViewer = jQuery(viewer);
+    }
+  };
+
+  Object.defineProperty($.DisplayResize, 'name', {
+    value: "DisplayResize"
+  });
+  $.plugins.push($.DisplayResize);
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
 /* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(70);
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 70 */,
+/* 71 */,
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(73);
 
 
 /***/ }),
-/* 70 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
 /* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+/* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
 /* harmony import */ var bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_theme_min_css__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
+/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
 /* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(46);
+/* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(53);
 /* harmony import */ var _css_text_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_css_text_css__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
  // vendors
 
-__webpack_require__(17);
+__webpack_require__(19);
 
-__webpack_require__(18); // common Hxighlighter object
+__webpack_require__(20); // common Hxighlighter object
 
 
 __webpack_require__(1);
 
-__webpack_require__(20);
+__webpack_require__(22);
 
 __webpack_require__(47);
 
 __webpack_require__(49);
 
+__webpack_require__(54);
+
+__webpack_require__(74);
+
+__webpack_require__(46);
+
 __webpack_require__(52);
 
-__webpack_require__(71);
-
-__webpack_require__(45);
-
-__webpack_require__(68);
-
-__webpack_require__(72);
+__webpack_require__(75);
 
 /***/ }),
-/* 71 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -46909,7 +46915,7 @@ __webpack_require__(72);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 72 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -46918,7 +46924,7 @@ __webpack_require__(72);
  *
  */
 //uncomment to add css file
-__webpack_require__(73);
+__webpack_require__(76);
 
 (function ($) {
   /**
@@ -46977,7 +46983,7 @@ __webpack_require__(73);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
 
 /***/ }),
-/* 73 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
