@@ -354,8 +354,10 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
     tree.forEach(function(it) {
         var selector = it.replace(/\[.*\]/g, '');
         var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
-
-        var foundNodes = traversingDown.querySelectorAll(selector)
+        
+        var foundNodes = Array.prototype.filter.call(traversingDown.children, function(el1) {
+            return el1.matches(selector);
+        });
         foundNodes = [].slice.call(foundNodes).filter(function(node) {
             return node.className.indexOf(ignoreSelector) == -1;
         })
