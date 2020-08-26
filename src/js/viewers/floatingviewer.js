@@ -134,7 +134,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
         // actually set up and draw the Editor
         var wrapperElement = self.element.find('.annotator-wrapper');
         wrapperElement.after(self.annotation_tool.editorTemplate);
-
+        console.log(self.element);
+        console.log(wrapperElement);
         // save the element to call upon later
         self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
 

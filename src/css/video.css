@@ -19,6 +19,10 @@ body {
     height: 100%;
 }
 
+#viewer .annotator-wrapper {
+    height: 100%;
+}
+
 #viewer video {
     width: inherit;
     height: inherit;

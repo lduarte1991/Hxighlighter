@@ -1,6 +1,8 @@
+require('./selectors/time-selector.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
 require('./plugins/hx-adminbutton.js');
 require('./viewers/sidebar.js');
+require('./viewers/floatingviewer.js');
 require('./plugins/hx-permissions.js');
 require('./plugins/hx-alert.js');
 require('./plugins/hx-summernote-plugin.js');
@@ -70,7 +72,7 @@ import * as videojs from 'video.js/dist/video.js'
         this.guid = $.getUniqueId();
         var selector = jQuery('#viewer');
         var origWidth = selector[0].clientWidth;
-        selector.append('<video id="vid1" class="video-js"><source src="'+this.options.vid_url+'" type="video/mp4"></source></video>')
+        selector.append('<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.vid_url+'" type="video/mp4"></source></video></div>')
         console.log(origWidth);
 
         this.vid_player = videojs('vid1', {
@@ -128,6 +130,8 @@ import * as videojs from 'video.js/dist/video.js'
             self.element = element;
             // console.log("Target loaded");
             // finish setting up selectors
+            
+            // self.setUpSelectors(self.element[0]);
             // self.setUpDrawers(self.element[0]);
 
             // finish setting up viewers (which contain displays and editors)
@@ -139,9 +143,11 @@ import * as videojs from 'video.js/dist/video.js'
             // finish setting up the storage containers
             self.setUpStorage(self.element[0]);
 
-            // if (!self.options.viewerOptions.readonly) {
-            //     self.setUpSelectorsƒ(self.element[0]);
-            // }
+            console.log('about to add selectors')
+            if (!self.options.viewerOptions.readonly) {
+                console.log("Adding selectors", self.setUpSelectors);
+                self.setUpSelectors(self.element[0]);
+            }
         });
 
         $.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
@@ -183,6 +189,17 @@ import * as videojs from 'video.js/dist/video.js'
                 instructors: self.options.instructors,
                 mediaType: self.media,
             }, self.instance_id));
+        });
+    };
+
+    $.VideoTarget.prototype.setUpSelectors = function(element) {
+        var self = this;
+        self.selectors = [];
+        console.log($.selectors);
+        jQuery.each($.selectors, function(_, selector) {
+            console.log(selector);
+            self.selectors.push(new selector(element, self.instance_id, {'confirm': true}));
+            console.log("HERE", self.selectors);
         });
     };
 
@@ -236,6 +253,26 @@ import * as videojs from 'video.js/dist/video.js'
 
     $.VideoTarget.prototype.StorageAnnotationLoad = function(annotations, converter, undrawOld) {
 
+    };
+
+    $.VideoTarget.prototype.TargetSelectionMade = function(range, event) {
+        var range = Array.isArray(range) ? range : [range];
+        var self = this;
+        var annotation = {
+            annotationText: [""],
+            ranges: range,
+            id: $.getUniqueId(),
+            media: "video",
+            totalReplies: 0,
+            creator: {
+                name: self.options.username,
+                id: self.options.user_id
+            }
+        };
+        console.log(annotation);
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.TargetSelectionMade(annotation, event);
+        });
     };
 
     $.VideoTarget.prototype.populateStorage = function(element) {

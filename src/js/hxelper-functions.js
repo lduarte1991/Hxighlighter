@@ -144,6 +144,7 @@
                 jQuery.subscribe(eventName + '.' + inst_id, callBack);
             });
         } else {
+            console.log("subscribe:", eventName + '.' + instanceID)
             jQuery.subscribe(eventName + '.' + instanceID, callBack);
         }
     };

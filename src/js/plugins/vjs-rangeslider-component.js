@@ -213,6 +213,12 @@ import * as videojs from 'video.js/dist/video.js'
       let width = this.limitR - this.limitL;
       this.el().style.width = width + '%';
       this.el().style.left = this.limitL + '%';
+      var percentLeft = this.limitL / 100.00;
+      var percentRight = this.limitR / 100.00;
+      var duration = this.player.duration();
+      var secondLeft = parseInt(percentLeft * duration, 10);
+      var secondRight = parseInt(percentRight * duration, 10);
+      Hxighlighter.publishEvent('videoRangeSelected', '', [this.el(), [secondLeft, secondRight]])
     },
 
     toggleSlider: function(event, params) {
