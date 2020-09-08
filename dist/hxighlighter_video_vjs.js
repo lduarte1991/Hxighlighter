@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Tuesday, August 25th, 2020, 7:56:10 AM  
+// [AIV_SHORT]  Version: 1.2.0 - Wednesday, September 2nd, 2020, 3:38:21 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -10754,7 +10754,7 @@ Hxighlighter.storage = [];
 Hxighlighter.globals = {}; // comment out following line when not webpacking
 
 /* harmony default export */ __webpack_exports__["default"] = (Hxighlighter);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 2 */
@@ -27914,36 +27914,10 @@ Hxighlighter.globals = {}; // comment out following line when not webpacking
   else {}
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(25)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(25)(module)))
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/**
@@ -86293,6 +86267,32 @@ module.exports = g;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(105).Buffer))
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -90110,7 +90110,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }, {}, [1])(1);
 });
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 9 */
@@ -98783,8 +98783,8 @@ __webpack_require__(10);
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
-      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name; // console.log('ann', ann);
-
+      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
+      console.log('ann', ann);
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
 
       if (self.options.viewer_options.readonly) {
@@ -99618,13 +99618,11 @@ __p += '\n            <span class="idAnnotation" style="display:none">' +
 '</span>\n        </div>\n    ';
  } else if (media === "video") {;
 __p += '\n        <div class="playMediaButton" style="text-align:center;">\n            <div class="btn btn-default" style="text-align:center;margin-top:20px;">\n                Segment ' +
-((__t = ( rangeTime.start )) == null ? '' : __t) +
+((__t = ( ranges[0].startLabel )) == null ? '' : __t) +
 ' - ' +
-((__t = ( rangeTime.end )) == null ? '' : __t) +
+((__t = ( ranges[0].endLabel )) == null ? '' : __t) +
 '\n            </div>\n            <span class="idAnnotation" style="display:none">' +
 ((__t = ( id )) == null ? '' : __t) +
-'</span>\n            <span class="uri" style="display:none">' +
-((__t = ( uri )) == null ? '' : __t) +
 '</span>\n        </div>\n    ';
  } ;
 __p += '\n    <div style="display:none;" id="annotationTextLabel">Annotation text</div>\n    <div class="body field side" aria-label="Comment: ' +
@@ -102423,8 +102421,8 @@ var hrange = __webpack_require__(5);
 
 (function ($) {
   $.CatchPy = function (options, inst_id) {
-    this.options = options; //console.log(options);
-
+    this.options = options;
+    console.log('try me', options);
     this.instance_id = inst_id;
     this.store = [];
     this.url_base = options.storageOptions.external_url.catchpy; //console.log(this.url_base);
@@ -102529,11 +102527,11 @@ var hrange = __webpack_require__(5);
     if (updating) {
       self.StorageAnnotationUpdate(ann_to_save, elem);
       return;
-    } // console.log(ann_to_save);
+    }
 
-
-    var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper')); // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
-
+    console.log(ann_to_save);
+    var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
+    console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
     var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
     params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
     params += '&version=' + this.options.storageOptions.database_params.version;
@@ -102702,7 +102700,7 @@ var hrange = __webpack_require__(5);
             'prefix': range.text.prefix,
             'suffix': range.text.suffix
           }];
-        } else {
+        } else if (mediatype === "Image") {
           // console.log('Should be here in image', range);
           if (range.type === "Image") {
             rangeItem = range.selector.items;
@@ -102721,6 +102719,17 @@ var hrange = __webpack_require__(5);
               }
             });
           }
+        } else if (mediatype === "Video" || mediatype === "Audio") {
+          source_id = self.options.vid_url;
+          rangeItem = [{
+            "type": "FragmentSelector",
+            "value": "t=" + range.start + "," + range.end,
+            "refinedBy": [{
+              "type": "CssSelector",
+              "value": "#vid1"
+            }],
+            "conformsTo": "http://www.w3.org/TR/media-frags/"
+          }];
         }
 
         targetList.push({
@@ -102737,7 +102746,7 @@ var hrange = __webpack_require__(5);
     var webAnnotationVersion = {
       "@context": "http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json",
       'type': 'Annotation',
-      'schema_version': '1.1.0',
+      'schema_version': '1.2.0',
       'id': annotation['id'],
       'creator': {
         'id': self.options.user_id,
@@ -103983,7 +103992,7 @@ module.exports = function (css) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__);
 __webpack_require__(103);
 
@@ -104012,6 +104021,8 @@ __webpack_require__(47);
 __webpack_require__(45);
 
 __webpack_require__(104);
+
+__webpack_require__(112);
 
 __webpack_require__(56);
 
@@ -104236,13 +104247,72 @@ __webpack_require__(56);
     });
   };
 
-  $.VideoTarget.prototype.StorageAnnotationSave = function (ann, callBack, errorCallback) {};
+  $.VideoTarget.prototype.StorageAnnotationSave = function (annotations, redraw) {
+    var self = this;
+    jQuery.each(self.storage, function (_, store) {
+      store.StorageAnnotationSave(annotations, self.element, redraw);
+    });
+    jQuery.each(self.viewers, function (_, viewer) {
+      viewer.StorageAnnotationSave(annotations);
+    });
+  };
 
   $.VideoTarget.prototype.StorageAnnotationUpdate = function (ann, callBack, errorCallback) {};
 
   $.VideoTarget.prototype.StorageAnnotationDelete = function (ann, callBack, errorCallback) {};
 
-  $.VideoTarget.prototype.ViewerEditorClose = function (ann, is_new_annotation, hit_cancel) {};
+  $.VideoTarget.prototype.ViewerEditorClose = function (annotation, is_new_annotation, hit_cancel) {
+    var self = this; //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+
+    if (hit_cancel) {
+      if (is_new_annotation) {
+        self.TargetAnnotationUndraw(annotation);
+      } // else, the annotation was already drawn, so don't touch it.
+
+    } else if (is_new_annotation) {
+      annotation = self.plugins.reduce(function (ann, plugin) {
+        return plugin.saving(ann);
+      }, annotation);
+      self.TargetAnnotationDraw(annotation);
+      jQuery('.sr-alert').html('');
+      jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
+      $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
+      console.log('should save new annotation', annotation);
+    } else {
+      jQuery.each(self.drawers, function (_, drawer) {
+        self.TargetAnnotationUndraw(annotation);
+        annotation = self.plugins.reduce(function (ann, plugin) {
+          return plugin.saving(ann);
+        }, annotation);
+        $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+        jQuery('.sr-alert').html('');
+        jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
+        $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
+        console.log('updating ann');
+      });
+    }
+
+    jQuery.each(self.viewers, function (_, viewer) {
+      var timer = new Date();
+      viewer.ViewerEditorClose(annotation); // console.log("Finished: " + (new Date() - timer) + 'ms')
+    });
+    setTimeout(function () {
+      $.publishEvent('editorHidden', self.instance_id, []);
+    }, 50);
+    return annotation;
+  };
+
+  $.VideoTarget.prototype.TargetAnnotationUndraw = function (annotation) {
+    var self = this;
+
+    if (annotation.media !== "Annotation") {
+      jQuery.each(self.drawers, function (_, drawer) {
+        drawer.undraw(annotation);
+      });
+    }
+  };
+
+  $.VideoTarget.prototype.TargetAnnotationDraw = function (annotation) {};
 
   $.VideoTarget.prototype.StorageAnnotationSearch = function (search_options, callback, errfun, shouldNotErase) {};
 
@@ -104406,7 +104476,7 @@ var hrange = __webpack_require__(5);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__);
 
 
@@ -104604,9 +104674,15 @@ __webpack_require__.r(__webpack_exports__);
       var percentLeft = this.limitL / 100.00;
       var percentRight = this.limitR / 100.00;
       var duration = this.player.duration();
-      var secondLeft = parseInt(percentLeft * duration, 10);
-      var secondRight = parseInt(percentRight * duration, 10);
-      Hxighlighter.publishEvent('videoRangeSelected', '', [this.el(), [secondLeft, secondRight]]);
+      var secondLeft = percentLeft * duration;
+      var secondRight = percentRight * duration;
+      Hxighlighter.publishEvent('videoRangeSelected', '', [this.el(), {
+        start: secondLeft,
+        startLabel: this.humanReadable(secondLeft),
+        end: secondRight,
+        endLabel: this.humanReadable(secondRight)
+      }]);
+      this.player.pause();
     },
     toggleSlider: function toggleSlider(event, params) {
       if (params.isAnnotating) {
@@ -104614,6 +104690,32 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.el().style.display = 'none';
       }
+    },
+    humanReadable: function humanReadable(seconds_float) {
+      var dur = this.player.duration();
+
+      if (dur < 60) {
+        return parseInt(seconds_float, 10) + "s";
+      } else if (dur < 3600) {
+        var mins = parseInt(seconds_float / 60, 10);
+        var secs = parseInt(seconds_float % 60, 10);
+        return this.pad(mins, 2) + ":" + this.pad(secs, 2);
+      } else {
+        var hours = parseInt(seconds_float / 3600, 10);
+        var leftovers = seconds_float % 3600;
+        var mins = parseInt(leftovers / 60, 10);
+        var secs = parseInt(leftovers % 60, 10);
+        return this.pad(hours, 2) + ":" + this.pad(mins, 2) + ":" + this.pad(secs, 2);
+      }
+    },
+    pad: function pad(num, size) {
+      var s = num + "";
+
+      while (s.length < size) {
+        s = "0" + s;
+      }
+
+      return s;
     } // TODO: slide together?
 
   });
@@ -106442,7 +106544,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 106 */
@@ -106722,7 +106824,7 @@ if (typeof window !== "undefined") {
 
 module.exports = win;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 110 */
@@ -106746,13 +106848,80 @@ if (typeof document !== 'undefined') {
 
 module.exports = doccy;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 111 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+/* 112 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__);
+/*
+ * Credit: A lot of this work comes from Daniel Cebrian's original
+ * code that can be found in `videojs-annotator-plugin.js`
+ */
+
+
+(function ($) {
+  // Get the Component base class from Video.js
+  var Component = video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__["getComponent"]('Component');
+  var BackAnDisplay = video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__["extend"](Component, {
+    constructor: function constructor(player, options) {
+      Component.apply(this, arguments);
+      this.player = player;
+      this.player.on('toggleAnnotations', this.toggleAnnotationsDisplay.bind(this));
+      this.player.on('playerresize', this.resizeDisplay.bind(this));
+      return this;
+    },
+    createEl: function createEl() {
+      return video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__["dom"].createEl('div', {
+        className: 'vjs-back-anpanel-annotation',
+        innerHTML: '<div class="vjs-back-anpanel-scroll"></div>'
+      });
+    },
+    toggleAnnotationsDisplay: function toggleAnnotationsDisplay(event, params) {
+      if (params.isAnnotating) {
+        this.resizeDisplay(event);
+        this.el().style.display = 'block';
+      } else {
+        this.el().style.display = 'none';
+      }
+    },
+    resizeDisplay: function resizeDisplay(event) {
+      var playerHeight = this.player.el().scrollHeight;
+      var controlBarHeight = this.player.controlBar.el().scrollHeight;
+      var newHeight = playerHeight - controlBarHeight;
+      this.el().style.height = newHeight + 'px';
+      this.el().style.top = '-' + newHeight + 'px';
+    }
+  });
+  /***************************** Installing Components *****************************/
+  // Register the component with Video.js, so it can be used in players.
+
+  video_js_dist_video_js__WEBPACK_IMPORTED_MODULE_0__["registerComponent"]('BackAnDisplay', BackAnDisplay);
+
+  if (!$.globals.hasOwnProperty('vjs')) {
+    $.globals['vjs'] = {};
+  }
+
+  if (!$.globals.vjs.hasOwnProperty('components')) {
+    $.globals.vjs['components'] = [];
+  }
+
+  $.globals.vjs.components.push(function (player) {
+    player.controlBar.addChild('BackAnDisplay', {
+      name: 'BackAnDisplay'
+    });
+  });
+})(Hxighlighter ? Hxighlighter : __webpack_require__(1));
 
 /***/ })
 /******/ ]); 

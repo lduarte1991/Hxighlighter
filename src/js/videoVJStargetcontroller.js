@@ -12,6 +12,7 @@ require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
 require('./plugins/hx-websockets.js');
 require('./plugins/vjs-rangeslider-component.js');
+require('./plugins/vjs-annotation-display-component.js');
 require('./storage/catchpy.js');
 
 import * as videojs from 'video.js/dist/video.js'
@@ -232,8 +233,14 @@ import * as videojs from 'video.js/dist/video.js'
         });
     };
 
-    $.VideoTarget.prototype.StorageAnnotationSave = function(ann, callBack, errorCallback) {
-
+    $.VideoTarget.prototype.StorageAnnotationSave = function(annotations, redraw) {
+        var self = this;
+        jQuery.each(self.storage, function(_, store) {
+            store.StorageAnnotationSave(annotations, self.element, redraw);
+        });
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.StorageAnnotationSave(annotations);
+        });
     };
 
     $.VideoTarget.prototype.StorageAnnotationUpdate = function(ann, callBack, errorCallback) {
@@ -243,8 +250,55 @@ import * as videojs from 'video.js/dist/video.js'
     $.VideoTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
     };
 
-    $.VideoTarget.prototype.ViewerEditorClose = function(ann, is_new_annotation, hit_cancel) {
+    $.VideoTarget.prototype.ViewerEditorClose = function(annotation, is_new_annotation, hit_cancel) {
+        var self = this;
+        //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
+        if (hit_cancel) {
+            if (is_new_annotation) {
+                self.TargetAnnotationUndraw(annotation);
+            }
+            
+            // else, the annotation was already drawn, so don't touch it.
+        } else if (is_new_annotation) {
+            annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+            self.TargetAnnotationDraw(annotation);
+            jQuery('.sr-alert').html('');
+            jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
+            $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
+            console.log('should save new annotation', annotation)
+        } else {
+            jQuery.each(self.drawers, function(_, drawer) {
+                self.TargetAnnotationUndraw(annotation);
+                annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
+                $.publishEvent('TargetAnnotationDraw', self.instance_id, [annotation]);
+                jQuery('.sr-alert').html('');
+                jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
+                $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
+                console.log('updating ann')
+            });
+        }
 
+        jQuery.each(self.viewers, function(_, viewer) {
+            var timer = new Date();
+            viewer.ViewerEditorClose(annotation);
+            // console.log("Finished: " + (new Date() - timer) + 'ms')
+        });
+
+        setTimeout(function() {$.publishEvent('editorHidden', self.instance_id, []);}, 50);
+        return annotation;
+    };
+
+    $.VideoTarget.prototype.TargetAnnotationUndraw = function(annotation) {
+        var self = this;
+        if (annotation.media !== "Annotation") {
+            jQuery.each(self.drawers, function(_, drawer) {
+                drawer.undraw(annotation);
+            });
+        }
+    };
+
+    $.VideoTarget.prototype.TargetAnnotationDraw = function(annotation) {
+        
     };
 
     $.VideoTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun, shouldNotErase) {

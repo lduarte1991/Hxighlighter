@@ -3,7 +3,7 @@ var hrange = require('../h-range.js');
 (function($) {
     $.CatchPy = function(options, inst_id) {
         this.options = options;
-        //console.log(options);
+        console.log('try me', options);
         this.instance_id = inst_id;
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;
@@ -106,9 +106,9 @@ var hrange = require('../h-range.js');
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
-        // console.log(ann_to_save);
+        console.log(ann_to_save);
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
-        // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
+        console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
@@ -276,7 +276,7 @@ var hrange = require('../h-range.js');
                         'prefix': range.text.prefix,
                         'suffix': range.text.suffix
                     }]
-                } else {
+                } else if (mediatype === "Image") {
                     // console.log('Should be here in image', range);
                     if (range.type === "Image") {
                         rangeItem = range.selector.items
@@ -295,6 +295,19 @@ var hrange = require('../h-range.js');
                             }
                         })
                     }
+                } else if (mediatype === "Video" || mediatype === "Audio") {
+                    source_id = self.options.vid_url;
+                    rangeItem = [{
+                        "type": "FragmentSelector",
+                        "value": "t="+range.start+","+range.end,
+                        "refinedBy": [
+                            {
+                              "type": "CssSelector",
+                              "value": "#vid1"
+                            }
+                        ],
+                        "conformsTo": "http://www.w3.org/TR/media-frags/"
+                    }];
                 }
                 targetList.push({
                     'source': source_id,
@@ -310,7 +323,7 @@ var hrange = require('../h-range.js');
         var webAnnotationVersion = {
             "@context": "http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json",
             'type': 'Annotation',
-            'schema_version': '1.1.0',
+            'schema_version': '1.2.0',
             'id': annotation['id'],
             'creator':  {
                 'id': self.options.user_id,

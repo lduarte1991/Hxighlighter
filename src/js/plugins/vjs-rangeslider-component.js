@@ -216,9 +216,10 @@ import * as videojs from 'video.js/dist/video.js'
       var percentLeft = this.limitL / 100.00;
       var percentRight = this.limitR / 100.00;
       var duration = this.player.duration();
-      var secondLeft = parseInt(percentLeft * duration, 10);
-      var secondRight = parseInt(percentRight * duration, 10);
-      Hxighlighter.publishEvent('videoRangeSelected', '', [this.el(), [secondLeft, secondRight]])
+      var secondLeft = percentLeft * duration;
+      var secondRight = percentRight * duration;
+      Hxighlighter.publishEvent('videoRangeSelected', '', [this.el(), {start: secondLeft, startLabel: this.humanReadable(secondLeft), end: secondRight, endLabel: this.humanReadable(secondRight)}])
+      this.player.pause();
     },
 
     toggleSlider: function(event, params) {
@@ -230,6 +231,30 @@ import * as videojs from 'video.js/dist/video.js'
         }
       
     },
+
+    humanReadable: function(seconds_float) {
+      var dur = this.player.duration();
+      if (dur < 60) {
+        return parseInt(seconds_float, 10) + "s";
+      } else if (dur < 3600) {
+        var mins = parseInt(seconds_float / 60, 10);
+        var secs = parseInt(seconds_float % 60, 10);
+        return this.pad(mins, 2) + ":" + this.pad(secs, 2);
+      } else {
+        var hours = parseInt(seconds_float / 3600, 10);
+        var leftovers = seconds_float % 3600;
+        var mins = parseInt(leftovers / 60, 10);
+        var secs = parseInt(leftovers % 60, 10);
+        return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
+      }
+    },
+
+    pad: function(num, size) {
+      var s = num+"";
+      while (s.length < size) s = "0" + s;
+      return s;
+    }
+
 
     // TODO: slide together?
 

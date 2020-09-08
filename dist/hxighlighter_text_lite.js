@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.3.1 - Wednesday, August 19th, 2020, 9:58:45 AM  
+// [AIV_SHORT]  Version: 1.2.0 - Wednesday, September 2nd, 2020, 3:38:21 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -10754,7 +10754,7 @@ Hxighlighter.storage = [];
 Hxighlighter.globals = {}; // comment out following line when not webpacking
 
 /* harmony default export */ __webpack_exports__["default"] = (Hxighlighter);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 2 */
@@ -27914,10 +27914,11 @@ Hxighlighter.globals = {}; // comment out following line when not webpacking
   else {}
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(25)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(25)(module)))
 
 /***/ }),
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports) {
 
 var g;
@@ -27943,7 +27944,6 @@ module.exports = g;
 
 
 /***/ }),
-/* 4 */,
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31763,7 +31763,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }, {}, [1])(1);
 });
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
 /* 9 */
@@ -39960,8 +39960,8 @@ __webpack_require__(10);
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
-      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name; // console.log('ann', ann);
-
+      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
+      console.log('ann', ann);
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
 
       if (self.options.viewer_options.readonly) {
@@ -40795,13 +40795,11 @@ __p += '\n            <span class="idAnnotation" style="display:none">' +
 '</span>\n        </div>\n    ';
  } else if (media === "video") {;
 __p += '\n        <div class="playMediaButton" style="text-align:center;">\n            <div class="btn btn-default" style="text-align:center;margin-top:20px;">\n                Segment ' +
-((__t = ( rangeTime.start )) == null ? '' : __t) +
+((__t = ( ranges[0].startLabel )) == null ? '' : __t) +
 ' - ' +
-((__t = ( rangeTime.end )) == null ? '' : __t) +
+((__t = ( ranges[0].endLabel )) == null ? '' : __t) +
 '\n            </div>\n            <span class="idAnnotation" style="display:none">' +
 ((__t = ( id )) == null ? '' : __t) +
-'</span>\n            <span class="uri" style="display:none">' +
-((__t = ( uri )) == null ? '' : __t) +
 '</span>\n        </div>\n    ';
  } ;
 __p += '\n    <div style="display:none;" id="annotationTextLabel">Annotation text</div>\n    <div class="body field side" aria-label="Comment: ' +
