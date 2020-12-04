@@ -575,7 +575,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             });
 
             jQuery('.side.item-' + ann.id).click(function(e) {
-                if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
+                console.log(ann, self.options);
+                if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
                     var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
                     jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140)});
                     //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
@@ -603,6 +604,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     }
                     // console.log("Yup!");
                     // $.pauseEvent(e);
+                } else if (self.options.mediaType.toLowerCase() === "video" || self.options.mediaType.toLowerCase() === "audio") {
+                    $.publishEvent('playAnnotation', self.inst_id, [ann]);
                 }
             });
 

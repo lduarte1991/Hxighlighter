@@ -3,7 +3,6 @@ var hrange = require('../h-range.js');
 (function($) {
     $.CatchPy = function(options, inst_id) {
         this.options = options;
-        console.log('try me', options);
         this.instance_id = inst_id;
         this.store = [];
         this.url_base = options.storageOptions.external_url.catchpy;
@@ -33,7 +32,7 @@ var hrange = require('../h-range.js');
                 setTimeout(function() {
                     // console.log('definitely getting to here');
                     $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
-                    $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+                    $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation, true]);
                     
                 }, 250);
             });
@@ -106,9 +105,9 @@ var hrange = require('../h-range.js');
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
-        console.log(ann_to_save);
+        // console.log(ann_to_save);
         var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
-        console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
+        // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
@@ -296,7 +295,7 @@ var hrange = require('../h-range.js');
                         })
                     }
                 } else if (mediatype === "Video" || mediatype === "Audio") {
-                    source_id = self.options.vid_url;
+                    source_id = self.options.object_id;
                     rangeItem = [{
                         "type": "FragmentSelector",
                         "value": "t="+range.start+","+range.end,
@@ -431,6 +430,7 @@ var hrange = require('../h-range.js');
     };
 
     $.CatchPy.prototype.getAnnotationTargetItems = function(webAnn) {
+        var self = this;
         try {
             var annType = webAnn['target']['items'][0]['type']
             // console.log("reached getAnnotationTargetItems", webAnn);
@@ -439,6 +439,20 @@ var hrange = require('../h-range.js');
                 return [{'parent':webAnn['target']['items'][0]['source']}]
             } else if (annType === "Image" || annType === "Thumbnail") {
                 return webAnn['target']['items']
+            } else if (annType === "Video") {
+                var fragmentSelectorItem = webAnn['target']['items'][0]['selector']['items'][0];
+                if (fragmentSelectorItem.type == "FragmentSelector") {
+                    var timeValue = fragmentSelectorItem.value.replace('t=', '').split(',');
+                    var startTime = parseFloat(timeValue[0]);
+                    var endTime = parseFloat(timeValue[1]);
+                    return [{
+                        start: startTime,
+                        startLabel: self.humanReadable(startTime),
+                        end: endTime,
+                        endLabel: self.humanReadable(endTime)
+                    }]
+                }
+                
             }
             // console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
@@ -519,6 +533,11 @@ var hrange = require('../h-range.js');
                 return webAnn['target']['items'];
             } else if (media.toLowerCase() == "comment") {
                 return webAnn['target']['items'];
+            } else if (media.toLowerCase() == "video" || media.toLowerCase() == 'audio') {
+                var ranges = [];
+                jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
+                    return ranges.push(targetItem)
+                });
             }
             //console.log('getAnnotationTarget', ranges, element);
             return ranges;
@@ -767,7 +786,30 @@ var hrange = require('../h-range.js');
             }
             return _results;
           }).call(this)).join('');
-    }
+    };
+
+    $.CatchPy.prototype.humanReadable = function(seconds_float) {
+        var self = this;
+        var dur = seconds_float;
+        if (dur < 3600) {
+            var mins = parseInt(seconds_float / 60, 10);
+            var secs = parseInt(seconds_float % 60, 10);
+            return self.pad(mins, 2) + ":" + self.pad(secs, 2);
+        } else {
+            var hours = parseInt(seconds_float / 3600, 10);
+            var leftovers = seconds_float % 3600;
+            var mins = parseInt(leftovers / 60, 10);
+            var secs = parseInt(leftovers % 60, 10);
+            return self.pad(hours, 2) + ":" + self.pad(mins,2) + ":" + self.pad(secs, 2);
+        }
+    };
+
+    $.CatchPy.prototype.pad = function(num, size) {
+      var s = num+"";
+      while (s.length < size) s = "0" + s;
+      return s;
+    };
+
     $.storage.push($.CatchPy);
 
 }(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

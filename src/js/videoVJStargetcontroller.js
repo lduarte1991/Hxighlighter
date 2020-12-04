@@ -1,4 +1,5 @@
 require('./selectors/time-selector.js');
+require('./drawers/timerange-drawer.js');
 require('./plugins/hx-sidebar-tag-tokens.js');
 require('./plugins/hx-adminbutton.js');
 require('./viewers/sidebar.js');
@@ -11,8 +12,8 @@ require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
 require('./plugins/hx-websockets.js');
-require('./plugins/vjs-rangeslider-component.js');
 require('./plugins/vjs-annotation-display-component.js');
+require('./plugins/vjs-rangeslider-component.js');
 require('./storage/catchpy.js');
 
 import * as videojs from 'video.js/dist/video.js'
@@ -73,7 +74,7 @@ import * as videojs from 'video.js/dist/video.js'
         this.guid = $.getUniqueId();
         var selector = jQuery('#viewer');
         var origWidth = selector[0].clientWidth;
-        selector.append('<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.vid_url+'" type="video/mp4"></source></video></div>')
+        selector.append('<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.object_id+'" type="video/mp4"></source></video></div>')
         console.log(origWidth);
 
         this.vid_player = videojs('vid1', {
@@ -81,14 +82,28 @@ import * as videojs from 'video.js/dist/video.js'
             "controls": true,
             "fill": true,
             "controlBar": {
-                pictureInPictureToggle: false
-            }
+                pictureInPictureToggle: false,
+                volumePanel: {
+                    inline: false,
+                }
+            },
+            "instance_id": self.instance_id
         }, function onPlayerReady() {
             // future-use : establishing PIP
             $.publishEvent('targetLoaded', self.instance_id, [jQuery('#viewer')]);
             jQuery.each($.globals.vjs.components, function(_, callback) {
                 callback(self.vid_player);
             });
+            self.vid_player.on('playerresize', function() {
+                jQuery.each(self.drawers, function(_, drawer) {
+                    drawer.refreshDisplay(self.vid_player);
+                });
+            });
+            $.subscribeEvent('playAnnotation', self.instance_id, function(_, annotation) {
+                console.log('playAnnotation event triggered');
+                self.vid_player.trigger('playAnnotation', annotation);
+            });
+
         });
         /*
          *TODO: Plugins/Features
@@ -149,6 +164,7 @@ import * as videojs from 'video.js/dist/video.js'
                 console.log("Adding selectors", self.setUpSelectors);
                 self.setUpSelectors(self.element[0]);
             }
+            self.setUpDrawers(self.element[0]);
         });
 
         $.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
@@ -166,6 +182,19 @@ import * as videojs from 'video.js/dist/video.js'
                 }
             });
         });
+
+        $.subscribeEvent('TargetAnnotationDraw', self.instance_id, function(_, annotation, toEnd) {
+            if (typeof toEnd === "undefined") {
+                toEnd = false;
+            }
+            self.TargetAnnotationDraw(annotation, toEnd);
+        });
+
+        $.subscribeEvent('TargetAnnotationUndraw', self.instance_id, function(_, annotation) {
+            self.TargetAnnotationUndraw(annotation);
+        });
+
+
 
         $.subscribeEvent('GetSpecificAnnotationData', self.windowId, function(_, id, callBack) {
             // console.log(self.mir.viewer.workspace.slots[0].window.endpoint);
@@ -196,13 +225,18 @@ import * as videojs from 'video.js/dist/video.js'
     $.VideoTarget.prototype.setUpSelectors = function(element) {
         var self = this;
         self.selectors = [];
-        console.log($.selectors);
         jQuery.each($.selectors, function(_, selector) {
-            console.log(selector);
             self.selectors.push(new selector(element, self.instance_id, {'confirm': true}));
-            console.log("HERE", self.selectors);
         });
     };
+
+    $.VideoTarget.prototype.setUpDrawers = function(element) {
+        var self = this;
+        self.drawers = [];
+        jQuery.each($.drawers, function(_, drawer) {
+            self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
+        });
+    }
 
     $.VideoTarget.prototype.setUpPlugins = function(element) {
         var self = this;
@@ -230,6 +264,22 @@ import * as videojs from 'video.js/dist/video.js'
                 optionsForStorage = {};
             }
             self.storage.push(new storage(optionsForStorage, self.instance_id));
+            if (self.options.viewerOptions.defaultTab === "mine") {
+                options = {
+                    'username': self.options.username
+                }
+            } else if (self.options.viewerOptions.defaultTab === "instructor") {
+                options = {
+                    'userid': self.options.instructors
+                }
+            } else {
+                var exclusion = [self.options.user_id].concat(self.options.instructors)
+                options = {
+                    'exclude_userid': exclusion
+                }
+            }
+
+            self.storage[idx].onLoad(element, options);
         });
     };
 
@@ -248,6 +298,17 @@ import * as videojs from 'video.js/dist/video.js'
     };
 
     $.VideoTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
+        var self = this;
+        console.log("TRYING TO DELETE");
+        jQuery.each(self.storage, function(_, store) {
+            store.StorageAnnotationDelete(ann);
+        });
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.StorageAnnotationDelete(ann);
+        });
+        jQuery.each(self.drawers, function(_, drawer) {
+            drawer.undraw(ann);
+        });
     };
 
     $.VideoTarget.prototype.ViewerEditorClose = function(annotation, is_new_annotation, hit_cancel) {
@@ -297,16 +358,49 @@ import * as videojs from 'video.js/dist/video.js'
         }
     };
 
-    $.VideoTarget.prototype.TargetAnnotationDraw = function(annotation) {
-        
+    $.VideoTarget.prototype.TargetAnnotationDraw = function(annotation, toEnd) {
+        console.log("IN VIDEOTARGET DRAW", annotation);
+        var self = this;
+        jQuery.each(self.drawers, function(_, drawer) {
+            drawer.draw(annotation, self.vid_player, toEnd);
+        });
+        // this.vid_player.trigger('drawAnnotation', {
+        //     'annotation': annotation
+        // });
+
     };
 
     $.VideoTarget.prototype.StorageAnnotationSearch = function(search_options, callback, errfun, shouldNotErase) {
-
+        var self = this;
+        jQuery.each(self.storage, function(_, store) {
+            store.search(search_options, callback, errfun);
+        });
     };
 
     $.VideoTarget.prototype.StorageAnnotationLoad = function(annotations, converter, undrawOld) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            if (typeof(viewer.StorageAnnotationLoad) === "function") {
+                viewer.StorageAnnotationLoad(annotations);
+            }
+        });
+        console.log("UNDRAWING", undrawOld);
 
+        if (undrawOld) {
+            $.publishEvent('GetAnnotationsData', self.instance_id, [function(anns) {
+                console.log("UNDRAWING", anns);
+                anns.forEach(function(ann) {
+                    self.TargetAnnotationUndraw(ann);
+                });
+            }]);
+        }
+
+        annotations.forEach(function(ann) {
+            var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
+            self.TargetAnnotationDraw(converted_ann, true);
+            $.publishEvent('annotationLoaded', self.instance_id, [converted_ann])
+            
+        });
     };
 
     $.VideoTarget.prototype.TargetSelectionMade = function(range, event) {
@@ -323,9 +417,24 @@ import * as videojs from 'video.js/dist/video.js'
                 id: self.options.user_id
             }
         };
-        console.log(annotation);
+        // console.log(annotation);
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.TargetSelectionMade(annotation, event);
+        });
+    };
+
+    $.VideoTarget.prototype.ViewerDisplayOpen = function(event, annotations) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.ViewerDisplayOpen(event, annotations);
+        });
+        return annotations;
+    };
+
+    $.VideoTarget.prototype.ViewerDisplayClose = function(event) {
+        var self = this;
+        jQuery.each(self.viewers, function(_, viewer) {
+            viewer.ViewerDisplayClose(event);
         });
     };
 
@@ -348,6 +457,7 @@ import * as videojs from 'video.js/dist/video.js'
         }
         jQuery.each(self.storage, function(idx, store){
             store.onLoad(element, options, function(anns, converter) {
+                console.log('hello hhello hello', anns);
                 $.publishEvent('drawFromSearch', self.instance_id, [anns, converter]);
             });
         });

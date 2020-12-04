@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Wednesday, September 2nd, 2020, 3:38:21 PM  
+// [AIV_SHORT]  Version: 1.2.0 - Friday, December 4th, 2020, 10:31:10 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -10757,7 +10757,8 @@ Hxighlighter.globals = {}; // comment out following line when not webpacking
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4)))
 
 /***/ }),
-/* 2 */
+/* 2 */,
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -27917,7 +27918,6 @@ Hxighlighter.globals = {}; // comment out following line when not webpacking
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(25)(module)))
 
 /***/ }),
-/* 3 */,
 /* 4 */
 /***/ (function(module, exports) {
 
@@ -40468,7 +40468,9 @@ __webpack_require__(10);
         self.ViewerEditorOpen(event, ann, true);
       });
       jQuery('.side.item-' + ann.id).click(function (e) {
-        if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
+        console.log(ann, self.options);
+
+        if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
           var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
           jQuery(self.element).parent().animate({
             scrollTop: jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140
@@ -40508,6 +40510,8 @@ __webpack_require__(10);
           } // console.log("Yup!");
           // $.pauseEvent(e);
 
+        } else if (self.options.mediaType.toLowerCase() === "video" || self.options.mediaType.toLowerCase() === "audio") {
+          $.publishEvent('playAnnotation', self.inst_id, [ann]);
         }
       });
       jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function (e) {
@@ -40758,7 +40762,7 @@ __webpack_require__(10);
 
   $.viewers.push($.Sidebar);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(3)))
 
 /***/ }),
 /* 25 */
@@ -41092,7 +41096,7 @@ __p += '\n    </div>\n    <div class="plugin-area-bottom">\n    </div>\n</div>\n
 return __p
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
 
 /***/ }),
 /* 30 */
@@ -41195,7 +41199,7 @@ __p += '\n	</ul>\n    <datalist id="tag-list-options">\n    </datalist>\n</secti
 return __p
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
 
 /***/ }),
 /* 31 */
@@ -41269,7 +41273,7 @@ __p += '\n            <span class="idAnnotation" style="display:none">' +
 '</span>\n            <span class="uri" style="display:none">' +
 ((__t = ( source_url )) == null ? '' : __t) +
 '</span>\n        </div>\n    ';
- } else if (media === "video") {;
+ } else if (media.toLowerCase() === "video") {;
 __p += '\n        <div class="playMediaButton" style="text-align:center;">\n            <div class="btn btn-default" style="text-align:center;margin-top:20px;">\n                Segment ' +
 ((__t = ( ranges[0].startLabel )) == null ? '' : __t) +
 ' - ' +
@@ -41328,7 +41332,7 @@ __p += '\n    </div> -->\n    <script>\n        // jQuery(\'.annotationItem.item
 return __p
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(0)))
 
 /***/ }),
 /* 32 */
@@ -43788,6 +43792,16 @@ var annotator = annotator ? annotator : __webpack_require__(8);
         },
         cancel: function cancel() {}
       }
+    });
+    self.annotation_tool.viewer.find('.playMediaButton').click(function (event) {
+      console.log('playmediabutton clicked', event.currentTarget);
+      var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim();
+      console.log('ann id', ann_id);
+      var filtered_annotation = annotations.find(function (ann) {
+        if (ann.id === ann_id) return ann;
+      });
+      console.log('filtered annotation', filtered_annotation);
+      $.publishEvent('playAnnotation', self.instance_id, [filtered_annotation]);
     }); // console.log(annotations);        
 
     $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
@@ -43983,7 +43997,7 @@ var annotator = annotator ? annotator : __webpack_require__(8);
 
   $.viewers.push($.FloatingViewer);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(1));
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(3)))
 
 /***/ }),
 /* 53 */
@@ -44041,9 +44055,21 @@ __p += '</div>\n                <button class="edit" id="edit-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
 '" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>\n                <button class="delete" id="delete-' +
 ((__t = ( ann.id )) == null ? '' : __t) +
-'" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>\n                <div class="annotation-quote">' +
+'" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>\n                ';
+ if (ann.media === "text" || ann.media === "Text") { ;
+__p += '\n                <div class="annotation-quote">' +
 ((__t = ( ann.exact )) == null ? '' : __t) +
-'</div>\n                <div class="annotation-text">' +
+'</div>\n                ';
+ } else if (ann.media === "video" || ann.media === "Video" || ann.media === "audio" || ann.media === "Audio") { ;
+__p += '\n                <div class="playMediaButton" style="text-align:center;">\n                    <div class="btn btn-default" style="text-align:center;margin-top:20px;">\n                        <i class="fas fa-play"></i> ' +
+((__t = ( ann.ranges[0].startLabel )) == null ? '' : __t) +
+' - ' +
+((__t = ( ann.ranges[0].endLabel )) == null ? '' : __t) +
+'\n                    </div>\n                    <span class="idAnnotation" style="display:none">' +
+((__t = ( ann.id )) == null ? '' : __t) +
+'</span>\n                </div>\n                ';
+ } ;
+__p += '\n                <div class="annotation-text">' +
 ((__t = ( ann.annotationText )) == null ? '' : __t) +
 '</div>\n                ';
  if (ann.tags && ann.tags.length > 0) { ;
@@ -44063,7 +44089,7 @@ __p += '\n    </div>\n</div>\n';
 return __p
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(0)))
 
 /***/ }),
 /* 56 */
@@ -44075,7 +44101,6 @@ var hrange = __webpack_require__(5);
 (function ($) {
   $.CatchPy = function (options, inst_id) {
     this.options = options;
-    console.log('try me', options);
     this.instance_id = inst_id;
     this.store = [];
     this.url_base = options.storageOptions.external_url.catchpy; //console.log(this.url_base);
@@ -44106,7 +44131,7 @@ var hrange = __webpack_require__(5);
         setTimeout(function () {
           // console.log('definitely getting to here');
           $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
-          $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+          $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation, true]);
         }, 250);
       });
 
@@ -44180,11 +44205,11 @@ var hrange = __webpack_require__(5);
     if (updating) {
       self.StorageAnnotationUpdate(ann_to_save, elem);
       return;
-    }
+    } // console.log(ann_to_save);
 
-    console.log(ann_to_save);
-    var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
-    console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
+
+    var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper')); // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
+
     var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
     params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
     params += '&version=' + this.options.storageOptions.database_params.version;
@@ -44373,7 +44398,7 @@ var hrange = __webpack_require__(5);
             });
           }
         } else if (mediatype === "Video" || mediatype === "Audio") {
-          source_id = self.options.vid_url;
+          source_id = self.options.object_id;
           rangeItem = [{
             "type": "FragmentSelector",
             "value": "t=" + range.start + "," + range.end,
@@ -44514,6 +44539,8 @@ var hrange = __webpack_require__(5);
   };
 
   $.CatchPy.prototype.getAnnotationTargetItems = function (webAnn) {
+    var self = this;
+
     try {
       var annType = webAnn['target']['items'][0]['type']; // console.log("reached getAnnotationTargetItems", webAnn);
 
@@ -44524,6 +44551,20 @@ var hrange = __webpack_require__(5);
         }];
       } else if (annType === "Image" || annType === "Thumbnail") {
         return webAnn['target']['items'];
+      } else if (annType === "Video") {
+        var fragmentSelectorItem = webAnn['target']['items'][0]['selector']['items'][0];
+
+        if (fragmentSelectorItem.type == "FragmentSelector") {
+          var timeValue = fragmentSelectorItem.value.replace('t=', '').split(',');
+          var startTime = parseFloat(timeValue[0]);
+          var endTime = parseFloat(timeValue[1]);
+          return [{
+            start: startTime,
+            startLabel: self.humanReadable(startTime),
+            end: endTime,
+            endLabel: self.humanReadable(endTime)
+          }];
+        }
       } // console.log("nope, something went wrong");
 
 
@@ -44611,6 +44652,11 @@ var hrange = __webpack_require__(5);
         return webAnn['target']['items'];
       } else if (media.toLowerCase() == "comment") {
         return webAnn['target']['items'];
+      } else if (media.toLowerCase() == "video" || media.toLowerCase() == 'audio') {
+        var ranges = [];
+        jQuery.each(this.getAnnotationTargetItems(webAnn), function (_, targetItem) {
+          return ranges.push(targetItem);
+        });
       } //console.log('getAnnotationTarget', ranges, element);
 
 
@@ -44878,6 +44924,33 @@ var hrange = __webpack_require__(5);
 
       return _results;
     }.call(this).join('');
+  };
+
+  $.CatchPy.prototype.humanReadable = function (seconds_float) {
+    var self = this;
+    var dur = seconds_float;
+
+    if (dur < 3600) {
+      var mins = parseInt(seconds_float / 60, 10);
+      var secs = parseInt(seconds_float % 60, 10);
+      return self.pad(mins, 2) + ":" + self.pad(secs, 2);
+    } else {
+      var hours = parseInt(seconds_float / 3600, 10);
+      var leftovers = seconds_float % 3600;
+      var mins = parseInt(leftovers / 60, 10);
+      var secs = parseInt(leftovers % 60, 10);
+      return self.pad(hours, 2) + ":" + self.pad(mins, 2) + ":" + self.pad(secs, 2);
+    }
+  };
+
+  $.CatchPy.prototype.pad = function (num, size) {
+    var s = num + "";
+
+    while (s.length < size) {
+      s = "0" + s;
+    }
+
+    return s;
   };
 
   $.storage.push($.CatchPy);
@@ -45626,10 +45699,11 @@ var hrange = __webpack_require__(5);
     //     highlightClass: (self.h_class + ' annotator-hl')
     // });
 
+    console.log('.' + self.h_class.replace(' ', '.'));
     jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function (event) {
       $.pauseEvent(event);
-      var annotations = self.getAnnotationsFromElement(event); //console.log("MOUSEOVER", annotations);
-
+      var annotations = self.getAnnotationsFromElement(event);
+      console.log("MOUSEOVER", annotations);
       Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
     });
     jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function (event) {
@@ -45684,14 +45758,7 @@ var hrange = __webpack_require__(5);
   };
 
   $.XPathDrawer.prototype.draw = function (annotation) {
-    var self = this;
-
-    if (annotation.media.toLowerCase() !== "text") {
-      return;
-    } // console.log(self.options, annotation);
-    // console.log("Annotation Being Drawn", annotation);
-    // checks to see if annotation has already been drawn, if so it undraws it
-
+    var self = this; // checks to see if annotation has already been drawn, if so it undraws it
 
     var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
 
@@ -45699,45 +45766,50 @@ var hrange = __webpack_require__(5);
       self.undraw(existing_drawn_annotation);
     }
 
-    self.tempHighlights.forEach(function (hl) {
-      jQuery(hl).contents().unwrap();
-    }); // the process for drawing is divided into 4 parts
-    // 1. Retrieve all discrete text nodes associated with annotation
+    if (annotation.media.toLowerCase() === "text") {
+      // console.log(self.options, annotation);
+      // console.log("Annotation Being Drawn", annotation);
+      self.tempHighlights.forEach(function (hl) {
+        jQuery(hl).contents().unwrap();
+      }); // the process for drawing is divided into 4 parts
+      // 1. Retrieve all discrete text nodes associated with annotation
 
-    var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+      var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
 
-    var spans = [];
-    var otherLabel = '';
+      var spans = [];
+      var otherLabel = '';
 
-    if (self.options.user_id === annotation.creator.id) {
-      otherLabel += ' annotation-mine';
-    }
-
-    if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
-      otherLabel += ' annotation-instructor';
-    }
-
-    var labelIt = true;
-    textNodes.forEach(function (node) {
-      //console.log(node, jQuery(node));
-      var node_id = "";
-
-      if (labelIt) {
-        labelIt = false;
-        node_id = ' id="first-node-' + annotation.id + '" ';
+      if (self.options.user_id === annotation.creator.id) {
+        otherLabel += ' annotation-mine';
       }
 
-      jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
-      spans.push(jQuery(node).parent()[0]);
-    }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
+      if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
+        otherLabel += ' annotation-instructor';
+      }
 
-    annotation['_local'] = {
-      'highlights': spans
-    }; // 3. Store in each span tag the value of the annotation post-saving _local.highlights
+      var labelIt = true;
+      textNodes.forEach(function (node) {
+        //console.log(node, jQuery(node));
+        var node_id = "";
 
-    spans.forEach(function (span) {
-      jQuery(span).data('annotation', annotation);
-    }); //console.log(annotation);
+        if (labelIt) {
+          labelIt = false;
+          node_id = ' id="first-node-' + annotation.id + '" ';
+        }
+
+        jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
+        spans.push(jQuery(node).parent()[0]);
+      }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
+
+      annotation['_local'] = {
+        'highlights': spans
+      }; // 3. Store in each span tag the value of the annotation post-saving _local.highlights
+
+      spans.forEach(function (span) {
+        jQuery(span).data('annotation', annotation);
+      });
+    } //console.log(annotation);
+
 
     $.publishEvent('annotationDrawn', self.instance_id, [annotation]); // the annotation is then saved to the current list
 

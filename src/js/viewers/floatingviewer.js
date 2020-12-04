@@ -272,6 +272,16 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 }
             }
         });
+
+        self.annotation_tool.viewer.find('.playMediaButton').click(function(event) {
+            console.log('playmediabutton clicked', event.currentTarget);
+            var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim();
+            console.log('ann id', ann_id);
+            var filtered_annotation = annotations.find(function(ann) { if (ann.id === ann_id) return ann; });
+            console.log('filtered annotation', filtered_annotation);
+            $.publishEvent('playAnnotation', self.instance_id, [filtered_annotation]);
+        });
+
         // console.log(annotations);        
         $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
         self.checkOrientation(self.annotation_tool.viewer);

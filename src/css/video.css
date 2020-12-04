@@ -161,7 +161,7 @@ span.annotation-instructor {
     left: 0em;
     right: 0em;
     position:absolute;
-    background-color: rgba(133,0,0,0.3);
+    background-color: rgba(0,0,0,0.2);
     width: auto;
     /*font-size: .3em;*/
     font-size: .9em;
@@ -171,10 +171,109 @@ span.annotation-instructor {
     transition: top .4s,height .4s,font-size .4s,transform .4s;
     opacity:1;
     transition-delay:0s;
+    overflow-y: scroll;
 }
 
 .vjs-back-anpanel-scroll {
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
+    position: relative;
+    padding-left: 8px;
+    padding-top: 5%;
+}
+
+.hx-annotation-hl.annotator-hl {
+    position: relative;
+    height: 15px;
+    background: rgba(255,255,0,0.6);
+    display: block;
+    transition-duration: 0.25s;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.hx-annotation-hl.annotator-hl:hover {
+    height: 20px;
+    background: rgba(255,255,0,0.85);
+}
+
+.hx-annotation-hl.annotator-hl:hover:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    bottom: -2000px;
+    border-left: 2px dashed green;
+    border-right: 2px dashed green;
+}
+
+.vjs-stats-toggle {
+    z-index: 9999999;
+    position: absolute;
+    top: 15px;
+    left: 30px;
+    font-size: 30px!important;
+    background: rgba(43, 51, 63, 0.7)!important;
+    border-radius: 5px;
+    border: 1px solid black!important;
+}
+
+.vjs-stats-toggle:hover {
+    color: rgb(230,230,230);
+}
+
+.vjs-rangeslider-text-input {
+    position: absolute;
+    right: 0px;
+    top: -90px;
+    padding: 15px;
+    background: rgba(43, 51, 63, 0.7);
+    display: none;
+}
+
+.vjs-rangeslider-text-input span {
+    width: 50px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+.vjs-rangeslider-text-input input {
+    color: black;
+}
+
+.vjs-back-stats-panel {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-left: 8px;
+    padding-top: 5%;
+    left: 80px;
+}
+
+.vjs-back-stats-panel canvas {
+    width: 100%;
+    height: 100%;
+}
+
+button#vjs-range-text-update {
+    background: white;
+    color: black;
+    padding: 5px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+button#vjs-range-text-update:active {
+    background: #CCCCCC;
+}
+
+button#vjs-range-text-update:hover {
+    background: #DDDDDD;
+}
+
+button#vjs-range-text-update:focus {
+    outline: -webkit-focus-ring-color auto 1px;
 }

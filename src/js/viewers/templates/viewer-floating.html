@@ -11,7 +11,16 @@
                 <div class="annotation-date" title="<%= ann.created %>"><% if (ann.created){print(jQuery.timeago(ann.created));} else {print(jQuery.timeago(new Date()))} %></div>
                 <button class="edit" id="edit-<%= ann.id %>" tabindex="0" aria-label="Edit Annotation" title="Edit Annotation"><i class="fas fa-edit"></i></button>
                 <button class="delete" id="delete-<%= ann.id %>" tabindex="0" aria-label="Delete Annotation" title="Delete Annotation"><i class="fa fa-trash"></i></button>
+                <% if (ann.media === "text" || ann.media === "Text") { %>
                 <div class="annotation-quote"><%= ann.exact %></div>
+                <% } else if (ann.media === "video" || ann.media === "Video" || ann.media === "audio" || ann.media === "Audio") { %>
+                <div class="playMediaButton" style="text-align:center;">
+                    <div class="btn btn-default" style="text-align:center;margin-top:20px;">
+                        <i class="fas fa-play"></i> <%= ann.ranges[0].startLabel %> - <%= ann.ranges[0].endLabel %>
+                    </div>
+                    <span class="idAnnotation" style="display:none"><%= ann.id %></span>
+                </div>
+                <% } %>
                 <div class="annotation-text"><%= ann.annotationText %></div>
                 <% if (ann.tags && ann.tags.length > 0) { %>
                     <div class="annotation-tags">
