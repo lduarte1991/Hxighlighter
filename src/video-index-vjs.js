@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap-theme.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'toastr/build/toastr.min.css';
+import 'videojs-transcript-ac/css/videojs-transcript3.css';
 import './css/video.css';
 require('!style-loader!css-loader!video.js/dist/video-js.css');
 

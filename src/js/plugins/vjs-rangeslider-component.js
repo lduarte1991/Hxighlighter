@@ -99,7 +99,7 @@ import * as videojs from 'video.js/dist/video.js'
     handleMouseMove: function() {
       if(this.heldDown){
         const prog = this.getProgress();
-        if ( prog <= this.limit) {
+        if ( prog < this.limit-1) {
           this.el().style.left = prog + '%';
           this.player.trigger('setLeftRangeLimit', prog);
         }
@@ -173,7 +173,7 @@ import * as videojs from 'video.js/dist/video.js'
     handleMouseMove: function(event) {
       if(this.heldDown){
         const prog = this.getProgress();
-        if (prog >= this.limit) {
+        if (prog > this.limit+1) {
           this.el().style.left = prog + '%';
           this.player.trigger('setRightRangeLimit', prog);
         }

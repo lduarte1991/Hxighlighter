@@ -55,7 +55,8 @@ module.exports = {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
             'CodeMirror': 'codemirror',
             'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
-            'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js'
+            'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
+            'videojs': PATHS.modules + 'video.js/dist/video.js'
         }
     },
     optimization: {
@@ -86,6 +87,10 @@ module.exports = {
             {
                 test: /mirador\.js/,
                 use: 'script-loader'
+            },
+            {
+                test: /videojs-transcript.js/,
+                use: ["imports-loader?videojs=videojs"]
             },
             {
                 test: /(floating|sidebar)\.html$/,

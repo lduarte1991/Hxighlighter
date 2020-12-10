@@ -25,7 +25,23 @@ body {
 
 #viewer video {
     width: inherit;
-    height: inherit;
+}
+
+#viewer .transcript-body {
+    height: unset;
+    width: 100%;
+}
+
+#viewer .vjs-modal-dialog-content {
+    color: black;
+}
+
+#viewer #transcript1 {
+    height: 25%;
+    overflow-y: scroll;
+    background: white;
+    color: black;
+    width: 100%;
 }
 
 .annotation-slot {
@@ -276,4 +292,49 @@ button#vjs-range-text-update:hover {
 
 button#vjs-range-text-update:focus {
     outline: -webkit-focus-ring-color auto 1px;
+}
+
+
+/** full screen progress bar? **/
+.video-js .vjs-progress-control {
+    position: absolute!important;
+    width: 100%!important;
+    height: 50%!important;
+    top: -1.5em;
+}
+
+.video-js .vjs-progress-control .vjs-progress-holder {
+    height: 100%;
+    margin: 0!important;
+}
+
+.video-js .vjs-play-progress:before {
+    content: ""!important;
+}
+
+.video-js .vjs-remaining-time.vjs-time-control.vjs-control {
+    margin-left: auto!important;
+}
+
+.vjs-back-anpanel-scroll, .vjs-back-stats-panel{
+    padding-left: 0!important;
+}
+
+.vjs-lrs, .vjs-rrs {
+    height: 110%;
+    top: -5%;
+    border-radius: 0;
+}
+
+.vjs-rs {
+    height: 90%;
+    top: 5%;
+}
+
+.vjs-rangeslider-text-input {
+    top: calc(-90px - 1.5em);
+}
+
+.vjs-back-anpanel-scroll, .vjs-back-stats-panel {
+    padding-top: 60px;
 }

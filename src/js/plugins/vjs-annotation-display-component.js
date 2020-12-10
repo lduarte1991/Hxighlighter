@@ -93,18 +93,19 @@ import * as videojs from 'video.js/dist/video.js'
         resizeDisplay: function(event) {
             var playerHeight = this.player.el().scrollHeight;
             var controlBarHeight = this.player.controlBar.el().scrollHeight;
-            var newHeight = playerHeight - controlBarHeight;
+            var progressControlHeight = this.player.controlBar.progressControl.el().scrollHeight;
+            var newHeight = playerHeight - controlBarHeight - progressControlHeight;
             this.el().style.height = newHeight + 'px';
-            this.el().style.top = '-' + newHeight + 'px';
+            this.el().style.top = '-' + (newHeight + progressControlHeight) + 'px';
             this.seekBarOffset = this.seekBar.el().offsetLeft + this.progressControl.el().offsetLeft;
-            this.seekBarWidth = this.seekBar.el().offsetWidth + this.progressControl.el().offsetWidth;
+            this.seekBarWidth = this.seekBar.el().offsetWidth + this.progressControl.el().offsetWidth - 16;
             var annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
             var statsPanel = this.el().querySelector('.vjs-back-stats-panel');
             var progressControl = this.player.controlBar.progressControl;
             jQuery(annotationPanel).css('left', progressControl.el().offsetLeft);
-            jQuery(annotationPanel).css('width', progressControl.el().offsetWidth);
+            jQuery(annotationPanel).css('width', progressControl.el().offsetWidth - 16);
             jQuery(statsPanel).css('left', progressControl.el().offsetLeft);
-            jQuery(statsPanel).css('width', progressControl.el().offsetWidth);
+            jQuery(statsPanel).css('width', progressControl.el().offsetWidth - 16);
         },
 
         getProgress: function(prog) {
@@ -120,7 +121,7 @@ import * as videojs from 'video.js/dist/video.js'
             var progressControl = this.player.controlBar.progressControl;
 
             this.seekBarOffset = this.seekBar.el().offsetLeft + this.progressControl.el().offsetLeft;
-            this.seekBarWidth = this.seekBar.el().offsetWidth + this.progressControl.el().offsetWidth;
+            this.seekBarWidth = this.seekBar.el().offsetWidth + this.progressControl.el().offsetWidth - 16;
 
             var ann = data['annotation'];
             var annotationStart = ann.ranges[0].start;

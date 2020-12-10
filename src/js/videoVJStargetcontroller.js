@@ -12,11 +12,15 @@ require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
 require('./plugins/hx-websockets.js');
+require('./plugins/vjs-live-transcript.js');
 require('./plugins/vjs-annotation-display-component.js');
 require('./plugins/vjs-rangeslider-component.js');
+
 require('./storage/catchpy.js');
 
-import * as videojs from 'video.js/dist/video.js'
+import * as videojs from 'video.js/dist/video.js';
+import 'videojs-transcript-ac/dist/videojs-transcript.js';
+import 'videojs-youtube/dist/Youtube.js';
 
 (function($) {
     /**
@@ -74,7 +78,8 @@ import * as videojs from 'video.js/dist/video.js'
         this.guid = $.getUniqueId();
         var selector = jQuery('#viewer');
         var origWidth = selector[0].clientWidth;
-        selector.append('<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.object_id+'" type="video/mp4"></source></video></div>')
+        console.log("TRNSCRIT URL", this.options.transcript_url)
+        selector.append('<div class="annotator-wrapper"><video id="vid1" class="video-js" crossorigin="anonymous"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source><track kind="captions" src="' + this.options.transcript_url +'" srclang="en" label="English" default></video><div id="transcript1"></div></div>')
         console.log(origWidth);
 
         this.vid_player = videojs('vid1', {
@@ -87,9 +92,9 @@ import * as videojs from 'video.js/dist/video.js'
                     inline: false,
                 }
             },
+            playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
             "instance_id": self.instance_id
         }, function onPlayerReady() {
-            // future-use : establishing PIP
             $.publishEvent('targetLoaded', self.instance_id, [jQuery('#viewer')]);
             jQuery.each($.globals.vjs.components, function(_, callback) {
                 callback(self.vid_player);
@@ -103,6 +108,21 @@ import * as videojs from 'video.js/dist/video.js'
                 console.log('playAnnotation event triggered');
                 self.vid_player.trigger('playAnnotation', annotation);
             });
+
+            setTimeout(function() {
+                    var options = {
+                    showTitle: false,
+                    showTrackSelector: false
+                }
+                var transcript = self.vid_player.transcript(options);
+                var transcriptContainer = document.querySelector('#transcript1');
+                transcriptContainer.appendChild(transcript.el());
+                //future-use : establishing PIP
+            }, 500)
+
+            // self.vid_player.transcript(options);
+            // var transcriptContainer = document.querySelector('#transcript');
+            // transcriptContainer.appendChild(transcript.el());
 
         });
         /*
