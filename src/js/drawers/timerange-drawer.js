@@ -40,6 +40,15 @@
         Hxighlighter.subscribeEvent('GetAnnotationsData', self.instance_id, function(_, callback) {
             callback(self.getAnnotationsData());
         });
+
+        Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function(_, annotation, color) {
+            console.log("changeDrawnColor Called", annotation, annotation._local)
+            if (annotation._local) {
+                jQuery.each(annotation._local.highlights, function(_, hl) {
+                    setTimeout(function() {jQuery(hl).css('background-color', color.replace('0.3)', '0.6)'));}, 250);
+                });
+            }
+        });
     };
 
     $.TimeRangeDrawer.prototype.refreshDisplay = function(player) {

@@ -12,6 +12,7 @@ require('./plugins/hx-dropdowntags-plugin.js');
 require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
 require('./plugins/hx-websockets.js');
+require('./plugins/hx-export-print.js');
 require('./plugins/vjs-live-transcript.js');
 require('./plugins/vjs-annotation-display-component.js');
 require('./plugins/vjs-rangeslider-component.js');
@@ -88,6 +89,7 @@ import 'videojs-youtube/dist/Youtube.js';
             "fill": true,
             "controlBar": {
                 pictureInPictureToggle: false,
+                fullscreenToggle: false,
                 volumePanel: {
                     inline: false,
                 }
@@ -185,6 +187,8 @@ import 'videojs-youtube/dist/Youtube.js';
                 self.setUpSelectors(self.element[0]);
             }
             self.setUpDrawers(self.element[0]);
+
+            self.setUpKeyboard();
         });
 
         $.subscribeEvent('editorShown', self.instance_id, function(_, editor, annotation) {
@@ -300,6 +304,76 @@ import 'videojs-youtube/dist/Youtube.js';
             }
 
             self.storage[idx].onLoad(element, options);
+        });
+    };
+
+    $.VideoTarget.prototype.setUpKeyboard = function() {
+        var self = this;
+        var snapshot = function() {
+            self.vid_player.play();
+            setTimeout(self.vid_player.pause, 100);
+            jQuery('.vjs-annotate-button.vjs-button').click();
+            setTimeout(function() {
+                jQuery('#vjs-start-range-text-input').focus();
+            }, 500);
+        }
+        jQuery(document).on('keydown', function(event){
+            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
+                snapshot();
+                return false;
+            } else if (event.key == 'Escape') {
+            }
+
+            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+                event.preventDefault();
+                var currentInst = jQuery('.sr-alert').html();
+                if (currentInst.trim() === "") {
+                    currentInst = 'Hit "Ctrl + 1" to annotate part of the image currently shown in the window.';
+                }
+                jQuery('.sr-alert').html('');
+                setTimeout(function() {
+                    jQuery('.sr-alert').html(currentInst);
+                }, 250);
+            }
+            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+                var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
+                var newVal = (currVal == "off") ? 'assertive' : 'off';
+                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+                if (newVal == "off") {
+                    jQuery('.sr-real-alert').html(newAlert);
+                    setTimeout(function() {
+                        jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+                        jQuery('.sr-real-alert').html('');
+                    }, 500);
+                    var currVal = jQuery('.sr-alert').html();
+                    jQuery('.sr-alert').html('');
+                    jQuery('.sr-alert').data('old', currVal);
+                } else {
+                    jQuery('.sr-alert').html(jQuery('.sr-alert').data('old'));
+                    jQuery('#hx-sr-notifications').attr('aria-live', newVal);
+                    jQuery('.sr-real-alert').html(newAlert);
+
+                }
+                
+                event.preventDefault();
+            }
+        });
+        jQuery(document).on('keyup', '*[role="button"]', function(evt) {
+            if (evt.key == 'Enter' || evt.key == ' ') {
+                jQuery(evt.currentTarget).click();
+                return $.pauseEvent(evt);;
+            }
+        });
+        jQuery(document).on('click', 'button[class*="make-annotation-button"]', function(evt) {
+            snapshot();
+        });
+        jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+            jQuery('#key-help').toggleClass('sr-only');
+            jQuery('#key-help').toggleClass('video-scrollable-helper');
+            jQuery('#viewer').toggleClass('video-viewer-keyboard-help');
+            jQuery(this).toggleClass('selected');
+            self.vid_player.trigger('playerresize');
         });
     };
 

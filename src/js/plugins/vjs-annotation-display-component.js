@@ -75,7 +75,7 @@ import * as videojs from 'video.js/dist/video.js'
 
             return videojs.dom.createEl('div', {
                 className: 'vjs-back-anpanel-annotation',
-                innerHTML: '<button class="vjs-stats-toggle fas fa-chart-bar" title="Toggle Stats View"></button><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
+                innerHTML: '<div class="vjs-hx-buttons"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-max"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
             })
         },
 
@@ -204,6 +204,7 @@ import * as videojs from 'video.js/dist/video.js'
             ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this._getPoints(function(points) {
                 var maxEn = this._getMaxArray(points, 'entries');
+                jQuery('.vjs-stats-max').html('Max: ' + maxEn + " annotations");
                 var w = this._getWeights(points);
                 var duration = this.player.duration();
 
@@ -335,12 +336,18 @@ import * as videojs from 'video.js/dist/video.js'
             if (params.statsView) {
                 jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'none')
                 jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'block')
-                jQuery('.vjs-stats-toggle').css('color', 'rgb(255,255,0)')
+                //jQuery('.vjs-stats-toggle').css('color', 'rgb(255,255,0)')
+                jQuery('.vjs-stats-toggle').removeClass('fa-flip-horizontal')
+                jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 0)')
+                jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 255)')
                 this._drawCanvas();
             } else {
                 jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'block')
                 jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'none')
-                jQuery('.vjs-stats-toggle').css('color', 'rgb(255, 255, 255)')
+                //jQuery('.vjs-stats-toggle').css('color', 'rgb(255, 255, 255)')
+                jQuery('.vjs-stats-toggle').addClass('fa-flip-horizontal')
+                jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 255)')
+                jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 0)')
             }
         },
 
@@ -353,6 +360,7 @@ import * as videojs from 'video.js/dist/video.js'
 
         setUpListeners: function() {
             jQuery('.vjs-stats-toggle').on('click', this.toggleStats.bind(this));
+            Hxighlighter.subscribeEvent('StorageAnnotationLoad', this.app_instance_id, this._drawCanvas.bind(this));
         },
 
         shutDownListeners: function() {

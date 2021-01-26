@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Friday, December 4th, 2020, 10:31:10 AM  
+// [AIV_SHORT]  Version: 1.2.0 - Tuesday, January 26th, 2021, 12:04:50 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40631,7 +40631,7 @@ obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class="resize-handle side">\n    <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->\n</div>\n<section class="annotationSection side" role="region" id="annotationList">\n    <nav role="navigation">\n        <!-- <button class="sidebar-button" id=\'create-annotation-side\'><i class="fa fa-edit"></i></button> -->\n        <a href="#key-help" class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" title="Keyboard Help" aria-label="Keyboard Help"><span class="fas fa-keyboard"></span><span class="fas fa-question" style="display: inline;margin-left: -16px; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959; "></span></a>\n        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar" title="Toggle sidebar"><span class="fas fa-angle-double-left" aria-pressed="true"></span></button>\n    </nav>\n    <div class="group-wrap">\n        <div class="annotation-filter-buttons btn-group buttons-' +
+__p += '<div class="resize-handle side">\n    <!--<div class="handle-button" title="Hide/Show dashboard" aria-labeledby="sidebar-hide-sidebar-instructions" role="button"><i class="fa fa-arrow-right"></i></div>-->\n</div>\n<section class="annotationSection side" role="region" id="annotationList">\n    <nav role="navigation">\n        <!-- <button class="sidebar-button" id=\'create-annotation-side\'><i class="fa fa-edit"></i></button> -->\n        <a href="#key-help" class="sidebar-button keyboard-toggle" role="button" tabindex="0" id="keyboard-toggle" title="Keyboard Help" aria-label="Keyboard Help"><span class="fas fa-keyboard"></span><span class="fas fa-question" style="display: inline;margin-left: -16px; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959; "></span></a>\n        <a href="#print-annotations" class="sidebar-button print-annotations" role="button" tabindex="0" id="print-annotations" title="Print Annotations" aria-label="Print Annotations"><span class="fas fa-print" style="display: inline; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959"></span></a>\n        <a href="#export-annotations" class="sidebar-button export-annotations" role="button" tabindex="0" id="export-annotations" title="Export Annotations" aria-label="Export Annotations"><span class="fas fa-cloud-download-alt" style="display: inline; color: rgba(255, 255, 255, 0.8); -webkit-text-stroke: 1px #595959"></span></a>\n        <button class="sidebar-button" role="button" tabindex="0" id="hide_label" onclick="" aria-label="Toggle sidebar" title="Toggle sidebar"><span class="fas fa-angle-double-left" aria-pressed="true"></span></button>\n    </nav>\n    <div class="group-wrap">\n        <div class="annotation-filter-buttons btn-group buttons-' +
 ((__t = ( filterTabCount )) == null ? '' : __t) +
 '">\n            ';
  if (tabsAvailable.indexOf('search') > -1) {;
@@ -42464,6 +42464,8 @@ var annotator = annotator ? annotator : __webpack_require__(8);
       self.ViewerDisplayClose();
     });
     Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
+      jQuery(event1.target).addClass('annotation-selected');
+      console.log(event1.target.className);
       clearTimeout(self.hideTimer);
 
       try {
@@ -42633,6 +42635,7 @@ var annotator = annotator ? annotator : __webpack_require__(8);
     self.annotation_tool.viewer.data('annotations', annotations);
     self.annotation_tool.viewer.find('.cancel').click(function (event1) {
       self.annotation_tool.isStatic = false;
+      jQuery('.annotation-selected').removeClass('annotation-selected');
       self.annotation_tool.viewer.remove();
       delete self.annotation_tool.viewer; // jQuery('body').css('overflow-y', 'scroll');
     });

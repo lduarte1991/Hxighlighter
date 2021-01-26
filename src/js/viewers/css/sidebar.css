@@ -191,8 +191,22 @@ button.sidebar-button#hide_label {
     font-size: 17px;
 }
 
-.sidebar-button#keyboard-toggle.selected {
+.sidebar-button#keyboard-toggle.selected, .sidebar-button#print-annotations:hover {
     color: var(--pop-color);
+}
+
+.sidebar-button#print-annotations {
+    left: 35px;
+    position: absolute;
+    font-size: 17px;
+    display: none;
+}
+
+.sidebar-button#export-annotations {
+    left: 63px;
+    position: absolute;
+    font-size: 17px;
+    display: none;
 }
 
 .two-button-version button#hide_label {

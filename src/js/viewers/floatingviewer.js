@@ -57,6 +57,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
+            jQuery(event1.target).addClass('annotation-selected');
+            console.log(event1.target.className);
             clearTimeout(self.hideTimer);
             try {
                 self.annotation_tool.viewer.addClass('static');
@@ -234,6 +236,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         self.annotation_tool.viewer.find('.cancel').click(function (event1) {
             self.annotation_tool.isStatic = false;
+            jQuery('.annotation-selected').removeClass('annotation-selected');
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer;
             // jQuery('body').css('overflow-y', 'scroll');

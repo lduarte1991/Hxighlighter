@@ -135,6 +135,8 @@
 
 .annotation-editor .annotation-editor-nav-bar, .annotation-viewer.static .annotation-viewer-nav-bar {
     cursor: move;
+    background: #2e75af;
+    background: var(--pop-color);
 }
 
 .backup-removelater {
@@ -160,6 +162,8 @@
 
 .annotation-viewer.static .annotation-viewer-nav-bar button.cancel {
     display: inline-block;
+    background: #2e75af;
+    background: var(--pop-color);
 }
 
 .annotation-viewer .delete, .annotation-viewer .edit {

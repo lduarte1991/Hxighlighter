@@ -72,9 +72,19 @@ body {
     border-top: 10px solid red;
 }
 
+.annotator-hl {
+    transition-property: bottom, position;
+    transition-duration: 2s!important;
+    transition-timing-function: ease;
+}
+
 .annotator-hl img {
     border: 3px solid yellow;
     outline: 1px solid black;
+}
+
+.annotator-hl.annotation-selected {
+    background-color: rgba(46, 117, 175, 0.8)!important;
 }
 
 .inst .fa-certificate {
@@ -224,15 +234,29 @@ span.annotation-instructor {
     border-right: 2px dashed green;
 }
 
-.vjs-stats-toggle {
-    z-index: 9999999;
+.vjs-hx-buttons {
     position: absolute;
     top: 15px;
     left: 30px;
-    font-size: 30px!important;
+    font-size: 25px!important;
+    z-index: 9999;
     background: rgba(43, 51, 63, 0.7)!important;
     border-radius: 5px;
     border: 1px solid black!important;
+    padding: 6px;
+}
+
+.vjs-hx-buttons .vjs-stats-annotations {
+    color: rgb(255, 255, 0);
+}
+
+.vjs-stats-toggle {
+    z-index: 9999999;
+    /*position: absolute;
+    top: 15px;
+    left: 30px;*/
+    font-size: 22px!important;
+    cursor: pointer;
 }
 
 .vjs-stats-toggle:hover {
@@ -337,4 +361,25 @@ button#vjs-range-text-update:focus {
 
 .vjs-back-anpanel-scroll, .vjs-back-stats-panel {
     padding-top: 60px;
+}
+
+.vjs-stats-max {
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    font-size: 16px;
+    color: #FFFF00;
+}
+
+.video-scrollable-helper {
+    margin-left: 300px;
+    overflow: scroll;
+    height: 167px;
+}
+
+.video-viewer-keyboard-help {
+    height: calc(100% - 167px - 15px)!important;
+    height: -webkit-calc(100% - 167px - 15px)!important;
+    height: -moz-calc(100% - 167px - 15px)!important;
+    top: 167px!important;
 }
