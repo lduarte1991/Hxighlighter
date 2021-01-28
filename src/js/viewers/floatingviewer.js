@@ -170,7 +170,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
         setTimeout(function() {self.annotation_tool.editor.find('#annotation-text-field')[0].focus();}, 250);
 
-        self.checkOrientation(self.annotation_tool.editor);
+        self.checkOrientation(self.annotation_tool.editor, intPt);
         $.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
     };
 
@@ -466,7 +466,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }
     };
 
-    $.FloatingViewer.prototype.checkOrientation = function(viewerElement) {
+    $.FloatingViewer.prototype.checkOrientation = function(viewerElement, interactionPoint) {
         var self = this;
         var newTop = parseInt(jQuery(viewerElement).css('top'), 10);
         var newLeft = parseInt(jQuery(viewerElement).css('left'), 10);
@@ -480,12 +480,15 @@ import 'jquery-confirm/css/jquery-confirm.css'
             newLeft = 0;
         }
         if (newTop + elHeight > window.innerHeight) {
-            newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+            if (interactionPoint && interactionPoint.top < window.innerHeight) {
+                newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off 
+            } else {
+                newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+            }
         }
         if (newLeft + elWidth > window.innerWidth) {
             newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
         }
-
         jQuery(viewerElement).css('top', newTop);
         jQuery(viewerElement).css('left', newLeft);
     };

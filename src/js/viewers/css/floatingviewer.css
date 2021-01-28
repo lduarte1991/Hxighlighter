@@ -135,6 +135,9 @@
 
 .annotation-editor .annotation-editor-nav-bar, .annotation-viewer.static .annotation-viewer-nav-bar {
     cursor: move;
+}
+
+.annotation-viewer.static .annotation-viewer-nav-bar {
     background: #2e75af;
     background: var(--pop-color);
 }

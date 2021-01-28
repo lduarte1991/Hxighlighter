@@ -298,23 +298,32 @@ span.annotation-instructor {
     height: 100%;
 }
 
-button#vjs-range-text-update {
+button#vjs-range-text-update,
+button#vjs-range-text-preview-clip,
+button#vjs-range-text-annotate {
     background: white;
     color: black;
     padding: 5px;
     text-align: center;
     margin-top: 5px;
+    border: 1px solid black;
 }
 
-button#vjs-range-text-update:active {
+button#vjs-range-text-update:active,
+button#vjs-range-text-preview-clip:active,
+button#vjs-range-text-annotate:active {
     background: #CCCCCC;
 }
 
-button#vjs-range-text-update:hover {
+button#vjs-range-text-update:hover,
+button#vjs-range-text-preview-clip:hover,
+button#vjs-range-text-annotate:hover {
     background: #DDDDDD;
 }
 
-button#vjs-range-text-update:focus {
+button#vjs-range-text-update:focus,
+button#vjs-range-text-preview-clip:focus,
+button#vjs-range-text-annotate:focus {
     outline: -webkit-focus-ring-color auto 1px;
 }
 
@@ -356,7 +365,7 @@ button#vjs-range-text-update:focus {
 }
 
 .vjs-rangeslider-text-input {
-    top: calc(-90px - 1.5em);
+    top: calc(-120px - 1.5em);
 }
 
 .vjs-back-anpanel-scroll, .vjs-back-stats-panel {

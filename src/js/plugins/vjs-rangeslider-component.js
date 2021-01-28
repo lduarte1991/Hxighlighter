@@ -308,7 +308,7 @@ import * as videojs from 'video.js/dist/video.js'
     createEl: function() {
       return videojs.dom.createEl('div', {
         className: 'vjs-rangeslider-text-input',
-        innerHTML: '<span>Start:</span><input type="text" id="vjs-start-range-text-input" /><br><span>End:</span><input type="text" id="vjs-end-range-text-input"/><br><button id="vjs-range-text-update">Update Time Range</button>'
+        innerHTML: '<span>Start:</span><input type="text" id="vjs-start-range-text-input" /><br><span>End:</span><input type="text" id="vjs-end-range-text-input"/><br><button id="vjs-range-text-update">Update Time Range</button><button id="vjs-range-text-preview-clip">Preview Clip</button><br><button id="vjs-range-text-annotate">Annotate Selection</button>'
       });
     },
 
@@ -358,12 +358,35 @@ import * as videojs from 'video.js/dist/video.js'
       return timeCounter
     },
 
+    previewClip: function() {
+      var startTimes = jQuery('#vjs-start-range-text-input').val()
+      var endTimes = jQuery('#vjs-end-range-text-input').val()
+
+      var startSeconds = this.parseTime(startTimes)
+      var endSeconds = this.parseTime(endTimes)
+      var fakeAnn = {
+        'ranges': [{
+          'start': startSeconds,
+          'end': endSeconds
+        }]
+      }
+      this.player.trigger('playAnnotation', fakeAnn);
+    },
+
+    annotateClip: function() {
+      jQuery('.hx-confirm-button button').trigger('click');
+    },
+
     setUpListeners: function() {
       jQuery('#vjs-range-text-update').on('click', this.updateTime.bind(this));
+      jQuery('#vjs-range-text-preview-clip').on('click', this.previewClip.bind(this));
+      jQuery('#vjs-range-text-annotate').on('click', this.annotateClip.bind(this));
     },
 
     closeUpListeners: function() {
       jQuery('#vjs-range-text-update').off('click');
+      jQuery('#vjs-range-text-preview-clip').off('click');
+      jQuery('#vjs-range-text-annotate').off('click');
     },
 
     setStart: function(event, percent) {

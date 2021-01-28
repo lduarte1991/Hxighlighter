@@ -17,6 +17,7 @@ require('./plugins/m2-viewer-plugin.js');
 require('./plugins/m2-hxighlighter-endpoint.js');
 require('./plugins/hx-reply.js');
 require('./plugins/hx-websockets.js');
+require('./plugins/hx-export-print.js');
 require('./storage/catchpy.js');
 
 (function($) {

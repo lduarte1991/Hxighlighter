@@ -13,6 +13,10 @@
         this.setUpButton();
     };
 
+    $.ExportPlugin.prototype.saving = function(annotation) {
+        return annotation;
+    };
+
     $.ExportPlugin.prototype.setUpButton = function() {
         var self = this;
         jQuery('#print-annotations').show();
