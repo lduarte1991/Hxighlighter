@@ -230,6 +230,7 @@ span.annotation-instructor {
     left: 0px;
     width: 100%;
     bottom: -2000px;
+    bottom: calc(-1 * 85vh);
     border-left: 2px dashed green;
     border-right: 2px dashed green;
 }

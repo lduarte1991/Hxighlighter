@@ -108,7 +108,7 @@
     background: white;
     border-radius: 5px;
     box-shadow: 5px 5px 3px #888;
-    z-index: 999;
+    z-index: 9999999999;
 }
 
 .annotation-editor {

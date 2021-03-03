@@ -13,6 +13,7 @@ require('./plugins/hx-colortags-plugin.js');
 require('./plugins/hx-reply.js');
 require('./plugins/hx-websockets.js');
 require('./plugins/hx-export-print.js');
+require('./plugins/hx-prevnextbutton.js');
 require('./plugins/vjs-live-transcript.js');
 require('./plugins/vjs-annotation-display-component.js');
 require('./plugins/vjs-rangeslider-component.js');
@@ -529,6 +530,7 @@ import 'videojs-youtube/dist/Youtube.js';
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerDisplayClose(event);
+            console.log("CLOSING VIDEO TARGET VIEWER DISPLAY CLOSE")
         });
     };
 

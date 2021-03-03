@@ -143,14 +143,32 @@ import * as videojs from 'video.js/dist/video.js'
         },
 
         playAnnotation: function(event, ann) {
-            console.log("PLAY", ann);
+            this.suspendPlay();
             // get start/end values pass it to playBetween
+            jQuery('.annotation-viewer.static .cancel').click();
+            let annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
+            let orig = jQuery('#hx-ann-' + ann.id)
+            let animated = orig.clone(true);
+            jQuery('div[id$="animated"]').remove()
+            animated.attr('id', "hx-ann-" + ann.id + '-animated')
+            animated.css({
+                'position': 'absolute',
+                'background': '#2e75af',
+                'bakcground': 'var(--pop-color)'
+            })
+            animated.appendTo(annotationPanel)
+            animated.css({
+                'margin-top': orig.offset().top - animated.offset().top,
+            })
+            animated.animate({
+                top: "100%",
+                'margin-top': "-20px"
+            }, 1000)
             this._playBetween(ann.ranges[0].start, ann.ranges[0].end);
         },
 
         _playBetween: function(start, end) {
             // seek to start point
-            console.log(start, end, this.player);
             this.player.currentTime(start);
             this.player.play();
             this.startTime = start;
@@ -165,7 +183,7 @@ import * as videojs from 'video.js/dist/video.js'
             this.player_.off("timeupdate", videojs.bind(this,this._processPlay));
         },
 
-        _processPlay: function (){
+        _processPlay: function () {
             //Check if current time is between start and end
             if(this.player_.currentTime() >= this.startTime && (this.endTime < 0 || this.player_.currentTime() < this.endTime)){
                 if(this.fired){ //Do nothing if start has already been called
@@ -299,14 +317,13 @@ import * as videojs from 'video.js/dist/video.js'
 
         _getPoints: function(callback) {
             var self = this;
-            Hxighlighter.publishEvent('getDrawnAnnotations', this.instance_id, [function(anns) {
+            Hxighlighter.publishEvent('getDrawnAnnotations', this.app_instance_id, [function(anns) {
                 var points_prep = {};
                 anns.forEach(function(ann) {
                     var start = ann.ranges[0].start;
                     var end = ann.ranges[0].end;
                     var startIndex = Math.floor(start).toString();
                     var endIndex = Math.ceil(end).toString();
-                    console.log("here", startIndex, points_prep, startIndex in points_prep);
                     if (!(startIndex in points_prep)) {
                         points_prep[startIndex] = self._getNumberAnnotations(startIndex, false, anns);
                         if (startIndex == endIndex) { // is a point

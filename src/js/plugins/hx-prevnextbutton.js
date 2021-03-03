@@ -37,18 +37,25 @@ require('./hx-prevnextbutton.css');
         var toAppend = "";
         var toPrepend = "";
         if (self.prevUrl && self.prevUrl != "") {
-            toPrepend += '<a href="'+self.prevUrl+'" title="Previous Page" id="prevButtonTop" role="button">Previous</button>';
+            toPrepend += '<a href="'+self.prevUrl+'" title="Previous Page" id="prevButtonNavTop" role="button">Previous</button>';
+
+            //toPrepend += '<a href="'+self.prevUrl+'" title="Previous Page" id="prevButtonTop" role="button">Previous</button>';
             toAppend += '<a href="'+self.prevUrl+'" title="Previous Page" id="prevButtonBottom" role="button">Previous</button>';
             //jQuery(self.options.slot).append('<a href="'+self.prevUrl+'" title="Previous Page" id="prevButton" role="button">Previous</button>');
         }
         if (self.nextUrl && self.nextUrl != "") {
-            toPrepend += '<a href="'+self.nextUrl+'" title="Next Page" id="nextButtonTop" role="button">Next</button>';
+            toPrepend += '<a href="'+self.nextUrl+'" title="Next Page" id="nextButtonNavTop" role="button">Next</button>';
+
+            //toPrepend += '<a href="'+self.nextUrl+'" title="Next Page" id="nextButtonTop" role="button">Next</button>';
             toAppend += '<a href="'+self.nextUrl+'" title="Next Page" id="nextButtonBottom" role="button">Next</button>';
             //jQuery(self.options.slot).append('<a href="'+self.nextUrl+'" title="Next Page" id="nextButton" role="button">Next</button>');
         }
 
-        jQuery(self.options.slot).before(toPrepend);
-        jQuery(self.options.slot).append(toAppend);
+        jQuery('.sidebar-navbar').append(toPrepend)
+        //jQuery(self.options.slot).before(toPrepend);
+        if (self.options.mediaType === "text") {
+            jQuery(self.options.slot).append(toAppend);
+        }
     };
 
     $.PrevNextButton.prototype.saving = function(annotation) {

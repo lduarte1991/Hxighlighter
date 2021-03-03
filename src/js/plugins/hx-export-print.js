@@ -25,23 +25,108 @@
         } else {
             jQuery('#export-annotations').show();
         }
-        jQuery(document).on('click', '#print-annotations', function(evt) {
-            var p = self.printAnnotations.bind(self);
-            p();
+        jQuery('#print-annotations').confirm({
+            'title': "Which annotations would you like to print?",
+            'buttons': {
+                mine: {
+                    text: 'Mine',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'm'],
+                    isHidden: false,
+                    isDisabled: false,
+                    action: function(mineButton) {
+                        var p = self.printAnnotations.bind(self);
+                        p("mine");
+                    }
+                },
+                inst: {
+                    text: 'Intructor',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'i'],
+                    isHidden: false,
+                    isDisabled: false,
+                    action: function(instButton) {
+                        var p = self.printAnnotations.bind(self);
+                        p('inst');
+                    }
+                },
+                both: {
+                    text: 'Both',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'b'],
+                    isHidden: false,
+                    isDisabled: false,
+                    action: function(bothButton) {
+                        var p = self.printAnnotations.bind(self);
+                        p('both');
+                    }
+                },
+                cancel: function() {}
+            }
         });
-        jQuery(document).on('click', '#export-annotations', function(evt) {
-            var e = self.exportAnnotations.bind(self);
-            e();
-        })
+        jQuery('#export-annotations').confirm({
+            'title': "Which annotations would you like to export?",
+            'buttons': {
+                mine: {
+                    text: 'Mine',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'm'],
+                    isHidden: false,
+                    isDisabled: false,
+                    action: function(mineButton) {
+                        var ex = self.exportAnnotations.bind(self);
+                        ex("mine");
+                    }
+                },
+                inst: {
+                    text: 'Intructor',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'i'],
+                    isHidden: false,
+                    isDisabled: false,
+                    action: function(mineButton) {
+                        var ex = self.exportAnnotations.bind(self);
+                        ex("inst");
+                    }
+                },
+                both: {
+                    text: 'Both Mine + Instructor',
+                    btnClass: 'btn-blue',
+                    keys: ['enter', 'b'],
+                    isHidden: false,
+                    isDisabled: false,
+                    action: function(mineButton) {
+                        var ex = self.exportAnnotations.bind(self);
+                        ex("both");
+                    }
+                },
+                cancel: function () {}
+            }
+        });
+        // jQuery(document).on('click', '#print-annotations', function(evt) {
+        //     var p = self.printAnnotations.bind(self);
+        //     p();
+        // });
+        // jQuery(document).on('click', '#export-annotations', function(evt) {
+        //     var e = self.exportAnnotations.bind(self);
+        //     e();
+        // })
     };
 
-    $.ExportPlugin.prototype.printAnnotations = function() {
+    $.ExportPlugin.prototype.printAnnotations = function(whose) {
         var self =this;
         var options = {
             type: self.options.mediaType,
             limit: -1,
             offset: 0
         };
+        if (whose === "mine") {
+            options['userid'] = [self.options.user_id];
+        } else if (whose === "inst") {
+            options['userid'] = self.options.instructors;
+        } else if (whose == "both") {
+            options['userid'] = [self.options.user_id].concat(self.options.instructors);
+        }
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
             var annotations = [];
             results.rows.forEach(function(ann) {
@@ -58,7 +143,7 @@
                     html += "<td>" + annotation.creator.name + "</td>";
                 }
                 if (annotation.media.toLowerCase() === "text") {
-                    html += "<td>" + annotation.exact + "</td>";
+                    html += "<td>" + self.truncate(annotation.exact, 100, ' [ ... ] ') + "</td>";
                 } else if(annotation.media.toLowerCase() === "image") {
                     html += "<td><img src=\""+annotation.thumbnail+"\" style=\"max-width: 150px; max-height: 150px;\"/></td>"
                 } else if (annotation.media.toLowerCase() === "video") {
@@ -88,13 +173,20 @@
         }]);
     };
 
-    $.ExportPlugin.prototype.exportAnnotations = function() {
+    $.ExportPlugin.prototype.exportAnnotations = function(whose) {
         var self =this;
         var options = {
             type: self.options.mediaType,
             limit: -1,
             offset: 0
         };
+        if (whose === "mine") {
+            options['userid'] = [self.options.user_id];
+        } else if (whose === "inst") {
+            options['userid'] = self.options.instructors;
+        } else if (whose == "both") {
+            options['userid'] = [self.options.user_id].concat(self.options.instructors);
+        }
         $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function(results, converter) {
             var annotations = [];
             results.rows.forEach(function(ann) {
@@ -126,6 +218,22 @@
         //         }
         //     }, 4) + "</textarea>");
         // }])
+    };
+
+    $.ExportPlugin.prototype.truncate = function (fullStr, strLen, separator) {
+        console.log(fullStr, strLen, separator);
+        if (fullStr.length <= strLen) return fullStr;
+
+        separator = separator || '...';
+
+        var sepLen = separator.length,
+            charsToShow = strLen - sepLen,
+            frontChars = Math.ceil(charsToShow/2),
+            backChars = Math.floor(charsToShow/2);
+
+        return fullStr.substr(0, frontChars) + 
+               separator + 
+               fullStr.substr(fullStr.length - backChars);
     };
 
     $.plugins.push($.ExportPlugin)
