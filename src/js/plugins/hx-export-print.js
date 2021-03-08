@@ -90,7 +90,7 @@
                     }
                 },
                 both: {
-                    text: 'Both Mine + Instructor',
+                    text: 'Both',
                     btnClass: 'btn-blue',
                     keys: ['enter', 'b'],
                     isHidden: false,
@@ -135,7 +135,7 @@
             });
             var html = "<h1>" + self.options.username + "</h1>";
             html += "<p>(" + results.size + " annotations out of " + results.total + ")</p>"
-            html += "<style>table, th, td { border: 1px solid black;} table { border-collapse: collapse; } td, th {padding: 10px;} </style><table><tr><th>Username</th><th>Excerpt</th><th>Annotation</th><th>Tag</th><th>Timestamp</th></tr><tr>";
+            html += "<style>table, th, td { border: 1px solid black;} table { border-collapse: collapse; } td, th {padding: 10px;} </style><table><tr><th>Username</th><th>Excerpt</th><th>Annotation</th><th>Tag</th><th>Creation Date</th></tr><tr>";
             jQuery.each(annotations, function(index, annotation) {
                 if (annotation.common_name && annotation.common_name !== annotation.creator.name) {
                     html += "<td>" + annotation.common_name + "</td>";
@@ -165,7 +165,15 @@
                         html += tagName + "<br>";
                     });
                 };
-                html += "<td>" + annotation.created + "</td></tr>";
+                let t = annotation.created;
+                let date = ('0' + t.getDate()).slice(-2);
+                let month = ('0' + (t.getMonth() + 1)).slice(-2);
+                let year = t.getFullYear();
+                let hours = ('0' + t.getHours()).slice(-2);
+                let minutes = ('0' + t.getMinutes()).slice(-2);
+                let seconds = ('0' + t.getSeconds()).slice(-2);
+                let time = `${date}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+                html += "<td>" + time + "</td></tr>";
             });
             html += "</table>";
             var wnd = window.open("about:blank", "", "_blank");
