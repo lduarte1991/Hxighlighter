@@ -80,10 +80,12 @@ import 'videojs-youtube/dist/Youtube.js';
         this.guid = $.getUniqueId();
         var selector = jQuery('#viewer');
         var origWidth = selector[0].clientWidth;
-        console.log("TRNSCRIT URL", this.options.transcript_url)
-        selector.append('<div class="annotator-wrapper"><video id="vid1" class="video-js" crossorigin="anonymous"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source><track kind="captions" src="' + this.options.transcript_url +'" srclang="en" label="English" default></video><div id="transcript1"></div></div>')
-        console.log(origWidth);
-
+        var html = '<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source></video></div>'
+        if (this.options.transcript_url && this.options.transcript_url.length > 0) {
+            html = '<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source><track kind="captions" src="' + this.options.transcript_url +'" srclang="en" label="English" default></video><div id="transcript1"></div></div>'
+        }
+        selector.append(html)
+        
         this.vid_player = videojs('vid1', {
             "width": origWidth + 'px',
             "controls": true,
@@ -111,17 +113,20 @@ import 'videojs-youtube/dist/Youtube.js';
                 console.log('playAnnotation event triggered');
                 self.vid_player.trigger('playAnnotation', annotation);
             });
-
-            setTimeout(function() {
-                    var options = {
-                    showTitle: false,
-                    showTrackSelector: false
-                }
-                var transcript = self.vid_player.transcript(options);
-                var transcriptContainer = document.querySelector('#transcript1');
-                transcriptContainer.appendChild(transcript.el());
-                //future-use : establishing PIP
-            }, 500)
+            if (self.options.transcript_url && self.options.transcript_url.length > 0) {
+                setTimeout(function() {
+                        var options = {
+                        showTitle: false,
+                        showTrackSelector: false
+                    }
+                    var transcript = self.vid_player.transcript(options);
+                    var transcriptContainer = document.querySelector('#transcript1');
+                    transcriptContainer.appendChild(transcript.el());
+                    //future-use : establishing PIP
+                }, 500)
+            } else {
+                jQuery('.vjs-toggle-transcript').hide();
+            }
 
             // self.vid_player.transcript(options);
             // var transcriptContainer = document.querySelector('#transcript');
