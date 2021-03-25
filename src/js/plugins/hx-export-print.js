@@ -26,7 +26,7 @@
             jQuery('#export-annotations').show();
         }
         jQuery('#print-annotations').confirm({
-            'title': "Which annotations would you like to print?",
+            'title': "Which annotations would you like to download to print?",
             'buttons': {
                 mine: {
                     text: 'Mine',
@@ -113,6 +113,16 @@
         // })
     };
 
+    $.ExportPlugin.prototype.download = function(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
     $.ExportPlugin.prototype.printAnnotations = function(whose) {
         var self =this;
         var options = {
@@ -176,8 +186,9 @@
                 html += "<td>" + time + "</td></tr>";
             });
             html += "</table>";
-            var wnd = window.open("about:blank", "", "_blank");
-            wnd.document.write(html);
+            self.download('annotations.html', html)
+            // var wnd = window.open("about:blank", "", "_blank");
+            // wnd.document.write(html);
         }]);
     };
 
@@ -200,15 +211,23 @@
             results.rows.forEach(function(ann) {
                 annotations.push(converter(ann, self.element));
             });
-
-            var wnd = window.open('about:blank', "", "_blank");
-            wnd.document.write("<p>(" + results.size + " annotations out of " + results.total + ")</p><textarea style='width:100%; height:100%;'>" + JSON.stringify(annotations, function(key, value) {
+            var html = JSON.stringify(annotations, function(key, value) {
                 if(key == "_local") {
                     return undefined
                 } else {
                     return value;
                 }
-            }, 4) + "</textarea>");
+            }, 4);
+            self.download('annotations.json', html)
+
+            // var wnd = window.open('about:blank', "", "_blank");
+            // wnd.document.write("<p>(" + results.size + " annotations out of " + results.total + ")</p><textarea style='width:100%; height:100%;'>" + JSON.stringify(annotations, function(key, value) {
+            //     if(key == "_local") {
+            //         return undefined
+            //     } else {
+            //         return value;
+            //     }
+            // }, 4) + "</textarea>");
 
         }]);
 

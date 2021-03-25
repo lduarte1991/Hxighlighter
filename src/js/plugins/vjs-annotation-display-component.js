@@ -47,7 +47,7 @@ import * as videojs from 'video.js/dist/video.js'
                     'isAnnotating': false,
                 });
             } else {
-                this.el().style.color = 'rgb(255, 255, 255)';
+                this.el().style.color = null;
             }
         },
     });

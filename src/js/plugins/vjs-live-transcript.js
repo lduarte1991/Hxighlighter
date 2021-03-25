@@ -34,7 +34,6 @@ import * as videojs from 'video.js/dist/video.js'
     },
 
     toggleTranscriptDisplay: function(event, params) {
-        console.log(params, 'here');
         if (params.transcript) {
             console.log(jQuery('.video-js.vjs-fill'))
             this.el().style.color = 'rgb(255, 255, 0)';

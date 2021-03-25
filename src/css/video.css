@@ -13,6 +13,13 @@
     --lighter-background: #ededed;
 }
 
+.video-js .vjs-current-time { display: block!important; margin-left: auto!important; }
+.video-js .vjs-time-divider { display: block!important; }
+.video-js .vjs-duration { display: block!important; }
+.video-js .vjs-remaining-time { display: none!important; }
+.video-js .vjs-control-bar { font-size: 14px; }
+
+
 body {
     overflow-y: scroll;
     width: 100%;
@@ -135,6 +142,17 @@ span.annotation-instructor {
 
 .vjs-annotate-button.fas.fa-highlighter {
     order: 5;
+    color: #2E75AF;
+    color: var(--pop-color);
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: white;
+}
+
+.vjs-annotation-viewer-button.fas {
+    color: #2E75AF;
+    color: var(--pop-color);
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: white;
 }
 
 .video-js .vjs-big-play-button {
