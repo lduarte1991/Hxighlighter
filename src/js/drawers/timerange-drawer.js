@@ -20,7 +20,7 @@
         jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function(event) {
             $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
-            console.log("MOUSEOVER", annotations);
+            // console.log("MOUSEOVER", annotations);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
 
@@ -41,8 +41,11 @@
             callback(self.getAnnotationsData());
         });
 
+        Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback){
+            callback(self.getSpecificAnnotationData(annotation_id));
+        });
+
         Hxighlighter.subscribeEvent('changeDrawnColor', self.instance_id, function(_, annotation, color) {
-            console.log("changeDrawnColor Called", annotation, annotation._local)
             if (annotation._local) {
                 jQuery.each(annotation._local.highlights, function(_, hl) {
                     setTimeout(function() {jQuery(hl).css('background-color', color.replace('0.3)', '0.6)'));}, 250);
@@ -64,7 +67,6 @@
         var self = this;
 
         var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
-        console.log("existing_drawn_annotation: ", existing_drawn_annotation);
         if (existing_drawn_annotation) {
             self.undraw(existing_drawn_annotation)
         }
@@ -75,7 +77,6 @@
         if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
             otherLabel += ' annotation-instructor';
         }
-        console.log(annotation, player, "Test");
         player.trigger('drawAnnotation', {
             'annotation': annotation,
             'otherLabel': otherLabel,
@@ -149,6 +150,7 @@
     $.TimeRangeDrawer.prototype.getSpecificAnnotationData = function(annotation_id) {
         var self = this;
         var currentAnnotations = self.getAnnotationsData();
+        // console.log(currentAnnotations)
         var foundAnnotation = currentAnnotations.find(function(ann) {
             if (ann.id === annotation_id) {
                 return ann;

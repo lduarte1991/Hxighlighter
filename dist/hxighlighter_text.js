@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.2.0 - Tuesday, January 26th, 2021, 12:04:50 PM  
+// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 1st, 2021, 5:56:03 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43145,7 +43145,9 @@ __webpack_require__(48);
       jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").hide();
       jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").show();
       jQuery(viewer).find('.' + prefix + 'reply-list').html('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
+      console.log(annotation.id);
       $.publishEvent('GetSpecificAnnotationData', self.instanceID, [annotation.id, function (ann) {
+        console.log(ann);
         self.viewRepliesToAnnotation(ann, viewer, prefix);
       }]);
     });
@@ -43238,6 +43240,7 @@ __webpack_require__(48);
 
   $.Reply.prototype.viewRepliesToAnnotation = function (annotation, viewer, prefix) {
     var self = this;
+    console.log(annotation.totalReplies);
 
     if (annotation.totalReplies > 0) {
       if (annotation.replies && annotation.totalReplies == annotation.replies.length) {
