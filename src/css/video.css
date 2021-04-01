@@ -411,3 +411,24 @@ button#vjs-range-text-annotate:focus {
     height: -moz-calc(100% - 167px - 15px)!important;
     top: 167px!important;
 }
+
+.video-js .vjs-progress-control.stats-view .vjs-mouse-display:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    top: -90vh;
+    bottom: 0;
+    border-left: 1px dashed white;
+    border-right: 1px dashed white;
+}
+
+.vjs-menu {
+    z-index: 9;
+}
+
+.vjs-volume-control.vjs-control.vjs-volume-vertical {
+    z-index: 9;
+    background-color: rgba(43, 51, 63, 0.9);
+}

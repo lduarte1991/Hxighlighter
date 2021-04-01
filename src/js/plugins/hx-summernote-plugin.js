@@ -29,7 +29,6 @@ require('./hx-summernote-plugin.css');
             toolbar = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['insert', ['table', 'link', 'hr', 'picture', 'video']],
                 ['view', ['codeview']]
@@ -164,7 +163,7 @@ require('./hx-summernote-plugin.css');
 
         element.find('.note-editable').trigger('focus');
         jQuery('.note-editor button').attr('tabindex', '0');
-        jQuery('.note-statusbar').hide();
+        setTimeout(function() { jQuery('.note-statusbar').hide(); console.log("HELP")}, 500);
 
         jQuery(document).on('mouseleave', function() {
             jQuery('.note-statusbar').trigger('mouseup');

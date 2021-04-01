@@ -121,6 +121,10 @@
     cursor: pointer;
 }
 
+.annotationSection .annotationsHolder.video-version .annotationItem {
+    cursor: default;
+}
+
 .annotationSection .annotationsHolder .annotationItem .annotatedBy{
     font-weight: bold;
     font-size: 11pt;

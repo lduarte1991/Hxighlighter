@@ -574,40 +574,47 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 self.ViewerEditorOpen(event, ann, true);
             });
 
-            jQuery('.side.item-' + ann.id).click(function(e) {
-                console.log(ann, self.options);
-                if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
-                    var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
-                    jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140)});
-                    //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
-                    setTimeout(function() {
-                        ann._local.highlights.forEach(function(hl) {
-                            if (jQuery(hl).text().trim().length > 0) {
-                                jQuery(hl).css({border: '0 solid black'}).animate({borderWidth: 2}, 200).animate({borderWidth: 0}, 200);
-                            }
-                        });
-                        jQuery('#first-node-' + ann.id)[0].focus();
-                        $.publishEvent('focusOnContext', self.instance_id, [ann]);
-                    }, 350);
-                } else if (self.options.mediaType.toLowerCase() === "image") {
-                    var elementClass = e.target.getAttribute('class');
-                    if ((elementClass && elementClass.indexOf('zoom-to-error-button') > -1) || e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path"){
-                        var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
-                        var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
-                        var bounds = {
-                            x: boundSplit[0] - (boundSplit[2] * .167),
-                            y: boundSplit[1] - (boundSplit[3] * .167),
-                            width: boundSplit[2] + (boundSplit[2] / 3.0),
-                            height: boundSplit[3] + (boundSplit[3] / 3.0)
-                        };
-                        $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+            
+
+            if (self.options.mediaType.toLowerCase() !== "video" && self.options.mediaType.toLowerCase() !== "audio") {
+                jQuery('.side.item-' + ann.id).click(function(e) {
+                    if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
+                        var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
+                        jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140)});
+                        //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
+                        setTimeout(function() {
+                            ann._local.highlights.forEach(function(hl) {
+                                if (jQuery(hl).text().trim().length > 0) {
+                                    jQuery(hl).css({border: '0 solid black'}).animate({borderWidth: 2}, 200).animate({borderWidth: 0}, 200);
+                                }
+                            });
+                            jQuery('#first-node-' + ann.id)[0].focus();
+                            $.publishEvent('focusOnContext', self.instance_id, [ann]);
+                        }, 350);
+                    } else if (self.options.mediaType.toLowerCase() === "image") {
+                        var elementClass = e.target.getAttribute('class');
+                        if ((elementClass && elementClass.indexOf('zoom-to-error-button') > -1) || e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path"){
+                            var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
+                            var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function(val) { return parseInt(val, 10); });
+                            var bounds = {
+                                x: boundSplit[0] - (boundSplit[2] * .167),
+                                y: boundSplit[1] - (boundSplit[3] * .167),
+                                width: boundSplit[2] + (boundSplit[2] / 3.0),
+                                height: boundSplit[3] + (boundSplit[3] / 3.0)
+                            };
+                            $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
+                        }
+                        // console.log("Yup!");
+                        // $.pauseEvent(e);
+                    } else if (self.options.mediaType.toLowerCase() === "video" || self.options.mediaType.toLowerCase() === "audio") {
+                        $.publishEvent('playAnnotation', self.inst_id, [ann]);
                     }
-                    // console.log("Yup!");
-                    // $.pauseEvent(e);
-                } else if (self.options.mediaType.toLowerCase() === "video" || self.options.mediaType.toLowerCase() === "audio") {
+                });
+            } else {
+                jQuery('.side.item-' + ann.id).find('.playMediaButton').click(function(e) {
                     $.publishEvent('playAnnotation', self.inst_id, [ann]);
-                }
-            });
+                });
+            }
 
             jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function(e) {
                 self.autosearch(jQuery(this).text().trim(), 'User')

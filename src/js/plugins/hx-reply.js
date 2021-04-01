@@ -121,6 +121,36 @@ import 'jquery-confirm/css/jquery-confirm.css'
         // removes summernote's ability to tab within the editor so users can tab through items
         delete jQuery.summernote.options.keyMap.pc.TAB;
         delete jQuery.summernote.options.keyMap.mac.TAB;
+        jQuery('.note-editor button').attr('tabindex', '0');
+        jQuery('.note-statusbar').hide();
+
+        jQuery(document).on('mouseleave', function() {
+            jQuery('.note-statusbar').trigger('mouseup');
+            if (self.elementObj) {
+                var editorObj = self.elementObj.closest('.annotation-editor');
+                var newTop = parseInt(editorObj.css('top'), 10);;
+                var newLeft = parseInt(editorObj.css('left'), 10);
+
+                // console.log(editorObj, newTop, newLeft);
+
+                if (newTop + editorObj.outerHeight() > window.innerHeight) {
+                    newTop = window.innerHeight - editorObj.outerHeight();
+                }
+                if (newLeft + editorObj.outerWidth() > window.innerWidth) {
+                    newLeft = window.innerWidth - editorObj.outerWidth();
+                }
+                if (newTop < 0) {
+                    newTop = 0;
+                }
+                if (newLeft < 0) {
+                    newLeft = 0;
+                }
+                editorObj.css({
+                    top: newTop,
+                    left: newLeft
+                });
+            }
+        });
     };
 
     /**

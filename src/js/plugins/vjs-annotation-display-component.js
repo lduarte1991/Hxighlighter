@@ -146,24 +146,26 @@ import * as videojs from 'video.js/dist/video.js'
             this.suspendPlay();
             // get start/end values pass it to playBetween
             jQuery('.annotation-viewer.static .cancel').click();
-            let annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
-            let orig = jQuery('#hx-ann-' + ann.id)
-            let animated = orig.clone(true);
-            jQuery('div[id$="animated"]').remove()
-            animated.attr('id', "hx-ann-" + ann.id + '-animated')
-            animated.css({
-                'position': 'absolute',
-                'background': '#2e75af',
-                'bakcground': 'var(--pop-color)'
-            })
-            animated.appendTo(annotationPanel)
-            animated.css({
-                'margin-top': orig.offset().top - animated.offset().top,
-            })
-            animated.animate({
-                top: "100%",
-                'margin-top': "-20px"
-            }, 1000)
+            if (typeof(ann.id) !== "undefined") {
+                let annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
+                let orig = jQuery('#hx-ann-' + ann.id)
+                let animated = orig.clone(true);
+                jQuery('div[id$="animated"]').remove()
+                animated.attr('id', "hx-ann-" + ann.id + '-animated')
+                animated.css({
+                    'position': 'absolute',
+                    'background': '#2e75af',
+                    'bakcground': 'var(--pop-color)'
+                })
+                animated.appendTo(annotationPanel)
+                animated.css({
+                    'margin-top': orig.offset().top - animated.offset().top,
+                })
+                animated.animate({
+                    top: "100%",
+                    'margin-top': "-20px"
+                }, 1000)
+            }
             this._playBetween(ann.ranges[0].start, ann.ranges[0].end);
         },
 
@@ -357,6 +359,7 @@ import * as videojs from 'video.js/dist/video.js'
                 jQuery('.vjs-stats-toggle').removeClass('fa-flip-horizontal')
                 jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 0)')
                 jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 255)')
+                jQuery('.video-js .vjs-progress-control').addClass('stats-view')
                 this._drawCanvas();
             } else {
                 jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'block')
@@ -365,6 +368,7 @@ import * as videojs from 'video.js/dist/video.js'
                 jQuery('.vjs-stats-toggle').addClass('fa-flip-horizontal')
                 jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 255)')
                 jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 0)')
+                jQuery('.video-js .vjs-progress-control').removeClass('stats-view')
             }
         },
 

@@ -57,8 +57,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
+            if (self.annotation_tool.isStatic) {
+                return;
+            }
             jQuery(event1.target).addClass('annotation-selected');
-            console.log(event1.target.className);
             clearTimeout(self.hideTimer);
             try {
                 self.annotation_tool.viewer.addClass('static');

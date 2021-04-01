@@ -104,6 +104,7 @@ import 'videojs-youtube/dist/Youtube.js';
             jQuery.each($.globals.vjs.components, function(_, callback) {
                 callback(self.vid_player);
             });
+            jQuery('.annotationsHolder').addClass('video-version');
             self.vid_player.on('playerresize', function() {
                 jQuery.each(self.drawers, function(_, drawer) {
                     drawer.refreshDisplay(self.vid_player);
@@ -117,7 +118,8 @@ import 'videojs-youtube/dist/Youtube.js';
                 setTimeout(function() {
                         var options = {
                         showTitle: false,
-                        showTrackSelector: false
+                        showTrackSelector: false,
+                        autoscroll: true,
                     }
                     var transcript = self.vid_player.transcript(options);
                     var transcriptContainer = document.querySelector('#transcript1');
@@ -127,7 +129,7 @@ import 'videojs-youtube/dist/Youtube.js';
             } else {
                 jQuery('.vjs-toggle-transcript').hide();
             }
-
+            
             // self.vid_player.transcript(options);
             // var transcriptContainer = document.querySelector('#transcript');
             // transcriptContainer.appendChild(transcript.el());
