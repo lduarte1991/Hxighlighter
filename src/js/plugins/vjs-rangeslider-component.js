@@ -361,6 +361,7 @@ import * as videojs from 'video.js/dist/video.js'
     },
 
     previewClip: function() {
+      this.updateTime();
       var startTimes = jQuery('#vjs-start-range-text-input').val()
       var endTimes = jQuery('#vjs-end-range-text-input').val()
 

@@ -178,14 +178,17 @@ import * as videojs from 'video.js/dist/video.js'
             //this.suspendPlay();
             this.player_.on("timeupdate", videojs.bind(this,this._processPlay));
             // set universal end point
+            console.log("Ran playBetween");
         },
 
         suspendPlay: function() {
             this.fired = false;
             this.player_.off("timeupdate", videojs.bind(this,this._processPlay));
+            console.log("Ran suspendPlay")
         },
 
         _processPlay: function () {
+            var self = this;
             //Check if current time is between start and end
             if(this.player_.currentTime() >= this.startTime && (this.endTime < 0 || this.player_.currentTime() < this.endTime)){
                 if(this.fired){ //Do nothing if start has already been called
@@ -194,10 +197,13 @@ import * as videojs from 'video.js/dist/video.js'
                 this.fired = true; //Set fired flag to true
             }else{
                 if(!this.fired){ //Do nothing if end has already been called
+                    this.suspendPlay();
+                    setTimeout(function() { self.player_.pause()}, 250);
                     return;
                 }
                 this.fired = false; //Set fired flat to false
-                this.player_.pause(); //Call end function
+                
+                setTimeout(function() { self.player_.pause()}, 250); //Call end function
                 this.player_.currentTime(this.endTime);
                 this.suspendPlay();
             }
