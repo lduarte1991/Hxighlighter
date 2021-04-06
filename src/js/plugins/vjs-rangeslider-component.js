@@ -308,7 +308,7 @@ import * as videojs from 'video.js/dist/video.js'
     createEl: function() {
       return videojs.dom.createEl('div', {
         className: 'vjs-rangeslider-text-input',
-        innerHTML: '<span>Start:</span><input type="text" id="vjs-start-range-text-input" /><br><span>End:</span><input type="text" id="vjs-end-range-text-input"/><br><button id="vjs-range-text-update">Update Time Range</button><button id="vjs-range-text-preview-clip">Preview Clip</button><br><button id="vjs-range-text-annotate">Annotate Selection</button>'
+        innerHTML: '<span>Start:</span><input type="text" id="vjs-start-range-text-input" /><br><span>End:</span><input type="text" id="vjs-end-range-text-input"/><br><button id="vjs-range-text-update">Update Time Range</button><button id="vjs-range-text-preview-clip">Play Clip</button><br><button id="vjs-range-text-annotate">Annotate Selection</button>'
       });
     },
 
@@ -334,13 +334,15 @@ import * as videojs from 'video.js/dist/video.js'
 
       var startPercent = this.getPercent(startSeconds, duration)
       var endPercent = this.getPercent(endSeconds, duration);
+      if (startPercent > endPercent) {
+        endPercent = startPercent;
+      }
 
       this.player.trigger('setLeftRangeLimit', startPercent);
       this.player.trigger('setRightRangeLimit', endPercent);
       this.player.trigger('setLeft', startPercent);
       this.player.trigger('setRight', endPercent);
 
-      console.log("UPDATED", startSeconds, endSeconds, startPercent, endPercent)
     },
 
     getPercent: function(prog, duration) {
@@ -364,6 +366,10 @@ import * as videojs from 'video.js/dist/video.js'
 
       var startSeconds = this.parseTime(startTimes)
       var endSeconds = this.parseTime(endTimes)
+      if (startSeconds > endSeconds) {
+        jQuery('#vjs-end-range-text-input').val(startTimes)
+        endSeconds = startSeconds;
+      }
       var fakeAnn = {
         'ranges': [{
           'start': startSeconds,

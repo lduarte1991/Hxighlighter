@@ -80,9 +80,9 @@ import 'videojs-youtube/dist/Youtube.js';
         this.guid = $.getUniqueId();
         var selector = jQuery('#viewer');
         var origWidth = selector[0].clientWidth;
-        var html = '<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source></video></div>'
+        var html = '<div class="annotator-wrapper"><video id="vid1" class="video-js" type="*"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source></video></div>'
         if (this.options.transcript_url && this.options.transcript_url.length > 0) {
-            html = '<div class="annotator-wrapper"><video id="vid1" class="video-js"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source><track kind="captions" src="' + this.options.transcript_url +'" srclang="en" label="English" default></video><div id="transcript1"></div></div>'
+            html = '<div class="annotator-wrapper"><video id="vid1" class="video-js" type="*"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source><track kind="captions" src="' + this.options.transcript_url +'" srclang="en" label="English" default></video><div id="transcript1"></div></div>'
         }
         selector.append(html)
         
