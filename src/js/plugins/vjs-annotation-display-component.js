@@ -75,7 +75,7 @@ import * as videojs from 'video.js/dist/video.js'
 
             return videojs.dom.createEl('div', {
                 className: 'vjs-back-anpanel-annotation',
-                innerHTML: '<div class="vjs-hx-buttons annotation-view-togglers"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" tabindex="0" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-max"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
+                innerHTML: '<div class="vjs-hx-buttons annotation-view-togglers"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" tabindex="0" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-selection-display"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
             })
         },
 
@@ -232,9 +232,14 @@ import * as videojs from 'video.js/dist/video.js'
             this.canvas.height = statsPanel.offsetHeight;
             var ctx = this.canvas.getContext('2d');
             ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            Hxighlighter.publishEvent('GetSelectedFilterTypes', this.app_instance_id, function(filters) {
+                if (filters.length === 0) {
+                    filters = ['none']
+                }
+                jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '))
+            })
             this._getPoints(function(points) {
                 var maxEn = this._getMaxArray(points, 'entries');
-                jQuery('.vjs-stats-max').html('Max: ' + maxEn + " annotations");
                 var w = this._getWeights(points);
                 var duration = this.player.duration();
 
@@ -392,6 +397,12 @@ import * as videojs from 'video.js/dist/video.js'
         setUpListeners: function() {
             jQuery('.annotation-view-togglers').on('click', this.toggleStats.bind(this));
             Hxighlighter.subscribeEvent('StorageAnnotationLoad', this.app_instance_id, this._drawCanvas.bind(this));
+            Hxighlighter.subscribeEvent('SelectedFilterTypesChanged', this.app_instance_id, function(_, filters) {
+                if (filters.length === 0) {
+                    filters = ['none']
+                }
+                jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '))
+            });
         },
 
         shutDownListeners: function() {

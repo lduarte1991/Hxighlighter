@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 8th, 2021, 10:15:03 AM  
+// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 8th, 2021, 10:37:48 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -40445,6 +40445,7 @@ __webpack_require__(15);
       }
 
       self.search(search_options);
+      Hxighlighter.publishEvent('SelectedFilterTypesChanged', self.instance_id, [filteroptions]);
     });
     jQuery('.sidebar-button#hide_label').click(function () {
       jQuery(':root').css('--sidebar-width', '0px');
@@ -40625,6 +40626,12 @@ __webpack_require__(15);
     });
     $.subscribeEvent('autosearch', self.instance_id, function (_, term, type) {
       self.autosearch(term, type);
+    });
+    $.subscribeEvent('GetSelectedFilterTypes', self.instance_id, function (_, callBack) {
+      var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
+        return button.id;
+      });
+      callBack(filteroptions);
     });
 
     if (self.options.mediaType == "image") {

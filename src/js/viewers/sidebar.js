@@ -270,6 +270,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 }
             }
             self.search(search_options)
+            Hxighlighter.publishEvent('SelectedFilterTypesChanged', self.instance_id, [filteroptions])
         });
 
         jQuery('.sidebar-button#hide_label').click(function() {
@@ -449,6 +450,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
         $.subscribeEvent('autosearch', self.instance_id, function(_, term, type) {
             self.autosearch(term, type);
+        });
+
+        $.subscribeEvent('GetSelectedFilterTypes', self.instance_id, function(_, callBack) {
+            var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
+            callBack(filteroptions);
         });
 
         if(self.options.mediaType == "image") {

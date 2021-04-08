@@ -391,11 +391,11 @@ button#vjs-range-text-annotate:focus {
     padding-top: 60px;
 }
 
-.vjs-stats-max {
+.vjs-stats-selection-display {
     position: absolute;
     right: 10px;
-    top: 30px;
-    font-size: 16px;
+    top: 46px;
+    font-size: 12px;
     color: #FFFF00;
 }
 
