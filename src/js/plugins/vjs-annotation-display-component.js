@@ -75,7 +75,7 @@ import * as videojs from 'video.js/dist/video.js'
 
             return videojs.dom.createEl('div', {
                 className: 'vjs-back-anpanel-annotation',
-                innerHTML: '<div class="vjs-hx-buttons"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-max"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
+                innerHTML: '<div class="vjs-hx-buttons annotation-view-togglers"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" tabindex="0" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-max"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
             })
         },
 
@@ -386,7 +386,7 @@ import * as videojs from 'video.js/dist/video.js'
         },
 
         setUpListeners: function() {
-            jQuery('.vjs-stats-toggle').on('click', this.toggleStats.bind(this));
+            jQuery('.annotation-view-togglers').on('click', this.toggleStats.bind(this));
             Hxighlighter.subscribeEvent('StorageAnnotationLoad', this.app_instance_id, this._drawCanvas.bind(this));
         },
 
