@@ -84,9 +84,13 @@ import * as videojs from 'video.js/dist/video.js'
                 this.resizeDisplay(event);
                 this.el().style.display = 'block';
                 this.setUpListeners();
+                if (this.inStatsView) {
+                    jQuery('.video-js .vjs-progress-control').addClass('stats-view')
+                }
             } else {
                 this.el().style.display = 'none';
                 this.shutDownListeners();
+                jQuery('.video-js .vjs-progress-control').removeClass('stats-view')
             }
         },
 
@@ -391,7 +395,7 @@ import * as videojs from 'video.js/dist/video.js'
         },
 
         shutDownListeners: function() {
-            jQuery('.vjs-stats-toggle').off('click');
+            jQuery('.annotation-view-togglers').off('click');
         }
 
     });
