@@ -4,8 +4,8 @@
  *  Should be generic, but its main purpose is to be used in tandem with annotations.
  *
  */
-require('bs4-summernote/dist/summernote-bs4.css')
-require('bs4-summernote/dist/summernote-bs4.js');
+require('summernote/dist/summernote-bs4.css')
+require('summernote/dist/summernote-bs4.js');
 require('./hx-summernote-plugin.css');
 
 (function($){
@@ -21,16 +21,14 @@ require('./hx-summernote-plugin.css');
         this.options = options;
         var toolbar = [
             ['font', ['bold', 'italic', 'underline', 'clear']],
-            ['fontsize', ['fontsize']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['table', 'link', 'hr']],
+            ['insert', ['link', 'hr']],
         ];
         if (self.options.instructors.indexOf(self.options.user_id) > -1) {
             toolbar = [
-                ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+                ['insert', ['link', 'hr', 'picture', 'video']],
                 ['view', ['codeview']]
             ]
         }
@@ -163,7 +161,7 @@ require('./hx-summernote-plugin.css');
 
         element.find('.note-editable').trigger('focus');
         jQuery('.note-editor button').attr('tabindex', '0');
-        setTimeout(function() { jQuery('.note-statusbar').hide(); console.log("HELP")}, 500);
+        jQuery('.note-statusbar').hide();
 
         jQuery(document).on('mouseleave', function() {
             jQuery('.note-statusbar').trigger('mouseup');
