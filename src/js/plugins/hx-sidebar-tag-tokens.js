@@ -70,11 +70,11 @@ require('./hx-sidebar-tag-tokens.css');
             jQuery('#empty-alert').hide();
             self.first_time = false;
         }
-        var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br>";
+        var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br><div class='tag-token-section'>";
         self.options.tagList.forEach(function(tag) {
             tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
         });
-        tokenHTML += "</div>";
+        tokenHTML += "</div></div>";
         jQuery('.search-bar.side').after(tokenHTML);
         setTimeout(function() {
             var tag_list_height = jQuery('.annotationSection > .tag-token-list').height()

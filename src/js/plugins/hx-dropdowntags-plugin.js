@@ -176,6 +176,7 @@ require('./hx-dropdowntags-plugin.css');
         self.field = editor.find('.token-tag-field');
 
         var tags = ('tags' in self.options) ? self.options.tags : [];
+        var hintText = tags.length > 0 ? '(e.g., ' + tags.join(', ') + ')' : '' 
         var preDTags = [];
         tags.forEach(function(tag) {
             preDTags.push({
@@ -187,7 +188,7 @@ require('./hx-dropdowntags-plugin.css');
             theme: 'facebook',
             preventDuplicates: true,
             allowTabOut: true,
-            hintText: 'Add a tag...',
+            hintText: 'Add a tag...' + hintText,
             placeholder: 'Add tags. Separate multiple by using "Enter".',
             allowFreeTagging: ('folksonomy' in self.options) ? self.options.folksonomy : false,
             noResultsText: "Not Found. Hit ENTER to add a personal tag.",

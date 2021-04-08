@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 8th, 2021, 9:40:18 AM  
+// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 8th, 2021, 10:06:13 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -42177,6 +42177,7 @@ __webpack_require__(40);
     editor.find('#tag-list').addClass('token-tag-field');
     self.field = editor.find('.token-tag-field');
     var tags = 'tags' in self.options ? self.options.tags : [];
+    var hintText = tags.length > 0 ? '(e.g., ' + tags.join(', ') + ')' : '';
     var preDTags = [];
     tags.forEach(function (tag) {
       preDTags.push({
@@ -42188,7 +42189,7 @@ __webpack_require__(40);
       theme: 'facebook',
       preventDuplicates: true,
       allowTabOut: true,
-      hintText: 'Add a tag...',
+      hintText: 'Add a tag...' + hintText,
       placeholder: 'Add tags. Separate multiple by using "Enter".',
       allowFreeTagging: 'folksonomy' in self.options ? self.options.folksonomy : false,
       noResultsText: "Not Found. Hit ENTER to add a personal tag."
@@ -42524,11 +42525,11 @@ __webpack_require__(44);
       self.first_time = false;
     }
 
-    var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br>";
+    var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br><div class='tag-token-section'>";
     self.options.tagList.forEach(function (tag) {
       tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
     });
-    tokenHTML += "</div>";
+    tokenHTML += "</div></div>";
     jQuery('.search-bar.side').after(tokenHTML);
     setTimeout(function () {
       var tag_list_height = jQuery('.annotationSection > .tag-token-list').height();
