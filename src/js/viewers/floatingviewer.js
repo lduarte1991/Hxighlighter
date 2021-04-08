@@ -58,6 +58,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
             if (self.annotation_tool.isStatic) {
+                alert("Dismiss opened annotation before selecting a new one.")
                 return;
             }
             jQuery(event1.target).addClass('annotation-selected');

@@ -43588,6 +43588,10 @@ var annotator = annotator ? annotator : __webpack_require__(8);
       self.ViewerDisplayClose();
     });
     Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
+      if (self.annotation_tool.isStatic) {
+        alert("Dismiss opened annotation before selecting a new one.");
+        return;
+      }
       jQuery(event1.target).addClass('annotation-selected');
       console.log(event1.target.className);
       clearTimeout(self.hideTimer);

@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Tuesday, April 6th, 2021, 2:52:55 PM  
+// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 8th, 2021, 9:33:33 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -42464,6 +42464,11 @@ var annotator = annotator ? annotator : __webpack_require__(8);
       self.ViewerDisplayClose();
     });
     Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
+      if (self.annotation_tool.isStatic) {
+        alert("Dismiss opened annotation before selecting a new one.");
+        return;
+      }
+
       jQuery(event1.target).addClass('annotation-selected');
       console.log(event1.target.className);
       clearTimeout(self.hideTimer);
