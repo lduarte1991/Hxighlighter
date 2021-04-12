@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Thursday, April 8th, 2021, 11:28:05 AM  
+// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Monday, April 12th, 2021, 4:22:00 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -46169,10 +46169,13 @@ var annotator = annotator ? annotator : __webpack_require__(13);
     });
     self.annotation_tool.viewer.data('annotations', annotations);
     self.annotation_tool.viewer.find('.cancel').click(function (event1) {
+      event1.preventDefault();
+      clearTimeout(self.hideTimer);
       self.annotation_tool.isStatic = false;
       jQuery('.annotation-selected').removeClass('annotation-selected');
       self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer; // jQuery('body').css('overflow-y', 'scroll');
+      delete self.annotation_tool.viewer;
+      return false;
     });
     self.annotation_tool.viewer.find('.edit').click(function (event1) {
       var annotation_id = jQuery(this).attr('id').replace('edit-', '');
@@ -46371,8 +46374,9 @@ var annotator = annotator ? annotator : __webpack_require__(13);
     var self = this;
 
     if (self.itemMoving) {
-      $.pauseEvent(event); //turns on moving mode
-
+      // uncommenting next line causes laura bug where focus is kept on seekbar
+      // $.pauseEvent(event);
+      //turns on moving mode
       self.itemMoving.moving = false;
       var move = annotator.util.mousePosition(event);
       self.annotation_tool.interactionPoint = {

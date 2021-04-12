@@ -238,11 +238,13 @@ import 'jquery-confirm/css/jquery-confirm.css'
         self.annotation_tool.viewer.data('annotations', annotations);
 
         self.annotation_tool.viewer.find('.cancel').click(function (event1) {
+            event1.preventDefault();
+            clearTimeout(self.hideTimer);
             self.annotation_tool.isStatic = false;
             jQuery('.annotation-selected').removeClass('annotation-selected');
             self.annotation_tool.viewer.remove();
             delete self.annotation_tool.viewer;
-            // jQuery('body').css('overflow-y', 'scroll');
+            return false;
         });
 
         self.annotation_tool.viewer.find('.edit').click(function (event1) {
@@ -456,7 +458,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
     $.FloatingViewer.prototype.finishedMoving = function(event) {
         var self = this;
         if (self.itemMoving) {
-            $.pauseEvent(event);
+            // uncommenting next line causes laura bug where focus is kept on seekbar
+            // $.pauseEvent(event);
 
             //turns on moving mode
             self.itemMoving.moving = false;
