@@ -111,7 +111,7 @@ import 'videojs-youtube/dist/Youtube.js';
                 });
             });
             $.subscribeEvent('playAnnotation', self.instance_id, function(_, annotation) {
-                console.log('playAnnotation event triggered');
+                // console.log('playAnnotation event triggered');
                 self.vid_player.trigger('playAnnotation', annotation);
             });
             if (self.options.transcript_url && self.options.transcript_url.length > 0) {
@@ -189,9 +189,9 @@ import 'videojs-youtube/dist/Youtube.js';
             // finish setting up the storage containers
             self.setUpStorage(self.element[0]);
 
-            console.log('about to add selectors')
+            // console.log('about to add selectors')
             if (!self.options.viewerOptions.readonly) {
-                console.log("Adding selectors", self.setUpSelectors);
+                // console.log("Adding selectors", self.setUpSelectors);
                 self.setUpSelectors(self.element[0]);
             }
             self.setUpDrawers(self.element[0]);
@@ -401,7 +401,7 @@ import 'videojs-youtube/dist/Youtube.js';
 
     $.VideoTarget.prototype.StorageAnnotationDelete = function(ann, callBack, errorCallback) {
         var self = this;
-        console.log("TRYING TO DELETE");
+        // console.log("TRYING TO DELETE");
         jQuery.each(self.storage, function(_, store) {
             store.StorageAnnotationDelete(ann);
         });
@@ -428,7 +428,7 @@ import 'videojs-youtube/dist/Youtube.js';
             jQuery('.sr-alert').html('');
             jQuery('.sr-real-alert').html('Your annotation was saved. Your annotation has been added to the top of the annotation list.');
             $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, false]);
-            console.log('should save new annotation', annotation)
+            // console.log('should save new annotation', annotation)
         } else {
             jQuery.each(self.drawers, function(_, drawer) {
                 self.TargetAnnotationUndraw(annotation);
@@ -437,7 +437,7 @@ import 'videojs-youtube/dist/Youtube.js';
                 jQuery('.sr-alert').html('');
                 jQuery('.sr-real-alert').html('Your annotation was updated. You can find your annotation in the annotation list.');
                 $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
-                console.log('updating ann')
+                // console.log('updating ann')
             });
         }
 
@@ -461,7 +461,7 @@ import 'videojs-youtube/dist/Youtube.js';
     };
 
     $.VideoTarget.prototype.TargetAnnotationDraw = function(annotation, toEnd) {
-        console.log("IN VIDEOTARGET DRAW", annotation);
+        // console.log("IN VIDEOTARGET DRAW", annotation);
         var self = this;
         jQuery.each(self.drawers, function(_, drawer) {
             drawer.draw(annotation, self.vid_player, toEnd);
@@ -486,11 +486,11 @@ import 'videojs-youtube/dist/Youtube.js';
                 viewer.StorageAnnotationLoad(annotations);
             }
         });
-        console.log("UNDRAWING", undrawOld);
+        // console.log("UNDRAWING", undrawOld);
 
         if (undrawOld) {
             $.publishEvent('GetAnnotationsData', self.instance_id, [function(anns) {
-                console.log("UNDRAWING", anns);
+                // console.log("UNDRAWING", anns);
                 anns.forEach(function(ann) {
                     self.TargetAnnotationUndraw(ann);
                 });
@@ -537,7 +537,7 @@ import 'videojs-youtube/dist/Youtube.js';
         var self = this;
         jQuery.each(self.viewers, function(_, viewer) {
             viewer.ViewerDisplayClose(event);
-            console.log("CLOSING VIDEO TARGET VIEWER DISPLAY CLOSE")
+            // console.log("CLOSING VIDEO TARGET VIEWER DISPLAY CLOSE")
         });
     };
 
@@ -560,7 +560,7 @@ import 'videojs-youtube/dist/Youtube.js';
         }
         jQuery.each(self.storage, function(idx, store){
             store.onLoad(element, options, function(anns, converter) {
-                console.log('hello hhello hello', anns);
+                // console.log('hello hhello hello', anns);
                 $.publishEvent('drawFromSearch', self.instance_id, [anns, converter]);
             });
         });

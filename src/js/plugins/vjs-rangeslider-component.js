@@ -70,7 +70,7 @@ import * as videojs from 'video.js/dist/video.js'
       this.heldDown = false;
       this.limit = 0.0;
       this.app_instance_id = player.options.instance_id;
-      console.log('look here plase', player, options);
+      // console.log('look here plase', player, options);
       return this;
     },
 

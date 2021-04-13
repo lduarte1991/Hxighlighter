@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.0-beta3.1 - Monday, April 12th, 2021, 4:22:00 PM  
+// [AIV_SHORT]  Version: 1.4.0 - Tuesday, April 13th, 2021, 11:49:43 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -28622,7 +28622,9 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   tree.forEach(function (it) {
     var selector = it.replace(/\[.*\]/g, '');
     var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
-    var foundNodes = traversingDown.querySelectorAll(selector);
+    var foundNodes = Array.prototype.filter.call(traversingDown.children, function (el1) {
+      return el1.matches(selector);
+    });
     foundNodes = [].slice.call(foundNodes).filter(function (node) {
       return node.className.indexOf(ignoreSelector) == -1;
     }); // //console.log(foundNodes, counter);
@@ -32823,9 +32825,9 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
         // some of the events require the core to handle calling the components in a certain order
         if ($$.requiredEvents.indexOf(eventName) >= 0) {
           $$._instances[inst_id].core[eventName](list);
-        }
+        } // console.log("publish: ", eventName + '.' + inst_id)
 
-        console.log("publish: ", eventName + '.' + inst_id);
+
         jQuery.publish(eventName + '.' + inst_id, list);
       });
     } else {
@@ -32850,11 +32852,11 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
   $$.subscribeEvent = function (eventName, instanceID, callBack) {
     if (!$$.exists(instanceID) || instanceID === "") {
       jQuery.each($$._instanceIDs, function (_, inst_id) {
-        console.log("subscribe:", eventName + '.' + inst_id);
+        // console.log("subscribe:", eventName + '.' + inst_id)
         jQuery.subscribe(eventName + '.' + inst_id, callBack);
       });
     } else {
-      console.log("subscribe:", eventName + '.' + instanceID);
+      // console.log("subscribe:", eventName + '.' + instanceID)
       jQuery.subscribe(eventName + '.' + instanceID, callBack);
     }
   };
@@ -33441,8 +33443,8 @@ __webpack_require__(15);
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
-      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
-      console.log('ann', ann);
+      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name; // console.log('ann', ann);
+
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
 
       if (self.options.viewer_options.readonly) {
@@ -46048,7 +46050,7 @@ __webpack_require__(48);
   };
 
   $.ExportPlugin.prototype.truncate = function (fullStr, strLen, separator) {
-    console.log(fullStr, strLen, separator);
+    // console.log(fullStr, strLen, separator);
     if (fullStr.length <= strLen) return fullStr;
     separator = separator || '...';
     var sepLen = separator.length,
@@ -54518,9 +54520,9 @@ var annotator = annotator ? annotator : __webpack_require__(13);
     self.annotation_tool.updating = updating; // actually set up and draw the Editor
 
     var wrapperElement = self.element.find('.annotator-wrapper');
-    wrapperElement.after(self.annotation_tool.editorTemplate);
-    console.log(self.element);
-    console.log(wrapperElement); // save the element to call upon later
+    wrapperElement.after(self.annotation_tool.editorTemplate); // console.log(self.element);
+    // console.log(wrapperElement);
+    // save the element to call upon later
 
     self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
     var intPt = interactionPoint; // situate it on its proper location
@@ -54654,13 +54656,13 @@ var annotator = annotator ? annotator : __webpack_require__(13);
       }
     });
     self.annotation_tool.viewer.find('.playMediaButton').click(function (event) {
-      console.log('playmediabutton clicked', event.currentTarget);
-      var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim();
-      console.log('ann id', ann_id);
+      // console.log('playmediabutton clicked', event.currentTarget);
+      var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim(); // console.log('ann id', ann_id);
+
       var filtered_annotation = annotations.find(function (ann) {
         if (ann.id === ann_id) return ann;
-      });
-      console.log('filtered annotation', filtered_annotation);
+      }); // console.log('filtered annotation', filtered_annotation);
+
       $.publishEvent('playAnnotation', self.instance_id, [filtered_annotation]);
     }); // console.log(annotations);        
 
@@ -56648,12 +56650,12 @@ var hrange = __webpack_require__(10);
     var self = this; // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
     //     highlightClass: (self.h_class + ' annotator-hl')
     // });
+    // console.log('.' + self.h_class.replace(' ', '.'));
 
-    console.log('.' + self.h_class.replace(' ', '.'));
     jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function (event) {
       $.pauseEvent(event);
-      var annotations = self.getAnnotationsFromElement(event);
-      console.log("MOUSEOVER", annotations);
+      var annotations = self.getAnnotationsFromElement(event); // console.log("MOUSEOVER", annotations);
+
       Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
     });
     jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function (event) {

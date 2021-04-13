@@ -12,22 +12,20 @@ var hrange = require('../h-range.js');
         this.adder = null;
         this.wrapperSelector = '.annotator-wrapper'
         this.mustConfirm = !!defaultOpts.confirm;
-        console.log('one')
         this.init();
     };
 
     $.TimeSelector.prototype.init = function() {
         var self = this;
-        console.log('two')
         self.setUpListeners();
     };
 
     $.TimeSelector.prototype.setUpListeners = function() {
         var self = this;
-        console.log('setted up the listeners');
-        console.log($);
-        console.log($.subscribeEvent);
-        console.log(self.instance_id);
+        // console.log('setted up the listeners');
+        // console.log($);
+        // console.log($.subscribeEvent);
+        // console.log(self.instance_id);
         $.subscribeEvent('videoRangeSelected', self.instance_id, function(_, el, timeRange) {
             self.onSelection(el, timeRange);
         });
@@ -36,9 +34,9 @@ var hrange = require('../h-range.js');
     $.TimeSelector.prototype.onSelection = function(anchor, range, event) {
         var self = this;
         //console.log('onSelection Ran: ', range, event);
-        console.log(self.mustConfirm)
-        console.log(range);
-        console.log(anchor);
+        // console.log(self.mustConfirm)
+        // console.log(range);
+        // console.log(anchor);
         if (self.mustConfirm) {
             //console.log("Confirming...")
             setTimeout(function() {self.confirm(range, anchor)}, 150);
@@ -59,7 +57,7 @@ var hrange = require('../h-range.js');
                 top: rect1.top,
                 left: rect1.left + (rect1.width / 2.0)
             }
-            console.log(self.interactionPoint);
+            // console.log(self.interactionPoint);
             //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
             self.loadButton(range, self.interactionPoint, anchor);
             //console.log("Should have loaded button to confirm annotation");
@@ -78,7 +76,7 @@ var hrange = require('../h-range.js');
             iP.top = 49;
         }
         var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+(iP.top- 10)+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
-        console.log(confirmButtonTemplate, iP);
+        // console.log(confirmButtonTemplate, iP);
         jQuery('body').append(confirmButtonTemplate);
         jQuery('.hx-confirm-button button').click(function(event1) {
             //$.publishEvent('drawTemp', self.instance_id, [[range]])

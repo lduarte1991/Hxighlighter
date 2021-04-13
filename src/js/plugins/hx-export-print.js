@@ -248,7 +248,7 @@
     };
 
     $.ExportPlugin.prototype.truncate = function (fullStr, strLen, separator) {
-        console.log(fullStr, strLen, separator);
+        // console.log(fullStr, strLen, separator);
         if (fullStr.length <= strLen) return fullStr;
 
         separator = separator || '...';

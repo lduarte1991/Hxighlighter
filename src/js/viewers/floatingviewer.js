@@ -139,8 +139,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
         // actually set up and draw the Editor
         var wrapperElement = self.element.find('.annotator-wrapper');
         wrapperElement.after(self.annotation_tool.editorTemplate);
-        console.log(self.element);
-        console.log(wrapperElement);
+        // console.log(self.element);
+        // console.log(wrapperElement);
         // save the element to call upon later
         self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
 
@@ -282,11 +282,11 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         self.annotation_tool.viewer.find('.playMediaButton').click(function(event) {
-            console.log('playmediabutton clicked', event.currentTarget);
+            // console.log('playmediabutton clicked', event.currentTarget);
             var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim();
-            console.log('ann id', ann_id);
+            // console.log('ann id', ann_id);
             var filtered_annotation = annotations.find(function(ann) { if (ann.id === ann_id) return ann; });
-            console.log('filtered annotation', filtered_annotation);
+            // console.log('filtered annotation', filtered_annotation);
             $.publishEvent('playAnnotation', self.instance_id, [filtered_annotation]);
         });
 

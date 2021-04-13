@@ -16,11 +16,11 @@ var hrange = require('../h-range.js');
         // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
         //     highlightClass: (self.h_class + ' annotator-hl')
         // });
-        console.log('.' + self.h_class.replace(' ', '.'));
+        // console.log('.' + self.h_class.replace(' ', '.'));
         jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function(event) {
             $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
-            console.log("MOUSEOVER", annotations);
+            // console.log("MOUSEOVER", annotations);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
 

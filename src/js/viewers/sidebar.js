@@ -551,7 +551,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             ann.index = jQuery('.ann-item').length;
             ann.instructor_ids = self.options.instructors;
             ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
-            console.log('ann', ann);
+            // console.log('ann', ann);
             var annHTML = self.options.TEMPLATES.annotationItem(ann);
             if (self.options.viewer_options.readonly) {
                 annHTML = annHTML.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '')

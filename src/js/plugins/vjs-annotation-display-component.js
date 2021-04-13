@@ -147,7 +147,8 @@ import * as videojs from 'video.js/dist/video.js'
         },
 
         playAnnotation: function(event, ann) {
-            this.suspendPlay();
+            var self = this;
+            
             // get start/end values pass it to playBetween
             jQuery('.annotation-viewer.static .cancel').click();
             if (typeof(ann.id) !== "undefined") {
@@ -170,7 +171,10 @@ import * as videojs from 'video.js/dist/video.js'
                     'margin-top': "-20px"
                 }, 1000)
             }
-            this._playBetween(ann.ranges[0].start, ann.ranges[0].end);
+            this.suspendPlay(function() {
+                self._playBetween(ann.ranges[0].start, ann.ranges[0].end);
+            });
+            
         },
 
         _playBetween: function(start, end) {
@@ -182,19 +186,22 @@ import * as videojs from 'video.js/dist/video.js'
             //this.suspendPlay();
             this.player_.on("timeupdate", videojs.bind(this,this._processPlay));
             // set universal end point
-            console.log("Ran playBetween");
+            // console.log("Ran playBetween");
         },
 
-        suspendPlay: function() {
+        suspendPlay: function(promise) {
             this.fired = false;
             this.player_.off("timeupdate", videojs.bind(this,this._processPlay));
-            console.log("Ran suspendPlay")
+            if (typeof(promise) == "function") {
+                // console.log("Ran suspendPlay");
+                promise();
+            }
         },
 
         _processPlay: function () {
             var self = this;
             //Check if current time is between start and end
-            if(this.player_.currentTime() >= this.startTime && (this.endTime < 0 || this.player_.currentTime() < this.endTime)){
+            if(this.player_.currentTime() >= Math.floor(this.startTime) && (this.endTime < 0 || this.player_.currentTime() < this.endTime)){
                 if(this.fired){ //Do nothing if start has already been called
                     return;
                 }
@@ -215,7 +222,7 @@ import * as videojs from 'video.js/dist/video.js'
 
         _getNumberAnnotations: function(time1, end, allannotations) {
             var num = (typeof end !== 'undefined' && end) ? -1 : 0;
-            console.log(num, end, time1)
+            // console.log(num, end, time1)
             var time = parseInt(time1)
             for (var index in allannotations) {
                 var ann = allannotations[index];
@@ -326,7 +333,7 @@ import * as videojs from 'video.js/dist/video.js'
             var maxEn = this._getMaxArray(points, 'entries');
             var panelW = parseFloat(panel.css('width'));
             var panelH = parseFloat(panel.css('height')) - (this.marginTop + this.marginBottom);
-            console.log(maxSe, maxEn, panelW, panelH);
+            // console.log(maxSe, maxEn, panelW, panelH);
             weight.X = maxSe != 0 ? (panelW / maxSe) : 0;
             weight.Y = maxEn != 0 ? (panelH / maxEn) : 0;
             return weight;
@@ -361,7 +368,7 @@ import * as videojs from 'video.js/dist/video.js'
                 points.sort(function(a, b) {
                     return parseFloat(a.second) - parseFloat(b.second);
                 });
-                console.log('POINTS', points);
+                // console.log('POINTS', points);
                 callback(points)
             }]);
         },
