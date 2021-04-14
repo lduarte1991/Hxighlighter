@@ -68,6 +68,7 @@ import * as videojs from 'video.js/dist/video.js'
             this.annotations = [];
             this.marginTop = 0;
             this.marginBottom = 0;
+            this.selectedAnimatedElement = undefined;
             return this;
         },
 
@@ -156,7 +157,8 @@ import * as videojs from 'video.js/dist/video.js'
                 let orig = jQuery('#hx-ann-' + ann.id)
                 let animated = orig.clone(true);
                 jQuery('div[id$="animated"]').remove()
-                animated.attr('id', "hx-ann-" + ann.id + '-animated')
+                this.selectedAnimatedElement = "hx-ann-" + ann.id + '-animated'
+                animated.attr('id', this.selectedAnimatedElement)
                 animated.css({
                     'position': 'absolute',
                     'background': '#2e75af',
@@ -402,11 +404,16 @@ import * as videojs from 'video.js/dist/video.js'
         },
 
         setUpListeners: function() {
+            var self = this;
             jQuery('.annotation-view-togglers').on('click', this.toggleStats.bind(this));
             Hxighlighter.subscribeEvent('StorageAnnotationLoad', this.app_instance_id, this._drawCanvas.bind(this));
             Hxighlighter.subscribeEvent('SelectedFilterTypesChanged', this.app_instance_id, function(_, filters) {
                 if (filters.length === 0) {
                     filters = ['none']
+                }
+                if (typeof(self.selectedAnimatedElement) !== "undefined" ) {
+                    jQuery('#' + self.selectedAnimatedElement).remove();
+                    self.selectedAnimatedElement = undefined;
                 }
                 jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '))
             });
