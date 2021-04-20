@@ -16,11 +16,11 @@ var hrange = require('../h-range.js');
         // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
         //     highlightClass: (self.h_class + ' annotator-hl')
         // });
-
+        // console.log('.' + self.h_class.replace(' ', '.'));
         jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function(event) {
             $.pauseEvent(event);
             var annotations = self.getAnnotationsFromElement(event);
-            //console.log("MOUSEOVER", annotations);
+            // console.log("MOUSEOVER", annotations);
             Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
         });
 
@@ -84,51 +84,51 @@ var hrange = require('../h-range.js');
 
     $.XPathDrawer.prototype.draw = function(annotation) {
         var self = this;
-        if (annotation.media.toLowerCase() !== "text") {
-            return;
-        }
-
-        // console.log(self.options, annotation);
-        // console.log("Annotation Being Drawn", annotation);
         // checks to see if annotation has already been drawn, if so it undraws it
         var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
         if (existing_drawn_annotation) {
             self.undraw(existing_drawn_annotation)
         }
-        self.tempHighlights.forEach(function(hl) {
-            jQuery(hl).contents().unwrap();
-        });
-        // the process for drawing is divided into 4 parts
-        // 1. Retrieve all discrete text nodes associated with annotation
-        var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
-        // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
-        var spans = [];
-        var otherLabel = '';
-        if (self.options.user_id === annotation.creator.id) {
-            otherLabel += ' annotation-mine';
-        }
-        if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
-            otherLabel += ' annotation-instructor';
-        }
-        var labelIt = true;
-        textNodes.forEach(function(node) {
-            //console.log(node, jQuery(node));
-            var node_id = "";
-            if (labelIt) {
-                labelIt = false;
-                node_id = ' id="first-node-' + annotation.id + '" ';
+        if (annotation.media.toLowerCase() === "text") {
+
+            // console.log(self.options, annotation);
+            // console.log("Annotation Being Drawn", annotation);
+            
+            self.tempHighlights.forEach(function(hl) {
+                jQuery(hl).contents().unwrap();
+            });
+            // the process for drawing is divided into 4 parts
+            // 1. Retrieve all discrete text nodes associated with annotation
+            var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
+            // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
+            var spans = [];
+            var otherLabel = '';
+            if (self.options.user_id === annotation.creator.id) {
+                otherLabel += ' annotation-mine';
             }
-            jQuery(node).wrap('<span' + node_id + ' class="'+self.h_class+otherLabel+'"></span>');
-            spans.push(jQuery(node).parent()[0]);
-        });
-        // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
-        annotation['_local'] = {
-            'highlights': spans,
-        };
-        // 3. Store in each span tag the value of the annotation post-saving _local.highlights
-        spans.forEach(function(span) {
-            jQuery(span).data('annotation', annotation);
-        });
+            if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
+                otherLabel += ' annotation-instructor';
+            }
+            var labelIt = true;
+            textNodes.forEach(function(node) {
+                //console.log(node, jQuery(node));
+                var node_id = "";
+                if (labelIt) {
+                    labelIt = false;
+                    node_id = ' id="first-node-' + annotation.id + '" ';
+                }
+                jQuery(node).wrap('<span' + node_id + ' class="'+self.h_class+otherLabel+'"></span>');
+                spans.push(jQuery(node).parent()[0]);
+            });
+            // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
+            annotation['_local'] = {
+                'highlights': spans,
+            };
+            // 3. Store in each span tag the value of the annotation post-saving _local.highlights
+            spans.forEach(function(span) {
+                jQuery(span).data('annotation', annotation);
+            });
+        }
         //console.log(annotation);
         $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
         

@@ -12,6 +12,17 @@
     margin-bottom: 0px;
 }
 
+#prevButtonNavTop, #nextButtonNavTop {
+    background: white;
+    color: #333;
+    padding: 0px 5px;
+    border-radius: 5px;
+    margin-right: 10px;
+    border: 1px solid #888;
+    cursor: pointer;
+    height: 21px;
+}
+
 #nextButtonTop, #nextButtonBottom {
     float: right;
 }

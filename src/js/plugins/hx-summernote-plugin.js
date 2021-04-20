@@ -4,8 +4,8 @@
  *  Should be generic, but its main purpose is to be used in tandem with annotations.
  *
  */
-require('bs4-summernote/dist/summernote-bs4.css')
-require('bs4-summernote/dist/summernote-bs4.js');
+require('summernote/dist/summernote-bs4.css')
+require('summernote/dist/summernote-bs4.js');
 require('./hx-summernote-plugin.css');
 
 (function($){
@@ -21,17 +21,14 @@ require('./hx-summernote-plugin.css');
         this.options = options;
         var toolbar = [
             ['font', ['bold', 'italic', 'underline', 'clear']],
-            ['fontsize', ['fontsize']],
             ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['table', 'link', 'hr']],
+            ['insert', ['link', 'hr']],
         ];
         if (self.options.instructors.indexOf(self.options.user_id) > -1) {
             toolbar = [
-                ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['table', 'link', 'hr', 'picture', 'video']],
+                ['insert', ['link', 'hr', 'picture', 'video']],
                 ['view', ['codeview']]
             ]
         }
@@ -284,24 +281,27 @@ require('./hx-summernote-plugin.css');
      */
     $.SummernoteRichText.prototype.editorShown = function(editor, annotation) {
         var self = this;
-        self.addWYSIWYG(editor, '#annotation-text-field');
-        self.currentAnnotation = annotation;
-        var annotationText = "";
-        if ($.exists(annotation.annotationText)) {
-            annotationText = annotation.annotationText;
-            self.elementObj.summernote('code', annotation.annotationText);
-        } else /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/ {
-            annotationText = returnWAText(annotation);
-            if (typeof annotationText !== "undefined") {
-                self.elementObj.summernote('code', annotationText);
-                self.updating = true;
-                self.updatingText = annotationText;
+        jQuery('.side #annotation-text-field').hide();
+        setTimeout(function() {
+            jQuery('.side #annotation-text-field').show();
+            self.addWYSIWYG(editor, '#annotation-text-field');
+            self.currentAnnotation = annotation;
+            var annotationText = "";
+            if ($.exists(annotation.annotationText)) {
+                annotationText = annotation.annotationText;
+                self.elementObj.summernote('code', annotation.annotationText);
+            } else /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/ {
+                annotationText = returnWAText(annotation);
+                if (typeof annotationText !== "undefined") {
+                    self.elementObj.summernote('code', annotationText);
+                    self.updating = true;
+                    self.updatingText = annotationText;
+                }
             }
-        }
-        if (typeof(annotationText) === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
-            editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.")
-        }
-
+            if (typeof(annotationText) === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
+                editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.")
+            }
+        }, 250)
     };
 
     $.SummernoteRichText.prototype.setUpEditor = function(type) {

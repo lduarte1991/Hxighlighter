@@ -108,7 +108,7 @@
     background: white;
     border-radius: 5px;
     box-shadow: 5px 5px 3px #888;
-    z-index: 999;
+    z-index: 9999999999;
 }
 
 .annotation-editor {
@@ -137,6 +137,11 @@
     cursor: move;
 }
 
+.annotation-viewer.static .annotation-viewer-nav-bar {
+    background: #2e75af;
+    background: var(--pop-color);
+}
+
 .backup-removelater {
     background: rgb(39, 86, 126); /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(rgb(54, 121, 179), rgb(39, 86, 126)); /* For Safari 5.1 to 6.0 */
@@ -160,6 +165,8 @@
 
 .annotation-viewer.static .annotation-viewer-nav-bar button.cancel {
     display: inline-block;
+    background: #2e75af;
+    background: var(--pop-color);
 }
 
 .annotation-viewer .delete, .annotation-viewer .edit {

@@ -11,6 +11,7 @@ node_modules
 *.zip
 simple-server.py
 env
+*.mp4
 
 # Testing
 .nyc_output

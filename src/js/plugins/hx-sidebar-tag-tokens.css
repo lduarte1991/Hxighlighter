@@ -21,3 +21,8 @@
     top: 105px;
     position: absolute;
 }
+
+.tag-token-section {
+    white-space: nowrap;
+    overflow-x: scroll;
+}

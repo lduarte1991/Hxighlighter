@@ -117,6 +117,7 @@
                 if ($$.requiredEvents.indexOf(eventName) >= 0) {
                     $$._instances[inst_id].core[eventName](list);
                 }
+                // console.log("publish: ", eventName + '.' + inst_id)
                 jQuery.publish(eventName + '.' + inst_id, list);
             });
         } else {
@@ -139,9 +140,11 @@
     $$.subscribeEvent = function(eventName, instanceID, callBack) {
         if (!$$.exists(instanceID) || instanceID === "") {
             jQuery.each($$._instanceIDs, function(_, inst_id) {
+                // console.log("subscribe:", eventName + '.' + inst_id)
                 jQuery.subscribe(eventName + '.' + inst_id, callBack);
             });
         } else {
+            // console.log("subscribe:", eventName + '.' + instanceID)
             jQuery.subscribe(eventName + '.' + instanceID, callBack);
         }
     };
