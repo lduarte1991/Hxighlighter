@@ -20,11 +20,13 @@ require('./plugins/vjs-rangeslider-component.js');
 
 require('./storage/catchpy.js');
 
-import * as videojs from 'video.js/dist/video.js';
-import 'videojs-transcript-ac/dist/videojs-transcript.js';
-import 'videojs-youtube/dist/Youtube.js';
+require('video.js');
+require('videojs-transcript');
+require('videojs-youtube');
 
 (function($) {
+    var videojs = require('video.js');
+
     /**
      * { function_description }
      *

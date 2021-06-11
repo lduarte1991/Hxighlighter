@@ -1,6 +1,6 @@
-import * as videojs from 'video.js/dist/video.js'
-
 (function($) {
+  var videojs = require('video.js');
+
   // Get the Component base class from Video.js
   var Component = videojs.getComponent('Component');
 

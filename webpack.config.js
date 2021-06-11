@@ -22,7 +22,8 @@ module.exports = {
             "$": require.resolve('jquery'),
             'jQuery': require.resolve('jquery'),
             _: require.resolve('lodash'),
-            'toastr': require.resolve('toastr')
+            'toastr': require.resolve('toastr'),
+            "videojs": require.resolve('video.js')
         }),
         new MiniCssExtractPlugin({
             filename: 'dist/hxighlighter_[name].css',
@@ -51,12 +52,17 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js'],
+        // Note: mainFields prioritizes the "main" entrypoint to deal with a video.js conflict 
+        //       between video.es.js and video.cjs.js
+        mainFields: ['main', 'module'], 
         alias: {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
             'CodeMirror': 'codemirror',
             'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
             'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
-            'videojs': PATHS.modules + 'video.js/dist/video.js'
+            'videojs': PATHS.modules + 'video.js',
+            'videojs-transcript': PATHS.modules + 'videojs-transcript-ac/dist/videojs-transcript.js',
+            'videojs-youtube': PATHS.modules + 'videojs-youtube/dist/Youtube.js'
         }
     },
     optimization: {
