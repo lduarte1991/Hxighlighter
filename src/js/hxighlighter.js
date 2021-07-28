@@ -25,7 +25,8 @@ root.Hxighlighter = root.Hxighlighter || function(options) {
         if (Hxighlighter.exists(options.commonInfo.context_id) &&
             Hxighlighter.exists(options.commonInfo.collection_id) &&
             Hxighlighter.exists(options.commonInfo.object_id)) {
-            inst_id = options.commonInfo.context_id.replace(/\+/g, '_') + ':' + options.commonInfo.collection_id + ':' + options.commonInfo.object_id
+            // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
+            inst_id = options.commonInfo.context_id.replace(/\+/g, '_') + ':' + options.commonInfo.collection_id + ':' + btoa(options.commonInfo.object_id)
         } else {
             inst_id = Hxighlighter.getUniqueId();
         }

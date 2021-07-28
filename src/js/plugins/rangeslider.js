@@ -18,10 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import * as videojs from 'video.js/dist/video.js'
-console.log(videojs);
 //----------------Load Plugin----------------//
 (function (){
+	var videojs = require('video.js');
 //-- Load RangeSlider plugin in videojs
 function RangeSlider_(options){
 	var player = this;
