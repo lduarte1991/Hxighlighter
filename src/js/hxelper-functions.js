@@ -112,6 +112,7 @@
     $$.publishEvent = function(eventName, instanceID, list) {
         // console.log(eventName, list);
         if (!$$.exists(instanceID) || instanceID === "") {
+            // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
             jQuery.each($$._instanceIDs, function(_, inst_id) {  
                 // some of the events require the core to handle calling the components in a certain order
                 if ($$.requiredEvents.indexOf(eventName) >= 0) {
