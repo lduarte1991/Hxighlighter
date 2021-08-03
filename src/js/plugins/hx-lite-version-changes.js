@@ -61,6 +61,8 @@
         value: "LiteVersionChanges"
     });
 
+    var exclude_plugins = ['SidebarTagTokens', 'AdminButton', 'Reply', 'Websockets', 'ExportPlugin'];
+    $.plugins = $.plugins.filter(plug => exclude_plugins.indexOf(plug.name) == -1);
 
     $.plugins.push($.LiteVersionChanges);
 }(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

@@ -263,5 +263,9 @@
                fullStr.substr(fullStr.length - backChars);
     };
 
+    Object.defineProperty($.ExportPlugin, 'name', {
+        value: "ExportPlugin"
+    });
+
     $.plugins.push($.ExportPlugin)
 }(Hxighlighter ? Hxighlighter : require('../hxighlighter.js')));

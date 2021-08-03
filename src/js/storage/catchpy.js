@@ -50,6 +50,13 @@ var hrange = require('../h-range.js');
  
     $.CatchPy.prototype.search = function(options, callBack, errfun) {
         var self = this;
+        var is_litemode = false;
+        if (typeof(self.options.storageOptions.litemode) !== "undefined"){
+            is_litemode = self.options.storageOptions.litemode;
+        }
+        if (is_litemode) {
+            return;
+        }
         var data = jQuery.extend({}, {
             limit: self.options.storageOptions.pagination,
             offset: 0,
@@ -101,12 +108,19 @@ var hrange = require('../h-range.js');
 
     $.CatchPy.prototype.StorageAnnotationSave = function(ann_to_save, elem, updating, callBack, errorCallback) {
         var self = this;
+        var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
         if (updating) {
             self.StorageAnnotationUpdate(ann_to_save, elem);
             return;
         }
-        // console.log(ann_to_save);
-        var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
+        var is_litemode = false;
+        if (typeof(self.options.storageOptions.litemode) !== "undefined"){
+            is_litemode = self.options.storageOptions.litemode;
+        }
+        if (is_litemode) {
+            callBack(save_ann, ann_to_save);
+            return;
+        }
         // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
@@ -150,6 +164,14 @@ var hrange = require('../h-range.js');
 
     $.CatchPy.prototype.StorageAnnotationDelete = function(ann_to_delete, callBack, errCallBack) {
         var self = this;
+        var is_litemode = false;
+        if (typeof(self.options.storageOptions.litemode) !== "undefined"){
+            is_litemode = self.options.storageOptions.litemode;
+        }
+        if (is_litemode) {
+            callBack()
+            return;
+        }
         var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version
@@ -183,6 +205,15 @@ var hrange = require('../h-range.js');
     $.CatchPy.prototype.StorageAnnotationUpdate = function(ann_to_update, elem, callBack, errCallBack) {
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
+
+        var is_litemode = false;
+        if (typeof(self.options.storageOptions.litemode) !== "undefined"){
+            is_litemode = self.options.storageOptions.litemode;
+        }
+        if (is_litemode) {
+            callBack(ann_to_save)
+            return;
+        }
         var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id
         params += '&utm_source=' + this.options.storageOptions.database_params.utm_source
         params += '&version=' + this.options.storageOptions.database_params.version

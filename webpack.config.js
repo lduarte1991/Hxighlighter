@@ -14,6 +14,7 @@ module.exports = {
         text: ['./src/text-index.js'],
         text_lite: ['./src/author-index.js'],
         image_m2: ['./src/image-index-m2.js'],
+        image_lite: ['./src/author-image-index.js'],
         video_vjs: ['./src/video-index-vjs.js']
     },
     plugins: [

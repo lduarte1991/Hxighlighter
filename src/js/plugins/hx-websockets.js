@@ -46,6 +46,10 @@
             console.log("Reached max connection value");
             return;
         }
+        if (typeof( self.options.Websockets ) == "undefined" ) {
+            console.log("No WS plugin was set up");
+            return;
+        }
         // console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
         self.socket = self.openWs(self.slot_id, self.options.Websockets.wsUrl);
         self.socket.onopen = function(e) {

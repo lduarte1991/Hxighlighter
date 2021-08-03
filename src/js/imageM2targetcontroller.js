@@ -80,6 +80,10 @@ require('./storage/catchpy.js');
 
     $.ImageTarget.prototype.createImageSlotFromManifest = function(manifest_url) {
         var self = this;
+        var is_readonly = false;
+        if (typeof(self.options.viewerOptions.readonly) != "undefined") {
+            is_readonly = self.options.viewerOptions.readonly;
+        }
         self.mir = Mirador({
             "id": "viewer",
             'windowSettings' : {
@@ -88,7 +92,7 @@ require('./storage/catchpy.js');
                 "canvasControls": {
                     "annotations": {
                         "annotationLayer": true,
-                        "annotationCreation": true,
+                        "annotationCreation": !is_readonly,
                         "annotationState": "on",
                     }
                 },
@@ -121,7 +125,8 @@ require('./storage/catchpy.js');
                 config: {
                     dialogInBody: false,
                 },
-                instructor_mode: (self.options.instructors.indexOf(self.options.user_id) > -1)
+                readonly: is_readonly,
+                instructor_mode: !is_readonly && (self.options.instructors.indexOf(self.options.user_id) > -1)
               }
             },
             'annotationEndpoint': {

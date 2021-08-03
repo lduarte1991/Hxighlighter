@@ -62,7 +62,9 @@
                             annotationsList: self.annotationsList,
                         });
                         // console.log(self.annotationsList)
-                        callback();
+                        if (typeof(callback) == "function") {
+                            callback();
+                        }
                     }]);
                 }]);
             });

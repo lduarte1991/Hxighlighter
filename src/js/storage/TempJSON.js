@@ -28,9 +28,13 @@ var hrange = require('../h-range.js');
                         var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
                         self.store.push(ann);
                         setTimeout(function() {
-                            // console.log('definitely getting to here');
-                            $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
-                            $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+                            if (waAnnotation.media.toLowerCase() == "image") {
+                                $.publishEvent('wsAnnotationLoaded', self.instance_id, [waAnnotation, function() {}])
+                            } else if (waAnnotation.media.toLowerCase() == "text") {
+                                // console.log('definitely getting to here');
+                                $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
+                                $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+                            }
                         }, 250);
                     });
                 }
@@ -102,7 +106,7 @@ var hrange = require('../h-range.js');
         var purpose = 'commenting';
         if (annotation.media === "comment") {
             targetList.push(annotation.ranges);
-            source_id = annotation.ranges.source;
+            //source_id = annotation.ranges.source;
             // jQuery.each(annotation.ranges, function(_, range){
             //     targetList.push(range)
             //     source_id = range.parent;
@@ -114,36 +118,72 @@ var hrange = require('../h-range.js');
             var serializedRanges = annotation.ranges;//self.serializeRanges(annotation.ranges, elem);
             var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
             jQuery.each(serializedRanges, function(index, range){
+                var rangeItem = range; 
+                if (mediatype === "Text") {
+                    rangeItem = [{
+                        'type': 'RangeSelector',
+                        'startSelector': {
+                            'type': 'XPathSelector',
+                            'value': range.xpath.start
+                        },
+                        'endSelector': {
+                            'type': 'XPathSelector',
+                            'value': range.xpath.end,
+                        },
+                        'refinedBy': {
+                            'type': 'TextPositionSelector',
+                            'start': range.xpath.startOffset,
+                            'end': range.xpath.endOffset,
+                        }
+                    }, {
+                        'type': 'TextPositionSelector',
+                        'start': range.position.globalStartOffset,
+                        'end': range.position.globalEndOffset,
+                    }, {
+                        'type': 'TextQuoteSelector',
+                        'exact': range.text.exact,
+                        'prefix': range.text.prefix,
+                        'suffix': range.text.suffix
+                    }]
+                } else if (mediatype === "Image") {
+                    // console.log('Should be here in image', range);
+                    if (range.type === "Image") {
+                        rangeItem = range.selector.items
+                    } else {
+                        jQuery.each(range.items, function(idx, choice) {
+                            if (choice.type === "Image") {
+                                rangeItem = [{
+                                    'type': 'FragmentSelector',
+                                    'value': choice.selector.items[0].selector.default.value
+                                }, {
+                                    'type': 'SvgSelector',
+                                    'value': choice.selector.items[0].selector.item.value
+                                }]
+                            } else if (choice.type === "Thumbnail") {
+                                targetList.push(choice)
+                            }
+                        })
+                    }
+                } else if (mediatype === "Video" || mediatype === "Audio") {
+                    source_id = self.options.object_id;
+                    rangeItem = [{
+                        "type": "FragmentSelector",
+                        "value": "t="+range.start+","+range.end,
+                        "refinedBy": [
+                            {
+                              "type": "CssSelector",
+                              "value": "#vid1"
+                            }
+                        ],
+                        "conformsTo": "http://www.w3.org/TR/media-frags/"
+                    }];
+                }
                 targetList.push({
-                    'source': 'http://sample.com/fake_content/preview',
+                    'source': source_id,
                     'type': mediatype,
                     'selector': {
                         'type': 'Choice',
-                        'items': [{
-                                'type': 'RangeSelector',
-                                'startSelector': {
-                                    'type': 'XPathSelector',
-                                    'value': range.xpath.start
-                                },
-                                'endSelector': {
-                                    'type': 'XPathSelector',
-                                    'value': range.xpath.end,
-                                },
-                                'refinedBy': {
-                                    'type': 'TextPositionSelector',
-                                    'start': range.xpath.startOffset,
-                                    'end': range.xpath.endOffset,
-                                }
-                            }, {
-                                'type': 'TextPositionSelector',
-                                'start': range.position.globalStartOffset,
-                                'end': range.position.globalEndOffset,
-                            }, {
-                                'type': 'TextQuoteSelector',
-                                'exact': range.text.exact,
-                                'prefix': range.text.prefix,
-                                'suffix': range.text.suffix
-                        }],
+                        'items': rangeItem,
                     }
                 });
             });
@@ -198,6 +238,7 @@ var hrange = require('../h-range.js');
 
     $.TempJSON.prototype.convertFromWebAnnotation = function(webAnn, element) {
         var self = this;
+        var mediaFound = self.getMediaType(webAnn);
         var annotation = {
             annotationText: self.getAnnotationText(webAnn),
             created: self.getAnnotationCreated(webAnn),
@@ -206,23 +247,89 @@ var hrange = require('../h-range.js');
             id: self.getAnnotationId(webAnn),
             media: self.getMediaType(webAnn),
             tags: self.getAnnotationTags(webAnn),
-            ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
+            ranges: self.getAnnotationTarget(webAnn, jQuery(element), mediaFound),
             totalReplies: webAnn.totalReplies,
             permissions: webAnn.permissions,
+        }
+        if (mediaFound.toLowerCase() === "image") {
+            jQuery.each(annotation['ranges'], function(index, range) {
+                if (range['type'].toLowerCase() === "thumbnail") {
+                    annotation['thumbnail'] = range.source;
+                } else if (range['type'].toLowerCase() === "image") {
+                    annotation['source_url'] = range.source;
+                    var fragFound = false;
+                    var svgExists = false;
+                    var fragVal = "";
+                    jQuery.each(range['selector']['items'], function(index, selector) {
+                        try {
+                            if (selector['type'].toLowerCase() === "svgselector") {
+                                var svgVal = selector.value
+                                if (fragFound) {
+                                    svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                                }
+                                annotation['svg'] = svgVal;
+                                svgExists = true;
+                            } else {
+                                fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
+                                if (svgExists) {
+                                    annotation['svg'] = annotation['svg'].replace('svg xmlns', ('svg ' + fragVal + ' xmlns'));
+                                }
+                                fragFound = true;
+                            }
+                        } catch(e) {
+                            if (typeof(selector['@type']) !== "undefined") {
+                                fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
+                                var svgVal = selector['selector']['item']['value'];
+                                svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
+                                annotation['svg'] = svgVal;
+                            }
+                        }
+                    });
+                }
+            })
         }
         return annotation;
     };
 
     $.TempJSON.prototype.getMediaType = function(webAnn, element) {
-        return webAnn['target']['items'][0]['type'];
+        var found = webAnn['target']['items'][0]['type'];
+        jQuery.each(webAnn['target']['items'], function(index, item) {
+            var m = item['type'].toLowerCase();
+
+            if (m === "image" || m === "video" || m === "text" || m === "audio") {
+                found = item['type'];
+            }
+            if (m === 'annotation') {
+                found = 'comment'
+            }
+        });
+        return found
     };
 
     $.TempJSON.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
+            
+            var annType = webAnn['target']['items'][0]['type']
             // console.log("reached getAnnotationTargetItems", webAnn);
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
+            if (annType === "Annotation") {
                 // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
+            } else if (annType === "Image" || annType === "Thumbnail") {
+                return webAnn['target']['items']
+            } else if (annType === "Video") {
+                var fragmentSelectorItem = webAnn['target']['items'][0]['selector']['items'][0];
+                if (fragmentSelectorItem.type == "FragmentSelector") {
+                    var timeValue = fragmentSelectorItem.value.replace('t=', '').split(',');
+                    var startTime = parseFloat(timeValue[0]);
+                    var endTime = parseFloat(timeValue[1]);
+                    return [{
+                        start: startTime,
+                        startLabel: self.humanReadable(startTime),
+                        end: endTime,
+                        endLabel: self.humanReadable(endTime)
+                    }]
+                }
+                
             }
             // console.log("nope, something went wrong");
             return webAnn['target']['items'][0]['selector']['items'];
@@ -232,57 +339,69 @@ var hrange = require('../h-range.js');
         }
     };
 
-    $.TempJSON.prototype.getAnnotationTarget = function(webAnn, element) {
+    $.TempJSON.prototype.getAnnotationTarget = function(webAnn, element, media) {
         var self = this;
         try {
-            var ranges = [];
-            var xpathRanges = [];
-            var positionRanges = [];
-            var textRanges = [];
-            jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
-                if (!('parent' in targetItem)) {
-                    if (targetItem['type'] === "RangeSelector") {
-                        xpathRanges.push({
-                            start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
-                            startOffset: targetItem['refinedBy'].start,
-                            end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
-                            endOffset: targetItem['refinedBy'].end
-                        });
-                    } else if (targetItem['type'] === "TextPositionSelector") {
-                        positionRanges.push({
-                            globalStartOffset: targetItem['start'],
-                            globalEndOffset: targetItem['end'] 
-                        });
-                    } else if (targetItem['type'] === "TextQuoteSelector") {
-                        textRanges.push({
-                            prefix: targetItem['prefix'],
-                            exact: targetItem['exact'],
-                            suffix: targetItem['suffix']
-                        })
+            if (media.toLowerCase() === "text") {
+                var ranges = [];
+                var xpathRanges = [];
+                var positionRanges = [];
+                var textRanges = [];
+                jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
+                    if (!('parent' in targetItem)) {
+                        if (targetItem['type'] === "RangeSelector") {
+                            xpathRanges.push({
+                                start: targetItem['startSelector'] ? targetItem['startSelector'].value : targetItem['oa:start'].value,
+                                startOffset: targetItem['refinedBy'].start,
+                                end: targetItem['endSelector'] ? targetItem['endSelector'].value : targetItem['oa:end'].value,
+                                endOffset: targetItem['refinedBy'].end
+                            });
+                        } else if (targetItem['type'] === "TextPositionSelector") {
+                            positionRanges.push({
+                                globalStartOffset: targetItem['start'],
+                                globalEndOffset: targetItem['end'] 
+                            });
+                        } else if (targetItem['type'] === "TextQuoteSelector") {
+                            textRanges.push({
+                                prefix: targetItem['prefix'],
+                                exact: targetItem['exact'],
+                                suffix: targetItem['suffix']
+                            })
+                        }
+                    } else {
+                        return ranges.push(targetItem)
                     }
-                } else {
-                    return ranges.push(targetItem)
-                }
-            });
-            if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
-                for (var i = xpathRanges.length - 1; i >= 0; i--) {
-                    ranges.push({
-                        'xpath': xpathRanges[i],
-                        'position': positionRanges[i],
-                        'text': textRanges[i]
-                    });
-                }
-            } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
-                var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
-                var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+                });
+                if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
+                    for (var i = xpathRanges.length - 1; i >= 0; i--) {
+                        ranges.push({
+                            'xpath': xpathRanges[i],
+                            'position': positionRanges[i],
+                            'text': textRanges[i]
+                        });
+                    }
+                } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+                    var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+                    var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
 
-                if (startNode && endNode) {
-                    var normalizedRange = document.createRange();
-                    normalizedRange.setStart(startNode.node, startNode.offset);
-                    normalizedRange.setEnd(endNode.node, endNode.offset);
-                    var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
-                    ranges.push(serializedRange);
+                    if (startNode && endNode) {
+                        var normalizedRange = document.createRange();
+                        normalizedRange.setStart(startNode.node, startNode.offset);
+                        normalizedRange.setEnd(endNode.node, endNode.offset);
+                        var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+                        ranges.push(serializedRange);
+                    }
                 }
+            } else if (media.toLowerCase() == "image") {
+                // console.log(webAnn['target'])
+                return webAnn['target']['items'];
+            } else if (media.toLowerCase() == "comment") {
+                return webAnn['target']['items'];
+            } else if (media.toLowerCase() == "video" || media.toLowerCase() == 'audio') {
+                var ranges = [];
+                jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
+                    return ranges.push(targetItem)
+                });
             }
             if (webAnn['target']['items'][0]['type'] == "Annotation") {
                 return ranges;
@@ -535,6 +654,10 @@ var hrange = require('../h-range.js');
             return _results;
           }).call(this)).join('');
     }
+
+    Object.defineProperty($.TempJSON, 'name', {
+        value: "TempJSON"
+    });
     $.storage.push($.TempJSON);
 
 }(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

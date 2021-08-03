@@ -420,11 +420,11 @@
                 //if it is a manifest annotation, don't allow editing or deletion
                 //otherwise, check annotation in endpoint
                 var showUpdate = false;
-                if (annotation.endpoint !== 'manifest') {
+                if (annotation.endpoint !== 'manifest' && !self.editorOptions.readonly) {
                     showUpdate = annotation.endpoint.userAuthorize('update', annotation);
                 }
                 var showDelete = false;
-                if (annotation.endpoint !== 'manifest') {
+                if (annotation.endpoint !== 'manifest' && !self.editorOptions.readonly) {
                     showDelete = annotation.endpoint.userAuthorize('delete', annotation);
                 }
 

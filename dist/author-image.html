@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <!-- Each page should have its own title -->
+        <title>Hxighlighter</title>
+        <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico"/>
+    </head>
+    <body>            
+        <main class="hxighlighter-container" role="main">
+            <p>
+                <script>
+                    var head  = document.getElementsByTagName('head')[0];
+                    var link  = document.createElement('link');
+                    link.id   = "bundlecss";
+                    link.rel  = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = './hxighlighter_image_lite.css';
+                    link.media = 'all';
+                    if (window.location.host.indexOf('studio') === -1) {
+                        head.appendChild(link);
+                    }
+                </script>
+            </p>
+            <section class="container1">
+                <div class="annotations-section">
+                    <div id="hxat_lite_loading"><i class='fa fa-spinner make-spin'></i></div>
+                    <div id="viewer" class="hx-mirador"></div>
+                </div>                    
+            </section>
+        
+        <div id='manifest-url' style='display:none;'></div>
+        <div id="tags" style="display: none;">test1:#0000FF</div>
+        <div id="annotations-url" style="display: none;">http://127.0.0.1:8080/sample_targets/annotations%20(1).json</div>
+        <div id='media-type' style="display: none;">image</div>
+        <div id='common-inst-display-name' style='display: none;'>HxStaff</div>
+        <div id="extra_options" style="display:none;">
+            <div id="allow_thumbnails_view">false</div> 
+            <div id="allow_scroll_view">false</div> 
+            <div id="default_thumbnails_view">false</div>
+            <div id="default_scroll_view">false</div>
+        </div>
+        <script src="./hxighlighter_image_lite.js"></script>
+    </body>
+</html>
