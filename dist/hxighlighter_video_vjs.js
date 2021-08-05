@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.1 - Tuesday, August 3rd, 2021, 3:05:41 PM  
+// [AIV_SHORT]  Version: 1.4.2 - Wednesday, August 4th, 2021, 11:45:01 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

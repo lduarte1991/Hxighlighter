@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.1 - Tuesday, August 3rd, 2021, 3:05:41 PM  
+// [AIV_SHORT]  Version: 1.4.2 - Wednesday, August 4th, 2021, 11:45:01 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -49796,7 +49796,7 @@ __webpack_require__(77);
     var _URL = window.URL || window.webkitURL;
 
     jQuery('#hxat_lite_loading').hide();
-    var html = "<h2>Step 1: Create Manifest</h2><p>Upload your image (jpg only) to Files and Upload and get the <strong>Web URL</strong>. As you fill out this section, remember <strong>students will see all you input here</strong>.</p>";
+    var html = "<h2>Create Manifest</h2><p>Upload your image (jpg only) to Files and Upload and get the <strong>Web URL</strong>. As you fill out this section, remember <strong>students will see all you input here</strong>.</p>";
     html += "Title of Image: <input id='imageTitle' class='form-control' type='text' placeholder='e.g. &quot;Prosperous Suzhou Scroll&quot;'/>";
     html += "<br>Short Description of Image: <input id='imageDesc' class='form-control' type='text' placeholder='e.g. &quot;30-foot scroll depicting a collection of scenes.&quot;'/>";
     html += "<br>Attribution of Image: <input id='imageAttr' class='form-control' type='text' placeholder='e.g. &quot;Provided by Harvard University&quot;'/>";
@@ -49819,8 +49819,13 @@ __webpack_require__(77);
         self.imageTitle = jQuery('#imageTitle').val();
         self.imageDesc = jQuery('#imageDesc').val();
         self.imageAttr = jQuery('#imageAttr').val();
-        self.download(self.manifestName, self.createManifest()); // jQuery('#manifestOutput').val(self.createManifest());
-        // jQuery('#manifestOutput').show();
+        self.download(self.manifestName, self.createManifest());
+        var successHTML = "<div style='color:#fff!important; background-color: #28a745!important; padding: 15px; margin: 20px'>You have <strong>successfully</strong> downloaded the manifest. Make sure its name matches '" + self.manifestName + "' <strong>exactly</strong>. Upload to 'Files and Uploads' and copy WebURL to the appropriately-named html component. Example: <pre>&lt;div id='manifest-url' style='display:none;'&gt;" + self.manifestUrl + "&lt;/div&gt;</pre></div>";
+        jQuery('.hxighlighter-container .container1 .annotations-section').append(successHTML);
+      };
+
+      img.onerror = function () {
+        toastr.error('There was an error retrieving your image. Check that you are using the Web URL or as the Tech Team.');
       };
 
       img.src = self.imageUrl;

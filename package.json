@@ -1,6 +1,6 @@
 {
   "name": "hxighlighter",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "JavaScript annotation tool suite",
   "main": "index.js",
   "scripts": {
