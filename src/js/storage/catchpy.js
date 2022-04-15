@@ -20,6 +20,10 @@ var hrange = require('../h-range.js');
             // console.log("in the To call", annotation);
             callBack(self.convertToWebAnnotation(annotation, jQuery(self.element).find('.annotation-wrapper')))
         })
+        $.subscribeEvent('objectIdUpdated', self.instance_id, function(_, objectID) {
+            self.options.object_id = objectID;
+            self.options.source_id = objectID;
+        });
     };
 
     $.CatchPy.prototype.onLoad = function(element, opts, callBack) {
@@ -282,6 +286,7 @@ var hrange = require('../h-range.js');
                     } else {
                         jQuery.each(range.items, function(idx, choice) {
                             if (choice.type === "Image") {
+                                source_id = choice.source
                                 rangeItem = [{
                                     'type': 'FragmentSelector',
                                     'value': choice.selector.items[0].selector.default.value

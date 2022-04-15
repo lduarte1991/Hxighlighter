@@ -89,7 +89,7 @@
                 if (typeof successCallback === "function") {
                     successCallback(result);
                 } else {
-                    self.drawFromSearch(result.rows, converter);
+                    self.drawFromSearch(result.rows, converter, true);
                 }
                 
             }, function() {

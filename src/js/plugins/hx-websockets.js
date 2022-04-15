@@ -31,11 +31,25 @@
         var self = this;
         var valid_object_id = self.options.ws_object_id || self.options.object_id
         self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
+        self.setUpListeners();
         self.setUpConnection();
     };
 
     $.Websockets.prototype.saving = function(annotation) {
         return annotation;
+    };
+
+    $.Websockets.prototype.setUpListeners = function() {
+        var self = this;
+        $.subscribeEvent('objectIdUpdated', self.instanceID, function(_, objectID) {
+            self.options.ws_object_id = objectID;
+            self.options.object_id = objectID;
+            var valid_object_id = self.options.ws_object_id || self.options.object_id
+            self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
+            if (self.socket) {
+                self.socket.close();
+            }
+        });
     };
 
     $.Websockets.prototype.setUpConnection = function() {
