@@ -388,7 +388,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 
         $.subscribeEvent('objectIdUpdated', self.instance_id, function() {
             jQuery('.annotationsHolder.side').html('');
-            console.log(self.options)
         });
 
         $.subscribeEvent('wsAnnotationDeleted', self.instance_id, function(_, annotation) {

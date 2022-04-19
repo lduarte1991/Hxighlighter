@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Version: 1.4.1 - Friday, April 15th, 2022, 3:34:53 PM  
+// [AIV_SHORT]  Version: 1.5.0 - Tuesday, April 19th, 2022, 11:48:51 AM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -32845,7 +32845,6 @@ __webpack_require__(9);
     });
     $.subscribeEvent('objectIdUpdated', self.instance_id, function () {
       jQuery('.annotationsHolder.side').html('');
-      console.log(self.options);
     });
     $.subscribeEvent('wsAnnotationDeleted', self.instance_id, function (_, annotation) {
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
@@ -45656,11 +45655,12 @@ __webpack_require__(43);
   $.Websockets = function (options, instanceID) {
     this.options = jQuery.extend({}, options);
     this.instanceID = instanceID;
-    this.init();
     this.timerRetryInterval;
     this.socket = null;
     this.maxConnections = 10;
     this.currentConnections = 0;
+    this.currentObjectId = this.options.object_id;
+    this.init();
     return this;
   };
   /**
@@ -45683,17 +45683,7 @@ __webpack_require__(43);
   $.Websockets.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('objectIdUpdated', self.instanceID, function (_, objectID) {
-      self.options.ws_object_id = objectID;
-      self.options.object_id = objectID;
-      var valid_object_id = self.options.ws_object_id || self.options.object_id;
-      self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
-
-      if (self.socket) {
-        self.socket.close();
-        console.log(self.socket);
-      }
-
-      console.log(self.options);
+      self.currentObjectId = objectID;
     });
   };
 
@@ -45728,10 +45718,13 @@ __webpack_require__(43);
   $.Websockets.prototype.receiveWsMessage = function (response) {
     var self = this;
     var message = response['message'];
-    var annotation = eval("(" + message + ")"); // console.log("WS:" + message)
+    var annotation = eval("(" + message + ")");
+
+    if (annotation.platform.target_source_id != self.currentObjectId) {
+      return;
+    }
 
     self.convertAnnotation(annotation, function (wa) {
-      // console.log("YEH", response)
       if (response['type'] === 'annotation_deleted') {
         $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
           if (typeof annotationFound === "undefined") {

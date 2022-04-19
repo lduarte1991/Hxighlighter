@@ -16,11 +16,12 @@
     $.Websockets = function(options, instanceID) {
         this.options = jQuery.extend({}, options);
         this.instanceID = instanceID;
-        this.init();
         this.timerRetryInterval;
         this.socket = null;
         this.maxConnections = 10;
         this.currentConnections = 0;
+        this.currentObjectId = this.options.object_id
+        this.init();
         return this;
     };
 
@@ -42,13 +43,7 @@
     $.Websockets.prototype.setUpListeners = function() {
         var self = this;
         $.subscribeEvent('objectIdUpdated', self.instanceID, function(_, objectID) {
-            self.options.ws_object_id = objectID;
-            self.options.object_id = objectID;
-            var valid_object_id = self.options.ws_object_id || self.options.object_id
-            self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
-            if (self.socket) {
-                self.socket.close();
-            }
+            self.currentObjectId = objectID
         });
     };
 
@@ -79,9 +74,10 @@
         var self = this;
         var message = response['message'];
         var annotation = eval( "(" + message + ")");
-        // console.log("WS:" + message)
+        if (annotation.platform.target_source_id != self.currentObjectId) {
+            return
+        }
         self.convertAnnotation(annotation, function(wa) {
-            // console.log("YEH", response)
             if (response['type'] === 'annotation_deleted') {
                 $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function(annotationFound) {
                     if (typeof(annotationFound) === "undefined") {
