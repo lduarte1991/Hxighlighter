@@ -161,6 +161,9 @@ require('./storage/catchpy.js');
 
         self.mir.eventEmitter.subscribe('windowAdded', function(event, windowId, slotAddress) {
             self.windowId = windowId.id;
+            self.mir.eventEmitter.subscribe('currentCanvasIDUpdated.' + self.windowId, function(e, canvasID, element) {
+                Hxighlighter.publishEvent('objectIdUpdated', self.instance_id, [canvasID]);
+            })
             self.mir.eventEmitter.subscribe('annotationsRendered.' + self.windowId, function(e) {
                 var overlay = window.paper.projects[0].getItem();
                 if (!overlay) {

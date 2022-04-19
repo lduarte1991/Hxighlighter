@@ -386,6 +386,10 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             self.search(options);
         });
 
+        $.subscribeEvent('objectIdUpdated', self.instance_id, function() {
+            jQuery('.annotationsHolder.side').html('');
+        });
+
         $.subscribeEvent('wsAnnotationDeleted', self.instance_id, function(_, annotation) {
             var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function(button){return button.id});
             var isMine = annotation.creator.id === self.options.user_id;
@@ -677,7 +681,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                     });
                 }]);
             } catch(e) {
-                console.log("Error", annotation, e)
+                console.log("Error, ignore if image annotation", annotation, e)
             }
         }
     };
