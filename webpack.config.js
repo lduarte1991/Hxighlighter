@@ -13,7 +13,6 @@ module.exports = {
     entry: {
         text: ['./src/text-index.js'],
         text_lite: ['./src/author-index.js'],
-        image_m2: ['./src/image-index-m2.js'],
         video_vjs: ['./src/video-index-vjs.js']
     },
     plugins: [

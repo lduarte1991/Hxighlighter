@@ -7,7 +7,6 @@ import './css/video.css';
 require('!style-loader!css-loader!video.js/dist/video-js.css');
 
 // vendors
-require('handlebars');
 require('bootstrap/dist/js/bootstrap.min.js');
 require('jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js');
 
