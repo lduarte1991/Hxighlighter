@@ -1,6 +1,6 @@
 {
   "name": "hxighlighter",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "JavaScript annotation tool suite",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,7 @@
     "codemirror": "^5.55.0",
     "jquery-confirm": "^3.3.4",
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
+    "mini-css-extract-plugin": "^2.6.0",
     "node-gyp": "^6.1.0",
     "script-loader": "^0.7.2",
     "summernote": "^0.8.18",
@@ -38,8 +39,7 @@
     "video.js": "^7.8.4",
     "videojs-transcript-ac": "^0.8.8",
     "videojs-youtube": "^2.6.1",
-    "webpack": "^4.46.0",
-    "webpack-auto-inject-version": "^1.2.2"
+    "webpack": "^5.72.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
@@ -60,7 +60,6 @@
     "jquery": "^3.5.1",
     "jquery-tiny-pubsub": "^0.7.1",
     "lodash": "^4.17.19",
-    "mini-css-extract-plugin": "^0.5.0",
     "mocha": "^6.2.3",
     "mocha-loader": "^2.0.1",
     "nyc": "^14.1.1",
@@ -71,6 +70,7 @@
     "style-loader": "^0.23.1",
     "underscore-template-loader": "^1.1.0",
     "url-loader": "^1.1.2",
+    "webpack-auto-inject-version-next": "^1.2.4",
     "webpack-cli": "^3.3.12"
   }
 }

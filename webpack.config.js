@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackAutoInject = require('webpack-auto-inject-version');
+const WebpackAutoInject = require('webpack-auto-inject-version-next');
 
 const PATHS = {
     vendor: path.join(__dirname, 'src/js/vendors/'),
@@ -31,7 +31,7 @@ module.exports = {
         new webpack.DefinePlugin({
           'require.specified': 'require.resolve'
         }),
-        new webpack.IgnorePlugin(/^codemirror$/),
+        new webpack.IgnorePlugin({resourceRegExp: /^codemirror$/}),
         new WebpackAutoInject({
             components: {
                 InjectAsComment: true
@@ -58,14 +58,13 @@ module.exports = {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
             'CodeMirror': 'codemirror',
             'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
-            'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
             'videojs': PATHS.modules + 'video.js',
             'videojs-transcript': PATHS.modules + 'videojs-transcript-ac/dist/videojs-transcript.js',
             'videojs-youtube': PATHS.modules + 'videojs-youtube/dist/Youtube.js'
         }
     },
     optimization: {
-        minimize: false
+        minimize: true
     },
     module: {
         rules: [
@@ -83,7 +82,7 @@ module.exports = {
             },
             {
                 test: /\.(eot|gif|svg|png|jpg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-                use: require.resolve('url-loader')
+                type: 'asset/inline'
             },
             {
                 test: /annotator\.ui\.js/,
@@ -101,7 +100,6 @@ module.exports = {
                 test: /(floating|sidebar)\.html$/,
                 use: ['underscore-template-loader']
             },
-            { test: /\.handlebars$/, loader: "handlebars-loader" },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
