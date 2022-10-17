@@ -13,7 +13,8 @@ module.exports = {
     entry: {
         text: ['./src/text-index.js'],
         text_lite: ['./src/author-index.js'],
-        video_vjs: ['./src/video-index-vjs.js']
+        video_vjs: ['./src/video-index-vjs.js'],
+        image_m3: ['./src/image-index-m3.js']
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -87,10 +88,6 @@ module.exports = {
             {
                 test: /annotator\.ui\.js/,
                 use: ["imports-loader?$=jquery&window.jQuery=jquery"]
-            },
-            {
-                test: /mirador\.js/,
-                use: 'script-loader'
             },
             {
                 test: /videojs-transcript.js/,
