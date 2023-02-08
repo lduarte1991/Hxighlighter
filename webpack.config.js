@@ -1,8 +1,9 @@
+process.traceDeprecation = true;
 const path = require('path');
 const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackAutoInject = require('webpack-auto-inject-version');
+const WebpackAutoInject = require('webpack-auto-inject-version-next');
 
 const PATHS = {
     vendor: path.join(__dirname, 'src/js/vendors/'),
@@ -35,7 +36,8 @@ module.exports = {
         new webpack.IgnorePlugin(/^codemirror$/),
         new WebpackAutoInject({
             components: {
-                InjectAsComment: true
+                InjectAsComment: true,
+                InjectByTag: false
             },
             componentsOptions: {
                 InjectAsComment: {
