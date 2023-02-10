@@ -1,8 +1,8 @@
-process.traceDeprecation = true;
 const path = require('path');
 const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const WebpackAutoInject = require('webpack-auto-inject-version-next');
 
 const PATHS = {
@@ -33,7 +33,9 @@ module.exports = {
         new webpack.DefinePlugin({
           'require.specified': 'require.resolve'
         }),
-        new webpack.IgnorePlugin(/^codemirror$/),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^codemirror$/
+        }),
         new WebpackAutoInject({
             components: {
                 InjectAsComment: true,
@@ -68,7 +70,12 @@ module.exports = {
         }
     },
     optimization: {
-        minimize: false
+        minimize: false,
+        minimizer: [
+            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+            `...`,
+            new CssMinimizerPlugin(),
+          ],
     },
     module: {
         rules: [
