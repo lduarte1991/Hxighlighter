@@ -52,7 +52,8 @@ module.exports = {
     ],
     output: {
         path: __dirname,
-        filename: 'dist/hxighlighter_[name].js'
+        filename: 'dist/hxighlighter_[name].js',
+        assetModuleFilename: '[hash][ext][query]'
     },
     resolve: {
         extensions: ['.js'],
@@ -94,22 +95,17 @@ module.exports = {
                     "css-loader"
                 ]
             },
-            // {
-            //     test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-            //     use: [
-            //         {
-            //             loader: require.resolve('file-loader'),
-            //             options: {
-            //                 name: '[name].[hash:8].[ext]',
-            //                 outputPath: 'dist/fonts/',
-            //                 publicPath: '../fonts/',
-            //             }
-            //         }
-            //     ]
-            // },
             {
-                test: /\.(gif|svg|png|jpg|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-                use: require.resolve('url-loader')
+                test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+                type: 'asset/resource',
+                generator: {
+                    publicPath: '../fonts/',
+                    outputPath: 'dist/fonts/'
+                }
+            }, 
+            {
+                test: /\.(gif|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?/,
+                type: 'asset/inline'
             },
             {
                 test: /annotator\.ui\.js/,

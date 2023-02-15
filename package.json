@@ -55,7 +55,6 @@
     "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "exports-loader": "^4.0.0",
-    "file-loader": "^6.2.0",
     "http-server": "^14.1.1",
     "ignore-styles": "^5.0.1",
     "imports-loader": "^4.0.1",
@@ -71,7 +70,6 @@
     "serve-static": "^1.15.0",
     "style-loader": "^3.3.1",
     "underscore-template-loader": "^1.2.0",
-    "url-loader": "^4.1.1",
     "webpack-auto-inject-version-next": "^1.2.4",
     "webpack-cli": "^5.0.1"
   }
