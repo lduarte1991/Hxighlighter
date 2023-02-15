@@ -77,6 +77,9 @@ module.exports = {
             new CssMinimizerPlugin(),
           ],
     },
+    externals: {
+
+    },
     module: {
         rules: [
             {
@@ -91,26 +94,34 @@ module.exports = {
                     "css-loader"
                 ]
             },
+            // {
+            //     test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+            //     use: [
+            //         {
+            //             loader: require.resolve('file-loader'),
+            //             options: {
+            //                 name: '[name].[hash:8].[ext]',
+            //                 outputPath: 'dist/fonts/',
+            //                 publicPath: '../fonts/',
+            //             }
+            //         }
+            //     ]
+            // },
             {
-                test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-                use: [
-                    {
-                        loader: require.resolve('file-loader'),
-                        options: {
-                            name: '[name].[hash:8].[ext]',
-                            outputPath: 'dist/fonts/',
-                            publicPath: '../fonts/',
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.(gif|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?/,
+                test: /\.(gif|svg|png|jpg|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
                 use: require.resolve('url-loader')
             },
             {
                 test: /annotator\.ui\.js/,
-                use: ["imports-loader?$=jquery&window.jQuery=jquery"]
+                use: [{
+                    loader: "imports-loader",
+                    options: {
+                        imports: [
+                            "defaults jquery $",
+                            "defaults jquery window.jQuery"
+                        ]
+                    }
+                }]
             },
             {
                 test: /mirador\.js/,
@@ -118,7 +129,14 @@ module.exports = {
             },
             {
                 test: /videojs-transcript.js/,
-                use: ["imports-loader?videojs=videojs"]
+                use: [{
+                    loader: "imports-loader",
+                    options: {
+                        imports: [
+                            "defaults videojs videojs"
+                        ]
+                    }
+                }]
             },
             {
                 test: /(floating|sidebar)\.html$/,
