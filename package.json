@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "./test_server.sh",
-    "webp": "webpack -p",
+    "webp": "webpack --mode production",
     "start": "cd dist && http-server",
-    "all": "webpack -p && cd dist && http-server"
+    "all": "webpack --mode production && cd dist && http-server"
   },
   "repository": {
     "type": "git",
@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/lduarte1991/Hxighlighter#readme",
   "dependencies": {
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^9.1.2",
     "bootstrap": "^3.4.1",
     "codemirror": "^5.55.0",
-    "handlebars": "^4.7.6",
-    "handlebars-loader": "^1.7.1",
+    "handlebars": "^4.7.7",
+    "handlebars-loader": "^1.7.3",
     "jquery-confirm": "^3.3.4",
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
     "mirador": "^2.7.2",
@@ -43,10 +43,10 @@
     "webpack": "^5.75.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/node": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
     "@babel/register": "^7.10.5",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "bs4-summernote": "^0.8.10",
@@ -61,7 +61,7 @@
     "imports-loader": "^0.8.0",
     "jquery": "^3.5.1",
     "jquery-tiny-pubsub": "^0.7.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.2",
     "mocha": "^6.2.3",
     "mocha-loader": "^2.0.1",
@@ -74,6 +74,6 @@
     "underscore-template-loader": "^1.1.0",
     "url-loader": "^1.1.2",
     "webpack-auto-inject-version-next": "^1.2.4",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^5.0.1"
   }
 }

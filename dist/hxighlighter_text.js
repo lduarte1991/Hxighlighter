@@ -8,6 +8,7 @@
 /**
  * 
  */
+
 (function ($) {
   /**
    * Sets up components for Hxighlighte Core isntance
@@ -19,116 +20,107 @@
   $.Core = function (options, inst_id) {
     // options and instance ids are saved
     this.options = options;
-    this.instance_id = inst_id; // keeps track of viewer/plugin modules for UI
+    this.instance_id = inst_id;
 
+    // keeps track of viewer/plugin modules for UI
     this.viewers = [];
     this.disabledViewers = [];
     this.plugins = [];
-    this.disabledPlugins = []; // keeps track of annotations and storage modules for backend
+    this.disabledPlugins = [];
 
+    // keeps track of annotations and storage modules for backend
     this.annotations = [];
     this.storage = [];
-    this.disabledStorage = []; // keeps track of object(s) being annotated
+    this.disabledStorage = [];
 
-    this.targets = []; // initializes tool
+    // keeps track of object(s) being annotated
+    this.targets = [];
 
+    // initializes tool
     this.init();
   };
+
   /**
    * initializer of core and its components
    */
-
-
   $.Core.prototype.init = function () {
     this.setUpTargets();
-    this.setUpViewers(); // this.setUpListeners();
+    this.setUpViewers();
+    // this.setUpListeners();
     //this.setUpStorage();
     // this.setUpPlugins();
   };
+
   /**
    * sets up targets to be annotated
    */
-
-
   $.Core.prototype.setUpTargets = function () {
     var targets = this.options.targets;
-
     for (var i = 0; i < targets.length; i++) {
       var mediaType = $.Core._capitalizeMedia(targets[i].mediaType) + "Target";
-
       if (typeof Hxighlighter[mediaType] === "function") {
         this.targets.push(new Hxighlighter[mediaType](jQuery.extend({}, targets[i], this.options.commonInfo), this.instance_id));
       }
     }
   };
-
   $.Core.prototype.setUpViewers = function () {};
-
   $.Core.prototype.TargetSelectionMade = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'TargetSelectionMade', [message[1], message[2]]);
   };
-
   $.Core.prototype.TargetAnnotationDraw = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'TargetAnnotationDraw', message);
   };
-
   $.Core.prototype.TargetAnnotationUndraw = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'TargetAnnotationUndraw', message);
   };
-
   $.Core.prototype.ViewerEditorOpen = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'ViewerEditorOpen', message);
   };
-
   $.Core.prototype.ViewerDisplayOpen = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'ViewerDisplayOpen', message);
   };
-
   $.Core.prototype.ViewerEditorClose = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'ViewerEditorClose', message);
   };
-
   $.Core.prototype.ViewerDisplayClose = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'ViewerDisplayClose', message);
   };
-
   $.Core.prototype.StorageAnnotationSave = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'StorageAnnotationSave', message);
   };
-
   $.Core.prototype.StorageAnnotationUpdate = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'StorageAnnotationUpdate', message);
   };
-
   $.Core.prototype.StorageAnnotationDelete = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'StorageAnnotationDelete', message);
   };
-
   $.Core.prototype.StorageAnnotationLoad = function (message) {
     var self = this;
     self.callFuncInList(this.targets, 'StorageAnnotationLoad', message);
-  }; // $.Core.prototype.StorageAnnotationGetReplies = function(message) {
+  };
+
+  // $.Core.prototype.StorageAnnotationGetReplies = function(message) {
   //     var self = this;
   //     self.callFuncInList(this.targets, 'StorageAnnotationGetReplies', message);
   // };
 
-
   $.Core.prototype.StorageAnnotationSearch = function (message) {
-    var self = this; //console.log('Received here');
-
+    var self = this;
+    //console.log('Received here');
     self.callFuncInList(this.targets, 'StorageAnnotationSearch', message);
-  }; // Util functions
+  };
 
+  // Util functions
 
   $.Core.prototype.callFuncInList = function (objectList, funcName, params) {
     var self = this;
@@ -138,7 +130,6 @@
       }
     });
   };
-
   $.Core._capitalizeMedia = function (media) {
     var editedMedia = Hxighlighter.trim(media);
     editedMedia = editedMedia.toLowerCase();
@@ -153,7 +144,6 @@
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
 var hrange = __webpack_require__(6989);
-
 (function ($) {
   $.XPathDrawer = function (element, inst_id, hClass, options) {
     this.element = element;
@@ -164,17 +154,16 @@ var hrange = __webpack_require__(6989);
     this.tempHighlights = [];
     this.options = options || {};
   };
-
   $.XPathDrawer.prototype.init = function () {
-    var self = this; // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
+    var self = this;
+    // this.highlighter = new annotator.ui.highlighter.Highlighter(this.element, {
     //     highlightClass: (self.h_class + ' annotator-hl')
     // });
     // console.log('.' + self.h_class.replace(' ', '.'));
-
     jQuery(self.element).on('mouseover', '.' + self.h_class.replace(' ', '.'), function (event) {
       $.pauseEvent(event);
-      var annotations = self.getAnnotationsFromElement(event); // console.log("MOUSEOVER", annotations);
-
+      var annotations = self.getAnnotationsFromElement(event);
+      // console.log("MOUSEOVER", annotations);
       Hxighlighter.publishEvent('ViewerDisplayOpen', self.instance_id, [event, annotations]);
     });
     jQuery(self.element).on('mouseleave', '.' + self.h_class.replace(' ', '.'), function (event) {
@@ -216,8 +205,8 @@ var hrange = __webpack_require__(6989);
       callBack(annotations);
     });
     Hxighlighter.subscribeEvent('drawTemp', self.instance_id, function (_, range, callBack) {
-      var textNodes = hrange.getTextNodesFromAnnotationRanges(range, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
-
+      var textNodes = hrange.getTextNodesFromAnnotationRanges(range, self.element);
+      // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
       var spans = [];
       textNodes.forEach(function (node) {
         //console.log(node, jQuery(node));
@@ -227,64 +216,58 @@ var hrange = __webpack_require__(6989);
       self.tempHighlights = self.tempHighlights.concat(spans);
     });
   };
-
   $.XPathDrawer.prototype.draw = function (annotation) {
-    var self = this; // checks to see if annotation has already been drawn, if so it undraws it
-
+    var self = this;
+    // checks to see if annotation has already been drawn, if so it undraws it
     var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
-
     if (existing_drawn_annotation) {
       self.undraw(existing_drawn_annotation);
     }
-
     if (annotation.media.toLowerCase() === "text") {
       // console.log(self.options, annotation);
       // console.log("Annotation Being Drawn", annotation);
+
       self.tempHighlights.forEach(function (hl) {
         jQuery(hl).contents().unwrap();
-      }); // the process for drawing is divided into 4 parts
+      });
+      // the process for drawing is divided into 4 parts
       // 1. Retrieve all discrete text nodes associated with annotation
-
-      var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element); // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
-
+      var textNodes = hrange.getTextNodesFromAnnotationRanges(annotation.ranges, self.element);
+      // 2. Wrap each node with a span tag that has a particular annotation value (this.h_class)
       var spans = [];
       var otherLabel = '';
-
       if (self.options.user_id === annotation.creator.id) {
         otherLabel += ' annotation-mine';
       }
-
       if (self.options.instructors.indexOf(annotation.creator.id) > -1) {
         otherLabel += ' annotation-instructor';
       }
-
       var labelIt = true;
       textNodes.forEach(function (node) {
         //console.log(node, jQuery(node));
         var node_id = "";
-
         if (labelIt) {
           labelIt = false;
           node_id = ' id="first-node-' + annotation.id + '" ';
         }
-
         jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
         spans.push(jQuery(node).parent()[0]);
-      }); // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
-
+      });
+      // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
       annotation['_local'] = {
         'highlights': spans
-      }; // 3. Store in each span tag the value of the annotation post-saving _local.highlights
-
+      };
+      // 3. Store in each span tag the value of the annotation post-saving _local.highlights
       spans.forEach(function (span) {
         jQuery(span).data('annotation', annotation);
       });
-    } //console.log(annotation);
+    }
+    //console.log(annotation);
+    $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
 
-
-    $.publishEvent('annotationDrawn', self.instance_id, [annotation]); // the annotation is then saved to the current list
-
-    self.drawnAnnotations.push(annotation); // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
+    // the annotation is then saved to the current list
+    self.drawnAnnotations.push(annotation);
+    // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
     // jQuery.each(annotation._local.highlights, function(_, high) {
     //     jQuery(high).on('mouseover', function() {
     //          $.publishEvent('toggleViewer')
@@ -293,17 +276,15 @@ var hrange = __webpack_require__(6989);
   };
 
   $.XPathDrawer.prototype.undraw = function (annotation) {
-    var self = this; //this.highlighter.undraw(annotation);
-
+    var self = this;
+    //this.highlighter.undraw(annotation);
     if (annotation._local) {
       //console.log('Undrawing...', annotation._local.highlights)
       annotation._local.highlights.forEach(function (hl) {
         jQuery(hl).contents().unwrap();
       });
-
       annotation._local.highlights = [];
     }
-
     self.tempHighlights.forEach(function (hl) {
       jQuery(hl).contents().unwrap();
     });
@@ -311,15 +292,15 @@ var hrange = __webpack_require__(6989);
       if (ann.id !== annotation.id) {
         return ann;
       }
-    }); //console.log(self.drawnAnnotations);
-
+    });
+    //console.log(self.drawnAnnotations);
     $.publishEvent('annotationUndrawn', self.instance_id, [annotation]);
   };
-
   $.XPathDrawer.prototype.redraw = function (annotation) {
     var self = this;
     self.undraw(annotation);
-    self.draw(annotation); //this.highlighter.redraw(annotation);
+    self.draw(annotation);
+    //this.highlighter.redraw(annotation);
     //$.publishEvent('annotationRedrawn', self.instance_id, [annotation]);
   };
 
@@ -329,16 +310,20 @@ var hrange = __webpack_require__(6989);
     }).toArray().sort(function (a, b) {
       return a.created - b.created;
     });
-  }; // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
+  };
 
-
+  // found @ https://dev.to/saigowthamr/how-to-remove-duplicate-objects-from-an-array-javascript-48ok
   $.XPathDrawer.prototype.getUnique = function (arr, comp) {
     var unique = arr.map(function (e) {
       return e[comp];
-    }) // store the keys of the unique objects
+    })
+
+    // store the keys of the unique objects
     .map(function (e, i, _final) {
       return _final.indexOf(e) === i && i;
-    }) // eliminate the dead keys & store unique objects
+    })
+
+    // eliminate the dead keys & store unique objects
     .filter(function (e) {
       return arr[e];
     }).map(function (e) {
@@ -346,7 +331,6 @@ var hrange = __webpack_require__(6989);
     });
     return unique;
   };
-
   $.XPathDrawer.prototype.getAnnotationsData = function () {
     var self = this;
     var all = self.getUnique(jQuery('.annotator-hl').parents('.annotator-hl').addBack().map(function (_, elem) {
@@ -354,11 +338,10 @@ var hrange = __webpack_require__(6989);
     }).toArray(), 'id');
     all.sort(function (a, b) {
       return b - a;
-    }); //console.log(all);
-
+    });
+    //console.log(all);
     return all;
   };
-
   $.XPathDrawer.prototype.getSpecificAnnotationData = function (annotation_id) {
     var self = this;
     var currentAnnotations = self.getAnnotationsData();
@@ -369,7 +352,6 @@ var hrange = __webpack_require__(6989);
     });
     return foundAnnotation;
   };
-
   $.drawers.push($.XPathDrawer);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -385,16 +367,15 @@ var hrange = __webpack_require__(6989);
 function xpathFromRootToNode(root, node, offset, ignoreSelector) {
   var currentNode = node;
   var xpath = '';
-  var totalOffset = offset; // this is often the case when highlighting images as <img> nodes do not have a text node child
+  var totalOffset = offset;
 
+  // this is often the case when highlighting images as <img> nodes do not have a text node child
   if (currentNode === root && root.childNodes[offset].nodeType === Node.TEXT_NODE) {
     currentNode = root.childNodes[offset];
   }
-
   if (currentNode === root) {
     //console.log('totally root');
     var actualNode = root.childNodes[offset];
-
     if (actualNode.nodeType === Node.TEXT_NODE) {
       xpath = "/";
       var nodeList = root.childNodes;
@@ -403,7 +384,6 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
       var likeNodesCounter = 1;
       var found = false;
       var BreakException = {};
-
       try {
         likeNodesList.forEach(function (node) {
           if (node !== actualNode && node.className.indexOf(ignoreSelector) === -1) {
@@ -417,10 +397,8 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
         if (e !== BreakException) {
           throw e;
         }
-
         ;
       }
-
       if (found) {
         xpath = "/" + actualNode.nodeName.toLowerCase() + '[' + likeNodesCounter + ']' + xpath;
         totalOffset = 0;
@@ -430,8 +408,8 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
     while (currentNode !== null && currentNode !== root) {
       if (currentNode.nodeType === Node.TEXT_NODE) {
         var textNodeCount = 1;
-        var traverseNode = currentNode; // //console.log(traverseNode.parentNode.childNodes);
-
+        var traverseNode = currentNode;
+        // //console.log(traverseNode.parentNode.childNodes);
         while (traverseNode = traverseNode.previousSibling) {
           //console.log(traverseNode);
           totalOffset += traverseNode.textContent.length;
@@ -441,32 +419,26 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
           var nodeCount = 1;
           var currentName = currentNode.nodeName;
           var counterNode = currentNode;
-
           while (counterNode = counterNode.previousSibling) {
             if (counterNode.nodeName === currentName) {
               nodeCount += 1;
             }
           }
-
           xpath = "/" + currentName.toLowerCase() + '[' + nodeCount + ']' + xpath;
         } else if (currentNode.nodeName == "IMG") {} else {
           var traverseNode = currentNode;
-
           while (traverseNode = traverseNode.previousSibling) {
             totalOffset += traverseNode.textContent.length;
           }
         }
       }
-
       currentNode = currentNode.parentNode;
     }
   }
-
   if (currentNode != null) {
     if (xpath === "" && totalOffset >= 0) {
       xpath = '/';
     }
-
     return {
       xpath: xpath,
       offset: totalOffset
@@ -475,60 +447,51 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
     return undefined;
   }
 }
-
 function getPrefixAndSuffix(range, root, ignoreSelector) {
   var prefixCounterNode = range.startContainer;
   var suffixCounterNode = range.endContainer;
   var prefixOffset = range.startOffset;
   var suffixOffset = range.endOffset;
-
   if (prefixCounterNode === root) {
     prefixCounterNode = root.childNodes[prefixOffset];
     prefixOffset = 0;
   }
-
   if (suffixCounterNode === root) {
     suffixCounterNode = root.childNodes[suffixOffset];
     suffixOffset = 0;
   }
-
   var prefix = prefixCounterNode.textContent.slice(0, prefixOffset);
-  var suffix = suffixCounterNode.textContent.slice(suffixOffset); //console.log(suffixCounterNode, range.endOffset);
+  var suffix = suffixCounterNode.textContent.slice(suffixOffset);
+
+  //console.log(suffixCounterNode, range.endOffset);
 
   while (prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
     prefix = prefixCounterNode.textContent + prefix;
   }
-
   while (suffix.length <= 35 && (suffixCounterNode = suffixCounterNode.nextSibling)) {
     suffix = suffix + suffixCounterNode.textContent;
   }
-
   if (prefix.length >= 36) {
     prefix = prefix.slice(prefix.length - 35);
   }
-
   if (suffix.length >= 36) {
     suffix = suffix.slice(0, 35);
   }
-
   return {
     prefix: prefix,
     suffix: suffix
   };
 }
+;
 
-; // general idea came from responses to this question
+// general idea came from responses to this question
 // https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
-
 function getGlobalOffset(range, root, ignoreSelector) {
   var preRangeRange = document.createRange(); //range.cloneRange();
-
   var root = jQuery(root)[0];
-
   if (root.className.indexOf('annotator-wrapper') == -1) {
     root = root.querySelector('.annotator-wrapper');
   }
-
   preRangeRange.selectNodeContents(jQuery(root)[0]);
   preRangeRange.setEnd(range.startContainer, range.startOffset);
   return {
@@ -536,24 +499,20 @@ function getGlobalOffset(range, root, ignoreSelector) {
     endOffset: preRangeRange.toString().length + range.toString().length
   };
 }
-
 function getExactText(range) {
   var exact = range.toString() == "[object Object]" ? range.exact : range.toString();
   var rangeContents = range.cloneContents();
   var possibleImageList = rangeContents.querySelectorAll('img');
-  var rangeContainsImage = possibleImageList.length; //console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
-
+  var rangeContainsImage = possibleImageList.length;
+  //console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
   if (rangeContainsImage) {
     if (typeof possibleImageList.forEach !== "function") {
       var convertToArray = [];
-
       for (var i = possibleImageList.length - 1; i >= 0; i--) {
         convertToArray.push(possibleImageList[i]);
       }
-
       possibleImageList = convertToArray;
     }
-
     possibleImageList.forEach(function (im) {
       //console.log(rangeContents);
       // ie support
@@ -565,48 +524,47 @@ function getExactText(range) {
             if (this == null) {
               throw new TypeError('"this" is null or not defined');
             }
+            var o = Object(this);
 
-            var o = Object(this); // 2. Let len be ? ToLength(? Get(O, "length")).
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            var len = o.length >>> 0;
 
-            var len = o.length >>> 0; // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
             if (typeof predicate !== 'function') {
               throw new TypeError('predicate must be a function');
-            } // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            }
 
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            var thisArg = arguments[1];
 
-            var thisArg = arguments[1]; // 5. Let k be 0.
+            // 5. Let k be 0.
+            var k = 0;
 
-            var k = 0; // 6. Repeat, while k < len
-
+            // 6. Repeat, while k < len
             while (k < len) {
               // a. Let Pk be ! ToString(k).
               // b. Let kValue be ? Get(O, Pk).
               // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
               // d. If testResult is true, return k.
               var kValue = o[k];
-
               if (predicate.call(thisArg, kValue, k, o)) {
                 return k;
-              } // e. Increase k by 1.
-
-
+              }
+              // e. Increase k by 1.
               k++;
-            } // 7. Return -1.
+            }
 
-
+            // 7. Return -1.
             return -1;
           },
           configurable: true,
           writable: true
         });
-      } // https://tc39.github.io/ecma262/#sec-array.prototype.findindex
-
-
+      }
+      // https://tc39.github.io/ecma262/#sec-array.prototype.findindex
       var indexOfImage = [].slice.call(rangeContents.childNodes).findIndex(function (el) {
         return el === im;
       });
-
       if (indexOfImage === 0) {
         exact = '[Image: ' + im.alt + ']' + exact;
       } else if (indexOfImage === rangeContents.childNodes.length - 1) {
@@ -614,49 +572,38 @@ function getExactText(range) {
       } else {
         var prefix = '';
         var prefixCounter = indexOfImage - 1;
-
         while (prefixCounter >= 0) {
-          prefix = rangeContents.childNodes[prefixCounter].textContent + prefix; //console.log(prefix)
-
+          prefix = rangeContents.childNodes[prefixCounter].textContent + prefix;
+          //console.log(prefix)
           prefixCounter--;
         }
-
         var suffix = '';
         var suffixCounter = indexOfImage + 1;
-
         while (suffixCounter < rangeContents.childNodes.length) {
           suffix += rangeContents.childNodes[suffixCounter].textContent;
           suffixCounter++;
         }
-
         exact = prefix + ' [Image: ' + im.alt + '] ' + suffix;
       }
     });
   }
-
   return exact.trim();
 }
-
 function compareExactText(text1, text2) {
   function getDiff(string, diffBy) {
     return string.split(diffBy).join('');
   }
-
   var res1 = getDiff(text1, text2);
   var res2 = getDiff(text2, text1);
   return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
 }
-
 ;
-
 function serializeRange(range, root, ignoreSelector) {
   var root = jQuery(root)[0];
-
   if (root.className.indexOf('annotator-wrapper') == -1) {
     root = root.querySelector('.annotator-wrapper');
-  } //console.log(root);
-
-
+  }
+  //console.log(root);
   var _start = range.startContainer;
   var _startOffset = range.startOffset;
   var _end = range.endContainer;
@@ -684,27 +631,23 @@ function serializeRange(range, root, ignoreSelector) {
     }
   };
 }
-
 ;
-
 function recurseGetNodeFromOffset(root_node, goal_offset) {
   var node_list = root_node.childNodes;
   var goal = goal_offset;
   var currOffset = 0;
   var found = undefined;
-
   if (goal === 0 && node_list.length === 0) {
     found = {
       node: root_node,
       offset: 0
     };
-  } //console.log(root_node, node_list, goal);
-
+  }
+  //console.log(root_node, node_list, goal);
 
   for (var i = 0; i < node_list.length; i++) {
     //console.log(i, currOffset);
     var node = node_list[i];
-
     if (node.textContent.length + currOffset >= goal) {
       if (node.nodeType !== Node.TEXT_NODE) {
         //console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
@@ -722,12 +665,12 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
       currOffset += node.textContent.length;
     }
   }
-
   ;
   return found;
 }
+;
 
-; // function getActualNodeFromOffset(elementNode, offset) {
+// function getActualNodeFromOffset(elementNode, offset) {
 //     var foundNode = elementNode;
 //     var currentNode = elementNode.firstChild;
 //     var offsetLimit = currentNode.textContent.length;
@@ -750,6 +693,7 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
 //         }
 //         offsetLimit += currentNode.textContent.length;
 //     }
+
 //     return {
 //         node: foundNode,
 //         offset: finalOffset
@@ -770,101 +714,91 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
     });
     foundNodes = [].slice.call(foundNodes).filter(function (node) {
       return node.className.indexOf(ignoreSelector) == -1;
-    }); // //console.log(foundNodes, counter);
-
+    });
+    // //console.log(foundNodes, counter);
     if (counter == NaN || counter < 0) {
       counter = 0;
       traversingDown = foundNodes[counter];
-
       while (traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
-      } //console.log('1', traversingDown, traversingDown.className);
-
-    } else if (!foundNodes || foundNodes.length === 0) {// should account for missing html elements without affecting text
+      }
+      //console.log('1', traversingDown, traversingDown.className);
+    } else if (!foundNodes || foundNodes.length === 0) {
+      // should account for missing html elements without affecting text
     } else {
       traversingDown = foundNodes[counter];
-
       while (traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
-      } //console.log('2', traversingDown, traversingDown.className);
-
+      }
+      //console.log('2', traversingDown, traversingDown.className);
     }
-  }); //console.log("TRAVERSINGDOWN", traversingDown, offset);
-
-  var found = recurseGetNodeFromOffset(traversingDown, offset); ////console.log(found);
-
+  });
+  //console.log("TRAVERSINGDOWN", traversingDown, offset);
+  var found = recurseGetNodeFromOffset(traversingDown, offset);
+  ////console.log(found);
   return found;
 }
+;
 
-; // https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
-
+// https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
 function getIndicesOf(searchStr, str, caseSensitive) {
   var searchStrLen = searchStr.length;
-
   if (searchStrLen == 0) {
     return [];
   }
-
   var startIndex = 0,
-      index,
-      indices = [];
-
+    index,
+    indices = [];
   if (!caseSensitive) {
     str = str.toLowerCase();
     searchStr = searchStr.toLowerCase();
   }
-
   while ((index = str.indexOf(searchStr, startIndex)) > -1) {
     indices.push(index);
     startIndex = index + searchStrLen;
   }
-
   return indices;
 }
-
 function normalizeRange(serializedRange, root, ignoreSelector) {
   var root = jQuery(root)[0];
-
   if (root.className.indexOf('annotator-wrapper') == -1) {
     root = root.querySelector('.annotator-wrapper');
   }
-
   var sR = serializedRange.xpath ? serializedRange.xpath : serializedRange;
   var _start = sR.start;
   var _end = sR.end;
   var _startOffset = sR.startOffset;
-  var _endOffset = sR.endOffset; // three ways of getting text:
-  // Way #1: Given an xpath, find the way to the node
+  var _endOffset = sR.endOffset;
+  // three ways of getting text:
 
+  // Way #1: Given an xpath, find the way to the node
   var startResult = getNodeFromXpath(root, _start, _startOffset, ignoreSelector);
   var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
-
   if (startResult && endResult) {
     var normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
-    normalizedRange.setEnd(endResult.node, endResult.offset); //console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
+    normalizedRange.setEnd(endResult.node, endResult.offset);
+    //console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
     //console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
-  } //console.log(_start, _startOffset, startResult, endResult);
+  }
+  //console.log(_start, _startOffset, startResult, endResult);
   //console.log(getPrefixAndSuffix(normalizedRange, root, ignoreSelector))
   // Way #2: if that doesn't match what we have stored as the quote, try global positioning from root
   // This is for the usecase where someone has changed tagnames so xpath cannot be found
-
-
   if (!(startResult && endResult) || serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
     startResult = recurseGetNodeFromOffset(root, serializedRange.position.globalStartOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalStartOffset, ignoreSelector);
-
     endResult = recurseGetNodeFromOffset(root, serializedRange.position.globalEndOffset); //getNodeFromXpath(root, '/', serializedRange.position.globalEndOffset, ignoreSelector);
 
     normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
-    normalizedRange.setEnd(endResult.node, endResult.offset); //console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
-  } // Way #3: looks for an exact match of prefix, suffix, and exact
+    normalizedRange.setEnd(endResult.node, endResult.offset);
+    //console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
+  }
+
+  // Way #3: looks for an exact match of prefix, suffix, and exact
   // This is for the usecase where someone has added text/html before this
-
-
   if (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
     var possibleCases = getIndicesOf(serializedRange.text.exact, root.textContent, true);
-
     for (var i = 0; i < possibleCases.length; i++) {
       var poss = possibleCases[i];
       var s = recurseGetNodeFromOffset(root, poss);
@@ -873,49 +807,45 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
       normalizedRange.setStart(s.node, s.offset);
       normalizedRange.setEnd(e.node, e.offset);
       var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
-
       if (serializedRange.text.prefix === toCheck.prefix && serializedRange.text.suffix === toCheck.suffix) {
         //console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
         break;
       }
     }
-  } // Possible Way #4: fuzzy search? TBD, no idea how to do this. fuzzy substrings are not as common as searching list of records
+  }
 
+  // Possible Way #4: fuzzy search? TBD, no idea how to do this. fuzzy substrings are not as common as searching list of records
 
   return normalizedRange;
 }
-
 ;
-
 function checkNode(currentNode, range) {
   var foundEnd = false;
   var nodeList = [];
-
   if (currentNode) {
     if (currentNode.nodeType == Node.TEXT_NODE) {
       if (currentNode === range.startContainer) {
-        currentNode = currentNode.splitText(range.startOffset); // console.log('Beginning', currentNode);
+        currentNode = currentNode.splitText(range.startOffset);
+        // console.log('Beginning', currentNode);
       }
 
       if (currentNode === range.endContainer) {
         foundEnd = true;
-        currentNode.splitText(range.endOffset); // console.log('Ending', currentNode);
+        currentNode.splitText(range.endOffset);
+        // console.log('Ending', currentNode);
       }
 
       if (range.startContainer === range.endContainer && range.startOffset === range.endOffset) {
         foundEnd = true;
-      } // console.log('Node', currentNode, foundEnd, range.startContainer === range.endContainer);
-
-
+      }
+      // console.log('Node', currentNode, foundEnd, range.startContainer === range.endContainer);
       nodeList.push(currentNode);
     } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG") {
       //console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
       if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startContainer.childNodes.length < range.startOffset) {
         var possibleStartNode = range.startContainer.childNodes[range.startOffset];
-
         if (possibleStartNode === currentNode) {
           nodeList.push(currentNode);
-
           if (range.startContainer === range.endContainer && range.endOffset - range.startOffset === 1) {
             foundEnd = true;
           }
@@ -923,7 +853,6 @@ function checkNode(currentNode, range) {
       } else if (!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
         //console.log("second")
         var possibleEndNode = range.endContainer.childNodes[range.endOffset];
-
         if (possibleEndNode === currentNode) {
           foundEnd = true;
           nodeList.push(currentNode);
@@ -932,91 +861,79 @@ function checkNode(currentNode, range) {
         //console.log("third", nodeList, currentNode);
         foundEnd = false;
         nodeList.push(currentNode);
-      } //console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
-
+      }
+      //console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
     } else {
       if (currentNode.firstChild) {
-        var result = recurseFromNodeToNode(currentNode.firstChild, range); //console.log("RETURN2:", result);
-
+        var result = recurseFromNodeToNode(currentNode.firstChild, range);
+        //console.log("RETURN2:", result);
         foundEnd = result.foundEnd;
         nodeList = nodeList.concat(result.nodes);
       }
     }
   }
-
   return {
     foundEnd: foundEnd,
     nodes: nodeList,
     currentNode: currentNode
   };
 }
-
 function recurseFromNodeToNode(currentNode, range) {
   var nodeList = [];
   var foundEnd = false;
-  var originalNode = currentNode; //console.log("RECURS", currentNode);
-
+  var originalNode = currentNode;
+  //console.log("RECURS", currentNode);
   var result = checkNode(currentNode, range);
   currentNode = result.currentNode;
-
   if (!foundEnd) {
     foundEnd = result.foundEnd;
   }
-
-  nodeList = nodeList.concat(result.nodes); //console.log('rFN2N: ', foundEnd);
-
+  nodeList = nodeList.concat(result.nodes);
+  //console.log('rFN2N: ', foundEnd);
   while (!foundEnd && originalNode && (currentNode = currentNode.nextSibling) !== null) {
     //console.log("SIBS")
-    var res = checkNode(currentNode, range); //console.log("RETURN", res);
-
+    var res = checkNode(currentNode, range);
+    //console.log("RETURN", res);
     if (!foundEnd) {
       foundEnd = res.foundEnd;
     }
-
     nodeList = nodeList.concat(res.nodes);
-  } //console.log('aftersibs', foundEnd);
-
-
+  }
+  //console.log('aftersibs', foundEnd);
   if (!foundEnd && originalNode) {
-    currentNode = originalNode; //console.log("Parent:", originalNode.parentNode);
+    currentNode = originalNode;
+    //console.log("Parent:", originalNode.parentNode);
     //console.log("ParentSibling:", originalNode.parentNode.nextSibling)
-
     while (!currentNode.parentNode.nextSibling) {
-      currentNode = currentNode.parentNode; //console.log("New parent:", currentNode);
+      currentNode = currentNode.parentNode;
+      //console.log("New parent:", currentNode);
     }
 
-    currentNode = currentNode.parentNode.nextSibling; //console.log("RENTS");
-
+    currentNode = currentNode.parentNode.nextSibling;
+    //console.log("RENTS");
     var res = recurseFromNodeToNode(currentNode, range);
-
     if (!foundEnd) {
       foundEnd = res.foundEnd;
     }
-
     nodeList = nodeList.concat(res.nodes);
-  } //console.log('afterrents', foundEnd);
-
-
+  }
+  //console.log('afterrents', foundEnd);
   return {
     foundEnd: foundEnd,
     nodes: nodeList
   };
 }
-
 ;
-
 function getTextNodesFromAnnotationRanges(ranges, root) {
   var textNodesList = [];
   ranges.forEach(function (range) {
     var normRanged = normalizeRange(range, root, 'annotator-hl'); //recurseFromNodeToNode(range.startContainer, range);
-
-    var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged); //console.log(normRanged, ranges, nodes, normRanged.cloneContents());
-
+    var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged);
+    //console.log(normRanged, ranges, nodes, normRanged.cloneContents());
     textNodesList = textNodesList.concat(nodes.nodes);
   });
   return textNodesList;
 }
-
 exports.serializeRange = serializeRange;
 exports.normalizeRange = normalizeRange;
 exports.getGlobalOffset = getGlobalOffset;
@@ -1043,21 +960,18 @@ exports.getNodeFromXpath = getNodeFromXpath;
       top: 0,
       left: 0
     };
-
     if (jQuery(body).css('position') !== "static") {
       offset = $(body).offset();
     }
-
     try {
       var top = event.pageY - offset.top;
-      var left = event.pageX - offset.left; // in case user is selecting via keyboard, this sets the adder to top-left corner
-
+      var left = event.pageX - offset.left;
+      // in case user is selecting via keyboard, this sets the adder to top-left corner
       if (event.type.indexOf("mouse") === -1 && event.type.indexOf('key') > -1) {
         var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
         top = boundingBox.top - offset.top + boundingBox.height;
         left = boundingBox.left - offset.left + boundingBox.width;
       }
-
       return {
         top: top,
         left: left
@@ -1066,75 +980,64 @@ exports.getNodeFromXpath = getNodeFromXpath;
       return $$.mouseFixedPositionFromRange(event);
     }
   };
-
   $$.mouseFixedPositionFromRange = function (boundingBox) {
     return {
       top: boundingBox.top,
       left: boundingBox.left
     };
   };
-
   $$.getQuoteFromHighlights = function (ranges) {
     var text = [];
     var exactText = [];
-
     for (var i = 0, len = ranges.length; i < len; i++) {
       text = [];
       var r = ranges[i];
-
       try {
         text.push(Hxighlighter.trim(r.text()));
       } catch (e) {
         text.push(Hxighlighter.trim(r.toString()));
-
         if (r.toString === "[object Object]") {
           text.pop();
           text.push(r.exact);
         }
       }
-
       var exact = text.join(' / ').replace(/[\n\r]/g, '<br>');
       exactText.push(exact);
     }
-
     return {
       'exact': exactText,
       'exactNoHtml': text
     };
   };
+
   /**
    * Gets the unique identifier.
    * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
    * @return     {string} Unique identifier
    */
-
-
   $$.getUniqueId = function () {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
-
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   };
+
   /**
    * Function to determine if value exists or not
    *
    * @param      {Object}  obj     The object
    * @return     {boolean}  returns whether item exists or not
    */
-
-
   $$.exists = function (obj) {
     return typeof obj !== 'undefined';
   };
+
   /**
    * trims whitespace from strings
    *
    * @param      {string}  s       original string
    * @return     {string}  trimmed string
    */
-
-
   $$.trim = function (s) {
     if (typeof String.prototype.trim === 'function') {
       return String.prototype.trim.call(s);
@@ -1142,6 +1045,7 @@ exports.getNodeFromXpath = getNodeFromXpath;
       return s.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
     }
   };
+
   /**
    * Publishes Event to a specific instance, if no instanceID or '' is sent, the
    * event will be published to all instances
@@ -1150,8 +1054,6 @@ exports.getNodeFromXpath = getNodeFromXpath;
    * @param      {string}  instanceID  The instance id
    * @param      {array}  list        The list
    */
-
-
   $$.publishEvent = function (eventName, instanceID, list) {
     // console.log(eventName, list);
     if (!$$.exists(instanceID) || instanceID === "") {
@@ -1160,9 +1062,8 @@ exports.getNodeFromXpath = getNodeFromXpath;
         // some of the events require the core to handle calling the components in a certain order
         if ($$.requiredEvents.indexOf(eventName) >= 0) {
           $$._instances[inst_id].core[eventName](list);
-        } // console.log("publish: ", eventName + '.' + inst_id)
-
-
+        }
+        // console.log("publish: ", eventName + '.' + inst_id)
         jQuery.publish(eventName + '.' + inst_id, list);
       });
     } else {
@@ -1170,10 +1071,10 @@ exports.getNodeFromXpath = getNodeFromXpath;
       if ($$.requiredEvents.indexOf(eventName) >= 0) {
         $$._instances[instanceID].core[eventName](list);
       }
-
       jQuery.publish(eventName + '.' + instanceID, list);
     }
   };
+
   /**
    * Subscribes Event to a specific instance, if no instanceID or '' is sent, all
    * instances will be subscribed to event
@@ -1182,8 +1083,6 @@ exports.getNodeFromXpath = getNodeFromXpath;
    * @param      {string}  instanceID  The instance id
    * @param      {<type>}  callBack    The call back
    */
-
-
   $$.subscribeEvent = function (eventName, instanceID, callBack) {
     if (!$$.exists(instanceID) || instanceID === "") {
       jQuery.each($$._instanceIDs, function (_, inst_id) {
@@ -1195,7 +1094,6 @@ exports.getNodeFromXpath = getNodeFromXpath;
       jQuery.subscribe(eventName + '.' + instanceID, callBack);
     }
   };
-
   $$.pauseEvent = function (e) {
     if (e.stopPropagation) e.stopPropagation();
     if (e.preventDefault) e.preventDefault();
@@ -1220,24 +1118,23 @@ __webpack_require__.r(__webpack_exports__);
  * It will allow users to set up targets to annotate and then ways to annotate
  */
 
+
+
 /* istanbul ignore next */
-
 var root = __webpack_require__.g || window;
-
 root.Hxighlighter = root.Hxighlighter || function (options) {
   if (!options) {
     return;
-  } // if no current instances, set up the dictionary
+  }
 
-
+  // if no current instances, set up the dictionary
   if (!Hxighlighter.exists(Hxighlighter._instances)) {
     Hxighlighter._instances = {};
     Hxighlighter._instanceIDs = [];
-  } // create a unique id for this instance
+  }
 
-
+  // create a unique id for this instance
   var inst_id = options.inst_id;
-
   if (!Hxighlighter.exists(inst_id)) {
     if (Hxighlighter.exists(options.commonInfo.context_id) && Hxighlighter.exists(options.commonInfo.collection_id) && Hxighlighter.exists(options.commonInfo.object_id)) {
       // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
@@ -1245,42 +1142,48 @@ root.Hxighlighter = root.Hxighlighter || function (options) {
     } else {
       inst_id = Hxighlighter.getUniqueId();
     }
-  } // save the new instance by its id
+  }
 
-
+  // save the new instance by its id
   Hxighlighter._instances[inst_id] = {
     'id': inst_id
-  }; // id gets pushed to list as well
+  };
 
-  Hxighlighter._instanceIDs.push(inst_id); // set up the actual instance of Hxighlighter
+  // id gets pushed to list as well
+  Hxighlighter._instanceIDs.push(inst_id);
 
-
+  // set up the actual instance of Hxighlighter
   Hxighlighter._instances[inst_id].core = new Hxighlighter.Core(options, inst_id);
 };
+
 /**
  * List of Required Sequential Events (RSEs)
  */
-
-
-Hxighlighter.requiredEvents = [// all components should deal with being enabled/disabled
-"ComponentEnable", "ComponentDisable", // targets should be sure that they have a way to make selection and show/hide annotations
-"TargetSelectionMade", "TargetAnnotationDraw", "TargetAnnotationUndraw", // viewers should handle a way to 1) make annotations and 2) display the text
-"ViewerEditorOpen", "ViewerEditorClose", "ViewerDisplayOpen", "ViewerDisplayClose", // storage should handle keeping track of the annotations made
-"StorageAnnotationSave", "StorageAnnotationLoad", "StorageAnnotationEdit", "StorageAnnotationDelete", "StorageAnnotationUpdate", // though replies are not mandatory, they are annotations and should be treated similarly
+Hxighlighter.requiredEvents = [
+// all components should deal with being enabled/disabled
+"ComponentEnable", "ComponentDisable",
+// targets should be sure that they have a way to make selection and show/hide annotations
+"TargetSelectionMade", "TargetAnnotationDraw", "TargetAnnotationUndraw",
+// viewers should handle a way to 1) make annotations and 2) display the text
+"ViewerEditorOpen", "ViewerEditorClose", "ViewerDisplayOpen", "ViewerDisplayClose",
+// storage should handle keeping track of the annotations made
+"StorageAnnotationSave", "StorageAnnotationLoad", "StorageAnnotationEdit", "StorageAnnotationDelete", "StorageAnnotationUpdate",
+// though replies are not mandatory, they are annotations and should be treated similarly
 // the line below can be commented out should it not be relevant to your usecase.
 "StorageAnnotationSearch"];
+
 /**
  * selectors will populate this array for target controllers to retrieve when
  * they are loaded on the page
  */
-
 Hxighlighter.selectors = [];
 Hxighlighter.drawers = [];
 Hxighlighter.viewers = [];
 Hxighlighter.plugins = [];
 Hxighlighter.storage = [];
-Hxighlighter.globals = {}; // comment out following line when not webpacking
+Hxighlighter.globals = {};
 
+// comment out following line when not webpacking
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hxighlighter);
 
 /***/ }),
@@ -1294,9 +1197,9 @@ Hxighlighter.globals = {}; // comment out following line when not webpacking
  *  
  *
  */
+
 //uncomment to add css file
 __webpack_require__(7373);
-
 (function ($) {
   /**
    * @constructor
@@ -1308,18 +1211,16 @@ __webpack_require__(7373);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.AdminButton.prototype.init = function () {
     var self = this;
-
     if (self.options.AdminButton) {
       self.url = self.options.AdminButton.homeURL;
-      self.allowed = self.options.AdminButton.has_staff_permissions; // console.log(self.url, self.allowed);
-
+      self.allowed = self.options.AdminButton.has_staff_permissions;
+      // console.log(self.url, self.allowed);
       if (self.allowed && self.url && self.url != '') {
         self.setUpButtons();
       } else {
@@ -1327,16 +1228,13 @@ __webpack_require__(7373);
       }
     }
   };
-
   $.AdminButton.prototype.setUpButtons = function () {
     var self = this;
     jQuery(self.options.slot).before('<div class="sidebar-navbar"><a href="' + self.url + '" title="Admin Hub" aria-label="Admin Hub" id="homebutton" role="button"><span class="fas fa-users-cog"></span></button></div>');
   };
-
   $.AdminButton.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.AdminButton, 'name', {
     value: "AdminButton"
   });
@@ -1354,9 +1252,9 @@ __webpack_require__(7373);
  *  
  *
  */
+
 //uncomment to add css file
 __webpack_require__(3058);
-
 (function ($) {
   /**
    * @constructor
@@ -1368,14 +1266,13 @@ __webpack_require__(3058);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.HxAlert.prototype.init = function () {
-    var self = this; //console.log("Alert options", self.options);
-
+    var self = this;
+    //console.log("Alert options", self.options);
     self.defaultOptions = {
       buttons: [{
         title: 'OK',
@@ -1401,16 +1298,16 @@ __webpack_require__(3058);
     $.subscribeEvent('HxAlert', self.instanceID, function (_, message, options) {
       var theseOptions = jQuery.extend({}, self.defaultOptions, options);
       constructedAlert = self.createNotification(message, theseOptions.modal, theseOptions.buttons);
-      jQuery('body').append(constructedAlert); // if (theseOptions.modal) {
+      jQuery('body').append(constructedAlert);
+
+      // if (theseOptions.modal) {
       //     self.current_alert = jQuery('.hx-modal');
       // } else {
-
       self.current_alert = jQuery('.hx-notify');
       jQuery.each(self.current_alert.find('button'), function (idx, but) {
         if (jQuery(but).hasClass('hx-close')) {
           return;
         }
-
         var currTitle = jQuery(but).html().trim();
         var onclick = theseOptions.buttons.find(function (b) {
           if (b.title == currTitle) {
@@ -1421,8 +1318,8 @@ __webpack_require__(3058);
       });
       setTimeout(function () {
         self.current_alert.addClass('opened');
-      }, 500); // }
-
+      }, 500);
+      // }
       if (theseOptions.time !== 0) {
         setTimeout(function () {
           self.current_alert.removeClass('opened');
@@ -1431,33 +1328,28 @@ __webpack_require__(3058);
           self.current_alert.remove();
         }, (theseOptions.time + 1) * 1000);
       }
-
       return;
     });
   };
-
   $.HxAlert.prototype.createNotification = function (message, isModal, buttons) {
     var buttonsHTML = "<button class='hx-notify-button hx-close'><span class='fa fa-close'></span></button>";
-
     if (buttons.length > 0) {
       buttonsHTML = "";
       buttons.forEach(function (b) {
         buttonsHTML += "<button class='hx-notify-button'>" + b.title + "</button>";
       });
     }
-
     var notificationHTML = "<div class='hx-notify'>" + message + "<div class='hx-notify-button-group'>" + buttonsHTML + "</div></div>";
-    jQuery('.sr-real-alert').html(message); // if (isModal) {
+    jQuery('.sr-real-alert').html(message);
+    // if (isModal) {
     //     notificationHTML = "<div class='hx-modal'>" + notificationHTML + "</div>";
     // }
 
     return notificationHTML;
   };
-
   $.HxAlert.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.HxAlert, 'name', {
     value: "HxAlert"
   });
@@ -1476,9 +1368,9 @@ __webpack_require__(3058);
  *  
  *
  */
+
 //uncomment to add css file
 __webpack_require__(9970);
-
 (function ($) {
   /**
    * @constructor
@@ -1490,14 +1382,13 @@ __webpack_require__(9970);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.Badges.prototype.init = function () {
-    var self = this; //console.log('test!');
-
+    var self = this;
+    //console.log('test!');
     self.setUpListeners();
     toastr.options = {
       progressBar: true,
@@ -1508,7 +1399,6 @@ __webpack_require__(9970);
       'positionClass': 'toast-top-left'
     };
   };
-
   $.Badges.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('addBadge', self.instanceID, function (_, elem, counter) {
@@ -1520,15 +1410,14 @@ __webpack_require__(9970);
     });
     $.subscribeEvent('decreaseBadgeCount', self.instanceID, function (_, elem, content_id) {
       var count = jQuery(elem).data('hxbadge');
-
       if (count) {
         self.updateBadge(elem, count - 1, content_id);
       }
     });
     $.subscribeEvent('increaseBadgeCount', self.instanceID, function (_, elem, content_id) {
       // toastr.info("Annotation was created and can be seen when 'Mine' filter is turned on.")
-      var count = jQuery(elem).data('hxbadge');
 
+      var count = jQuery(elem).data('hxbadge');
       if (count) {
         self.updateBadge(elem, count + 1, content_id);
       } else {
@@ -1542,35 +1431,29 @@ __webpack_require__(9970);
       self.clearBadge(elem);
     });
   };
-
   $.Badges.prototype.addBadge = function (elem, counter, content_id) {
-    var self = this; // create a badge to go in the top-right corner
-
-    jQuery(elem).append('<span class="hx-badge" aria-label="' + counter + ' new unread">' + counter + "</span>"); // add counter to data('hxbadge')
-
+    var self = this;
+    // create a badge to go in the top-right corner
+    jQuery(elem).append('<span class="hx-badge" aria-label="' + counter + ' new unread">' + counter + "</span>");
+    // add counter to data('hxbadge')
     jQuery(elem).data('hxbadge', counter);
     var content = [];
-
     if (typeof content_id != "undefined") {
       content = Array.isArray(content_id) ? content_id : [content_id];
     }
-
-    jQuery(elem).data('hxbadge-content', content); // add click event listener that will automatically clear badge when clicked
-
+    jQuery(elem).data('hxbadge-content', content);
+    // add click event listener that will automatically clear badge when clicked
     jQuery(elem).click(function () {
       self.clearBadge(elem);
     });
   };
-
   $.Badges.prototype.updateBadge = function (elem, counter, content_id) {
     var self = this;
     jQuery(elem).find('.hx-badge').html(counter);
     var content = jQuery(elem).data('hxbadge-content');
-
     if (typeof content_id !== "undefined") {
       if (content.indexOf(content_id) > -1) {
         content.splice(content.indexOf(content_id));
-
         if (content.length == 0) {
           self.clearBadge(elem);
         } else {
@@ -1580,21 +1463,17 @@ __webpack_require__(9970);
         content.push(content_id);
         jQuery(elem).data('hxbadge', counter);
       }
-
       jQuery(elem).data('hxbadge-content', content);
     }
   };
-
   $.Badges.prototype.clearBadge = function (elem) {
     jQuery(elem).find('.hx-badge').remove();
     jQuery(elem).removeData('hxbadge');
     jQuery(elem).removeData('hxbadge-content');
   };
-
   $.Badges.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.Badges, 'name', {
     value: "Badges"
   });
@@ -1613,8 +1492,8 @@ __webpack_require__(9970);
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(2638);
 
+__webpack_require__(2638);
 (function ($) {
   /**
    * @constructor
@@ -1627,44 +1506,40 @@ __webpack_require__(2638);
     this.instanceID = instanceID;
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.ColorTags.prototype.init = function () {
     var self = this;
     self.name = 'ColorTags';
     self.annotationListeners();
   };
+
   /**
    * Returns the HTML value of the WYSIWYG. 
    *
    * @return     {String}  HTML value found in the WYSIWYG
    */
+  $.ColorTags.prototype.returnValue = function () {};
 
-
-  $.ColorTags.prototype.returnValue = function () {}; // Annotation specific functions
+  // Annotation specific functions
 
   /**
    * Turns on the specific listeners when the plug in is initiated.
    */
-
-
   $.ColorTags.prototype.annotationListeners = function () {
     var self = this;
     $.subscribeEvent('annotationLoaded', self.instanceID, function (_, ann) {
       // console.log('hello', ann.tags);
       if (typeof ann.tags !== 'undefined' && ann.tags.length > 0) {
         var color = self.getColorFromValue(ann.tags[ann.tags.length - 1]);
-
         if (typeof color !== "undefined") {
           setTimeout(function () {
             $.publishEvent('changeDrawnColor', self.instanceID, [ann, color]);
           }, 250);
         }
       }
-
       ;
     });
     $.subscribeEvent('drawList', self.instanceID, function (_, anns) {
@@ -1672,7 +1547,6 @@ __webpack_require__(2638);
         // console.log('hello', ann.tags);
         if (typeof ann.tags !== 'undefined' && ann.tags.length > 0) {
           var color = self.getColorFromValue(ann.tags[ann.tags.length - 1]);
-
           if (typeof color !== "undefined") {
             setTimeout(function () {
               $.publishEvent('changeDrawnColor', self.instanceID, [ann, color]);
@@ -1683,37 +1557,30 @@ __webpack_require__(2638);
     });
     $.subscribeEvent('changeColorOfElement', self.instanceID, function (_, tag, callBack) {
       var colorFound = self.getColorFromValue(tag);
-
       if (colorFound) {
         colorFound = self.RGBaToHex(colorFound);
       }
-
       callBack(colorFound);
     });
   };
-
   $.ColorTags.prototype.getColorFromValue = function (value) {
     var self = this;
-
     if ('allTags' in self.options) {
       var rgbaColor = self.hexToRGBa(self.options.allTags);
       var rgbaVal = 'rgba(' + rgbaColor.join(',') + ')';
       return rgbaVal;
     }
-
     if (value in self.options) {
       var rgbaColor = self.hexToRGBa(self.options[value]);
       var rgbaVal = 'rgba(' + rgbaColor.join(',') + ')';
       return rgbaVal;
     }
-
     return undefined;
   };
+
   /* Following function taken from
    * https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
    */
-
-
   $.ColorTags.prototype.hexToRGBa = function (hex) {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1723,95 +1590,82 @@ __webpack_require__(2638);
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16), 0.3] : null;
   };
+
   /**
    * Following function taken from
    * https://css-tricks.com/converting-color-spaces-in-javascript/
    */
-
-
   $.ColorTags.prototype.RGBaToHex = function (rgb) {
     // Choose correct separator
-    var sep = rgb.indexOf(",") > -1 ? "," : " "; // Turn "rgb(r,g,b)" into [r,g,b]
-
+    var sep = rgb.indexOf(",") > -1 ? "," : " ";
+    // Turn "rgb(r,g,b)" into [r,g,b]
     rgb = rgb.substr(5).split(")")[0].split(sep);
     var r = (+rgb[0]).toString(16),
-        g = (+rgb[1]).toString(16),
-        b = (+rgb[2]).toString(16);
+      g = (+rgb[1]).toString(16),
+      b = (+rgb[2]).toString(16);
     if (r.length == 1) r = "0" + r;
     if (g.length == 1) g = "0" + g;
     if (b.length == 1) b = "0" + b;
     return "#" + r + g + b;
   };
+
   /**
    * Code to run just before the annotation is saved to storage
    *
    * @param      {Annotation}  annotation  The annotation as it currently is saved.
    * @return     {Annotation}  The annotation with the contents of the WYSIWYG inserted.
    */
-
-
   $.ColorTags.prototype.saving = function (annotation) {
     var self = this;
-
     if (typeof annotation.tags !== 'undefined' && annotation.tags.length > 0) {
       var color = self.getColorFromValue(annotation.tags[annotation.tags.length - 1]);
-
       if (typeof color !== "undefined") {
         setTimeout(function () {
           $.publishEvent('changeDrawnColor', self.instanceID, [annotation, color]);
         }, 250);
       }
     }
-
     return annotation;
   };
+
   /**
    * Code that runs once the editor is shown on screen.
    *
    * @param      {Annotation}  annotation  The annotation in case the user is editing and we need the text
    * @param      {HTMLElement}  editor      The editor element
    */
-
-
   $.ColorTags.prototype.editorShown = function (editor, annotation) {
-    var self = this; // console.log('ColorTags editorShown');
-
+    var self = this;
+    // console.log('ColorTags editorShown');
     var listNode = editor.find('.token-input-list-facebook')[0];
-
     if (listNode && listNode.addEventListener) {
       listNode.addEventListener('DOMNodeInserted', function (event) {
         if (event.target.className === "token-input-token-facebook") {
           var color = self.getColorFromValue(jQuery(event.target).find('p').text().trim());
-
           if (typeof color !== "undefined") {
             jQuery(event.target).css('background', color);
           }
         }
       }, false);
     }
-
     jQuery.each(jQuery(listNode).find('.token-input-token-facebook p'), function (_, el) {
       var tag = jQuery(el).text();
       var color = self.getColorFromValue(tag);
-
       if (typeof color !== "undefined") {
         jQuery(el).parent().css('background', color);
       }
     });
   };
-
   $.ColorTags.prototype.displayShown = function (viewer, annotation) {
     var self = this;
     jQuery.each(jQuery(viewer).find('.annotation-tag'), function (_, el) {
       var tag = jQuery(el).text().trim();
       var color = self.getColorFromValue(tag);
-
       if (typeof color !== "undefined") {
         jQuery(el).css('background', color);
       }
     });
   };
-
   Object.defineProperty($.ColorTags, 'name', {
     value: "ColorTags"
   });
@@ -1829,10 +1683,9 @@ __webpack_require__(2638);
  *  
  *
  */
-var annotator = annotator ? annotator : __webpack_require__(4348); //uncomment to add css file
-
+var annotator = annotator ? annotator : __webpack_require__(4348);
+//uncomment to add css file
 __webpack_require__(2929);
-
 (function ($) {
   /**
    * @constructor
@@ -1845,16 +1698,14 @@ __webpack_require__(2929);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.DisplayResize.prototype.init = function () {
     var self = this;
     self.setUpListeners();
   };
-
   $.DisplayResize.prototype.setUpListeners = function () {
     var self = this;
     Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
@@ -1864,14 +1715,14 @@ __webpack_require__(2929);
       });
       jQuery(self.options.slot).on('mousemove', function (event) {
         self.stretch(event);
-
-        if (self.itemStretching) {// jQuery('body').css('overflow', 'hidden');
+        if (self.itemStretching) {
+          // jQuery('body').css('overflow', 'hidden');
         }
       });
       jQuery(self.options.slot).on('mouseup', function (event) {
-        if (self.itemStretching) {// jQuery('body').css('overflow', 'inherit');
+        if (self.itemStretching) {
+          // jQuery('body').css('overflow', 'inherit');
         }
-
         self.finishedStretching(event);
       });
       jQuery(self.options.slot).on('mouseleave', function (event) {
@@ -1879,18 +1730,17 @@ __webpack_require__(2929);
       });
     });
   };
-
   $.DisplayResize.prototype.prepareToStretch = function (event) {
     var self = this;
     self.itemStretching = true;
     $.pauseEvent(event);
     self.initialPoint = annotator.util.mousePosition(event);
-    self.initialHeight = self.currentViewer.height(); // self.initialInnerHeight = self.currentViewer.find('.annotation-text-field').outerHeight() - 10;
+    self.initialHeight = self.currentViewer.height();
+    // self.initialInnerHeight = self.currentViewer.find('.annotation-text-field').outerHeight() - 10;
   };
 
   $.DisplayResize.prototype.stretch = function (event) {
     var self = this;
-
     if (self.itemStretching) {
       var newPoint = annotator.util.mousePosition(event);
       var diff = newPoint.top - self.initialPoint.top;
@@ -1903,24 +1753,19 @@ __webpack_require__(2929);
       });
     }
   };
-
   $.DisplayResize.prototype.finishedStretching = function (event) {
     var self = this;
     self.itemStretching = false;
   };
-
   $.DisplayResize.prototype.saving = function (annotation) {
     return annotation;
   };
-
   $.DisplayResize.prototype.displayShown = function (viewer, annotations) {
     var self = this;
-
     if (Array.isArray(annotations)) {
       self.currentViewer = jQuery(viewer);
     }
   };
-
   Object.defineProperty($.DisplayResize, 'name', {
     value: "DisplayResize"
   });
@@ -1939,16 +1784,12 @@ __webpack_require__(2929);
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
+
 __webpack_require__(4817);
-
 __webpack_require__(2295);
-
 __webpack_require__(1806);
-
 __webpack_require__(6764);
-
 __webpack_require__(1979);
-
 (function ($) {
   /**
    * @constructor
@@ -1961,19 +1802,18 @@ __webpack_require__(1979);
     this.instanceID = instanceID;
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.DropdownTags.prototype.init = function () {
     var self = this;
     self.name = 'DropdownTags';
     self.annotationListeners();
-    var tags = 'tags' in self.options ? self.options.tags : []; // jQuery.each(tags, function(_, tag) {
+    var tags = 'tags' in self.options ? self.options.tags : [];
+    // jQuery.each(tags, function(_, tag) {
     //   jQuery('#tag-list-options').append('<option value="' + tag + '" />');
     // });
-
     jQuery('.search-bar select').on('change', function () {
       if (jQuery(this).val() == "Tag") {
         jQuery.each(tags, function (_, tag) {
@@ -1984,145 +1824,131 @@ __webpack_require__(1979);
       }
     });
   };
+
   /**
    * Returns the HTML value of the WYSIWYG. 
    *
    * @return     {String}  HTML value found in the WYSIWYG
    */
-
-
   $.DropdownTags.prototype.returnValue = function () {
     var self = this;
     var tags = jQuery('.token-input-token-facebook p').map(function (_, token) {
       return jQuery(token).html();
-    }); // Thanks to https://stackoverflow.com/questions/36810940/array-from-on-the-internet-explorer
-
+    });
+    // Thanks to https://stackoverflow.com/questions/36810940/array-from-on-the-internet-explorer
     if (!Array.from) {
       Array.from = function () {
         var toStr = Object.prototype.toString;
-
         var isCallable = function isCallable(fn) {
           return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
         };
-
         var toInteger = function toInteger(value) {
           var number = Number(value);
-
           if (isNaN(number)) {
             return 0;
           }
-
           if (number === 0 || !isFinite(number)) {
             return number;
           }
-
           return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
         };
-
         var maxSafeInteger = Math.pow(2, 53) - 1;
-
         var toLength = function toLength(value) {
           var len = toInteger(value);
           return Math.min(Math.max(len, 0), maxSafeInteger);
-        }; // The length property of the from method is 1.
+        };
 
-
-        return function from(arrayLike
-        /*, mapFn, thisArg */
-        ) {
+        // The length property of the from method is 1.
+        return function from(arrayLike /*, mapFn, thisArg */) {
           // 1. Let C be the this value.
-          var C = this; // 2. Let items be ToObject(arrayLike).
+          var C = this;
 
-          var items = Object(arrayLike); // 3. ReturnIfAbrupt(items).
+          // 2. Let items be ToObject(arrayLike).
+          var items = Object(arrayLike);
 
+          // 3. ReturnIfAbrupt(items).
           if (arrayLike == null) {
             throw new TypeError("Array.from requires an array-like object - not null or undefined");
-          } // 4. If mapfn is undefined, then let mapping be false.
+          }
 
-
+          // 4. If mapfn is undefined, then let mapping be false.
           var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
           var T;
-
           if (typeof mapFn !== 'undefined') {
             // 5. else
             // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
             if (!isCallable(mapFn)) {
               throw new TypeError('Array.from: when provided, the second argument must be a function');
-            } // 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            }
 
-
+            // 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
             if (arguments.length > 2) {
               T = arguments[2];
             }
-          } // 10. Let lenValue be Get(items, "length").
+          }
+
+          // 10. Let lenValue be Get(items, "length").
           // 11. Let len be ToLength(lenValue).
+          var len = toLength(items.length);
 
-
-          var len = toLength(items.length); // 13. If IsConstructor(C) is true, then
+          // 13. If IsConstructor(C) is true, then
           // 13. a. Let A be the result of calling the [[Construct]] internal method of C with an argument list containing the single item len.
           // 14. a. Else, Let A be ArrayCreate(len).
+          var A = isCallable(C) ? Object(new C(len)) : new Array(len);
 
-          var A = isCallable(C) ? Object(new C(len)) : new Array(len); // 16. Let k be 0.
-
-          var k = 0; // 17. Repeat, while k < len… (also steps a - h)
-
+          // 16. Let k be 0.
+          var k = 0;
+          // 17. Repeat, while k < len… (also steps a - h)
           var kValue;
-
           while (k < len) {
             kValue = items[k];
-
             if (mapFn) {
               A[k] = typeof T === 'undefined' ? mapFn(kValue, k) : mapFn.call(T, kValue, k);
             } else {
               A[k] = kValue;
             }
-
             k += 1;
-          } // 18. Let putStatus be Put(A, "length", len, true).
-
-
-          A.length = len; // 20. Return A.
-
+          }
+          // 18. Let putStatus be Put(A, "length", len, true).
+          A.length = len;
+          // 20. Return A.
           return A;
         };
       }();
     }
-
     return Array.from(tags);
-  }; // Annotation specific functions
+  };
+
+  // Annotation specific functions
 
   /**
    * Turns on the specific listeners when the plug in is initiated.
    */
-
-
   $.DropdownTags.prototype.annotationListeners = function () {
     var self = this;
     $.subscribeEvent('editorHidden', self.instanceID, function () {
       self.destroy();
     }.bind(this));
   };
+
   /**
    * Code to run just before the annotation is saved to storage
    *
    * @param      {Annotation}  annotation  The annotation as it currently is saved.
    * @return     {Annotation}  The annotation with the contents of the WYSIWYG inserted.
    */
-
-
   $.DropdownTags.prototype.saving = function (annotation) {
     var self = this;
     annotation.tags = self.returnValue() || [];
     return annotation;
   };
+
   /**
    * Code that runs once the editor is shown on screen.
    *
    * @param      {Annotation}  annotation  The annotation in case the user is editing and we need the text
    * @param      {HTMLElement}  editor      The editor element
    */
-
-
   $.DropdownTags.prototype.editorShown = function (editor, annotation) {
     // console.log('DropdownTags editorShown');
     var self = this;
@@ -2146,8 +1972,8 @@ __webpack_require__(1979);
       allowFreeTagging: 'folksonomy' in self.options ? self.options.folksonomy : false,
       noResultsText: "Not Found. Hit ENTER to add a personal tag."
     });
-    jQuery('#token-input-tag-list').attr('aria-label', 'Add tags. Separate multiple by using "Enter".'); // jQuery('#token-input-tag-list').attr('placeholder', 'Tag:');
-
+    jQuery('#token-input-tag-list').attr('aria-label', 'Add tags. Separate multiple by using "Enter".');
+    // jQuery('#token-input-tag-list').attr('placeholder', 'Tag:');
     if (annotation.tags && annotation.tags.length > 0) {
       annotation.tags.forEach(function (tag) {
         self.field.tokenInput('add', {
@@ -2157,13 +1983,11 @@ __webpack_require__(1979);
       });
     }
   };
-
   $.DropdownTags.prototype.destroy = function () {
     var self = this;
     self.field.tokenInput('destroy');
     jQuery('.token-input-dropdown-facebook').remove();
   };
-
   Object.defineProperty($.DropdownTags, 'name', {
     value: "DropdownTags"
   });
@@ -2180,33 +2004,26 @@ __webpack_require__(1979);
   $.ExportPlugin = function (options, inst_id) {
     this.options = options;
     this.element = this.options.slot;
-
     if (!jQuery(this.element).hasClass('annotator-wrapper')) {
       this.element = jQuery(this.element).find('.annotator-wrapper');
     }
-
     this.instance_id = inst_id;
     this.init();
   };
-
   $.ExportPlugin.prototype.init = function () {
     this.setUpButton();
   };
-
   $.ExportPlugin.prototype.saving = function (annotation) {
     return annotation;
   };
-
   $.ExportPlugin.prototype.setUpButton = function () {
     var self = this;
     jQuery('#print-annotations').show();
-
     if (self.options.instructors.indexOf(self.options.user_id) == -1) {
       jQuery('#export-annotations').remove();
     } else {
       jQuery('#export-annotations').show();
     }
-
     jQuery('#print-annotations').confirm({
       'title': "Which annotations would you like to download to print?",
       'buttons': {
@@ -2284,7 +2101,8 @@ __webpack_require__(1979);
         },
         cancel: function cancel() {}
       }
-    }); // jQuery(document).on('click', '#print-annotations', function(evt) {
+    });
+    // jQuery(document).on('click', '#print-annotations', function(evt) {
     //     var p = self.printAnnotations.bind(self);
     //     p();
     // });
@@ -2303,7 +2121,6 @@ __webpack_require__(1979);
     element.click();
     document.body.removeChild(element);
   };
-
   $.ExportPlugin.prototype.printAnnotations = function (whose) {
     var self = this;
     var options = {
@@ -2311,7 +2128,6 @@ __webpack_require__(1979);
       limit: -1,
       offset: 0
     };
-
     if (whose === "mine") {
       options['userid'] = [self.options.user_id];
     } else if (whose === "inst") {
@@ -2319,7 +2135,6 @@ __webpack_require__(1979);
     } else if (whose == "both") {
       options['userid'] = [self.options.user_id].concat(self.options.instructors);
     }
-
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
       var annotations = [];
       results.rows.forEach(function (ann) {
@@ -2334,7 +2149,6 @@ __webpack_require__(1979);
         } else {
           html += "<td>" + annotation.creator.name + "</td>";
         }
-
         if (annotation.media.toLowerCase() === "text") {
           html += "<td>" + self.truncate(annotation.exact, 100, ' [ ... ] ') + "</td>";
         } else if (annotation.media.toLowerCase() === "image") {
@@ -2347,19 +2161,16 @@ __webpack_require__(1979);
           html += "</td>";
           html = html.replace('<th>Excerpt</th>', '<th>Annotated Time Range</th>');
         }
-
         html += "<td>";
         annotation.annotationText.forEach(function (text) {
           html += text + "<br>";
         });
         html += "</td><td>";
-
         if (annotation.tags && annotation.tags.length > 0) {
           jQuery.each(annotation.tags, function (tagIndex, tagName) {
             html += tagName + "<br>";
           });
         }
-
         ;
         var t = annotation.created;
         var date = ('0' + t.getDate()).slice(-2);
@@ -2372,7 +2183,8 @@ __webpack_require__(1979);
         html += "<td>" + time + "</td></tr>";
       });
       html += "</table>";
-      self.download('annotations.html', html); // var wnd = window.open("about:blank", "", "_blank");
+      self.download('annotations.html', html);
+      // var wnd = window.open("about:blank", "", "_blank");
       // wnd.document.write(html);
     }]);
   };
@@ -2384,7 +2196,6 @@ __webpack_require__(1979);
       limit: -1,
       offset: 0
     };
-
     if (whose === "mine") {
       options['userid'] = [self.options.user_id];
     } else if (whose === "inst") {
@@ -2392,7 +2203,6 @@ __webpack_require__(1979);
     } else if (whose == "both") {
       options['userid'] = [self.options.user_id].concat(self.options.instructors);
     }
-
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
       var annotations = [];
       results.rows.forEach(function (ann) {
@@ -2405,7 +2215,9 @@ __webpack_require__(1979);
           return value;
         }
       }, 4);
-      self.download('annotations.json', html); // var wnd = window.open('about:blank', "", "_blank");
+      self.download('annotations.json', html);
+
+      // var wnd = window.open('about:blank', "", "_blank");
       // wnd.document.write("<p>(" + results.size + " annotations out of " + results.total + ")</p><textarea style='width:100%; height:100%;'>" + JSON.stringify(annotations, function(key, value) {
       //     if(key == "_local") {
       //         return undefined
@@ -2413,8 +2225,12 @@ __webpack_require__(1979);
       //         return value;
       //     }
       // }, 4) + "</textarea>");
-    }]); // Hxighlighter.publishEvent('GetAnnotationsData', self.instance_id, [function(annotations) {
+    }]);
+
+    // Hxighlighter.publishEvent('GetAnnotationsData', self.instance_id, [function(annotations) {
+
     //     annotations.forEach(function(ann) {
+
     //     })
     //     var wnd = window.open('about:blank', "", "_blank");
     //     wnd.document.write("<textarea style='width:100%; height:100%;'>" + JSON.stringify(annotations, function(key, value) {
@@ -2432,12 +2248,11 @@ __webpack_require__(1979);
     if (fullStr.length <= strLen) return fullStr;
     separator = separator || '...';
     var sepLen = separator.length,
-        charsToShow = strLen - sepLen,
-        frontChars = Math.ceil(charsToShow / 2),
-        backChars = Math.floor(charsToShow / 2);
+      charsToShow = strLen - sepLen,
+      frontChars = Math.ceil(charsToShow / 2),
+      backChars = Math.floor(charsToShow / 2);
     return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
   };
-
   $.plugins.push($.ExportPlugin);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -2452,8 +2267,8 @@ __webpack_require__(1979);
  *  
  *
  */
-__webpack_require__(1689);
 
+__webpack_require__(1689);
 (function ($) {
   /**
    * @constructor
@@ -2466,16 +2281,14 @@ __webpack_require__(1689);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.FontResize.prototype.init = function () {
     var self = this;
     self.setUpButtons();
   };
-
   $.FontResize.prototype.setUpButtons = function () {
     var self = this;
     jQuery(self.options.slot).prepend('<div class="btn-group hx-font-size" role="group" aria-label="Control Annotation Text Size" aria-live="polite" ><div class="pull-left" style="padding: 6px 12px;">Text Size <span id="annotations-text-size-label">(+0)</span>:</div><button aria-label="Increase font size" type="button" class="annotations-text-size-plus btn btn-default" role="button"><i class="fa fa-plus" aria-hidden="true"></i></button><button aria-label="Decrease font size" type="button" class="annotations-text-size-minus btn btn-default" role="button"><i class="fa fa-minus" aria-hidden="true"></i></button>');
@@ -2486,40 +2299,32 @@ __webpack_require__(1689);
       self.toggleTextSize(-1);
     });
   };
-
   $.FontResize.prototype.saving = function (annotation) {
     return annotation;
   };
-
   $.FontResize.prototype.toggleTextSize = function (step) {
     var self = this;
     step = isNaN(Number(step)) ? 0 : Number(step);
     var $content = jQuery(self.options.slot).find('.annotator-wrapper');
     var $label = jQuery("#annotations-text-size-label");
     var nodes = [],
-        curnode,
-        stylesize,
-        styleunit,
-        computed;
+      curnode,
+      stylesize,
+      styleunit,
+      computed;
     var minsize = 8;
     var sizediff = 0;
-
     if (typeof this.defaultFontSize === "undefined") {
       this.defaultFontSize = 14;
     }
-
     if (typeof this.targetFontSize === "undefined") {
       this.targetFontSize = this.defaultFontSize;
     }
-
     this.targetFontSize += step;
-
     if (this.targetFontSize < minsize) {
       this.targetFontSize = minsize;
     }
-
     sizediff = this.targetFontSize - this.defaultFontSize;
-
     if (sizediff === 0) {
       $label.html("(+0)");
       $content.css('fontSize', '');
@@ -2527,43 +2332,38 @@ __webpack_require__(1689);
       $label.html("(" + (sizediff > 0 ? "+" + sizediff : sizediff) + ")");
       $content.css('fontSize', String(this.targetFontSize) + "px");
       nodes.push($content[0]);
-    } // walk the dom and find custom fontStyle declarations and adust as necessary
+    }
+
+    // walk the dom and find custom fontStyle declarations and adust as necessary
     //console.log("updating font size to: ", this.targetFontSize, "step:", step);
-
-
     while (nodes.length > 0) {
-      curnode = nodes.pop(); // handle case where a <font> is embedded (deprecated tag... but still out there in the wild)
-
+      curnode = nodes.pop();
+      // handle case where a <font> is embedded (deprecated tag... but still out there in the wild)
       if (curnode.tagName.toLowerCase() == 'font') {
         computed = window.getComputedStyle(curnode);
         curnode.style.fontSize = computed['font-size'];
         curnode.size = "";
-      } // handle case where a class like "msoNormal" from an embedded stylesheet has applied a font size
-
-
+      }
+      // handle case where a class like "msoNormal" from an embedded stylesheet has applied a font size
       if (curnode != $content[0] && curnode.className != "") {
         curnode.style.fontSize = "inherit";
-      } // handle case with an inline style fontSize (only adjust absolute fontSize values)
+      }
 
-
+      // handle case with an inline style fontSize (only adjust absolute fontSize values)
       stylesize = parseInt(curnode.style.fontSize, 10);
-
       if (!isNaN(stylesize)) {
         styleunit = curnode.style.fontSize.replace(stylesize, '');
         stylesize += step;
         stylesize = stylesize < minsize ? minsize : stylesize;
-
         if (styleunit.indexOf("px") !== -1 || styleunit.indexOf("pt") !== -1) {
           curnode.style.fontSize = stylesize + styleunit;
         }
       }
-
       for (var i = curnode.children.length; i > 0; i--) {
         nodes.push(curnode.children[i - 1]);
       }
     }
   };
-
   Object.defineProperty($.FontResize, 'name', {
     value: "FontResize"
   });
@@ -2581,9 +2381,9 @@ __webpack_require__(1689);
  *  
  *
  */
+
 //uncomment to add css file
 __webpack_require__(7825);
-
 (function ($) {
   /**
    * @constructor
@@ -2591,32 +2391,28 @@ __webpack_require__(7825);
    */
   $.InstructionPanel = function (options, instanceID) {
     this.options = jQuery.extend({}, options);
-    this.instanceID = instanceID; // console.log("INSTRUCTION PANEL CREATED");
-
+    this.instanceID = instanceID;
+    // console.log("INSTRUCTION PANEL CREATED");
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.InstructionPanel.prototype.init = function () {
     var self = this;
     self.setUpInstructions();
   };
-
   $.InstructionPanel.prototype.setUpInstructions = function () {
     var self = this;
-
     if (!self.options.instructions || self.options.instructions.length == 0) {
       return;
-    } // console.log(self.options.instructions, typeof(self.options.instructions));
-
-
+    }
+    // console.log(self.options.instructions, typeof(self.options.instructions));
     var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span href="#" class="toggle-instructions" role="button" data-toggle="collapse" data-target=".instructions-body" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse in" aria-expanded="true" aria-live="polite" id="annotation-instructions">' + self.options.instructions + '</section></div>';
-    jQuery(self.options.slot).prepend(container); // toggles the label for toggling instructions
-
+    jQuery(self.options.slot).prepend(container);
+    // toggles the label for toggling instructions
     var inst_area = jQuery(self.options.slot).find('.toggle-instructions');
     inst_area.click(function () {
       if (inst_area.html() == "Collapse Instructions") {
@@ -2626,11 +2422,9 @@ __webpack_require__(7825);
       }
     });
   };
-
   $.InstructionPanel.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.InstructionPanel, 'name', {
     value: "InstructionPanel"
   });
@@ -2648,8 +2442,10 @@ __webpack_require__(7825);
  *  
  *
  */
+
 //uncomment to add css file
 //require('./filaname.css');
+
 (function ($) {
   /**
    * @constructor
@@ -2661,54 +2457,46 @@ __webpack_require__(7825);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.HxPermissions.prototype.init = function () {
     var self = this;
   };
-
   $.HxPermissions.prototype.saving = function (annotation) {
     return annotation;
   };
-
-  $.HxPermissions.prototype.editorShown = function (editor, annotation) {// console.log(annotation.permissions, self.options.user_id, editor);
+  $.HxPermissions.prototype.editorShown = function (editor, annotation) {
+    // console.log(annotation.permissions, self.options.user_id, editor);
   };
-
   $.HxPermissions.prototype.displayShown = function (display, annotation) {
     var self = this;
-
     if (Array.isArray(annotation)) {
       annotation.forEach(function (ann) {
         self.removeWithoutPermission(ann, display);
       });
     } else {
       self.removeWithoutPermission(annotation, display);
-    } // console.log(annotation.permissions, self.options.user_id, display);
-
+    }
+    // console.log(annotation.permissions, self.options.user_id, display);
   };
 
   $.HxPermissions.prototype.removeWithoutPermission = function (ann, loc) {
     var self = this;
-
     if (!ann.permissions) {
       // either permissions are not turned on or the annotation is fresh and person must have just made it.
       return;
-    } // hide edit if the person does not have can_update permissions
-
-
+    }
+    // hide edit if the person does not have can_update permissions
     if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) == -1 && ann.permissions.can_update.indexOf(self.options.user_id) == -1) {
       loc.find('#edit-' + ann.id).remove();
-    } // hide delete if the person does not have can_delete permissions
-
-
+    }
+    // hide delete if the person does not have can_delete permissions
     if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) == -1 && ann.permissions.can_delete.indexOf(self.options.user_id) == -1) {
       loc.find('#delete-' + ann.id).remove();
     }
   };
-
   Object.defineProperty($.HxPermissions, 'name', {
     value: "HxPermissions"
   });
@@ -2726,9 +2514,9 @@ __webpack_require__(7825);
  *  
  *
  */
+
 //uncomment to add css file
 __webpack_require__(6164);
-
 (function ($) {
   /**
    * @constructor
@@ -2740,49 +2528,47 @@ __webpack_require__(6164);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.PrevNextButton.prototype.init = function () {
     var self = this;
-
     if (self.options.PrevNextButton) {
       self.prevUrl = self.options.PrevNextButton.prevUrl;
       self.nextUrl = self.options.PrevNextButton.nextUrl;
       self.setUpButtons();
     }
   };
-
   $.PrevNextButton.prototype.setUpButtons = function () {
     var self = this;
     var toAppend = "";
     var toPrepend = "";
-
     if (self.prevUrl && self.prevUrl != "") {
-      toPrepend += '<a href="' + self.prevUrl + '" title="Previous Page" id="prevButtonNavTop" role="button">Previous</button>'; //toPrepend += '<a href="'+self.prevUrl+'" title="Previous Page" id="prevButtonTop" role="button">Previous</button>';
+      toPrepend += '<a href="' + self.prevUrl + '" title="Previous Page" id="prevButtonNavTop" role="button">Previous</button>';
 
-      toAppend += '<a href="' + self.prevUrl + '" title="Previous Page" id="prevButtonBottom" role="button">Previous</button>'; //jQuery(self.options.slot).append('<a href="'+self.prevUrl+'" title="Previous Page" id="prevButton" role="button">Previous</button>');
+      //toPrepend += '<a href="'+self.prevUrl+'" title="Previous Page" id="prevButtonTop" role="button">Previous</button>';
+      toAppend += '<a href="' + self.prevUrl + '" title="Previous Page" id="prevButtonBottom" role="button">Previous</button>';
+      //jQuery(self.options.slot).append('<a href="'+self.prevUrl+'" title="Previous Page" id="prevButton" role="button">Previous</button>');
     }
 
     if (self.nextUrl && self.nextUrl != "") {
-      toPrepend += '<a href="' + self.nextUrl + '" title="Next Page" id="nextButtonNavTop" role="button">Next</button>'; //toPrepend += '<a href="'+self.nextUrl+'" title="Next Page" id="nextButtonTop" role="button">Next</button>';
+      toPrepend += '<a href="' + self.nextUrl + '" title="Next Page" id="nextButtonNavTop" role="button">Next</button>';
 
-      toAppend += '<a href="' + self.nextUrl + '" title="Next Page" id="nextButtonBottom" role="button">Next</button>'; //jQuery(self.options.slot).append('<a href="'+self.nextUrl+'" title="Next Page" id="nextButton" role="button">Next</button>');
+      //toPrepend += '<a href="'+self.nextUrl+'" title="Next Page" id="nextButtonTop" role="button">Next</button>';
+      toAppend += '<a href="' + self.nextUrl + '" title="Next Page" id="nextButtonBottom" role="button">Next</button>';
+      //jQuery(self.options.slot).append('<a href="'+self.nextUrl+'" title="Next Page" id="nextButton" role="button">Next</button>');
     }
 
-    jQuery('.sidebar-navbar').append(toPrepend); //jQuery(self.options.slot).before(toPrepend);
-
+    jQuery('.sidebar-navbar').append(toPrepend);
+    //jQuery(self.options.slot).before(toPrepend);
     if (self.options.mediaType === "text") {
       jQuery(self.options.slot).append(toAppend);
     }
   };
-
   $.PrevNextButton.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.PrevNextButton, 'name', {
     value: "PrevNextButton"
   });
@@ -2799,20 +2585,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9357);
 /* harmony import */ var jquery_confirm__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery_confirm__WEBPACK_IMPORTED_MODULE_0__);
 /* provided dependency */ var jQuery = __webpack_require__(9755);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 /**
  *  Reply Plugin
  *  
  *
  */
 __webpack_require__(9629);
-
 __webpack_require__(559);
-
 __webpack_require__(8540);
-
-
 
 
 (function ($) {
@@ -2834,7 +2615,6 @@ __webpack_require__(8540);
       toolbar: [['font', ['bold', 'italic', 'underline', 'link']]],
       onCreateLink: function onCreateLink(link) {
         var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/;
-
         if (link.match(linkValidator)) {
           linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link) ? link : 'http://' + link;
           return linkUrl;
@@ -2848,22 +2628,20 @@ __webpack_require__(8540);
           var t = e.currentTarget.innerText;
           var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
           var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
-
           if (bufferHTML.indexOf('<img') > -1 && self.options.instructors.indexOf(self.options.user_id) == -1) {
             var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
             var inside = bufferHTML.match(regex);
             jQuery.each(inside, function (_, image_tags) {
               var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
-
               if (new_img_url.indexOf('data:image') > -1) {
                 alert('You are not allowed to paste images in annotations. Add a descriptive link instead.');
                 bufferHTML = bufferHTML.replace(image_tags, '');
               } else {
                 bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href=\"' + new_img_url + "\">[External Image Link]</a>");
               }
-            }); // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
+            });
+            // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
             // console.log(bufferHTML)
-
             setTimeout(function () {
               // wrap in a timer to prevent issues in Firefox
               self.elementObj.summernote('code', bufferHTML);
@@ -2871,7 +2649,6 @@ __webpack_require__(8540);
               alert('You may have pasted an image. It will be converted to a link.');
             }, 100);
           }
-
           if (t.length + bufferText.length >= 1000) {
             e.preventDefault();
             var bufferTextAllowed = bufferText.trim().substring(0, 1000 - t.length);
@@ -2896,69 +2673,62 @@ __webpack_require__(8540);
     this.last_added = undefined;
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.Reply.prototype.init = function () {
     // warns dev that they forgot to include summernote.js
     if (_typeof(jQuery.summernote) !== "object") {
       console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
     }
-
     this.annotationListeners();
   };
+
   /**
    * 
    * @param element {HTMLElement} - where the annotation will be added
    * @param selector {String} - selector to find input it is replacing
    */
-
-
   $.Reply.prototype.addWYSIWYG = function (element, selector) {
     var self = this;
-
     if (self.elementObj != undefined) {
       return;
-    } // adds the summernote WYSIWIG to the editor to the selector's location
-
-
+    }
+    // adds the summernote WYSIWIG to the editor to the selector's location
     self.elementObj = self.jq_backup(element).find(selector);
     var newOptions = jQuery.extend({}, self.options, {
       'width': element.outerWidth() - 24
     });
-    self.elementObj.summernote(newOptions); // removes summernote's ability to tab within the editor so users can tab through items
+    self.elementObj.summernote(newOptions);
 
+    // removes summernote's ability to tab within the editor so users can tab through items
     delete jQuery.summernote.options.keyMap.pc.TAB;
     delete jQuery.summernote.options.keyMap.mac.TAB;
     jQuery('.note-editor button').attr('tabindex', '0');
     jQuery('.note-statusbar').hide();
     jQuery(document).on('mouseleave', function () {
       jQuery('.note-statusbar').trigger('mouseup');
-
       if (self.elementObj) {
         var editorObj = self.elementObj.closest('.annotation-editor');
         var newTop = parseInt(editorObj.css('top'), 10);
         ;
-        var newLeft = parseInt(editorObj.css('left'), 10); // console.log(editorObj, newTop, newLeft);
+        var newLeft = parseInt(editorObj.css('left'), 10);
+
+        // console.log(editorObj, newTop, newLeft);
 
         if (newTop + editorObj.outerHeight() > window.innerHeight) {
           newTop = window.innerHeight - editorObj.outerHeight();
         }
-
         if (newLeft + editorObj.outerWidth() > window.innerWidth) {
           newLeft = window.innerWidth - editorObj.outerWidth();
         }
-
         if (newTop < 0) {
           newTop = 0;
         }
-
         if (newLeft < 0) {
           newLeft = 0;
         }
-
         editorObj.css({
           top: newTop,
           left: newLeft
@@ -2966,48 +2736,43 @@ __webpack_require__(8540);
       }
     });
   };
+
   /**
    * Returns the HTML value of the WYSIWYG. 
    *
    * @return     {String}  HTML value found in the WYSIWYG
    */
-
-
   $.Reply.prototype.returnValue = function () {
     var result = this.elementObj.summernote('code');
-
     if (result.indexOf('<script') >= 0) {
       alert("I'm sorry Colin, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
       return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
     }
-
     return result;
   };
+
   /**
    * Deletes the Summernote instance.
    *
    * @param      {HTMLElement}  element   The editor element
    * @param      {String}  selector  The selector containing the area in the editor where to insert the WYSIWYG
    */
-
-
   $.Reply.prototype.destroy = function (element, selector) {
     jQuery('.summernote').each(function () {
       jQuery(this).summernote('destroy');
     });
-
     if (this.elementObj) {
       this.elementObj.val('');
       this.elementObj.summernote('destroy');
       this.elementObj = undefined;
     }
-  }; // Annotation specific functions
+  };
+
+  // Annotation specific functions
 
   /**
    * Turns on the specific listeners when the plug in is initiated.
    */
-
-
   $.Reply.prototype.annotationListeners = function () {
     var self = this;
     $.subscribeEvent('displayHidden', self.instanceID, function () {
@@ -3025,38 +2790,33 @@ __webpack_require__(8540);
           // console.log(annotation_data);
           // console.log(reply)
           annotation_data.totalReplies--;
-
           annotation_data._local.highlights.forEach(function (high) {
             jQuery(high).data('annotation', annotation_data);
           });
-
           jQuery('.reply-area-' + annotation_data.id + ' .view-replies').html('View ' + annotation_data.totalReplies + ' Replies');
         }]);
       }
     });
   };
+
   /**
    * Code to run just before the annotation is saved to storage
    *
    * @param      {Annotation}  annotation  The annotation as it currently is saved.
    * @return     {Annotation}  The annotation with the contents of the WYSIWYG inserted.
    */
-
-
   $.Reply.prototype.saving = function (annotation) {
     return annotation;
   };
+
   /**
    * Code that runs once the display is shown on screen.
    *
    * @param      {Annotation}  annotation  The annotation in case the user is editing and we need the text
    * @param      {HTMLElement}  editor      The editor element
    */
-
-
   $.Reply.prototype.displayShown = function (viewer, annotations) {
     var self = this;
-
     if (Array.isArray(annotations)) {
       jQuery.each(annotations, function (_, annotation) {
         if (typeof annotation.id === "undefined") {
@@ -3073,22 +2833,18 @@ __webpack_require__(8540);
       self.annotationShown(viewer, annotations, true);
     }
   };
-
   $.Reply.prototype.annotationShown = function (viewer, annotation, isSidebar) {
     var self = this;
     var prefix = isSidebar ? "sidebar-" : "other-";
     jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button aria-label="Close Reply List" title="Close Reply List" class="close-list-reply"><span class="fa fa-times-circle"></span></button><button aria-label="Toggle Visual Order of Replies" title="Reverse Replies Order" class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-' + annotation.id + '"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-' + annotation.id + '">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="' + prefix + 'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-' + annotation.id + '" style="display:none;"><textarea id="' + prefix + 'reply-textarea-' + annotation.id + '"></textarea><button id="' + prefix + 'save-reply-' + annotation.id + '">Save</button><button id="' + prefix + 'cancel-reply-' + annotation.id + '">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-' + annotation.id + '">Reply to Annotation</button></div>');
-
     if ('totalReplies' in annotation && annotation.totalReplies > 0) {
       jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
       jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
     }
-
     jQuery(viewer).find('.plugin-area-bottom #' + prefix + 'reply-' + annotation.id).click(function () {
       if (jQuery('.note-editor.card').length > 0) {
         return;
       }
-
       jQuery('#' + prefix + 'create-reply-area-' + annotation.id).show();
       self.addWYSIWYG(viewer, '#' + prefix + 'reply-textarea-' + annotation.id);
       jQuery(this).hide();
@@ -3117,17 +2873,14 @@ __webpack_require__(8540);
     });
     jQuery('#' + prefix + 'save-reply-' + annotation.id).click(function () {
       var result = self.elementObj.summernote('code');
-
       if (result.indexOf('<script') >= 0) {
         alert('content contains javascript code that will be removed.');
         result = result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
       }
-
       if (jQuery(result).text().length === 0) {
         alert('replies must contain text');
         return;
       }
-
       var reply = {
         annotationText: [result],
         ranges: {
@@ -3143,22 +2896,19 @@ __webpack_require__(8540);
           name: self.options.username,
           id: self.options.user_id
         }
-      }; // console.log("Reaching here", reply)
-
+      };
+      // console.log("Reaching here", reply)
       $.publishEvent('StorageAnnotationSave', self.instanceID, [reply, false]);
       annotation.totalReplies++;
       typeof annotation.replies == "undefined" ? annotation.replies = [reply] : annotation.replies.push(reply);
-
       if (annotation._local && annotation._local.highlighter) {
         annotation._local.highlights.forEach(function (high) {
           jQuery(high).data('annotation', annotation);
         });
       }
-
       self.last_added = reply.id;
       self.addReplyToViewer(viewer, reply, prefix, annotation);
       self.destroy();
-
       if (prefix === "other-") {
         if (jQuery('.ann-item.item-' + annotation.id + ' .create-reply').length === 2) {
           jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
@@ -3167,7 +2917,6 @@ __webpack_require__(8540);
           jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
           jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
         }
-
         jQuery('.floating.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
       } else {
         if (jQuery('.ann-item.item-' + annotation.id + ' .create-reply').length === 2) {
@@ -3177,20 +2926,18 @@ __webpack_require__(8540);
           jQuery('.floating.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
           jQuery('.floating.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
         }
-
         jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
       }
-
       jQuery('#' + prefix + 'create-reply-area-' + annotation.id).hide();
       jQuery(viewer).find('.create-reply').show();
       jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').show();
-      jQuery(viewer).find('.plugin-area-bottom .reply-menu').show(); //jQuery('.ann-item.item-'+annotation.id+' div[class*=reply-list]').show();
+      jQuery(viewer).find('.plugin-area-bottom .reply-menu').show();
+      //jQuery('.ann-item.item-'+annotation.id+' div[class*=reply-list]').show();
     });
   };
 
   $.Reply.prototype.viewRepliesToAnnotation = function (annotation, viewer, prefix) {
     var self = this;
-
     if (annotation.totalReplies > 0) {
       if (annotation.replies && annotation.totalReplies == annotation.replies.length) {
         annotation.replies.forEach(function (rep) {
@@ -3201,11 +2948,9 @@ __webpack_require__(8540);
         self.retrieveRepliesForAnnotation(annotation, viewer, prefix);
       }
     }
-
     jQuery(viewer).find('.' + prefix + 'reply-list').show();
     jQuery(viewer).find('.reply-menu').show();
   };
-
   $.Reply.prototype.retrieveRepliesForAnnotation = function (annotation, viewer, prefix) {
     var self = this;
     $.publishEvent('StorageAnnotationSearch', self.instanceID, [{
@@ -3218,34 +2963,30 @@ __webpack_require__(8540);
         self.addReplyToViewer(viewer, rep, prefix, annotation);
         annotation.replies ? annotation.replies.push(rep) : annotation.replies = [rep];
       });
-
       if (annotation.totalReplies !== results.rows.length) {
         annotation.totalReplies = results.rows.length;
       }
-
       if (annotation._local && annotation._local.highlighter) {
         annotation._local.highlights.forEach(function (high) {
           jQuery(high).data('annotation', annotation);
         });
       }
-    }, function () {// console.log("Didn't work exactly");
+    }, function () {
+      // console.log("Didn't work exactly");
     }]);
   };
-
   $.Reply.prototype.addReplyToViewer = function (viewer, reply, prefix, annotation) {
     var self = this;
     var delete_option = '';
-    var display_name = reply.creator.name; // console.log("DID IN FACT REACH HERE")
-
+    var display_name = reply.creator.name;
+    // console.log("DID IN FACT REACH HERE")
     if (self.options.instructors.indexOf(reply.creator.id) > -1) {
       delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
       display_name = self.options.common_instructor_name;
     }
-
     if (reply.creator.id === self.options.user_id) {
       delete_option = "<button aria-label='delete reply' title='Delete Reply' class='delete-reply' tabindex='0'><span class='fa fa-trash'></span></button>";
     }
-
     var reply_list = jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]');
     setTimeout(function () {
       if (reply_list.is(':visible')) {
@@ -3270,14 +3011,11 @@ __webpack_require__(8540);
                 });
                 self.last_delete = reply.id;
                 annotation.totalReplies--;
-
                 annotation._local.highlights.forEach(function (high) {
                   jQuery(high).data('annotation', annotation);
                 });
-
                 jQuery('.reply.reply-item-' + reply.id).remove();
                 jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
-
                 if (annotation.totalReplies == 0) {
                   jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').show();
                   jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').hide();
@@ -3285,7 +3023,6 @@ __webpack_require__(8540);
                   jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').hide();
                   jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').show();
                 }
-
                 jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
                 jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
               },
@@ -3307,11 +3044,9 @@ __webpack_require__(8540);
       }
     }, 500);
   };
-
   $.Reply.prototype.pluralize = function (num, singular, plural) {
     return num == 1 ? '1 ' + singular : num + ' ' + plural;
   };
-
   Object.defineProperty($.Reply, 'name', {
     value: "Reply"
   });
@@ -3329,9 +3064,9 @@ __webpack_require__(8540);
  *  
  *
  */
+
 //uncomment to add css file
 __webpack_require__(7710);
-
 (function ($) {
   /**
    * @constructor
@@ -3344,14 +3079,13 @@ __webpack_require__(7710);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.SidebarTagTokens.prototype.init = function () {
-    var self = this; // console.log(this);
-
+    var self = this;
+    // console.log(this);
     var search_button = jQuery('.btn.user-filter#search');
     search_button.click(function () {
       self.removeTokens();
@@ -3380,24 +3114,19 @@ __webpack_require__(7710);
     });
     self.setUpListeners();
   };
-
   $.SidebarTagTokens.prototype.removeTokens = function () {
     jQuery('.tag-token-list').remove();
   };
-
   $.SidebarTagTokens.prototype.setUpTokens = function () {
     var self = this;
-
     if (self.options.tagList.length === 0 || self.options.tagList.length === 1 && self.options.tagList[0] === "") {
       document.documentElement.style.setProperty('--sidebar-search-bar-height-open', 72 + "px");
       return;
     }
-
     if (self.first_time) {
       jQuery('#empty-alert').hide();
       self.first_time = false;
     }
-
     var tokenHTML = "<div class='tag-token-list'><span>Instructor Tags:</span><br><div class='tag-token-section'>";
     self.options.tagList.forEach(function (tag) {
       tokenHTML += '<div role="button" tabIndex="0" class="tag-token-tag">' + tag + '</div>';
@@ -3410,11 +3139,9 @@ __webpack_require__(7710);
       jQuery('#empty-alert').show();
     }, 150);
   };
-
   $.SidebarTagTokens.prototype.saving = function (annotation) {
     return annotation;
   };
-
   $.SidebarTagTokens.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('searchSelected', self.instanceID, function () {
@@ -3423,7 +3150,6 @@ __webpack_require__(7710);
       }, 250);
     });
   };
-
   Object.defineProperty($.SidebarTagTokens, 'name', {
     value: "SidebarTagTokens"
   });
@@ -3442,8 +3168,8 @@ __webpack_require__(7710);
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
-__webpack_require__(2295);
 
+__webpack_require__(2295);
 (function ($) {
   /**
    * @constructor
@@ -3455,68 +3181,64 @@ __webpack_require__(2295);
     this.instanceID = instanceID;
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.SimpleTags.prototype.init = function () {
     var self = this;
     self.name = 'SimpleTags';
     var ed = "<input type='text' name='tags' id='tag-list' class='hx-text-field' placeholder='Add tags...' />";
     self.editorElement = 'editorElement' in self.options ? self.options.editorElement : ed;
   };
+
   /**
    * Returns the HTML value of the WYSIWYG. 
    *
    * @return     {String}  HTML value found in the WYSIWYG
    */
-
-
   $.SimpleTags.prototype.returnValue = function () {
     var self = this;
     var delimiter = 'delimiter' in self.options ? self.options.delimiter : ',';
     result = jQuery('#tag-list').val().split(delimiter);
     return result;
-  }; // Annotation specific functions
+  };
+
+  // Annotation specific functions
 
   /**
    * Turns on the specific listeners when the plug in is initiated.
    */
-
-
   $.SimpleTags.prototype.annotationListeners = function () {
     var self = this;
   };
+
   /**
    * Code to run just before the annotation is saved to storage
    *
    * @param      {Annotation}  annotation  The annotation as it currently is saved.
    * @return     {Annotation}  The annotation with the contents of the WYSIWYG inserted.
    */
-
-
   $.SimpleTags.prototype.saving = function (annotation) {
     var self = this;
     annotation.tags = self.returnValue() || [];
     return annotation;
   };
+
   /**
    * Code that runs once the editor is shown on screen.
    *
    * @param      {Annotation}  annotation  The annotation in case the user is editing and we need the text
    * @param      {HTMLElement}  editor      The editor element
    */
-
-
   $.SimpleTags.prototype.editorShown = function (editor, annotation) {
     // console.log('Simple editorShown');
     var self = this;
     editor.find('.plugin-area').append(self.editorElement);
-
     if (annotation.tags && annotation.tags.length > 0) {
       var tagList = annotation.tags.join(',');
-      editor.find('#tag-list').val(tagList); //console.log(tagList);
+      editor.find('#tag-list').val(tagList);
+      //console.log(tagList);
     }
   };
 
@@ -3537,8 +3259,10 @@ __webpack_require__(2295);
  *  
  *
  */
+
 //uncomment to add css file
 //require('./filaname.css');
+
 (function ($) {
   /**
    * @constructor
@@ -3550,16 +3274,14 @@ __webpack_require__(2295);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.HxStyleMine.prototype.init = function () {
     var self = this;
     self.setUpButtons();
   };
-
   $.HxStyleMine.prototype.setUpButtons = function () {
     var self = this;
     jQuery(self.options.slot).prepend('<button class="hx-style-mine btn btn-default" style="margin-right: 10px; width: 150px;">Underline Mine</button>');
@@ -3573,11 +3295,9 @@ __webpack_require__(2295);
       }
     });
   };
-
   $.HxStyleMine.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.HxStyleMine, 'name', {
     value: "HxStyleMine"
   });
@@ -3590,8 +3310,7 @@ __webpack_require__(2295);
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 /**
  *  Summernote RichText Plugin
  *  
@@ -3599,11 +3318,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
  *
  */
 __webpack_require__(5571);
-
 __webpack_require__(1055);
-
 __webpack_require__(9108);
-
 (function ($) {
   /**
    * @constructor
@@ -3611,15 +3327,13 @@ __webpack_require__(9108);
    */
   $.SummernoteRichText = function (options, instanceID) {
     var self = this;
-    var maxLength = 1000; // console.log("SummernoteRichText Options Sent:", options);
-
+    var maxLength = 1000;
+    // console.log("SummernoteRichText Options Sent:", options);
     this.options = options;
     var toolbar = [['font', ['bold', 'italic', 'underline', 'clear']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'hr']]];
-
     if (self.options.instructors.indexOf(self.options.user_id) > -1) {
       toolbar = [['font', ['bold', 'italic', 'underline', 'clear']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'hr', 'picture', 'video']], ['view', ['codeview']]];
     }
-
     this.summernoteOpts = jQuery.extend({
       height: 150,
       focus: true,
@@ -3634,7 +3348,6 @@ __webpack_require__(9108);
       disableDragAndDrop: true,
       onCreateLink: function onCreateLink(link) {
         var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/;
-
         if (link.match(linkValidator)) {
           linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link) ? link : 'http://' + link;
           return linkUrl;
@@ -3646,14 +3359,12 @@ __webpack_require__(9108);
       callbacks: {
         onKeydown: function onKeydown(e) {
           var t = e.currentTarget.innerText;
-
           if ('Escape' === e.key) {
             $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
             jQuery('.sr-real-alert').html('You have closed the editor and unselected text for annotation.');
           } else if (t.trim().length >= maxLength && self.options.instructors.indexOf(self.options.user_id) == -1) {
             // prevents everything that could add a new character
             var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
-
             if (allowedKeys.indexOf(e.key) == -1 || e.key == 'a' && !(e.ctrlKey || e.metaKey) || e.key == 'c' && !(e.ctrlKey || e.metaKey) || e.key == 'v' && !(e.ctrlKey || e.metaKey)) {
               e.preventDefault();
               alert('You have reached the character limit for this annotation (max 1000 characters).');
@@ -3668,15 +3379,14 @@ __webpack_require__(9108);
           var t = e.currentTarget.innerText;
           var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
           var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
-
           if (bufferHTML.indexOf('<img') > -1 && self.options.instructors.indexOf(self.options.user_id) == -1) {
             var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
             var inside = bufferHTML.match(regex);
             jQuery.each(inside, function (_, image_tags) {
               var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
               bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href=\"' + new_img_url + "\">[External Image Link]</a>");
-            }); // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
-
+            });
+            // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
             setTimeout(function () {
               // wrap in a timer to prevent issues in Firefox
               self.elementObj.summernote('code', bufferHTML);
@@ -3684,7 +3394,6 @@ __webpack_require__(9108);
               alert('You may have pasted an image. It will be converted to a link.');
             }, 100);
           }
-
           if (t.length + bufferText.length >= maxLength && self.options.instructors.indexOf(self.options.user_id) == -1) {
             e.preventDefault();
             var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
@@ -3706,45 +3415,43 @@ __webpack_require__(9108);
         }
       },
       toolbar: toolbar
-    }, this.options); // console.log("After init options", this.options);
+    }, this.options);
+    // console.log("After init options", this.options);
     // console.log('SUMMERNOTE', this.options);
-
     this.init();
     this.instanceID = instanceID;
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.SummernoteRichText.prototype.init = function () {
     // warns dev that they forgot to include summernote.js
-    if (_typeof(jQuery.summernote) !== "object") {//console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
+    if (_typeof(jQuery.summernote) !== "object") {
+      //console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
     }
-
     this.annotationListeners();
   };
+
   /**
    * 
    * @param element {HTMLElement} - where the annotation will be added
    * @param selector {String} - selector to find input it is replacing
    */
-
-
   $.SummernoteRichText.prototype.addWYSIWYG = function (element, selector) {
-    var self = this; // adds the summernote WYSIWIG to the editor to the selector's location
+    var self = this;
 
+    // adds the summernote WYSIWIG to the editor to the selector's location
     self.elementObj = element.find(selector);
-
     if (self.elementObj.closest('.side').length > 0) {
       self.summernoteOpts.width = self.elementObj.parent().width();
     } else {
       self.summernoteOpts.width = 435;
     }
+    self.elementObj.summernote(self.summernoteOpts);
 
-    self.elementObj.summernote(self.summernoteOpts); // removes summernote's ability to tab within the editor so users can tab through items
-
+    // removes summernote's ability to tab within the editor so users can tab through items
     delete jQuery.summernote.options.keyMap.pc.TAB;
     delete jQuery.summernote.options.keyMap.mac.TAB;
     delete jQuery.summernote.options.keyMap.pc['SHIFT+TAB'];
@@ -3754,29 +3461,26 @@ __webpack_require__(9108);
     jQuery('.note-statusbar').hide();
     jQuery(document).on('mouseleave', function () {
       jQuery('.note-statusbar').trigger('mouseup');
-
       if (self.elementObj) {
         var editorObj = self.elementObj.closest('.annotation-editor');
         var newTop = parseInt(editorObj.css('top'), 10);
         ;
-        var newLeft = parseInt(editorObj.css('left'), 10); // console.log(editorObj, newTop, newLeft);
+        var newLeft = parseInt(editorObj.css('left'), 10);
+
+        // console.log(editorObj, newTop, newLeft);
 
         if (newTop + editorObj.outerHeight() > window.innerHeight) {
           newTop = window.innerHeight - editorObj.outerHeight();
         }
-
         if (newLeft + editorObj.outerWidth() > window.innerWidth) {
           newLeft = window.innerWidth - editorObj.outerWidth();
         }
-
         if (newTop < 0) {
           newTop = 0;
         }
-
         if (newLeft < 0) {
           newLeft = 0;
         }
-
         editorObj.css({
           top: newTop,
           left: newLeft
@@ -3784,43 +3488,39 @@ __webpack_require__(9108);
       }
     });
   };
+
   /**
    * Returns the HTML value of the WYSIWYG. 
    *
    * @return     {String}  HTML value found in the WYSIWYG
    */
-
-
   $.SummernoteRichText.prototype.returnValue = function () {
     var result = this.elementObj.summernote('code');
-
     if (result.indexOf('<script') >= 0) {
       alert("I'm sorry Dave, I'm afraid I can't do that. Only you wil be affected by the JS you entered. It will be escaped for everyone else.");
       return result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
     }
-
     result = result.replace(/<p><\/p>/g, '').replace(/<p><br><\/p>/g, '');
     return result;
   };
+
   /**
    * Deletes the Summernote instance.
    *
    * @param      {HTMLElement}  element   The editor element
    * @param      {String}  selector  The selector containing the area in the editor where to insert the WYSIWYG
    */
-
-
   $.SummernoteRichText.prototype.destroy = function (element, selector) {
     var self = this;
     self.elementObj.summernote('destroy');
     jQuery('.tooltip.fade').remove();
-  }; // Annotation specific functions
+  };
+
+  // Annotation specific functions
 
   /**
    * Turns on the specific listeners when the plug in is initiated.
    */
-
-
   $.SummernoteRichText.prototype.annotationListeners = function () {
     var self = this;
     $.subscribeEvent('editorToBeHidden', self.instanceID, function () {
@@ -3828,7 +3528,9 @@ __webpack_require__(9108);
     }.bind(self));
     $.subscribeEvent('editorHidden', self.instanceID, function () {
       self.destroy();
-    }.bind(self)); // jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
+    }.bind(self));
+
+    // jQuery('body').on('mouseover','.btn.btn-primary.note-btn.note-btn-primary.note-link-btn', function() {
     //     var input = jQuery('.note-link-url.form-control.note-form-control.note-input');
     //     input.prop('type', 'url');
     //     var chosen = jQuery('.note-link-url.form-control.note-form-control.note-input').val();
@@ -3841,39 +3543,34 @@ __webpack_require__(9108);
     //     }
     // });
   };
+
   /**
    * Code to run just before the annotation is saved to storage
    *
    * @param      {Annotation}  annotation  The annotation as it currently is saved.
    * @return     {Annotation}  The annotation with the contents of the WYSIWYG inserted.
    */
-
-
   $.SummernoteRichText.prototype.saving = function (annotation) {
     var self = this;
-
     try {
       var annotationText = this.returnValue();
-
       if (typeof this.options.validator === "function") {
         annotationText = this.options.validator(annotationText);
       }
-
       annotation['annotationText'] = [annotationText];
-    } catch (e) {//console.log('plugin was never started');
+    } catch (e) {
+      //console.log('plugin was never started');
     }
-
     self.destroy();
     return annotation;
   };
+
   /**
    * Code that runs once the editor is shown on screen.
    *
    * @param      {Annotation}  annotation  The annotation in case the user is editing and we need the text
    * @param      {HTMLElement}  editor      The editor element
    */
-
-
   $.SummernoteRichText.prototype.editorShown = function (editor, annotation) {
     var self = this;
     jQuery('.side #annotation-text-field').hide();
@@ -3882,48 +3579,36 @@ __webpack_require__(9108);
       self.addWYSIWYG(editor, '#annotation-text-field');
       self.currentAnnotation = annotation;
       var annotationText = "";
-
       if ($.exists(annotation.annotationText)) {
         annotationText = annotation.annotationText;
         self.elementObj.summernote('code', annotation.annotationText);
-      } else
-        /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/
-        {
+      } else /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/{
           annotationText = returnWAText(annotation);
-
           if (typeof annotationText !== "undefined") {
             self.elementObj.summernote('code', annotationText);
             self.updating = true;
             self.updatingText = annotationText;
           }
         }
-
       if (typeof annotationText === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
         editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.");
       }
     }, 250);
   };
-
   $.SummernoteRichText.prototype.setUpEditor = function (type) {
     var type = type.toLowerCase();
-
     if (!type || type === "default" || type === "") {
       return [['font', ['bold', 'italic', 'underline', 'clear']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['table', 'link', 'hr']]];
     }
-
     if (type === "simple") {
       return [['font', ['bold', 'italic', 'underline', 'clear']]];
     }
-
     var fullsetup = [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['fontsize', ['fontsize']], ['para', ['ul', 'ol', 'paragraph']], ['height', ['height']], ['insert', ['table', 'link', 'hr', 'picture', 'video']], ['view', ['codeview']]];
-
     if (type === "instructor") {
       return fullsetup;
     }
-
     if (type.indexOf('no-style')) {}
   };
-
   Object.defineProperty($.SummernoteRichText, 'name', {
     value: "SummernoteRichText"
   });
@@ -3941,8 +3626,8 @@ __webpack_require__(9108);
  *  
  *
  */
-__webpack_require__(7201);
 
+__webpack_require__(7201);
 (function ($) {
   /**
    * @constructor
@@ -3955,22 +3640,19 @@ __webpack_require__(7201);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.ToggleAnnotations.prototype.init = function () {
     var self = this;
     self.setUpButton();
   };
-
   $.ToggleAnnotations.prototype.setUpButton = function () {
     var self = this;
     jQuery(self.options.slot).prepend('<button class="hx-toggle-annotations btn btn-default"></button>');
     jQuery(self.options.slot).find('.hx-toggle-annotations').click(function () {
       var toggleButton = jQuery(this);
-
       if (!toggleButton.hasClass('should-show')) {
         $.publishEvent('undrawAll', self.instanceID, [function (annList) {
           self.tempAnnotationList = annList;
@@ -3986,10 +3668,8 @@ __webpack_require__(7201);
       }
     });
   };
-
   $.ToggleAnnotations.prototype.editorShown = function () {
     var self = this;
-
     if (!self.on) {
       $.publishEvent('drawList', self.instanceID, [self.tempAnnotationList, function () {
         self.tempAnnotationList = [];
@@ -3998,11 +3678,9 @@ __webpack_require__(7201);
       }]);
     }
   };
-
   $.ToggleAnnotations.prototype.saving = function (annotation) {
     return annotation;
   };
-
   Object.defineProperty($.ToggleAnnotations, 'name', {
     value: "ToggleAnnotations"
   });
@@ -4020,8 +3698,10 @@ __webpack_require__(7201);
  *  
  *
  */
+
 //uncomment to add css file
 //require('./filaname.css');
+
 (function ($) {
   /**
    * @constructor
@@ -4038,11 +3718,10 @@ __webpack_require__(7201);
     this.init();
     return this;
   };
+
   /**
    * Initializes instance
    */
-
-
   $.Websockets.prototype.init = function () {
     var self = this;
     var valid_object_id = self.options.ws_object_id || self.options.object_id;
@@ -4050,62 +3729,50 @@ __webpack_require__(7201);
     self.setUpListeners();
     self.setUpConnection();
   };
-
   $.Websockets.prototype.saving = function (annotation) {
     return annotation;
   };
-
   $.Websockets.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('objectIdUpdated', self.instanceID, function (_, objectID) {
       self.currentObjectId = objectID;
     });
   };
-
   $.Websockets.prototype.setUpConnection = function () {
     var self = this;
     self.currentConnections += 1;
-
     if (self.currentConnections >= self.maxConnections) {
       clearInterval(self.timerRetryInterval);
       console.log("Reached max connection value");
       return;
-    } // console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
-
-
+    }
+    // console.log("WS Options: ", self.slot_id, self.options, self.options.Websockets);
     self.socket = self.openWs(self.slot_id, self.options.Websockets.wsUrl);
-
     self.socket.onopen = function (e) {
       self.onWsOpen(e);
       self.currentConnections = 0;
     };
-
     self.socket.onmessage = function (e) {
       var data = JSON.parse(e.data);
       self.receiveWsMessage(data);
     };
-
     self.socket.onclose = function (e) {
       self.onWsClose(e);
     };
   };
-
   $.Websockets.prototype.receiveWsMessage = function (response) {
     var self = this;
     var message = response['message'];
     var annotation = eval("(" + message + ")");
-
     if (annotation.platform.target_source_id != self.currentObjectId) {
       return;
     }
-
     self.convertAnnotation(annotation, function (wa) {
       if (response['type'] === 'annotation_deleted') {
         $.publishEvent('GetSpecificAnnotationData', self.instanceID, [wa.id, function (annotationFound) {
           if (typeof annotationFound === "undefined") {
             return;
           }
-
           if (wa.media !== 'comment') {
             $.publishEvent('TargetAnnotationUndraw', self.instanceID, [annotationFound]);
             jQuery('.item-' + wa.id).remove();
@@ -4127,7 +3794,8 @@ __webpack_require__(7201);
               $.publishEvent('TargetAnnotationDraw', self.instanceID, [wa]);
             }
           }
-        }, response['type'] === 'annotation_updated']); // console.log("HERE:", wa)
+        }, response['type'] === 'annotation_updated']);
+        // console.log("HERE:", wa)
       }
     });
   };
@@ -4137,19 +3805,15 @@ __webpack_require__(7201);
     var notificationSocket = new WebSocket('wss://' + wsUrl + '/ws/notification/' + slot_id + '/?utm_source=' + self.options.Websockets.utm + '&resource_link_id=' + self.options.Websockets.resource);
     return notificationSocket;
   };
-
   $.Websockets.prototype.onWsOpen = function () {
     var self = this;
-
     if (self.timerRetryInterval) {
       clearInterval(self.timerRetryInterval);
       self.timerRetryInterval = undefined;
     }
   };
-
   $.Websockets.prototype.onWsClose = function () {
     var self = this;
-
     if (!self.timerRetryInterval) {
       self.timerRetryInterval = setInterval(function () {
         // console.log('intervalrunning');
@@ -4157,14 +3821,11 @@ __webpack_require__(7201);
       }, 30000);
     }
   };
-
   Object.defineProperty($.Websockets, 'name', {
     value: "Websockets"
   });
-
   $.Websockets.prototype.convertAnnotation = function (annotation, callBack) {
     var self = this;
-
     if (annotation && annotation.schema_version) {
       // console.log("option 1");
       return self.convertingFromWebAnnotations(annotation, callBack);
@@ -4173,12 +3834,10 @@ __webpack_require__(7201);
       return self.convertingFromAnnotatorJS(annotation, callBack);
     }
   };
-
   $.Websockets.prototype.convertingFromWebAnnotations = function (annotation, callBack) {
     var self = this;
     $.publishEvent('convertFromWebAnnotation', self.instanceID, [self.options.slot, annotation, callBack]);
   };
-
   $.Websockets.prototype.convertingFromAnnotatorJS = function (annotation, callBack) {
     var self = this;
     var ranges = annotation.ranges;
@@ -4207,7 +3866,6 @@ __webpack_require__(7201);
     };
     callBack(annotation);
   };
-
   $.plugins.push($.Websockets);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -4218,15 +3876,12 @@ __webpack_require__(7201);
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
 var hrange = __webpack_require__(6989);
-
 (function ($) {
   $.KeyboardSelector = function (element, inst_id) {
     this.element = element;
-
     if (!jQuery(element).hasClass('annotator-wrapper')) {
       this.element = jQuery(element).find('.annotator-wrapper');
     }
-
     this.instance_id = inst_id;
     this.delimiter_list = ['*', '+', '#', '^'];
     this.keyMaps = {
@@ -4253,46 +3908,39 @@ var hrange = __webpack_require__(6989);
     };
     this.init();
   };
-
   $.KeyboardSelector.prototype.init = function () {
     var self = this;
     this.delimiter = this.checkDelimiter(self.element);
-
-    if (!this.delimiter) {//console.log('Error in delimiter...no suitable delimiter found!');
+    if (!this.delimiter) {
+      //console.log('Error in delimiter...no suitable delimiter found!');
     }
-
     this.start = undefined;
     this.setUpButton();
   };
-
   $.KeyboardSelector.prototype.checkDelimiter = function (element) {
     var textSearch = jQuery(element).text();
-
     for (var i = 0; i < this.delimiter_list.length; i++) {
       var testDelimiter = this.delimiter_list[i];
-
       if (textSearch.indexOf(testDelimiter) == -1) {
         return testDelimiter;
       }
     }
-
     return undefined;
   };
-
   $.KeyboardSelector.prototype.setUpButton = function () {
     var self = this;
     jQuery(document).on('keydown', function (event) {
       if (event.key == '1' && (event.altKey || event.ctrlKey) || event.key == '\'' && (event.altKey || event.ctrlKey)) {
-        event.preventDefault(); //move this to external button
-
+        event.preventDefault();
+        //move this to external button
         if (!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')) {
           self.turnSelectionModeOn();
         }
-
         return false;
       } else if (event.key == 'Escape') {
         //console.log("hello");
-        self.turnSelectionModeOff(); // } else if (event.key == ' ') {
+        self.turnSelectionModeOff();
+        // } else if (event.key == ' ') {
         //     event.preventDefault();
         //     return false;
       }
@@ -4300,22 +3948,18 @@ var hrange = __webpack_require__(6989);
       if (event.key == '2' && (event.altKey || event.ctrlKey)) {
         event.preventDefault();
         var currentInst = jQuery('.sr-alert').html();
-
         if (currentInst.trim() === "") {
           currentInst = 'Hit "Ctrl + 1" to beginning annotating the text by marking them with apostrophes.';
         }
-
         jQuery('.sr-alert').html('');
         setTimeout(function () {
           jQuery('.sr-alert').html(currentInst);
         }, 250);
       }
-
       if (event.key == '3' && (event.altKey || event.ctrlKey)) {
         var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
         var newVal = currVal == "off" ? 'assertive' : 'off';
         var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-
         if (newVal == "off") {
           jQuery('.sr-real-alert').html(newAlert);
           setTimeout(function () {
@@ -4330,7 +3974,6 @@ var hrange = __webpack_require__(6989);
           jQuery('#hx-sr-notifications').attr('aria-live', newVal);
           jQuery('.sr-real-alert').html(newAlert);
         }
-
         event.preventDefault();
       }
     });
@@ -4340,7 +3983,8 @@ var hrange = __webpack_require__(6989);
         return $.pauseEvent(evt);
         ;
       }
-    }); // var slot = self.element;
+    });
+    // var slot = self.element;
     // if (!self.element.hasClass('annotation-slot')) {
     //     slot = self.element.find('.annotation-slot');
     // }
@@ -4348,13 +3992,13 @@ var hrange = __webpack_require__(6989);
     //     slot = self.element.closest('.annotation-slot');
     // }
     // jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
-
     jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function (evt) {
       jQuery('#key-help').toggleClass('sr-only');
       jQuery(this).toggleClass('selected');
       jQuery(self.element).closest('main').animate({
         scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
-      }); // if (jQuery(this).hasClass('selection-mode-on')) {
+      });
+      // if (jQuery(this).hasClass('selection-mode-on')) {
       // self.turnSelectionModeOff();
       //jQuery(this).removeClass('selection-mode-on');
       // } else {
@@ -4362,6 +4006,7 @@ var hrange = __webpack_require__(6989);
       //jQuery(this).addClass('selection-mode-on');
       // }
     });
+
     jQuery(document).on('click', 'button[class*="make-annotation-button"]', function (evt) {
       if (jQuery(this).hasClass('selection-mode-on')) {
         self.turnSelectionModeOff();
@@ -4381,19 +4026,15 @@ var hrange = __webpack_require__(6989);
       self.addMarkers(ann.ranges);
     });
   };
-
   $.KeyboardSelector.prototype.turnSelectionModeOn = function () {
     this.saveHTML = this.element.innerHTML;
     var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
-
     if (!toggleButton.hasClass('should-show')) {
       toggleButton.click();
     }
-
     if (window.navigator.platform.indexOf('Mac') !== -1) {
       jQuery('.sr-alert').html('Enter the text box until editing text (usually VoiceOver Keys + Down Arrow) then move around using arrow keys without VoiceOver keys held down.');
     }
-
     jQuery(this.element).attr('contenteditable', 'true');
     jQuery(this.element).attr('role', 'textbox');
     jQuery(this.element).attr('tabindex', "0");
@@ -4408,15 +4049,12 @@ var hrange = __webpack_require__(6989);
     this.element.innerHTML = this.saveHTML;
     this.element.focus();
   };
-
   $.KeyboardSelector.prototype.turnSelectionModeOff = function () {
     var self = this;
     var toggleButton = jQuery(this.element).parent().find('.hx-toggle-annotations');
-
     if (toggleButton.hasClass('should-show')) {
       toggleButton.click();
     }
-
     jQuery(this.element).off('keydown');
     jQuery(this.element).off('keyup');
     jQuery(this.element).attr('contenteditable', 'false');
@@ -4431,19 +4069,16 @@ var hrange = __webpack_require__(6989);
       self.element.blur();
     }, 250);
   };
+
   /* Credit to Rich Caloggero
    * https://github.com/RichCaloggero/annotator/blob/master/annotator.html
    */
-
-
   $.KeyboardSelector.prototype.filterKeys = function (keyPressed) {
     var self = this;
     var key = keyPressed.key || keypressed.keyCode;
-
     switch (key) {
       case self.delimiter:
         return false;
-
       case "ArrowUp":
       case "ArrowDown":
       case "ArrowLeft":
@@ -4460,27 +4095,22 @@ var hrange = __webpack_require__(6989);
       case "End":
       case "Tab":
         return true;
-
       case "Backspace":
         if (self.verifyBackspace()) {
           self.start = undefined;
           return true;
         }
-
       case "Escape":
         self.turnSelectionModeOff();
         keyPressed.preventDefault();
         jQuery('.sr-real-alert').html("Keyboard Selection Mode is off.");
         return false;
-
       case "2":
         if (keyPressed.altKey || keyPressed.ctrlKey) {
           jQuery('.sr-alert').html(jQuery('.sr-alert').html());
         }
-
         keyPressed.preventDefault();
         return false;
-
       case "3":
         if (keyPressed.altKey || keyPressed.ctrlKey) {
           var currVal = jQuery('.sr-alert').attr('aria-live');
@@ -4489,20 +4119,16 @@ var hrange = __webpack_require__(6989);
           var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
           jQuery('.sr-real-alert').html(newAlert);
         }
-
         keyPressed.preventDefault();
         return false;
-
       default:
         keyPressed.preventDefault();
         return false;
     } // switch
-
   };
 
   $.KeyboardSelector.prototype.getBoundingClientRect = function (range) {
     var newRange = range.cloneRange();
-
     try {
       newRange.setStart(range.startContainer, range.startOffset);
       newRange.setEnd(range.startContainer, range.startOffset + 1);
@@ -4519,17 +4145,15 @@ var hrange = __webpack_require__(6989);
       };
     }
   };
-
   $.KeyboardSelector.prototype.setSelection = function (keyPressed) {
     var self = this;
     var key = keyPressed.key || keyPressed.keyCode;
-
     switch (key) {
       case self.delimiter:
         if (!self.start || typeof self.start == "undefined") {
           self.start = self.copySelection(getSelection());
-          var bcr = self.getBoundingClientRect(self.start); //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
-
+          var bcr = self.getBoundingClientRect(self.start);
+          //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
           jQuery('body').append('<div class="hx-selector-img"></div>');
           jQuery('.hx-selector-img').css({
             top: bcr.top + jQuery(window).scrollTop() - 5,
@@ -4539,16 +4163,16 @@ var hrange = __webpack_require__(6989);
           jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
         } else {
           var end = self.copySelection(getSelection());
-          jQuery('.hx-selector-img').remove(); //console.log("Found end", end);
-
-          if (self.currentSelection) {//console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
+          jQuery('.hx-selector-img').remove();
+          //console.log("Found end", end);
+          if (self.currentSelection) {
+            //console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
           } else {
             var end = self.copySelection(getSelection());
             var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
             var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
             var boundingBox = undefined;
             self.currentSelection = document.createRange();
-
             if (posStart.startOffset < posEnd.startOffset) {
               self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
               self.currentSelection.setEnd(end.startContainer, end.startOffset);
@@ -4557,33 +4181,32 @@ var hrange = __webpack_require__(6989);
               self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
             }
           }
-
           boundingBox = {
             top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
             left: self.currentSelection.getBoundingClientRect().left - 5
           };
           var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
-          jQuery('.sr-alert').html(''); //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
-
-          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]); //console.log("Active Element", document.activeElement.className);
-
+          jQuery('.sr-alert').html('');
+          //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
+          Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
+          //console.log("Active Element", document.activeElement.className);
           if (document.activeElement.className.indexOf('note-editable') == -1) {
             //console.log("BLURRING");
             self.element.blur();
           } else {
             setTimeout(function () {
-              jQuery('.note-editable.card-block')[0].focus(); //console.log("should be focusing on", document.activeElement);
+              jQuery('.note-editable.card-block')[0].focus();
+              //console.log("should be focusing on", document.activeElement);
             }, 250);
           }
-
-          self.turnSelectionModeOff(); // var startComesAfter = self.startComesAfter(self.start, end);
+          self.turnSelectionModeOff();
+          // var startComesAfter = self.startComesAfter(self.start, end);
           // console.log("Found other", startComesAfter);
           // self.start = startComesAfter[0];
           // self.processSelection(startComesAfter[0], startComesAfter[1]);
         }
 
         break;
-
       case "ArrowUp":
       case "ArrowDown":
       case "ArrowLeft":
@@ -4601,21 +4224,19 @@ var hrange = __webpack_require__(6989);
           var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
           var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
           self.currentSelection = document.createRange();
-
           if (posStart.startOffset < posEnd.startOffset) {
             self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
             self.currentSelection.setEnd(end.startContainer, end.startOffset);
           } else {
             self.currentSelection.setStart(end.startContainer, end.startOffset);
             self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
-          } // console.log(self.start, end);
+          }
+          // console.log(self.start, end);
           // console.log(self.currentSelection, self.currentSelection.toString());
           // var sel = window.getSelection();
           // sel.removeAllRanges();
           // sel.addRange(self.currentSelection);
-
         }
-
     }
   };
 
@@ -4629,29 +4250,29 @@ var hrange = __webpack_require__(6989);
     // };
     return selection.getRangeAt(0);
   };
-
   $.KeyboardSelector.prototype.processSelection = function (start, end) {
     var self = this;
-    var s = getSelection(); //console.log("LOOK HERE", start, end);
-
+    var s = getSelection();
+    //console.log("LOOK HERE", start, end);
     var r = this.removeMarkers(start, end);
-    self.start = undefined; //console.log("R!", r);
+    self.start = undefined;
+    //console.log("R!", r);
 
     try {
       var boundingBox = r.end.parentElement.getBoundingClientRect();
     } catch (e) {
       var boundingBox = r.endContainer.parentElement.getBoundingClientRect();
-    } //console.log(boundingBox);
+    }
+    //console.log(boundingBox);
+
     // publish selection made
-
-
-    Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]); //console.log("Element Focused", document.activeElement);
-
+    Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]);
+    //console.log("Element Focused", document.activeElement);
     if (document.activeElement.className.indexOf('note-editable') == -1) {
       self.element.blur();
     }
-
-    self.turnSelectionModeOff(); // this.element.focus();
+    self.turnSelectionModeOff();
+    // this.element.focus();
   };
 
   $.KeyboardSelector.prototype.startComesAfter = function (start, end) {
@@ -4662,9 +4283,8 @@ var hrange = __webpack_require__(6989);
       } else {
         return [start, end];
       }
-    } // TODO: Handle other use cases (i.e. starting several nodes instead of within the same one)
-
-
+    }
+    // TODO: Handle other use cases (i.e. starting several nodes instead of within the same one)
     var commonAncestor = this.getCommonAncestor(start.anchorNode, end.anchorNode);
     var children = jQuery(commonAncestor).children();
     var startCounter = 0;
@@ -4685,13 +4305,13 @@ var hrange = __webpack_require__(6989);
         endCounter += jQuery(el).text().length;
       }
     });
-
     if (startCounter > endCounter) {
       return [end, start];
     } else {
       return [start, end];
     }
   };
+
   /**
    * Gets the common ancestor.
    * Credit: https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
@@ -4700,8 +4320,6 @@ var hrange = __webpack_require__(6989);
    * @param      {<type>}  b       { parameter_description }
    * @return     {Object}  The common ancestor.
    */
-
-
   $.KeyboardSelector.prototype.getCommonAncestor = function (a, b) {
     $parentsa = jQuery(a).parents();
     $parentsb = jQuery(b).parents();
@@ -4718,17 +4336,13 @@ var hrange = __webpack_require__(6989);
     });
     return found;
   };
-
   $.KeyboardSelector.prototype.removeMarkers = function (start, end) {
     var self = this;
     var _start = start.anchorNode;
-
     var _startOffset = start.anchorOffset - 1;
-
     var _end = end.anchorNode;
-
-    var _endOffset = end.anchorOffset - 1; //console.log(_start, _startOffset, _end, _endOffset);
-
+    var _endOffset = end.anchorOffset - 1;
+    //console.log(_start, _startOffset, _end, _endOffset);
 
     var t2 = this.removeCharacter(_end.textContent, _endOffset);
     _end.textContent = t2;
@@ -4741,31 +4355,28 @@ var hrange = __webpack_require__(6989);
       startOffset: _startOffset,
       endContainer: _end
     };
-
     if (start.anchorNode === end.anchorNode) {
       realRange['endOffset'] = _endOffset - 1;
       r.setEnd(_start, _endOffset - 1);
     } else {
       realRange['endOffset'] = _endOffset;
       r.setEnd(_start, _endOffset);
-    } // getting common ancestors
+    }
+    // getting common ancestors
     // lonesomeday @ https://stackoverflow.com/questions/3960843/how-to-find-the-nearest-common-ancestors-of-two-or-more-nodes
-
-
     realRange['commonAncestorContainer'] = jQuery(_start).parents().has(_end).first()[0];
     realRange['exact'] = [r.toString()];
     window.getSelection().removeAllRanges();
-    window.getSelection().addRange(r); // convert to xpath and then back to a range
+    window.getSelection().addRange(r);
+    // convert to xpath and then back to a range
     // var sR = hrange.serializeRange(r, self.element, 'annotator-hl');
     //var nR = hrange.normalizeRange(sR, self.element, 'annotator-hl');
     // console.log(sR, nR);
-
     return r;
   };
-
-  $.KeyboardSelector.prototype.addMarkers = function (ranges) {// console.log(ranges);
+  $.KeyboardSelector.prototype.addMarkers = function (ranges) {
+    // console.log(ranges);
   };
-
   $.KeyboardSelector.prototype.removeCharacter = function (s, offset) {
     if (offset === 0) {
       s = s.slice(1);
@@ -4774,24 +4385,19 @@ var hrange = __webpack_require__(6989);
     } else {
       s = s.slice(0, offset) + s.slice(offset + 1);
     }
-
     return s;
   };
-
   $.KeyboardSelector.prototype.verifyBackspace = function () {
     var s = getSelection();
     var r = document.createRange();
     var startOffset = s.anchorOffset;
-
     if (startOffset > 0) {
       startOffset -= 1;
     }
-
     r.setStart(s.anchorNode, startOffset);
     r.setEnd(s.anchorNode, startOffset + 1);
     return r.toString() == this.delimiter;
   };
-
   $.selectors.push($.KeyboardSelector);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -4804,10 +4410,9 @@ var hrange = __webpack_require__(6989);
  * Should be listening for ways to select a text and then return an xpath 
  * object with the range that was selected.
  */
+
 var jQuery = __webpack_require__(9755);
-
 var hrange = __webpack_require__(6989);
-
 (function ($) {
   $.MouseSelector = function (element, inst_id) {
     var defaultOpts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -4818,39 +4423,34 @@ var hrange = __webpack_require__(6989);
     this.mustConfirm = !!defaultOpts.confirm;
     this.init();
   };
-
   $.MouseSelector.prototype.init = function () {
     var self = this;
     self.setUpListeners();
   };
-
   $.MouseSelector.prototype.setUpListeners = function () {
     var self = this;
     this.element.addEventListener('mouseup', function (event) {
       var selection = window.getSelection();
-      var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
-
+      var selectionRange = selection.getRangeAt(0);
+      //console.log(selectionRange.cloneContents());
       self.onSelection(selectionRange, event);
     });
     document.addEventListener('keyup', function (e) {
       var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
-
       if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
         var selection = window.getSelection();
-        var selectionRange = selection.getRangeAt(0); //console.log(selectionRange.cloneContents());
-
+        var selectionRange = selection.getRangeAt(0);
+        //console.log(selectionRange.cloneContents());
         self.onSelection(selectionRange, event);
       }
     });
   };
-
   $.MouseSelector.prototype.onSelection = function (range, event) {
-    var self = this; //console.log('onSelection Ran: ', range, event);
-
+    var self = this;
+    //console.log('onSelection Ran: ', range, event);
     if (range instanceof Range) {
       //console.log('range is instance of Range', range.toString());
       var result = self.shouldBeAnnotated(range);
-
       if (result && (range.toString().length > 0 || range.cloneContents().querySelectorAll('img').length > 0)) {
         if (self.mustConfirm) {
           //console.log("Confirming...")
@@ -4867,27 +4467,23 @@ var hrange = __webpack_require__(6989);
       }
     }
   };
-
   $.MouseSelector.prototype.shouldBeAnnotated = function (range) {
     var self = this;
     var wrapper = self.element.querySelector(self.wrapperSelector);
     var testingNode = range.commonAncestorContainer;
-
     while (testingNode !== wrapper && testingNode !== null) {
       testingNode = testingNode.parentNode;
     }
-
     return testingNode === wrapper;
   };
-
   $.MouseSelector.prototype.confirm = function (range, event) {
     var self = this;
     self.hideConfirm();
-
     if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length == 0) {
-      self.interactionPoint = $.mouseFixedPosition(event); //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
-
-      self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event); //console.log("Should have loaded button to confirm annotation");
+      self.interactionPoint = $.mouseFixedPosition(event);
+      //console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
+      self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event);
+      //console.log("Should have loaded button to confirm annotation");
     } else {
       $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {
         buttons: [],
@@ -4895,18 +4491,14 @@ var hrange = __webpack_require__(6989);
       }]);
     }
   };
-
   $.MouseSelector.prototype.hideConfirm = function () {
     jQuery('.hx-confirm-button').remove();
   };
-
   $.MouseSelector.prototype.loadButton = function (range, iP, event) {
     var self = this;
-
     if (iP.top <= 48) {
       iP.top = 49;
     }
-
     var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
     jQuery('body').append(confirmButtonTemplate);
     jQuery('.hx-confirm-button button').click(function () {
@@ -4915,7 +4507,6 @@ var hrange = __webpack_require__(6989);
       jQuery('.hx-confirm-button').remove();
     });
   };
-
   $.selectors.push($.MouseSelector);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -4928,17 +4519,15 @@ var hrange = __webpack_require__(6989);
 /* provided dependency */ var toastr = __webpack_require__(8901);
 //var xpathrange = xpathrange ? xpathrange : require('xpath-range');
 var hrange = __webpack_require__(6989);
-
 (function ($) {
   $.CatchPy = function (options, inst_id) {
     this.options = options;
     this.instance_id = inst_id;
     this.store = [];
-    this.url_base = options.storageOptions.external_url.catchpy; //console.log(this.url_base);
-
+    this.url_base = options.storageOptions.external_url.catchpy;
+    //console.log(this.url_base);
     this.setUpListeners();
   };
-
   $.CatchPy.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('convertFromWebAnnotation', self.instance_id, function (_, element, webAnnotation, callBack) {
@@ -4954,35 +4543,30 @@ var hrange = __webpack_require__(6989);
       self.options.source_id = objectID;
     });
   };
-
   $.CatchPy.prototype.onLoad = function (element, opts, callBack) {
     var self = this;
     self.element = element;
-
     var callB = function callB(result) {
       jQuery.each(result.rows, function (_, ann) {
-        var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper')); //console.log(waAnnotation);
-
+        var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
+        //console.log(waAnnotation);
         setTimeout(function () {
           // console.log('definitely getting to here');
           $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
           $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation, true]);
         }, 250);
       });
-
       if (typeof callBack !== "undefined") {
         var wrapperFunc = function wrapperFunc(ann) {
           return self.convertFromWebAnnotation(ann, jQuery(element).find('.annotator-wrapper'));
         };
-
         callBack(result.rows, wrapperFunc);
       }
     };
-
-    self.search(opts, callB, function (errs) {//console.log("Error", errs);
+    self.search(opts, callB, function (errs) {
+      //console.log("Error", errs);
     });
   };
-
   $.CatchPy.prototype.search = function (options, callBack, errfun) {
     var self = this;
     var data = jQuery.extend({}, {
@@ -5006,8 +4590,8 @@ var hrange = __webpack_require__(6989);
         'x-annotator-auth-token': self.options.storageOptions.token
       },
       success: function success(result) {
-        $.totalAnnotations = result.total; // console.log('Result: ', result)
-
+        $.totalAnnotations = result.total;
+        // console.log('Result: ', result)
         callBack(result, self.convertFromWebAnnotation.bind(self));
       },
       error: function error(xhr, status, _error) {
@@ -5028,23 +4612,19 @@ var hrange = __webpack_require__(6989);
             toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error code ' + xhr.status + ')');
           }
         }
-
         errfun([xhr, status, _error]);
       }
     });
   };
-
   $.CatchPy.prototype.StorageAnnotationSave = function (ann_to_save, elem, updating, callBack, errorCallback) {
     var self = this;
-
     if (updating) {
       self.StorageAnnotationUpdate(ann_to_save, elem);
       return;
-    } // console.log(ann_to_save);
-
-
-    var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper')); // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
-
+    }
+    // console.log(ann_to_save);
+    var save_ann = self.convertToWebAnnotation(ann_to_save, jQuery(elem).find('.annotator-wrapper'));
+    // console.log("4. Converts to WebAnnotation to send to Catchpy: ", ann_to_save, save_ann);
     var params = '?resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
     params += '&utm_source=' + this.options.storageOptions.database_params.utm_source;
     params += '&version=' + this.options.storageOptions.database_params.version;
@@ -5059,15 +4639,16 @@ var hrange = __webpack_require__(6989);
       success: function success(result) {
         //console.log('ANNOTATION SAVED', result);
         if (typeof callBack === "function") {
-          callBack(result, ann_to_save); //callBack(self.convertFromWebAnnotation(result, jQuery(elem).find('.annotator-wrapper')));
+          callBack(result, ann_to_save);
+          //callBack(self.convertFromWebAnnotation(result, jQuery(elem).find('.annotator-wrapper')));
         }
       },
+
       error: function error(xhr, status, _error2) {
         if (typeof errorCallback === "function") {
           errorCallback();
-        } //console.log(xhr, status, error);
-
-
+        }
+        //console.log(xhr, status, error);
         if (xhr.status === 401) {
           toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)");
         } else if (xhr.status === 500) {
@@ -5084,7 +4665,6 @@ var hrange = __webpack_require__(6989);
       }
     });
   };
-
   $.CatchPy.prototype.StorageAnnotationDelete = function (ann_to_delete, callBack, errCallBack) {
     var self = this;
     var params = '&resource_link_id=' + this.options.storageOptions.database_params.resource_link_id;
@@ -5106,7 +4686,6 @@ var hrange = __webpack_require__(6989);
         if (typeof errCallBack === "function") {
           errCallBack();
         }
-
         if (xhr.status === 401) {
           toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)");
         } else if (xhr.status === 500) {
@@ -5117,7 +4696,6 @@ var hrange = __webpack_require__(6989);
       }
     });
   };
-
   $.CatchPy.prototype.StorageAnnotationUpdate = function (ann_to_update, elem, callBack, errCallBack) {
     var self = this;
     var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
@@ -5136,9 +4714,10 @@ var hrange = __webpack_require__(6989);
         // console.log("Yup");
         if (typeof callBack === "function") {
           callBack(self.convertFromWebAnnotation(result));
-        } //console.log('ANNOTATION_UPDATED', result)
-
+        }
+        //console.log('ANNOTATION_UPDATED', result)
       },
+
       error: function error(xhr, status, _error4) {
         if (xhr.status === 401) {
           toastr.error("You do not have permission to access the database. Refreshing the page might reactivate your permissions.", "(Error code 401)");
@@ -5147,14 +4726,12 @@ var hrange = __webpack_require__(6989);
         } else {
           toastr.error('Unknown Error. Your annotations were not saved. Copy them elsewhere to prevent loss. Notify instructor.', '(Error ' + xhr.status + ')');
         }
-
         if (typeof errCallBack === "function") {
           errCallBack();
         }
       }
     });
   };
-
   $.CatchPy.prototype.convertToWebAnnotation = function (annotation, elem) {
     var self = this;
     var tags = [];
@@ -5165,14 +4742,16 @@ var hrange = __webpack_require__(6989);
         'purpose': 'tagging'
       };
       tags.push(t_el);
-    }); // console.log('in annotation', annotation, elem)
+    });
 
+    // console.log('in annotation', annotation, elem)
     var targetList = [];
     var source_id = this.options.object_id;
-    var purpose = 'commenting'; // console.log(annotation.media, annotation)
-
+    var purpose = 'commenting';
+    // console.log(annotation.media, annotation)
     if (annotation.media === "comment") {
-      targetList.push(annotation.ranges); //source_id = annotation.ranges.source;
+      targetList.push(annotation.ranges);
+      //source_id = annotation.ranges.source;
       // jQuery.each(annotation.ranges, function(_, range){
       //     targetList.push(range)
       //     source_id = range.parent;
@@ -5182,11 +4761,9 @@ var hrange = __webpack_require__(6989);
     } else {
       // console.log('convert2wa', annotation.ranges, elem);
       var serializedRanges = annotation.ranges; //self.serializeRanges(annotation.ranges, elem);
-
       var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
       jQuery.each(serializedRanges, function (index, range) {
         var rangeItem = range;
-
         if (mediatype === "Text") {
           rangeItem = [{
             'type': 'RangeSelector',
@@ -5245,7 +4822,6 @@ var hrange = __webpack_require__(6989);
             "conformsTo": "http://www.w3.org/TR/media-frags/"
           }];
         }
-
         targetList.push({
           'source': source_id,
           'type': mediatype,
@@ -5256,7 +4832,6 @@ var hrange = __webpack_require__(6989);
         });
       });
     }
-
     var webAnnotationVersion = {
       "@context": "http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json",
       'type': 'Annotation',
@@ -5295,7 +4870,6 @@ var hrange = __webpack_require__(6989);
     };
     return webAnnotationVersion;
   };
-
   $.CatchPy.prototype.convertFromWebAnnotation = function (webAnn, element) {
     var self = this;
     var mediaFound = self.getMediaType(webAnn);
@@ -5311,7 +4885,6 @@ var hrange = __webpack_require__(6989);
       totalReplies: webAnn.totalReplies,
       permissions: webAnn.permissions
     };
-
     if (mediaFound.toLowerCase() === "image") {
       jQuery.each(annotation['ranges'], function (index, range) {
         if (range['type'].toLowerCase() === "thumbnail") {
@@ -5325,20 +4898,16 @@ var hrange = __webpack_require__(6989);
             try {
               if (selector['type'].toLowerCase() === "svgselector") {
                 var svgVal = selector.value;
-
                 if (fragFound) {
                   svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
                 }
-
                 annotation['svg'] = svgVal;
                 svgExists = true;
               } else {
                 fragVal = 'class="thumbnail-svg-' + annotation['id'] + '" viewBox="' + selector.value.replace('xywh=', '').split(',').join(' ') + '"';
-
                 if (svgExists) {
                   annotation['svg'] = annotation['svg'].replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
                 }
-
                 fragFound = true;
               }
             } catch (e) {
@@ -5353,33 +4922,27 @@ var hrange = __webpack_require__(6989);
         }
       });
     }
-
     return annotation;
   };
-
   $.CatchPy.prototype.getMediaType = function (webAnn, element) {
     var found = webAnn['target']['items'][0]['type'];
     jQuery.each(webAnn['target']['items'], function (index, item) {
       var m = item['type'].toLowerCase();
-
       if (m === "image" || m === "video" || m === "text" || m === "audio") {
         found = item['type'];
       }
-
       if (m === 'annotation') {
         found = 'comment';
       }
-    }); // console.log("FOUND IT", found);
-
+    });
+    // console.log("FOUND IT", found);
     return found;
   };
-
   $.CatchPy.prototype.getAnnotationTargetItems = function (webAnn) {
     var self = this;
-
     try {
-      var annType = webAnn['target']['items'][0]['type']; // console.log("reached getAnnotationTargetItems", webAnn);
-
+      var annType = webAnn['target']['items'][0]['type'];
+      // console.log("reached getAnnotationTargetItems", webAnn);
       if (annType === "Annotation") {
         // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
         return [{
@@ -5389,7 +4952,6 @@ var hrange = __webpack_require__(6989);
         return webAnn['target']['items'];
       } else if (annType === "Video") {
         var fragmentSelectorItem = webAnn['target']['items'][0]['selector']['items'][0];
-
         if (fragmentSelectorItem.type == "FragmentSelector") {
           var timeValue = fragmentSelectorItem.value.replace('t=', '').split(',');
           var startTime = parseFloat(timeValue[0]);
@@ -5401,19 +4963,16 @@ var hrange = __webpack_require__(6989);
             endLabel: self.humanReadable(endTime)
           }];
         }
-      } // console.log("nope, something went wrong");
-
-
+      }
+      // console.log("nope, something went wrong");
       return webAnn['target']['items'][0]['selector']['items'];
     } catch (e) {
       // console.log(e);
       return [];
     }
   };
-
   $.CatchPy.prototype.getAnnotationTarget = function (webAnn, element, media) {
     var self = this;
-
     try {
       // console.log(media);
       if (media.toLowerCase() === "text") {
@@ -5446,7 +5005,6 @@ var hrange = __webpack_require__(6989);
             return ranges.push(targetItem);
           }
         });
-
         if (xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length) {
           for (var i = xpathRanges.length - 1; i >= 0; i--) {
             ranges.push({
@@ -5458,7 +5016,6 @@ var hrange = __webpack_require__(6989);
         } else if (xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
           var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
           var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
-
           if (startNode && endNode) {
             var normalizedRange = document.createRange();
             normalizedRange.setStart(startNode.node, startNode.offset);
@@ -5468,19 +5025,15 @@ var hrange = __webpack_require__(6989);
           }
         } else {
           var rangeFound = {};
-
           if (xpathRanges.length >= 1) {
             rangeFound['xpath'] = xpathRanges[0];
           }
-
           if (positionRanges.length >= 1) {
             rangeFound['position'] = positionRanges[0];
           }
-
           if (textRanges.length >= 1) {
             rangeFound['text'] = textRanges[0];
           }
-
           ranges.push(rangeFound);
         }
       } else if (media.toLowerCase() == "image") {
@@ -5493,20 +5046,18 @@ var hrange = __webpack_require__(6989);
         jQuery.each(this.getAnnotationTargetItems(webAnn), function (_, targetItem) {
           return ranges.push(targetItem);
         });
-      } //console.log('getAnnotationTarget', ranges, element);
-
-
+      }
+      //console.log('getAnnotationTarget', ranges, element);
       return ranges;
     } catch (e) {
       // console.log(ranges, element[0]);
-      throw e; // console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
+      throw e;
+      // console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
       //return self.normalizeRanges(ranges, window.document);
       // console.log(e);
-
       return [];
     }
   };
-
   $.CatchPy.prototype.getAnnotationText = function (webAnn) {
     try {
       var found = [];
@@ -5520,7 +5071,6 @@ var hrange = __webpack_require__(6989);
       return "";
     }
   };
-
   $.CatchPy.prototype.getAnnotationCreated = function (webAnn) {
     try {
       return new Date(webAnn['created']);
@@ -5528,7 +5078,6 @@ var hrange = __webpack_require__(6989);
       return new Date();
     }
   };
-
   $.CatchPy.prototype.getAnnotationCreator = function (webAnn) {
     try {
       return webAnn['creator'];
@@ -5539,7 +5088,6 @@ var hrange = __webpack_require__(6989);
       };
     }
   };
-
   $.CatchPy.prototype.getAnnotationExact = function (webAnn) {
     try {
       var quote = '';
@@ -5555,7 +5103,6 @@ var hrange = __webpack_require__(6989);
       return "";
     }
   };
-
   $.CatchPy.prototype.getAnnotationId = function (webAnn) {
     try {
       return webAnn['id'];
@@ -5563,7 +5110,6 @@ var hrange = __webpack_require__(6989);
       return "";
     }
   };
-
   $.CatchPy.prototype.getAnnotationTags = function (webAnn) {
     try {
       var tags = [];
@@ -5577,35 +5123,28 @@ var hrange = __webpack_require__(6989);
       return [];
     }
   };
-
   $.CatchPy.prototype.storeCurrent = function () {};
-
   $.CatchPy.prototype.serializeRanges = function (ranges, elem) {
     var self = this;
-
     if (ranges.length < 1) {
       return {
         ranges: []
       };
     }
-
     var text = [],
-        serializedRanges = [],
-        previous = "",
-        next = "",
-        extraRanges = [],
-        contextEl = elem[0];
-
+      serializedRanges = [],
+      previous = "",
+      next = "",
+      extraRanges = [],
+      contextEl = elem[0];
     for (var i = 0, len = ranges.length; i < len; i++) {
       text = [];
       var r = ranges[i];
-
       if (r.text !== undefined) {
         text.push(Hxighlighter.trim(r.text()));
       } else {
         text.push(Hxighlighter.trim(self.text(r)));
       }
-
       try {
         previous = ranges[i]['start']['previousSibling'] ? ranges[i]['start']['previousSibling'].textContent : '';
         next = ranges[i]['end']['nextSibling'] ? ranges[i]['end']['nextSibling'].textContent : '';
@@ -5613,7 +5152,6 @@ var hrange = __webpack_require__(6989);
         previous = ranges[i]['startContainer']['previousSibling'] ? ranges[i]['startContainer']['previousSibling'].textContent : '';
         next = ranges[i]['endContainer']['nextSibling'] ? ranges[i]['endContainer']['nextSibling'].textContent : '';
       }
-
       var exact = text.join(' / ');
       var exactFullStart = jQuery(contextEl).text().indexOf(exact);
       var fullTextRange = {
@@ -5623,7 +5161,6 @@ var hrange = __webpack_require__(6989);
         prefix: previous.substring(previous.length - 20, previous.length).replace('*', ''),
         suffix: next.substring(0, 20).replace('*', '')
       };
-
       try {
         // This is the annotatorjs way to serialize");
         serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
@@ -5642,8 +5179,8 @@ var hrange = __webpack_require__(6989);
           exact: serializedRange.text.exact,
           suffix: serializedRange.text.suffix
         });
-      } // console.log("SERIALIZED", serializedRanges, contextEl);
-
+      }
+      // console.log("SERIALIZED", serializedRanges, contextEl);
     }
 
     return {
@@ -5651,7 +5188,6 @@ var hrange = __webpack_require__(6989);
       extra: extraRanges
     };
   };
-
   $.CatchPy.prototype.normalizeRanges = function (ranges, elem) {
     var self = this;
     var normalizedRanges = [];
@@ -5663,109 +5199,84 @@ var hrange = __webpack_require__(6989);
       // } catch(e) {
       //     //console.log("trying toRange");
       //console.log(elem, range.start, range.startOffset, range.end, range.endOffset);
-      var foundRange = hrange.normalizeRange(range, elem, 'annotator-hl'); // }
+      var foundRange = hrange.normalizeRange(range, elem, 'annotator-hl');
+      // }
       // console.log(elem);
-      // console.log(foundRange);
 
+      // console.log(foundRange);
       normalizedRanges.push(foundRange);
     });
     return normalizedRanges;
   };
-
   $.CatchPy.prototype.getElementViaXpath = function (xpath, rootElem) {
     var res = document.evaluate('.' + xpath, jQuery(rootElem)[0], null, XPathResult.ANY_TYPE, null);
     return res.iterateNext();
   };
-
   $.CatchPy.prototype.contains = function (elem1, elem2) {
     if (document.compareDocumentPosition != null) {
       return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_CONTAINED_BY;
     }
-
     return false;
   };
-
   $.CatchPy.prototype.flatten = function (array) {
     var _flatten;
-
     _flatten = function flatten(ary) {
       var el, flat, _i, _len;
-
       flat = [];
-
       for (_i = 0, _len = ary.length; _i < _len; _i++) {
         el = ary[_i];
         flat = flat.concat(el && jQuery.isArray(el) ? _flatten(el) : el);
       }
-
       return flat;
     };
-
     return _flatten(array);
   };
-
   $.CatchPy.prototype.getTextNodes = function (nodeContainer) {
     var self = this;
-
     var _getTextNodes;
-
     _getTextNodes = function getTextNodes(node) {
       var nodes;
-
       if (node && node.nodeType !== 3) {
         nodes = [];
-
         if (node.nodeType !== 8) {
           node = node.lastChild;
-
           while (node) {
             nodes.push(_getTextNodes(node));
             node = node.previousSibling;
           }
         }
-
         return nodes.reverse();
       } else {
         return node;
       }
     };
-
     return nodeContainer.map(function () {
       return self.flatten(_getTextNodes(this));
     });
   };
-
   $.CatchPy.prototype.getTextNodesFromRange = function (node) {
     var end, start, textNodes, _ref;
-
     var self = this;
     textNodes = self.getTextNodes(jQuery(node.commonAncestorContainer));
     _ref = [textNodes.index(node.start), textNodes.index(node.end)], start = _ref[0], end = _ref[1];
     return jQuery.makeArray(textNodes.slice(start, +end + 1 || 9e9));
   };
-
   $.CatchPy.prototype.text = function (node) {
     var self = this;
     return function () {
       var _i, _len, _ref, _results;
-
       _ref = self.getTextNodesFromRange(node);
       _results = [];
-
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-
         _results.push(node.nodeValue);
       }
-
       return _results;
     }.call(this).join('');
   };
-
   $.CatchPy.prototype.humanReadable = function (seconds_float) {
     var self = this;
     var dur = seconds_float;
-
     if (dur < 3600) {
       var mins = parseInt(seconds_float / 60, 10);
       var secs = parseInt(seconds_float % 60, 10);
@@ -5778,17 +5289,11 @@ var hrange = __webpack_require__(6989);
       return self.pad(hours, 2) + ":" + self.pad(mins, 2) + ":" + self.pad(secs, 2);
     }
   };
-
   $.CatchPy.prototype.pad = function (num, size) {
     var s = num + "";
-
-    while (s.length < size) {
-      s = "0" + s;
-    }
-
+    while (s.length < size) s = "0" + s;
     return s;
   };
-
   $.storage.push($.CatchPy);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -5801,45 +5306,27 @@ var hrange = __webpack_require__(6989);
 /**
  * 
  */
+
 //during deployment, this is what decides what gets instantiated, should be moved elsewhere
 __webpack_require__(3064);
-
 __webpack_require__(6235);
-
 __webpack_require__(931);
-
 __webpack_require__(9185);
-
 __webpack_require__(2741);
-
 __webpack_require__(4817);
-
 __webpack_require__(5911);
-
 __webpack_require__(3247);
-
 __webpack_require__(2394);
-
 __webpack_require__(8347);
-
 __webpack_require__(4110);
-
 __webpack_require__(3798);
-
 __webpack_require__(5972);
-
 __webpack_require__(1416);
-
 __webpack_require__(2934);
-
 __webpack_require__(6775);
-
 __webpack_require__(4304);
-
 __webpack_require__(7290);
-
 __webpack_require__(7773);
-
 (function ($) {
   /**
    * { function_description }
@@ -5855,19 +5342,20 @@ __webpack_require__(7773);
     this.annotation_selector = 'hx-annotation-hl';
     this.init();
   };
+
   /**
    * { function_description }
    */
-
-
   $.TextTarget.prototype.init = function () {
-    var self = this; // this target is only meant to work with text/html objects
-
+    var self = this;
+    // this target is only meant to work with text/html objects
     this.media = "text";
-    this.setUpListeners(); // this where the target will be contained
+    this.setUpListeners();
 
-    this.target_selector = this.options.target_selector; // sets up listeners from core and other places
+    // this where the target will be contained
+    this.target_selector = this.options.target_selector;
 
+    // sets up listeners from core and other places
     if (this.options.method == "url") {
       // if the text exists externally, this will load it into the DOM
       this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector);
@@ -5876,10 +5364,9 @@ __webpack_require__(7773);
       // console.log('Loading Target via Inline');
       this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
     }
-
     function areScrollbarsVisible() {
       var scrollableElem = document.createElement('div'),
-          innerElem = document.createElement('div');
+        innerElem = document.createElement('div');
       scrollableElem.style.width = '30px';
       scrollableElem.style.height = '30px';
       scrollableElem.style.overflow = 'scroll';
@@ -5888,12 +5375,10 @@ __webpack_require__(7773);
       innerElem.style.height = '60px';
       scrollableElem.appendChild(innerElem);
       document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
-
       var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
       document.body.removeChild(scrollableElem);
       return diff > 0;
     }
-
     window.addEventListener('load', function () {
       // Show scrollbars if they're hidden.
       if (!areScrollbarsVisible()) {
@@ -5901,6 +5386,7 @@ __webpack_require__(7773);
       }
     });
   };
+
   /**
    * Creates a text slot from url.
    *
@@ -5908,39 +5394,41 @@ __webpack_require__(7773);
    * @param      {<type>}  selector     The selector
    * @param      {<type>}  instance_id  The instance identifier
    */
-
-
   $.TextTarget.prototype.createTextSlotFromURL = function (content, selector, instance_id) {
-    this.guid = $.getUniqueId(); // each annotation target will be enclosed in a "slot"
-    //var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
-    // adds it to the page and turns on the wrapper
+    this.guid = $.getUniqueId();
 
+    // each annotation target will be enclosed in a "slot"
+    //var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
+
+    // adds it to the page and turns on the wrapper
     jQuery(selector + ' .annotations-section').append(content);
     jQuery(selector).prop('id', this.guid);
     jQuery(selector).addClass('annotation-slot');
-    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section'); // lets Core know that the target has finished loading on screen
+    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
 
+    // lets Core know that the target has finished loading on screen
     $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
   };
+
   /**
    * Creates a text slot from selector.
    *
    * @param      {<type>}  selector     The selector
    * @param      {<type>}  instance_id  The instance identifier
    */
-
-
   $.TextTarget.prototype.createTextSlotFromSelector = function (selector, instance_id) {
     // each annotation target will be enclosed in a "slot" with a temporary unique id
     this.guid = $.getUniqueId();
     var slot = jQuery(selector);
     slot.addClass('annotation-slot');
     slot.attr('id', this.guid);
-    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section'); // lets core know that the target has finished loading on screen
-    // console.log("Publishing TargetLoaded");
+    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
 
+    // lets core know that the target has finished loading on screen
+    // console.log("Publishing TargetLoaded");
     $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
   };
+
   /**
    * Makes a query.
    *
@@ -5949,11 +5437,10 @@ __webpack_require__(7773);
    * @param      {<type>}    selector  The selector
    * @return     {<type>}    { description_of_the_return_value }
    */
-
-
   $.TextTarget.prototype.makeQuery = function (url, callback, selector) {
-    var self = this; // retrieves the text to be loaded onto the page and passes it to callback function
+    var self = this;
 
+    // retrieves the text to be loaded onto the page and passes it to callback function
     var defer = jQuery.ajax({
       url: url,
       type: 'GET',
@@ -5965,11 +5452,10 @@ __webpack_require__(7773);
     });
     return defer;
   };
+
   /**
    * { function_description }
    */
-
-
   $.TextTarget.prototype.setUpListeners = function () {
     var self = this;
     jQuery('.toggle-alerts').click(function () {
@@ -5982,23 +5468,26 @@ __webpack_require__(7773);
         jQuery(this).addClass('on');
         jQuery('.sr-alert').attr('aria-live', 'polite');
       }
-    }); // once the target has been loaded, the selector can be instantiated
+    });
 
+    // once the target has been loaded, the selector can be instantiated
     $.subscribeEvent('targetLoaded', self.instance_id, function (_, element) {
       // console.log("LOADING TARGET");
       //annotation element gets data that may be needed later
       self.element = element;
       self.element.data('source_type', self.options.object_source);
-      self.element.data('source_type', 'text'); // finish setting up selectors
+      self.element.data('source_type', 'text');
+      // finish setting up selectors
+      self.setUpDrawers(self.element[0]);
 
-      self.setUpDrawers(self.element[0]); // finish setting up viewers (which contain displays and editors)
+      // finish setting up viewers (which contain displays and editors)
+      self.setUpViewers(self.element[0]);
 
-      self.setUpViewers(self.element[0]); // finish setting up extra plugins
+      // finish setting up extra plugins
+      self.setUpPlugins(self.element[0]);
 
-      self.setUpPlugins(self.element[0]); // finish setting up the storage containers
-
+      // finish setting up the storage containers
       self.setUpStorage(self.element[0]);
-
       if (!self.options.viewerOptions.readonly) {
         self.setUpSelectors(self.element[0]);
       }
@@ -6018,13 +5507,12 @@ __webpack_require__(7773);
       });
     });
   };
+
   /**
    * { function_description }
    *
    * @param      {<type>}  element  The element
    */
-
-
   $.TextTarget.prototype.setUpSelectors = function (element) {
     var self = this;
     self.selectors = [];
@@ -6034,13 +5522,12 @@ __webpack_require__(7773);
       }));
     });
   };
+
   /**
    * { function_description }
    *
    * @param      {<type>}  element  The element
    */
-
-
   $.TextTarget.prototype.setUpDrawers = function (element) {
     var self = this;
     self.drawers = [];
@@ -6048,7 +5535,6 @@ __webpack_require__(7773);
       self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
     });
   };
-
   $.TextTarget.prototype.setUpViewers = function (element) {
     var self = this;
     self.viewers = [];
@@ -6065,13 +5551,11 @@ __webpack_require__(7773);
       }, self.instance_id));
     });
   };
-
   $.TextTarget.prototype.setUpPlugins = function (element) {
     var self = this;
     self.plugins = [];
     jQuery.each($.plugins, function (_, plugin) {
       var optionsForPlugin;
-
       try {
         optionsForPlugin = jQuery.extend({
           'slot': element
@@ -6083,17 +5567,14 @@ __webpack_require__(7773);
           'slot': element
         };
       }
-
       self.plugins.push(new plugin(optionsForPlugin, self.instance_id));
     });
   };
-
   $.TextTarget.prototype.setUpStorage = function (element, options) {
     var self = this;
     self.storage = [];
     jQuery.each($.storage, function (idx, storage) {
       var optionsForStorage;
-
       try {
         optionsForStorage = jQuery.extend({
           'media': 'text'
@@ -6101,9 +5582,7 @@ __webpack_require__(7773);
       } catch (e) {
         optionsForStorage = {};
       }
-
       self.storage.push(new storage(optionsForStorage, self.instance_id));
-
       if (self.options.viewerOptions.defaultTab === "mine") {
         options = {
           'username': self.options.username
@@ -6118,39 +5597,36 @@ __webpack_require__(7773);
           'exclude_userid': exclusion
         };
       }
-
       self.storage[idx].onLoad(element, options);
     });
   };
+
   /**
    * { function_description }
    *
    * @class      ComponentEnable (name)
    */
-
-
   $.TextTarget.prototype.ComponentEnable = function () {
     // Targets cannot technically be enabled/disabled, but 
     // there might be cases in which the target needs to be hidden/shown
+
     jQuery('#' + this.guid).show();
   };
+
   /**
    * { function_description }
    *
    * @class      ComponentDisable (name)
    */
-
-
   $.TextTarget.prototype.ComponentDisable = function () {
     jQuery('#') + this.guid.hide();
   };
+
   /**
    * { function_description }
    *
    * @class      TargetSelectionMade (name)
    */
-
-
   $.TextTarget.prototype.TargetSelectionMade = function (range, event) {
     var range = Array.isArray(range) ? range : [range];
     var self = this;
@@ -6170,24 +5646,24 @@ __webpack_require__(7773);
     };
     jQuery.each(self.viewers, function (_, viewer) {
       viewer.TargetSelectionMade(annotation, event);
-    }); //self.TargetAnnotationDraw(annotation);
+    });
+    //self.TargetAnnotationDraw(annotation);
+
     // jQuery('.annotator-wrapper')[0].focus();
+
     //$.publishEvent('ViewerEditorOpen', self.instance_id, [annotation]);
   };
+
   /**
    * { function_description }
    *
    * @class      TargetAnnotationDraw (name)
    */
-
-
   $.TextTarget.prototype.TargetAnnotationDraw = function (annotation) {
     var self = this;
-
     if (Object.keys(annotation.ranges[0]).indexOf('parent') > -1) {
       return;
     }
-
     jQuery.each(self.drawers, function (_, drawer) {
       drawer.draw(annotation);
     });
@@ -6202,47 +5678,44 @@ __webpack_require__(7773);
       }
     });
   };
+
   /**
    * { function_description }
    *
    * @class      TargetAnnotationUndraw (name)
    */
-
-
   $.TextTarget.prototype.TargetAnnotationUndraw = function (annotation) {
     var self = this;
-
     if (annotation.media !== "Annotation") {
       jQuery.each(self.drawers, function (_, drawer) {
         drawer.undraw(annotation);
       });
     }
   };
+
   /**
    * { function_description }
    *
    * @class      ViewerEditorOpen (name)
    */
-
-
   $.TextTarget.prototype.ViewerEditorOpen = function (event, annotation) {
     return annotation;
   };
+
   /**
    * { function_description }
    *
    * @class      ViewerEditorClose (name)
    */
-
-
   $.TextTarget.prototype.ViewerEditorClose = function (annotation, is_new_annotation, hit_cancel) {
-    var self = this; //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
-
+    var self = this;
+    //console.log(annotation, 'New?:', is_new_annotation, 'Hit Cancel', hit_cancel);
     if (hit_cancel) {
       if (is_new_annotation) {
         self.TargetAnnotationUndraw(annotation);
-      } // else, the annotation was already drawn, so don't touch it.
+      }
 
+      // else, the annotation was already drawn, so don't touch it.
     } else if (is_new_annotation) {
       annotation = self.plugins.reduce(function (ann, plugin) {
         return plugin.saving(ann);
@@ -6263,23 +5736,23 @@ __webpack_require__(7773);
         $.publishEvent('StorageAnnotationSave', self.instance_id, [annotation, true]);
       });
     }
-
     jQuery.each(self.viewers, function (_, viewer) {
       var timer = new Date();
-      viewer.ViewerEditorClose(annotation); // console.log("Finished: " + (new Date() - timer) + 'ms')
+      viewer.ViewerEditorClose(annotation);
+      // console.log("Finished: " + (new Date() - timer) + 'ms')
     });
+
     setTimeout(function () {
       $.publishEvent('editorHidden', self.instance_id, []);
     }, 50);
     return annotation;
   };
+
   /**
    * { function_description }
    *
    * @class      ViewerDisplayOpen (name)
    */
-
-
   $.TextTarget.prototype.ViewerDisplayOpen = function (event, annotations) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
@@ -6287,13 +5760,12 @@ __webpack_require__(7773);
     });
     return annotations;
   };
+
   /**
    * { function_description }
    *
    * @class      ViewerDisplayClose (name)
    */
-
-
   $.TextTarget.prototype.ViewerDisplayClose = function (annotations) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
@@ -6301,16 +5773,15 @@ __webpack_require__(7773);
     });
     return annotations;
   };
+
   /**
    * { function_description }
    *
    * @class      StorageAnnotationSave (name)
    */
-
-
   $.TextTarget.prototype.StorageAnnotationSave = function (annotations, redraw) {
-    var self = this; // console.log(annotations, redraw);
-
+    var self = this;
+    // console.log(annotations, redraw);
     jQuery.each(self.storage, function (_, store) {
       store.StorageAnnotationSave(annotations, self.element, redraw);
     });
@@ -6318,13 +5789,12 @@ __webpack_require__(7773);
       viewer.StorageAnnotationSave(annotations);
     });
   };
+
   /**
    * { function_description }
    *
    * @class      StorageAnnotationLoad (name)
    */
-
-
   $.TextTarget.prototype.StorageAnnotationLoad = function (annotations, converter, undrawOld) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
@@ -6332,7 +5802,6 @@ __webpack_require__(7773);
         viewer.StorageAnnotationLoad(annotations);
       }
     });
-
     if (undrawOld) {
       $.publishEvent('GetAnnotationsData', self.instance_id, [function (anns) {
         anns.forEach(function (ann) {
@@ -6340,28 +5809,25 @@ __webpack_require__(7773);
         });
       }]);
     }
-
     annotations.forEach(function (ann) {
       var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
       self.TargetAnnotationDraw(converted_ann);
       $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
     });
   };
+
   /**
    * { function_description }
    *
    * @class      StorageAnnotationEdit (name)
    */
-
-
   $.TextTarget.prototype.StorageAnnotationEdit = function () {};
+
   /**
    * { function_description }
    *
    * @class      StorageAnnotationDelete (name)
    */
-
-
   $.TextTarget.prototype.StorageAnnotationDelete = function (annotation) {
     var self = this;
     jQuery.each(self.viewers, function (_, viewer) {
@@ -6371,13 +5837,12 @@ __webpack_require__(7773);
       store.StorageAnnotationDelete(annotation);
     });
   };
+
   /**
    * { function_description }
    *
    * @class      StorageAnnotationGetReplies (name)
    */
-
-
   $.TextTarget.prototype.StorageAnnotationSearch = function (search_options, callback, errfun) {
     var self = this;
     jQuery.each(self.storage, function (_, store) {
@@ -6404,7 +5869,6 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
 
 
 
-
 (function ($) {
   $.FloatingViewer = function (options, inst_id) {
     // sets default options
@@ -6418,8 +5882,8 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       template_suffix: "floating",
       template_urls: ""
     };
-    this.options = jQuery.extend({}, defaultOptions, options); // console.log("Floating options", this.options);
-
+    this.options = jQuery.extend({}, defaultOptions, options);
+    // console.log("Floating options", this.options);
     this.instance_id = inst_id;
     this.annotation_tool = {
       interactionPoint: null,
@@ -6432,20 +5896,20 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
     this.hideTimer = null;
     this.init();
   };
-
   $.FloatingViewer.prototype.init = function () {
     var self = this;
-    self.setUpTemplates(self.options.template_suffix); // make sure the viewer doesn't disappear when the person moves their mouse over it
+    self.setUpTemplates(self.options.template_suffix);
 
+    // make sure the viewer doesn't disappear when the person moves their mouse over it
     self.element.on('mouseover', '.annotation-viewer', function (event1) {
       clearTimeout(self.hideTimer);
-    }); // once they leave the viewer hide it
+    });
 
+    // once they leave the viewer hide it
     self.element.on('mouseleave', '.annotation-viewer', function (event1) {
       if (self.annotation_tool.isStatic) {
         return;
       }
-
       clearTimeout(self.hideTimer);
       self.ViewerDisplayClose();
     });
@@ -6454,10 +5918,8 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
         alert("Dismiss opened annotation before selecting a new one.");
         return;
       }
-
       jQuery(event1.target).addClass('annotation-selected');
       clearTimeout(self.hideTimer);
-
       try {
         self.annotation_tool.viewer.addClass('static');
         self.annotation_tool.isStatic = true;
@@ -6475,21 +5937,18 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
     });
     this.setUpPinAndMove();
   };
-
   $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
     var self = this;
     var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName) {
       if (templateName in self.options.TEMPLATES) {
         return;
       }
-
       var options = {
         url: self.options.template_urls + templateName + '-' + suffix + '.html',
         type: "GET",
         contentType: "charset=utf-8",
         success: function success(data) {
           var template = _.template(data);
-
           self.options.TEMPLATES[templateName] = template;
         },
         async: true
@@ -6502,20 +5961,18 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       });
     });
   };
-
   $.FloatingViewer.prototype.TargetSelectionMade = function (annotation, event) {
     // if (event && event instanceof MouseEvent) {
-    this.ViewerEditorOpen(event, annotation, false, $.mouseFixedPosition(event, annotation)); // }
+    this.ViewerEditorOpen(event, annotation, false, $.mouseFixedPosition(event, annotation));
+    // }
   };
 
   $.FloatingViewer.prototype.ViewerEditorOpen = function (event, annotation, updating, interactionPoint) {
     var self = this;
-
     if (self.annotation_tool.editing && self.annotation_tool.updating && self.annotation_tool.isStatic && !updating) {
       // there's already an open editor window for this instance so don't do anything
       return;
     }
-
     if (self.annotation_tool.viewer) {
       jQuery('.annotation-viewer').remove();
       delete self.annotation_tool.viewer;
@@ -6523,42 +5980,45 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       self.annotation_tool.updating = false;
       self.annotation_tool.editing = false;
     }
+    jQuery('.edit').prop('disabled', true);
 
-    jQuery('.edit').prop('disabled', true); // set editing mode
-
+    // set editing mode
     self.annotation_tool.editing = true;
-    self.annotation_tool.updating = updating; // actually set up and draw the Editor
+    self.annotation_tool.updating = updating;
 
+    // actually set up and draw the Editor
     var wrapperElement = self.element.find('.annotator-wrapper');
-    wrapperElement.after(self.annotation_tool.editorTemplate); // console.log(self.element);
+    wrapperElement.after(self.annotation_tool.editorTemplate);
+    // console.log(self.element);
     // console.log(wrapperElement);
     // save the element to call upon later
-
     self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
-    var intPt = interactionPoint; // situate it on its proper location
-
+    var intPt = interactionPoint;
+    // situate it on its proper location
     self.annotation_tool.editor.css({
       'top': intPt.top - jQuery(window).scrollTop(),
       'left': intPt.left
-    }); // closes the editor tool and does not save annotation
+    });
 
+    // closes the editor tool and does not save annotation
     self.annotation_tool.editor.find('.cancel').click(function () {
       $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, true]);
-    }); // closes the editor and does save annotations
+    });
 
+    // closes the editor and does save annotations
     self.annotation_tool.editor.find('.save').click(function () {
       var timer = new Date();
       var text = self.annotation_tool.editor.find('#annotation-text-field').val();
-
       if (updating) {
         annotation.annotationText.pop();
       }
-
       annotation.annotationText.push(text);
       var timer2 = new Date();
       $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
-      var end = new Date(); // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
+      var end = new Date();
+      // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
     });
+
     self.annotation_tool.editor.find('#annotation-text-field').val(annotation.annotationText);
     setTimeout(function () {
       self.annotation_tool.editor.find('#annotation-text-field')[0].focus();
@@ -6566,55 +6026,49 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
     self.checkOrientation(self.annotation_tool.editor, intPt);
     $.publishEvent('editorShown', self.instance_id, [self.annotation_tool.editor, annotation]);
   };
-
   $.FloatingViewer.prototype.ViewerEditorClose = function (annotation, redraw, should_erase) {
     var self = this;
     var timer = new Date();
     jQuery('.edit').prop('disabled', false);
     jQuery('.note-link-popover').remove();
-
     if (self.annotation_tool.editor) {
       self.annotation_tool.editor.remove();
     }
-
     delete self.annotation_tool.editor;
     self.annotation_tool.editing = false;
-    self.annotation_tool.updating = false; //$.publishEvent('editorHidden', self.instance_id, []);
+    self.annotation_tool.updating = false;
+    //$.publishEvent('editorHidden', self.instance_id, []);
     // jQuery('body').css('overflow-y', 'scroll');
   };
 
   $.FloatingViewer.prototype.ViewerDisplayOpen = function (event, anns) {
     var self = this;
-    var annotations = anns.reverse(); // if the timer is set for the tool to be hidden, this intercepts it
-
+    var annotations = anns.reverse();
+    // if the timer is set for the tool to be hidden, this intercepts it
     if (self.hideTimer !== undefined) {
       clearTimeout(self.hideTimer);
     }
-
     if (jQuery('.annotation-editor').is(':visible') || jQuery('.hx-confirm-button').is(':visible') || self.annotation_tool.editing || self.annotation_tool.updating || self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer)) {
       // there's already an open editor window for this instance so don't do anything
       return;
     }
-
     self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
       'viewerid': self.instance_id.replace(/\W/g, '-'),
       'annotations': annotations,
       'instructor_ids': self.options.instructors,
       'common_name': self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ""
     });
-
     if (self.options.viewer_options.readonly) {
       self.annotation_tool.viewerTemplate = self.annotation_tool.viewerTemplate.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '');
-    } // add the viewer to the DOM
+    }
 
-
-    self.element.find('.annotator-wrapper').after(self.annotation_tool.viewerTemplate); // collect the object for manipulation and coordinates of where it should appear
-
+    // add the viewer to the DOM
+    self.element.find('.annotator-wrapper').after(self.annotation_tool.viewerTemplate);
+    // collect the object for manipulation and coordinates of where it should appear
     if (self.annotation_tool.viewer) {
       self.annotation_tool.viewer.remove();
       delete self.annotation_tool.viewer;
     }
-
     self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
     var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
     var newLeft = annotator.util.mousePosition(event).left + 30;
@@ -6640,8 +6094,11 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       self.ViewerEditorOpen(event1, filtered_annotation, true, {
         top: parseInt(self.annotation_tool.viewer.css('top'), 10),
         left: parseInt(self.annotation_tool.viewer.css('left'), 10)
-      }); //StorageAnnotationSave
+      });
+
+      //StorageAnnotationSave
     });
+
     self.annotation_tool.viewer.find('.delete').confirm({
       title: 'Delete Annotation?',
       content: 'Would you like to delete your annotation? This is permanent.',
@@ -6653,70 +6110,65 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
           });
           $.publishEvent('StorageAnnotationDelete', self.instance_id, [filtered_annotation]);
           self.ViewerDisplayClose();
-
           if (self.annotation_tool.viewer) {
             jQuery('.annotation-viewer').remove();
             delete self.annotation_tool.viewer;
             self.annotation_tool.isStatic = false;
             self.annotation_tool.updating = false;
-            self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
+            self.annotation_tool.editing = false;
+            // jQuery('body').css('overflow-y', 'scroll');
           }
         },
+
         cancel: function cancel() {}
       }
     });
     self.annotation_tool.viewer.find('.playMediaButton').click(function (event) {
       // console.log('playmediabutton clicked', event.currentTarget);
-      var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim(); // console.log('ann id', ann_id);
-
+      var ann_id = jQuery(event.currentTarget).find('.idAnnotation').html().trim();
+      // console.log('ann id', ann_id);
       var filtered_annotation = annotations.find(function (ann) {
         if (ann.id === ann_id) return ann;
-      }); // console.log('filtered annotation', filtered_annotation);
-
+      });
+      // console.log('filtered annotation', filtered_annotation);
       $.publishEvent('playAnnotation', self.instance_id, [filtered_annotation]);
-    }); // console.log(annotations);        
+    });
 
+    // console.log(annotations);        
     $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
     self.checkOrientation(self.annotation_tool.viewer);
   };
-
   $.FloatingViewer.prototype.ViewerDisplayClose = function (annotations) {
     var self = this;
-
     if (self.annotation_tool.isStatic) {
       return;
     }
-
     clearTimeout(self.hideTimer);
     self.hideTimer = setTimeout(function () {
       if (self.hideTimer) {
         $.publishEvent('displayHidden', self.instance_id, []);
-
         if (self.annotation_tool.viewer) {
           self.annotation_tool.viewer.remove();
           delete self.annotation_tool.viewer;
         }
-
         self.annotation_tool.isStatic = false;
         self.annotation_tool.updating = false;
-        self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
+        self.annotation_tool.editing = false;
+        // jQuery('body').css('overflow-y', 'scroll');
       }
     }, 500);
   };
-
   $.FloatingViewer.prototype.StorageAnnotationSave = function (annotations) {};
-
   $.FloatingViewer.prototype.StorageAnnotationLoad = function (first_argument) {
     var self = this;
-
     if (self.annotation_tool.viewer) {
       self.annotation_tool.viewer.remove();
       delete self.annotation_tool.viewer;
     }
-
     self.annotation_tool.isStatic = false;
     self.annotation_tool.updating = false;
-    self.annotation_tool.editing = false; // jQuery('body').css('overflow-y', 'scroll');
+    self.annotation_tool.editing = false;
+    // jQuery('body').css('overflow-y', 'scroll');
   };
 
   $.FloatingViewer.prototype.StorageAnnotationDelete = function (annotation) {
@@ -6727,22 +6179,24 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
     self.annotation_tool.updating = false;
     self.annotation_tool.editing = false;
   };
-
   $.FloatingViewer.prototype.setUpPinAndMove = function () {
-    var self = this; // keeps track of when mouse button is pressed
-
+    var self = this;
+    // keeps track of when mouse button is pressed
     jQuery('body').on('mousedown', function (event) {
       self.buttonDown = true;
-    }); // keeps track of when mouse button is let go
+    });
 
+    // keeps track of when mouse button is let go
     jQuery('body').on('mouseup', function (event) {
       self.buttonDown = false;
-    }); // handles moving the editor by clicking and dragging
+    });
 
+    // handles moving the editor by clicking and dragging
     jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event) {
       self.prepareToMove(true, event);
-    }); // handles moving the viewer by clicking and dragging
+    });
 
+    // handles moving the viewer by clicking and dragging
     jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event) {
       self.prepareToMove(false, event);
     });
@@ -6751,15 +6205,20 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
     });
     jQuery('body').on('mouseup', function (event) {
       self.finishedMoving(event);
-    }); // jQuery('body').on('mouseover', '.annotation-editor', function(event) {
+    });
+
+    // jQuery('body').on('mouseover', '.annotation-editor', function(event) {
     //     jQuery('body').css('overflow-y', 'hidden');
     // });
+
     // jQuery('body').on('mouseleave', '.annotation-editor', function(event) {
     //     jQuery('body').css('overflow-y', 'scroll');
     // });
+
     // jQuery('body').on('mouseover', '.annotation-viewer', function(event) {
     //     jQuery('body').css('overflow-y', 'hidden');
     // });
+
     // jQuery('body').on('mouseleave', '.annotation-viewer', function(event) {
     //     jQuery('body').css('overflow-y', 'scroll');
     // });
@@ -6768,16 +6227,16 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       self.finishedMoving(event);
     });
   };
-
   $.FloatingViewer.prototype.prepareToMove = function (isEditor, event) {
     var self = this;
     self.itemMoving = isEditor ? self.annotation_tool.editor : self.annotation_tool.viewer;
-
     if (self.itemMoving) {
-      $.pauseEvent(event); //turns on moving mode
+      $.pauseEvent(event);
 
-      self.itemMoving.moving = true; // set initial mouse position offset by where on the editor the user clicked
+      //turns on moving mode
+      self.itemMoving.moving = true;
 
+      // set initial mouse position offset by where on the editor the user clicked
       var move = annotator.util.mousePosition(event);
       var editorTop = parseInt(self.itemMoving.css('top'), 10);
       var editorLeft = parseInt(self.itemMoving.css('left'), 10);
@@ -6785,36 +6244,33 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       self.itemMoving.offsetLeftBy = move.left - editorLeft;
     }
   };
-
   $.FloatingViewer.prototype.moving = function (event) {
     var self = this;
-
     if (self.itemMoving && self.itemMoving.moving) {
-      $.pauseEvent(event); // gets the userlocation (where they've dragged to)
+      $.pauseEvent(event);
 
+      // gets the userlocation (where they've dragged to)
       var move = annotator.util.mousePosition(event);
       var newTop = move.top - self.itemMoving.offsetTopBy;
-      var newLeft = move.left - self.itemMoving.offsetLeftBy; // var borderBox = self.element[0].getBoundingClientRect();
+      var newLeft = move.left - self.itemMoving.offsetLeftBy;
 
+      // var borderBox = self.element[0].getBoundingClientRect();
       if (newTop < 0) {
         newTop = 0;
       }
-
       if (newLeft < 0) {
         newLeft = 0;
       }
-
       if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
         newTop = window.innerHeight - self.itemMoving.outerHeight();
       }
-
       if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
         newLeft = window.innerWidth - self.itemMoving.outerWidth();
       }
+
       /* TODO: Set boundaries for far right and far down */
+
       // sets the editor to that location (fixing offset)
-
-
       self.itemMoving.css({
         top: newTop,
         left: newLeft
@@ -6824,13 +6280,12 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       delete self.annotation_tool.viewer;
     }
   };
-
   $.FloatingViewer.prototype.finishedMoving = function (event) {
     var self = this;
-
     if (self.itemMoving) {
       // uncommenting next line causes laura bug where focus is kept on seekbar
       // $.pauseEvent(event);
+
       //turns on moving mode
       self.itemMoving.moving = false;
       var move = annotator.util.mousePosition(event);
@@ -6840,22 +6295,18 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
       };
     }
   };
-
   $.FloatingViewer.prototype.checkOrientation = function (viewerElement, interactionPoint) {
     var self = this;
     var newTop = parseInt(jQuery(viewerElement).css('top'), 10);
     var newLeft = parseInt(jQuery(viewerElement).css('left'), 10);
     var elWidth = parseInt(jQuery(viewerElement).outerWidth());
     var elHeight = parseInt(jQuery(viewerElement).outerHeight());
-
     if (newTop < 0) {
       newTop = 0;
     }
-
     if (newLeft < 0) {
       newLeft = 0;
     }
-
     if (newTop + elHeight > window.innerHeight) {
       if (interactionPoint && interactionPoint.top < window.innerHeight) {
         newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off 
@@ -6871,7 +6322,6 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
     jQuery(viewerElement).css('top', newTop);
     jQuery(viewerElement).css('left', newLeft);
   };
-
   $.viewers.push($.FloatingViewer);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -6896,11 +6346,8 @@ var annotator = annotator ? annotator : __webpack_require__(4348);
 
 
 
-
 __webpack_require__(1806);
-
 __webpack_require__(6764);
-
 (function ($) {
   $.Sidebar = function (options, inst_id) {
     // sets default options
@@ -6928,37 +6375,31 @@ __webpack_require__(6764);
     this.element = jQuery(this.options.element);
     this.hideTimer = null;
     this.load_more_open = false;
-
     if (options && options.viewer_options && options.viewer_options.defaultTab) {
       this.latestOpenedTabs = [options.viewer_options.defaultTab];
     } else {
       this.latestOpenedTabs = [];
     }
-
     this.init();
   };
-
   $.Sidebar.prototype.init = function () {
     var self = this;
     self.setUpTemplates(self.options.template_suffix);
     self.setUpSidebar();
     self.setUpListeners();
   };
-
   $.Sidebar.prototype.setUpTemplates = function (suffix) {
     var self = this;
     var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName) {
       if (templateName in self.options.TEMPLATES) {
         return;
       }
-
       var options = {
         url: self.options.template_urls + templateName + '-' + suffix + '.html',
         type: "GET",
         contentType: "charset=utf-8",
         success: function success(data) {
           var template = _.template(data);
-
           self.options.TEMPLATES[templateName] = template;
         },
         async: true
@@ -6971,7 +6412,6 @@ __webpack_require__(6764);
       });
     });
   };
-
   $.Sidebar.prototype.setUpSidebar = function () {
     var self = this;
     var sidebarOptions = jQuery.extend({
@@ -6981,14 +6421,17 @@ __webpack_require__(6764);
     });
     self.element.append(self.options.TEMPLATES.annotationSection(sidebarOptions));
     self.sidebar = self.element.find('.annotationSection');
-    self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))'); // self.element.on('mouseover', '.annotationsHolder', function(event) {
+    self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
+
+    // self.element.on('mouseover', '.annotationsHolder', function(event) {
     //     jQuery('body').css('overflow-y', 'hidden');
     // });
+
     // self.element.on('mouseleave', '.annotationsHolder', function(event) {
     //     jQuery('body').css('overflow-y', 'scroll');
     // });
-    // toggle search
 
+    // toggle search
     jQuery('#search').click(function () {
       jQuery('.search-bar.search-toggle').toggle();
       jQuery('.annotationsHolder').toggleClass('search-opened');
@@ -7007,7 +6450,9 @@ __webpack_require__(6764);
       jQuery.each(doit, function (_, tab) {
         // console.log(tab);
         jQuery('#' + tab).trigger('click');
-      }); // jQuery('.annotationsHolder.side').html('');
+      });
+
+      // jQuery('.annotationsHolder.side').html('');
       // var messageVals = [];
       // var pluralMessage = '';
       // jQuery.each(jQuery('.btn.user-filter'), function(a, b) {
@@ -7043,12 +6488,13 @@ __webpack_require__(6764);
     });
     jQuery('#search-submit').click(function () {
       var searchValue = jQuery('#srch-term').val().trim();
-      var searchType = jQuery('.search-bar select').val(); // console.log(searchValue, searchType);
-
+      var searchType = jQuery('.search-bar select').val();
+      // console.log(searchValue, searchType);
       var ops = self.filterByType(searchValue, searchType, undefined);
       self.search(ops);
-    }); // trigger new filter tab
+    });
 
+    // trigger new filter tab
     jQuery('.btn.user-filter').click(function (event) {
       // hitting enter apparently also triggers a mouse click event in html
       // the difference between a real click event and a fake one is that real
@@ -7056,14 +6502,12 @@ __webpack_require__(6764);
       if (event && event.originalEvent && event.originalEvent.detail === 0) {
         return;
       }
-
       if (this.id === "search") {
         jQuery('.btn.user-filter').removeClass('active');
         jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //.removeClass('fa-toggle-on').addClass('fa-toggle-off');
       } else {
         if (jQuery(this).hasClass('active')) {
           self.latestOpenedTabs.splice(self.latestOpenedTabs.indexOf(this.id), 1);
-
           if (jQuery('.btn.user-filter.active').length == 1) {
             jQuery(this).removeClass('active');
             jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');
@@ -7083,18 +6527,15 @@ __webpack_require__(6764);
                 messageVals.push("peer annotations");
               }
             });
-
             if (messageVals.length > 1) {
               messageVals.splice(messageVals.length - 1, 0, 'and/or,');
               messageVals = messageVals.join(', ').replace(',,', '');
               pluralMessage = '<br><br>Note: You can select multiple tabs at a time to view those annotations together!</div>';
             }
-
             jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;"><strong>No Annotations Selected</strong><br>Use the filter buttons above to view ' + messageVals + '.' + pluralMessage);
             self.searchRequest = $.getUniqueId();
             return;
           }
-
           jQuery(this).removeClass('active');
           jQuery(this).attr('aria-pressed', 'false');
           jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //removeClass('fa-toggle-on').addClass('fa-toggle-off');
@@ -7113,8 +6554,8 @@ __webpack_require__(6764);
       };
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
-      }); // console.log('filter options', filteroptions)
-
+      });
+      // console.log('filter options', filteroptions)
       if (this.id === "search") {
         jQuery('.annotationsHolder').addClass('search-opened');
         jQuery('.annotation-filter-buttons').hide();
@@ -7125,23 +6566,20 @@ __webpack_require__(6764);
         jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">Search annotations with options above.</div>');
         return;
       }
-
       var possible_exclude = [];
-      var possible_include = []; //console.log(filteroptions);
-
+      var possible_include = [];
+      //console.log(filteroptions);
       if (filteroptions.indexOf('mine') > -1) {
         possible_include.push(self.options.user_id);
       } else {
         possible_exclude.push(self.options.user_id);
       }
-
       if (filteroptions.indexOf('instructor') > -1) {
         possible_include = possible_include.concat(self.options.instructors);
       } else {
         possible_exclude = possible_exclude.concat(self.options.instructors);
-      } // console.log(possible_include, possible_exclude, self.options, self.options.instructors);
-
-
+      }
+      // console.log(possible_include, possible_exclude, self.options, self.options.instructors);
       if (filteroptions.indexOf('peer') > -1) {
         if (possible_exclude.length > 0) {
           search_options['exclude_userid'] = possible_exclude;
@@ -7149,14 +6587,14 @@ __webpack_require__(6764);
       } else {
         search_options['userid'] = possible_include;
       }
-
       if (self.options.instructors.indexOf(self.options.user_id) > -1) {
         if (filteroptions.indexOf('peer') > -1 && (filteroptions.indexOf('mine') > -1 && filteroptions.indexOf('instructor') == -1 || filteroptions.indexOf('mine') == -1 && filteroptions.indexOf('instructor') > -1)) {
           // jQuery('.btn.user-filter#instructor').addClass('active');
           // jQuery('.btn.user-filter#instructor').find('.fas').removeClass('fa-toggle-off').addClass('fa-toggle-on');
           // jQuery('.btn.user-filter#mynotes').addClass('active');
           // jQuery('.btn.user-filter#mynotes').find('.fas').removeClass('fa-toggle-off').addClass('fa-toggle-on');
-          search_options['exclude_userid'] = []; //search_options['userid'] = [];
+          search_options['exclude_userid'] = [];
+          //search_options['userid'] = [];
         }
       }
 
@@ -7172,7 +6610,6 @@ __webpack_require__(6764);
     jQuery('.side.annotationsHolder').on('scroll', function () {
       if (jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight) {
         var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
-
         if (total_left > 0 && jQuery('.load-more').length == 0) {
           jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
           jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load Next ' + self.options.viewer_options.pagination + ' Annotations</div>');
@@ -7183,7 +6620,6 @@ __webpack_require__(6764);
               limit: self.options.viewer_options.pagination,
               offset: jQuery('.side.ann-item').length
             };
-
             if (jQuery('.search-toggle:visible').length > 0) {
               var searchValue = jQuery('#srch-term').val().trim();
               var searchType = jQuery('.search-bar select').val();
@@ -7194,19 +6630,16 @@ __webpack_require__(6764);
               var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
                 return button.id;
               });
-
               if (filteroptions.indexOf('mine') > -1) {
                 possible_include.push(self.options.user_id);
               } else {
                 possible_exclude.push(self.options.user_id);
               }
-
               if (filteroptions.indexOf('instructor') > -1) {
                 possible_include = possible_include.concat(self.options.instructors);
               } else {
                 possible_exclude = possible_exclude.concat(self.options.instructors);
               }
-
               if (filteroptions.indexOf('peer') > -1) {
                 if (possible_exclude.length > 0) {
                   options['exclude_userid'] = possible_exclude;
@@ -7215,9 +6648,8 @@ __webpack_require__(6764);
                 options['userid'] = possible_include;
               }
             }
-
-            jQuery(this).html('<span class="fa fa-spinner make-spin"></span>'); //console.log(options);
-
+            jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
+            //console.log(options);
             $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
               jQuery('.side.load-more').remove();
               jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
@@ -7233,11 +6665,11 @@ __webpack_require__(6764);
       }
     });
   };
-
   $.Sidebar.prototype.showSidebarTab = function (type) {
     // if (type === "smalltab") {
     jQuery(':root').css('--sidebar-width', '40px');
-    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>'); // }
+    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>');
+    // }
 
     jQuery('.open-sidebar').click(function () {
       jQuery('.open-sidebar').remove();
@@ -7245,15 +6677,14 @@ __webpack_require__(6764);
       jQuery(':root').css('--sidebar-width', '300px');
     });
   };
-
   $.Sidebar.prototype.setUpListeners = function () {
     var self = this;
     $.subscribeEvent('StorageAnnotationSave', self.instance_id, function (_, annotation, updating) {
       // console.log("6. Got Annotation in Viewer", annotation, self.options);
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
-      }); // console.log(filteroptions, filteroptions.indexOf('mine') > -1, (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)))
-
+      });
+      // console.log(filteroptions, filteroptions.indexOf('mine') > -1, (filteroptions.indexOf('instructor' > -1 && self.options.instructors.indexOf(self.options.user_id) > -1)))
       if (filteroptions.indexOf('mine') > -1 || filteroptions.indexOf('instructor') > -1 && self.options.instructors.indexOf(self.options.user_id) > -1) {
         self.addAnnotation(annotation, updating, false);
       } else {
@@ -7263,9 +6694,8 @@ __webpack_require__(6764);
           // console.log(annotation.creator.id == self.options.user_id);
           if (annotation.creator.id == self.options.user_id) {
             jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
-          } //$.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
-
-
+          }
+          //$.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
           self.search(self.lastSearchOption);
         }
       }
@@ -7287,7 +6717,6 @@ __webpack_require__(6764);
       var isMine = annotation.creator.id === self.options.user_id;
       var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
       var isPeer = !isMine && !isInstructor;
-
       if (isMine && filteroptions.indexOf('mine') == -1) {
         $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#mine'), annotation.id]);
       } else if (isInstructor && filteroptions.indexOf('instructor') == -1) {
@@ -7303,7 +6732,6 @@ __webpack_require__(6764);
       var isMine = annotation.creator.id === self.options.user_id;
       var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
       var isPeer = !isMine && !isInstructor;
-
       if (isMine && filteroptions.indexOf('mine') > -1) {
         self.addAnnotation(annotation, false, false);
         callback();
@@ -7321,9 +6749,10 @@ __webpack_require__(6764);
         } else if (isPeer) {
           $.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#peer'), annotation.id]);
         }
-      } // console.log("WS Annotation added", annotation);
-
+      }
+      // console.log("WS Annotation added", annotation);
     });
+
     $.subscribeEvent('shouldDraw', self.instance_id, function (_, annotation, callback) {
       var filteroptions = jQuery('.btn.user-filter.active').toArray().map(function (button) {
         return button.id;
@@ -7331,7 +6760,6 @@ __webpack_require__(6764);
       var isMine = annotation.creator.id === self.options.user_id;
       var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
       var isPeer = !isMine && !isInstructor;
-
       if (isMine && filteroptions.indexOf('mine') > -1) {
         callback();
       } else if (isInstructor && filteroptions.indexOf('instructor') > -1) {
@@ -7352,7 +6780,6 @@ __webpack_require__(6764);
       });
       callBack(filteroptions);
     });
-
     if (self.options.mediaType == "image") {
       $.subscribeEvent('tryLazyLoad', self.instance_id, function (_, scrollElement) {
         self.lazyLoadImages(scrollElement);
@@ -7362,7 +6789,6 @@ __webpack_require__(6764);
       });
     }
   };
-
   $.Sidebar.prototype.lazyLoadImages = function (scrollEl) {
     var self = this;
     var scrolly = scrollEl || '.side.annotationsHolder';
@@ -7373,8 +6799,8 @@ __webpack_require__(6764);
       }
     });
     var scrollableViewer = jQuery(scrolly)[0];
-    var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight; //console.log(currentViewPortLimit);
-
+    var currentViewPortLimit = scrollableViewer.getBoundingClientRect().y + scrollableViewer.clientHeight;
+    //console.log(currentViewPortLimit);
     unloaded_images.forEach(function (img) {
       if (img.getBoundingClientRect().y <= currentViewPortLimit) {
         img.onload = function () {
@@ -7389,26 +6815,22 @@ __webpack_require__(6764);
           //     img.nextElementSibling.style.left = "";
           // }
           img.style = "display: inline-block;";
-
           if (img.nextElementSibling.tagName.toLowerCase() === "svg") {
             var w = img.getBoundingClientRect().width;
             var h = img.getBoundingClientRect().height;
             var sv = img.nextElementSibling;
             var img_id = sv.classList['value'].replace(' ', '.').replace('thumbnail-svg-', '');
             var path = jQuery(sv).find('path');
-
             if (new window.paper.Path(path.attr('d')).isClosed()) {
               path.wrap('<clipPath id="' + img_id + '-clippath"></clipPath>');
               img.style = "display: none;";
               var img_url = img.src;
               var viewBox;
-
               try {
                 viewBox = sv.viewBox.split(' ');
               } catch (e) {
                 viewBox = sv.getAttribute('viewBox').split(' ');
               }
-
               jQuery(sv)[0].innerHTML += '<image x="' + viewBox[0] + '" y="' + viewBox[1] + '" width="' + viewBox[2] + '" height="' + viewBox[3] + '" clip-path="url(#' + img_id + '-clippath)" class="annotation-thumbnail" href="' + img_url + '" xlink:href="' + img_url + '" />';
               sv.style['max-width'] = w + "px";
               sv.style['max-height'] = w + "px";
@@ -7429,34 +6851,29 @@ __webpack_require__(6764);
             }
           }
         };
-
         img.onerror = function (e) {
           // console.log('error', e);
           img.style = 'display: none';
           jQuery(img).after('<button class="zoom-to-error-button" style="background:#ededed; color: black; border-radius: 5px; border: 1px solid #333;">Zoom to annotation</button>');
         };
-
         img.src = img.dataset['src'];
         img.dataset['loaded'] = true;
       }
     });
   };
-
   $.Sidebar.prototype.addAnnotation = function (annotation, updating, shouldAppend) {
-    var self = this; // console.log("7. Should add Annotation to viewer", annotation)
-
+    var self = this;
+    // console.log("7. Should add Annotation to viewer", annotation)
     if (annotation.media !== "comment" && annotation.media !== "Annotation" && $.exists(annotation.tags)) {
       var ann = annotation;
       ann.index = jQuery('.ann-item').length;
       ann.instructor_ids = self.options.instructors;
-      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name; // console.log('ann', ann);
-
+      ann.common_name = self.options.common_instructor_name && self.options.common_instructor_name !== "" ? self.options.common_instructor_name : ann.creator.name;
+      // console.log('ann', ann);
       var annHTML = self.options.TEMPLATES.annotationItem(ann);
-
       if (self.options.viewer_options.readonly) {
         annHTML = annHTML.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '');
       }
-
       if (jQuery('.side.item-' + ann.id).length > 0) {
         jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
       } else {
@@ -7466,7 +6883,6 @@ __webpack_require__(6764);
           jQuery('.annotationsHolder').prepend(annHTML);
         }
       }
-
       jQuery('.item-' + ann.id).find('.delete').confirm({
         title: 'Delete Annotation?',
         content: 'Would you like to delete your annotation? This is permanent.',
@@ -7480,15 +6896,14 @@ __webpack_require__(6764);
       jQuery('.side.item-' + ann.id).find('.edit').click(function (event) {
         self.ViewerEditorOpen(event, ann, true);
       });
-
       if (self.options.mediaType.toLowerCase() !== "video" && self.options.mediaType.toLowerCase() !== "audio") {
         jQuery('.side.item-' + ann.id).click(function (e) {
           if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
             var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
             jQuery(self.element).parent().animate({
               scrollTop: jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140
-            }); //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
-
+            });
+            //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
             setTimeout(function () {
               ann._local.highlights.forEach(function (hl) {
                 if (jQuery(hl).text().trim().length > 0) {
@@ -7501,13 +6916,11 @@ __webpack_require__(6764);
                   }, 200);
                 }
               });
-
               jQuery('#first-node-' + ann.id)[0].focus();
               $.publishEvent('focusOnContext', self.instance_id, [ann]);
             }, 350);
           } else if (self.options.mediaType.toLowerCase() === "image") {
             var elementClass = e.target.getAttribute('class');
-
             if (elementClass && elementClass.indexOf('zoom-to-error-button') > -1 || e.target.tagName.toLowerCase() === "image" || e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path") {
               var regexp = /\/([0-9]+,[0-9]+,[0-9]+,[0-9]+)\//;
               var boundSplit = regexp.exec(ann.thumbnail)[1].split(',').map(function (val) {
@@ -7520,9 +6933,9 @@ __webpack_require__(6764);
                 height: boundSplit[3] + boundSplit[3] / 3.0
               };
               $.publishEvent('zoomTo', self.inst_id, [bounds, ann]);
-            } // console.log("Yup!");
+            }
+            // console.log("Yup!");
             // $.pauseEvent(e);
-
           } else if (self.options.mediaType.toLowerCase() === "video" || self.options.mediaType.toLowerCase() === "audio") {
             $.publishEvent('playAnnotation', self.inst_id, [ann]);
           }
@@ -7532,13 +6945,13 @@ __webpack_require__(6764);
           $.publishEvent('playAnnotation', self.inst_id, [ann]);
         });
       }
-
       jQuery('.side.item-' + ann.id).find('.annotatedBy.side').click(function (e) {
         self.autosearch(jQuery(this).text().trim(), 'User');
         $.pauseEvent(e);
       });
       jQuery('.side.item-' + ann.id).find('.annotation-tag.side').click(function (e) {
-        self.autosearch(jQuery(this).text().trim(), 'Tag'); // jQuery('.btn.user-filter').removeClass('active');
+        self.autosearch(jQuery(this).text().trim(), 'Tag');
+        // jQuery('.btn.user-filter').removeClass('active');
         // jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');//.removeClass('fa-toggle-on').addClass('fa-toggle-off');
         // jQuery('.annotationsHolder').addClass('search-opened');
         // jQuery('.annotation-filter-buttons').hide();
@@ -7554,7 +6967,6 @@ __webpack_require__(6764);
         // jQuery('#srch-term').val(tagSearched)
         // jQuery('.search-bar select').val('Tag');
         // self.search(options);
-
         $.pauseEvent(e);
       });
       $.publishEvent('displayShown', self.instance_id, [jQuery('.item-' + ann.id), ann]);
@@ -7565,24 +6977,20 @@ __webpack_require__(6764);
       try {
         var ranges = annotation.ranges;
         var source;
-
         if (Array.isArray(ranges)) {
           source = ranges[0].source;
         } else {
           source = ranges.source;
         }
-
         var parent_id = source;
         $.publishEvent('GetSpecificAnnotationData', self.instance_id, [parent_id, function (annotation_data) {
           // console.log(annotation_data);
           annotation_data.totalReplies++;
-
           if (annotation_data.media === "text") {
             annotation_data._local.highlights.forEach(function (high) {
               jQuery(high).data('annotation', annotation_data);
             });
           }
-
           var viewers = jQuery('.item-' + annotation_data.id);
           jQuery.each(viewers, function (index, viewer) {
             $.publishEvent('addReplyToViewer', self.instance_id, [viewer, annotation, '', annotation_data]);
@@ -7593,19 +7001,16 @@ __webpack_require__(6764);
       }
     }
   };
-
   $.Sidebar.prototype.filterByType = function (searchValue, type, options) {
     var self = this;
     searchValue = searchValue.trim();
     var options = options ? options : {
       'type': self.options.mediaType
     };
-
     if (searchValue === "") {
       jQuery('.annotationsHolder .annotationItem').show();
       return;
     }
-
     if (type === "User") {
       options['username'] = searchValue;
     } else if (type === "Annotation") {
@@ -7613,29 +7018,24 @@ __webpack_require__(6764);
     } else if (type === "Tag") {
       options['tag'] = searchValue;
     }
-
     return options;
   };
-
   $.Sidebar.prototype.search = function (options) {
-    var self = this; // console.log('sidebar search', options);
-
+    var self = this;
+    // console.log('sidebar search', options);
     self.lastSearchOption = options;
-
     if (jQuery('.loading-obj').is(':visible')) {
       jQuery('.loading-obj').remove();
     }
-
-    self.searchRequest = $.getUniqueId(); // console.log(self.searchRequest, options);
-
+    self.searchRequest = $.getUniqueId();
+    // console.log(self.searchRequest, options);
     var tempRequest = self.searchRequest;
     jQuery('.annotationsHolder').prepend('<div class="loading-obj" style="margin-top: 15px; text-align: center"><span class="make-spin fa fa-spinner"></span></div>');
     $.publishEvent('StorageAnnotationSearch', self.instance_id, [options, function (results, converter) {
       if (tempRequest !== self.searchRequest) {
         return;
-      } // console.log("RETURN: ", tempRequest, self.searchRequest)
-
-
+      }
+      // console.log("RETURN: ", tempRequest, self.searchRequest)
       jQuery('.annotationsHolder.side').html('');
       $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows, converter, true]);
       jQuery('.loading-obj').remove();
@@ -7643,83 +7043,69 @@ __webpack_require__(6764);
       self.load_more_open = false;
       jQuery('.side.load-more').remove();
       jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-
       if (results.rows.length == 0) {
         jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations to show! Create an annotation by highlighting a portion of the text to the right.</div>');
       }
     }, function (err) {
       jQuery('.loading-obj').remove();
-
       if (jQuery('.ann-item').length == 0) {
         jQuery('#empty-alert').remove();
         jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations to show! Create an annotation by highlighting a portion of the text to the right.</div>');
       }
     }]);
   };
-
   $.Sidebar.prototype.TargetSelectionMade = function (annotation, event) {
     var self = this;
     self.currentSelection = annotation;
   };
-
   $.Sidebar.prototype.TargetAnnotationDraw = function (annotation) {};
-
   $.Sidebar.prototype.ViewerEditorOpen = function (event, annotation, updating, interactionPoint) {
     var self = this;
     var editor = jQuery('.side.item-' + annotation.id);
     editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><div class="plugin-area"></div><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
     editor.find('.body').hide();
     editor.find('.tagList').hide();
-    jQuery('.edit').prop('disabled', true); // closes the editor tool and does not save annotation
+    jQuery('.edit').prop('disabled', true);
 
+    // closes the editor tool and does not save annotation
     editor.find('.cancel').click(function () {
       self.ViewerEditorClose(annotation, true, false, editor);
-    }); // closes the editor and does save annotations
+    });
 
+    // closes the editor and does save annotations
     editor.find('.save').click(function () {
       var text = editor.find('#annotation-text-field').val();
-
       if (updating) {
         annotation.annotationText.pop();
       }
-
       annotation.annotationText.push(text);
       $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, false, false]);
       self.ViewerEditorClose(annotation, true, false, editor);
     });
     $.publishEvent('editorShown', self.instance_id, [editor, annotation]);
   };
-
   $.Sidebar.prototype.ViewerEditorClose = function (annotation, redraw, should_erase, editor) {
     jQuery('.editor-area.side').remove();
     jQuery('.edit').prop('disabled', false);
-    jQuery('.note-link-popover').remove(); //$.publishEvent('editorHidden', self.instance_id, []);
-
+    jQuery('.note-link-popover').remove();
+    //$.publishEvent('editorHidden', self.instance_id, []);
     if (editor) {
       editor.find('.side.body').show();
       editor.find('.tagList.side').show();
     }
   };
-
   $.Sidebar.prototype.ViewerDisplayOpen = function (event, annotations) {};
-
   $.Sidebar.prototype.ViewerDisplayClose = function (annotations) {};
-
   $.Sidebar.prototype.StorageAnnotationSave = function (annotations) {};
-
   $.Sidebar.prototype.StorageAnnotationDelete = function (annotation) {
     jQuery('.item-' + annotation.id).remove();
-
     if (jQuery('.annotationItem').length == 0) {
       jQuery('#empty-alert').css('display', 'block');
     }
   };
-
   $.Sidebar.prototype.StorageAnnotationLoad = function (annotations) {};
-
   $.Sidebar.prototype.autosearch = function (term, type) {
     var self = this;
-
     if (self.options.viewer_options.readonly) {
       $.publishEvent('dumpStore', self.instance_id, [function (annotations) {
         self.tempAnnotationList = annotations;
@@ -7760,7 +7146,6 @@ __webpack_require__(6764);
     } else {
       jQuery('.btn.user-filter').removeClass('active');
       jQuery('.btn.user-filter').find('.fas.fa-toggle-on').addClass('fa-flip-horizontal'); //.removeClass('fa-toggle-on').addClass('fa-toggle-off');
-
       if (term !== self.options.common_instructor_name) {
         self.search(self.filterByType(term, type, undefined));
         jQuery('.annotationsHolder').addClass('search-opened');
@@ -7778,7 +7163,6 @@ __webpack_require__(6764);
       }
     }
   };
-
   $.viewers.push($.Sidebar);
 })(Hxighlighter ? Hxighlighter : __webpack_require__(488));
 
@@ -15080,8 +14464,7 @@ var $ = __webpack_require__(9755);
 var window = (window || {});
 window.jQuery = __webpack_require__(9755);
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 (function (f) {
   if (( false ? 0 : _typeof(exports)) === "object" && "object" !== "undefined") {
     module.exports = f();
@@ -15103,7 +14486,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           var f = new Error("Cannot find module '" + o + "'");
           throw f.code = "MODULE_NOT_FOUND", f;
         }
-
         var l = n[o] = {
           exports: {}
         };
@@ -15112,53 +14494,50 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           return s(n ? n : e);
         }, l, l.exports, e, t, n, r);
       }
-
       return n[o].exports;
     }
-
     var i = undefined;
-
-    for (var o = 0; o < r.length; o++) {
-      s(r[o]);
-    }
-
+    for (var o = 0; o < r.length; o++) s(r[o]);
     return s;
   }({
     1: [function (require, module, exports) {
       (function (global) {
-        "use strict"; // Inject Annotator CSS
+        "use strict";
 
+        // Inject Annotator CSS
         var insertCss = require('insert-css');
-
         var css = require('./css/annotator.css');
+        insertCss(css);
 
-        insertCss(css); // var app = require('./src/app');
+        // var app = require('./src/app');
+        var util = require('./src/util');
 
-        var util = require('./src/util'); // Core annotator components
+        // Core annotator components
         // exports.App = app.App;
+
         // Access to libraries (for browser installations)
         // exports.authz = require('./src/authz');
         // exports.identity = require('./src/identity');
         // exports.notification = require('./src/notification');
         // exports.storage = require('./src/storage');
-
-
         exports.ui = require('./src/ui');
-        exports.util = util; // Ext namespace (for core-provided extension modules)
+        exports.util = util;
 
-        exports.ext = {}; // If wicked-good-xpath is available, install it. This will not overwrite any
+        // Ext namespace (for core-provided extension modules)
+        exports.ext = {};
+
+        // If wicked-good-xpath is available, install it. This will not overwrite any
         // native XPath functionality.
-
         var wgxpath = global.wgxpath;
-
         if (typeof wgxpath !== "undefined" && wgxpath !== null && typeof wgxpath.install === "function") {
           wgxpath.install();
-        } // Store a reference to the current annotator object, if one exists.
+        }
 
+        // Store a reference to the current annotator object, if one exists.
+        var _annotator = global.annotator;
 
-        var _annotator = global.annotator; // Restores the Annotator property on the global object to it's
+        // Restores the Annotator property on the global object to it's
         // previous value and returns the Annotator.
-
         exports.noConflict = function noConflict() {
           global.annotator = _annotator;
           return this;
@@ -15183,8 +14562,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           window.BackboneExtend = definition();
         }
       })(function () {
-        "use strict"; // mini-underscore
+        "use strict";
 
+        // mini-underscore
         var _ = {
           has: function has(obj, key) {
             return Object.prototype.hasOwnProperty.call(obj, key);
@@ -15192,56 +14572,58 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           extend: function extend(obj) {
             for (var i = 1; i < arguments.length; ++i) {
               var source = arguments[i];
-
               if (source) {
                 for (var prop in source) {
                   obj[prop] = source[prop];
                 }
               }
             }
-
             return obj;
           }
-        }; /// Following code is pasted from Backbone.js ///
+        };
+
+        /// Following code is pasted from Backbone.js ///
+
         // Helper function to correctly set up the prototype chain, for subclasses.
         // Similar to `goog.inherits`, but uses a hash of prototype properties and
         // class properties to be extended.
-
         var extend = function extend(protoProps, staticProps) {
           var parent = this;
-          var child; // The constructor function for the new subclass is either defined by you
+          var child;
+
+          // The constructor function for the new subclass is either defined by you
           // (the "constructor" property in your `extend` definition), or defaulted
           // by us to simply call the parent's constructor.
-
           if (protoProps && _.has(protoProps, 'constructor')) {
             child = protoProps.constructor;
           } else {
             child = function child() {
               return parent.apply(this, arguments);
             };
-          } // Add static properties to the constructor function, if supplied.
+          }
 
+          // Add static properties to the constructor function, if supplied.
+          _.extend(child, parent, staticProps);
 
-          _.extend(child, parent, staticProps); // Set the prototype chain to inherit from `parent`, without calling
+          // Set the prototype chain to inherit from `parent`, without calling
           // `parent`'s constructor function.
-
-
           var Surrogate = function Surrogate() {
             this.constructor = child;
           };
-
           Surrogate.prototype = parent.prototype;
-          child.prototype = new Surrogate(); // Add prototype properties (instance properties) to the subclass,
+          child.prototype = new Surrogate();
+
+          // Add prototype properties (instance properties) to the subclass,
           // if supplied.
+          if (protoProps) _.extend(child.prototype, protoProps);
 
-          if (protoProps) _.extend(child.prototype, protoProps); // Set a convenience property in case the parent's prototype is needed
+          // Set a convenience property in case the parent's prototype is needed
           // later.
-
           child.__super__ = parent.prototype;
           return child;
-        }; // Expose the extend function
+        };
 
-
+        // Expose the extend function
         return extend;
       });
     }, {}],
@@ -15254,6 +14636,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
          *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
          * @version   3.3.1
          */
+
         (function (global, factory) {
           _typeof(exports) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.ES6Promise = factory();
         })(this, function () {
@@ -15262,13 +14645,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           function objectOrFunction(x) {
             return typeof x === 'function' || _typeof(x) === 'object' && x !== null;
           }
-
           function isFunction(x) {
             return typeof x === 'function';
           }
-
           var _isArray = undefined;
-
           if (!Array.isArray) {
             _isArray = function _isArray(x) {
               return Object.prototype.toString.call(x) === '[object Array]';
@@ -15276,17 +14656,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           } else {
             _isArray = Array.isArray;
           }
-
           var isArray = _isArray;
           var len = 0;
           var vertxNext = undefined;
           var customSchedulerFn = undefined;
-
           var asap = function asap(callback, arg) {
             queue[len] = callback;
             queue[len + 1] = arg;
             len += 2;
-
             if (len === 2) {
               // If len is 2, that means that we need to schedule an async flush.
               // If additional callbacks are queued before the queue is flushed, they
@@ -15298,37 +14675,35 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }
           };
-
           function setScheduler(scheduleFn) {
             customSchedulerFn = scheduleFn;
           }
-
           function setAsap(asapFn) {
             asap = asapFn;
           }
-
           var browserWindow = typeof window !== 'undefined' ? window : undefined;
           var browserGlobal = browserWindow || {};
           var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;
-          var isNode = typeof self === 'undefined' && typeof process !== 'undefined' && {}.toString.call(process) === '[object process]'; // test for web worker but not in IE10
+          var isNode = typeof self === 'undefined' && typeof process !== 'undefined' && {}.toString.call(process) === '[object process]';
 
-          var isWorker = typeof Uint8ClampedArray !== 'undefined' && typeof importScripts !== 'undefined' && typeof MessageChannel !== 'undefined'; // node
+          // test for web worker but not in IE10
+          var isWorker = typeof Uint8ClampedArray !== 'undefined' && typeof importScripts !== 'undefined' && typeof MessageChannel !== 'undefined';
 
+          // node
           function useNextTick() {
             // node version 0.10.x displays a deprecation warning when nextTick is used recursively
             // see https://github.com/cujojs/when/issues/410 for details
             return function () {
               return process.nextTick(flush);
             };
-          } // vertx
+          }
 
-
+          // vertx
           function useVertxTimer() {
             return function () {
               vertxNext(flush);
             };
           }
-
           function useMutationObserver() {
             var iterations = 0;
             var observer = new BrowserMutationObserver(flush);
@@ -15339,9 +14714,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             return function () {
               node.data = iterations = ++iterations % 2;
             };
-          } // web worker
+          }
 
-
+          // web worker
           function useMessageChannel() {
             var channel = new MessageChannel();
             channel.port1.onmessage = flush;
@@ -15349,7 +14724,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return channel.port2.postMessage(0);
             };
           }
-
           function useSetTimeout() {
             // Store setTimeout reference so es6-promise will be unaffected by
             // other code modifying setTimeout (like sinon.useFakeTimers())
@@ -15358,9 +14732,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return globalSetTimeout(flush, 1);
             };
           }
-
           var queue = new Array(1000);
-
           function flush() {
             for (var i = 0; i < len; i += 2) {
               var callback = queue[i];
@@ -15369,10 +14741,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               queue[i] = undefined;
               queue[i + 1] = undefined;
             }
-
             len = 0;
           }
-
           function attemptVertx() {
             try {
               var r = require;
@@ -15383,9 +14753,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return useSetTimeout();
             }
           }
-
-          var scheduleFlush = undefined; // Decide what async method to use to triggering processing of queued callbacks:
-
+          var scheduleFlush = undefined;
+          // Decide what async method to use to triggering processing of queued callbacks:
           if (isNode) {
             scheduleFlush = useNextTick();
           } else if (BrowserMutationObserver) {
@@ -15397,18 +14766,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           } else {
             scheduleFlush = useSetTimeout();
           }
-
           function then(onFulfillment, onRejection) {
             var _arguments = arguments;
             var parent = this;
             var child = new this.constructor(noop);
-
             if (child[PROMISE_ID] === undefined) {
               makePromise(child);
             }
-
             var _state = parent._state;
-
             if (_state) {
               (function () {
                 var callback = _arguments[_state - 1];
@@ -15419,9 +14784,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             } else {
               subscribe(parent, child, onFulfillment, onRejection);
             }
-
             return child;
           }
+
           /**
             `Promise.resolve` returns a promise that will become resolved with the
             passed `value`. It is shorthand for the following:
@@ -15453,40 +14818,28 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             @return {Promise} a promise that will become fulfilled with the given
             `value`
           */
-
-
           function resolve(object) {
             /*jshint validthis:true */
             var Constructor = this;
-
             if (object && _typeof(object) === 'object' && object.constructor === Constructor) {
               return object;
             }
-
             var promise = new Constructor(noop);
-
             _resolve(promise, object);
-
             return promise;
           }
-
           var PROMISE_ID = Math.random().toString(36).substring(16);
-
           function noop() {}
-
           var PENDING = void 0;
           var FULFILLED = 1;
           var REJECTED = 2;
           var GET_THEN_ERROR = new ErrorObject();
-
           function selfFulfillment() {
             return new TypeError("You cannot resolve a promise with itself");
           }
-
           function cannotReturnOwn() {
             return new TypeError('A promises callback cannot return that same promise.');
           }
-
           function getThen(promise) {
             try {
               return promise.then;
@@ -15495,7 +14848,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return GET_THEN_ERROR;
             }
           }
-
           function tryThen(then, value, fulfillmentHandler, rejectionHandler) {
             try {
               then.call(value, fulfillmentHandler, rejectionHandler);
@@ -15503,7 +14855,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return e;
             }
           }
-
           function handleForeignThenable(promise, thenable, then) {
             asap(function (promise) {
               var sealed = false;
@@ -15511,9 +14862,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 if (sealed) {
                   return;
                 }
-
                 sealed = true;
-
                 if (thenable !== value) {
                   _resolve(promise, value);
                 } else {
@@ -15523,20 +14872,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 if (sealed) {
                   return;
                 }
-
                 sealed = true;
-
                 _reject(promise, reason);
               }, 'Settle: ' + (promise._label || ' unknown promise'));
-
               if (!sealed && error) {
                 sealed = true;
-
                 _reject(promise, error);
               }
             }, promise);
           }
-
           function handleOwnThenable(promise, thenable) {
             if (thenable._state === FULFILLED) {
               fulfill(promise, thenable._result);
@@ -15550,7 +14894,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               });
             }
           }
-
           function handleMaybeThenable(promise, maybeThenable, then$$) {
             if (maybeThenable.constructor === promise.constructor && then$$ === then && maybeThenable.constructor.resolve === resolve) {
               handleOwnThenable(promise, maybeThenable);
@@ -15566,7 +14909,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }
           }
-
           function _resolve(promise, value) {
             if (promise === value) {
               _reject(promise, selfFulfillment());
@@ -15576,38 +14918,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               fulfill(promise, value);
             }
           }
-
           function publishRejection(promise) {
             if (promise._onerror) {
               promise._onerror(promise._result);
             }
-
             publish(promise);
           }
-
           function fulfill(promise, value) {
             if (promise._state !== PENDING) {
               return;
             }
-
             promise._result = value;
             promise._state = FULFILLED;
-
             if (promise._subscribers.length !== 0) {
               asap(publish, promise);
             }
           }
-
           function _reject(promise, reason) {
             if (promise._state !== PENDING) {
               return;
             }
-
             promise._state = REJECTED;
             promise._result = reason;
             asap(publishRejection, promise);
           }
-
           function subscribe(parent, child, onFulfillment, onRejection) {
             var _subscribers = parent._subscribers;
             var length = _subscribers.length;
@@ -15615,44 +14949,34 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             _subscribers[length] = child;
             _subscribers[length + FULFILLED] = onFulfillment;
             _subscribers[length + REJECTED] = onRejection;
-
             if (length === 0 && parent._state) {
               asap(publish, parent);
             }
           }
-
           function publish(promise) {
             var subscribers = promise._subscribers;
             var settled = promise._state;
-
             if (subscribers.length === 0) {
               return;
             }
-
             var child = undefined,
-                callback = undefined,
-                detail = promise._result;
-
+              callback = undefined,
+              detail = promise._result;
             for (var i = 0; i < subscribers.length; i += 3) {
               child = subscribers[i];
               callback = subscribers[i + settled];
-
               if (child) {
                 invokeCallback(settled, child, callback, detail);
               } else {
                 callback(detail);
               }
             }
-
             promise._subscribers.length = 0;
           }
-
           function ErrorObject() {
             this.error = null;
           }
-
           var TRY_CATCH_ERROR = new ErrorObject();
-
           function tryCatch(callback, detail) {
             try {
               return callback(detail);
@@ -15661,17 +14985,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return TRY_CATCH_ERROR;
             }
           }
-
           function invokeCallback(settled, promise, callback, detail) {
             var hasCallback = isFunction(callback),
-                value = undefined,
-                error = undefined,
-                succeeded = undefined,
-                failed = undefined;
-
+              value = undefined,
+              error = undefined,
+              succeeded = undefined,
+              failed = undefined;
             if (hasCallback) {
               value = tryCatch(callback, detail);
-
               if (value === TRY_CATCH_ERROR) {
                 failed = true;
                 error = value.error;
@@ -15679,18 +15000,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               } else {
                 succeeded = true;
               }
-
               if (promise === value) {
                 _reject(promise, cannotReturnOwn());
-
                 return;
               }
             } else {
               value = detail;
               succeeded = true;
             }
-
-            if (promise._state !== PENDING) {// noop
+            if (promise._state !== PENDING) {
+              // noop
             } else if (hasCallback && succeeded) {
               _resolve(promise, value);
             } else if (failed) {
@@ -15701,7 +15020,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               _reject(promise, value);
             }
           }
-
           function initializePromise(promise, resolver) {
             try {
               resolver(function resolvePromise(value) {
@@ -15713,41 +15031,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               _reject(promise, e);
             }
           }
-
           var id = 0;
-
           function nextId() {
             return id++;
           }
-
           function makePromise(promise) {
             promise[PROMISE_ID] = id++;
             promise._state = undefined;
             promise._result = undefined;
             promise._subscribers = [];
           }
-
           function Enumerator(Constructor, input) {
             this._instanceConstructor = Constructor;
             this.promise = new Constructor(noop);
-
             if (!this.promise[PROMISE_ID]) {
               makePromise(this.promise);
             }
-
             if (isArray(input)) {
               this._input = input;
               this.length = input.length;
               this._remaining = input.length;
               this._result = new Array(this.length);
-
               if (this.length === 0) {
                 fulfill(this.promise, this._result);
               } else {
                 this.length = this.length || 0;
-
                 this._enumerate();
-
                 if (this._remaining === 0) {
                   fulfill(this.promise, this._result);
                 }
@@ -15756,29 +15065,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               _reject(this.promise, validationError());
             }
           }
-
           function validationError() {
             return new Error('Array Methods must be provided an Array');
           }
-
           ;
-
           Enumerator.prototype._enumerate = function () {
             var length = this.length;
             var _input = this._input;
-
             for (var i = 0; this._state === PENDING && i < length; i++) {
               this._eachEntry(_input[i], i);
             }
           };
-
           Enumerator.prototype._eachEntry = function (entry, i) {
             var c = this._instanceConstructor;
             var resolve$$ = c.resolve;
-
             if (resolve$$ === resolve) {
               var _then = getThen(entry);
-
               if (_then === then && entry._state !== PENDING) {
                 this._settledAt(entry._state, i, entry._result);
               } else if (typeof _then !== 'function') {
@@ -15787,7 +15089,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               } else if (c === Promise) {
                 var promise = new c(noop);
                 handleMaybeThenable(promise, entry, _then);
-
                 this._willSettleAt(promise, i);
               } else {
                 this._willSettleAt(new c(function (resolve$$) {
@@ -15798,25 +15099,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               this._willSettleAt(resolve$$(entry), i);
             }
           };
-
           Enumerator.prototype._settledAt = function (state, i, value) {
             var promise = this.promise;
-
             if (promise._state === PENDING) {
               this._remaining--;
-
               if (state === REJECTED) {
                 _reject(promise, value);
               } else {
                 this._result[i] = value;
               }
             }
-
             if (this._remaining === 0) {
               fulfill(promise, this._result);
             }
           };
-
           Enumerator.prototype._willSettleAt = function (promise, i) {
             var enumerator = this;
             subscribe(promise, undefined, function (value) {
@@ -15825,6 +15121,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return enumerator._settledAt(REJECTED, i, reason);
             });
           };
+
           /**
             `Promise.all` accepts an array of promises, and returns a new promise which
             is fulfilled with an array of fulfillment values for the passed promises, or
@@ -15872,11 +15169,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             fulfilled, or rejected if any of them become rejected.
             @static
           */
-
-
           function all(entries) {
             return new Enumerator(this, entries).promise;
           }
+
           /**
             `Promise.race` returns a new promise which is settled in the same way as the
             first passed promise to settle.
@@ -15942,12 +15238,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             @return {Promise} a promise which settles in the same way as the first passed
             promise to settle.
           */
-
-
           function race(entries) {
             /*jshint validthis:true */
             var Constructor = this;
-
             if (!isArray(entries)) {
               return new Constructor(function (_, reject) {
                 return reject(new TypeError('You must pass an array to race.'));
@@ -15955,13 +15248,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             } else {
               return new Constructor(function (resolve, reject) {
                 var length = entries.length;
-
                 for (var i = 0; i < length; i++) {
                   Constructor.resolve(entries[i]).then(resolve, reject);
                 }
               });
             }
           }
+
           /**
             `Promise.reject` returns a promise rejected with the passed `reason`.
             It is shorthand for the following:
@@ -15996,25 +15289,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             Useful for tooling.
             @return {Promise} a promise rejected with the given `reason`.
           */
-
-
           function reject(reason) {
             /*jshint validthis:true */
             var Constructor = this;
             var promise = new Constructor(noop);
-
             _reject(promise, reason);
-
             return promise;
           }
-
           function needsResolver() {
             throw new TypeError('You must pass a resolver function as the first argument to the promise constructor');
           }
-
           function needsNew() {
             throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
           }
+
           /**
             Promise objects represent the eventual result of an asynchronous operation. The
             primary way of interacting with a promise is through its `then` method, which
@@ -16118,19 +15406,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             Useful for tooling.
             @constructor
           */
-
-
           function Promise(resolver) {
             this[PROMISE_ID] = nextId();
             this._result = this._state = undefined;
             this._subscribers = [];
-
             if (noop !== resolver) {
               typeof resolver !== 'function' && needsResolver();
               this instanceof Promise ? initializePromise(this, resolver) : needsNew();
             }
           }
-
           Promise.all = all;
           Promise.race = race;
           Promise.resolve = resolve;
@@ -16140,7 +15424,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           Promise._asap = asap;
           Promise.prototype = {
             constructor: Promise,
-
             /**
               The primary way of interacting with a promise is through its `then` method,
               which registers callbacks to receive either a promise's eventual value or the
@@ -16335,7 +15618,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               @return {Promise}
             */
             then: then,
-
             /**
               `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
               as the catch block of a try/catch statement.
@@ -16367,10 +15649,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return this.then(null, onRejection);
             }
           };
-
           function polyfill() {
             var local = undefined;
-
             if (typeof global !== 'undefined') {
               local = global;
             } else if (typeof self !== 'undefined') {
@@ -16382,27 +15662,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 throw new Error('polyfill failed because global object is unavailable in this environment');
               }
             }
-
             var P = local.Promise;
-
             if (P) {
               var promiseToString = null;
-
               try {
                 promiseToString = Object.prototype.toString.call(P.resolve());
-              } catch (e) {// silently ignored
+              } catch (e) {
+                // silently ignored
               }
-
               if (promiseToString === '[object Promise]' && !P.cast) {
                 return;
               }
             }
-
             local.Promise = Promise;
           }
-
-          polyfill(); // Strange compat..
-
+          polyfill();
+          // Strange compat..
           Promise.polyfill = polyfill;
           Promise.Promise = Promise;
           return Promise;
@@ -16413,21 +15688,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }],
     5: [function (require, module, exports) {
       var inserted = {};
-
       module.exports = function (css, options) {
         if (inserted[css]) return;
         inserted[css] = true;
         var elem = document.createElement('style');
         elem.setAttribute('type', 'text/css');
-
         if ('textContent' in elem) {
           elem.textContent = css;
         } else {
           elem.styleSheet.cssText = css;
         }
-
         var head = document.getElementsByTagName('head')[0];
-
         if (options && options.prepend) {
           head.insertBefore(elem, head.childNodes[0]);
         } else {
@@ -16437,22 +15708,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {}],
     6: [function (require, module, exports) {
       // shim for using process in browser
-      var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
+      var process = module.exports = {};
+
+      // cached from whatever global is present so that test runners that stub it
       // don't break things.  But we need to wrap it in a try catch in case it is
       // wrapped in strict mode code which doesn't define any globals.  It's inside a
       // function because try/catches deoptimize in certain engines.
 
       var cachedSetTimeout;
       var cachedClearTimeout;
-
       function defaultSetTimout() {
         throw new Error('setTimeout has not been defined');
       }
-
       function defaultClearTimeout() {
         throw new Error('clearTimeout has not been defined');
       }
-
       (function () {
         try {
           if (typeof setTimeout === 'function') {
@@ -16463,7 +15733,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         } catch (e) {
           cachedSetTimeout = defaultSetTimout;
         }
-
         try {
           if (typeof clearTimeout === 'function') {
             cachedClearTimeout = clearTimeout;
@@ -16474,19 +15743,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           cachedClearTimeout = defaultClearTimeout;
         }
       })();
-
       function runTimeout(fun) {
         if (cachedSetTimeout === setTimeout) {
           //normal enviroments in sane situations
           return setTimeout(fun, 0);
-        } // if setTimeout wasn't available but was latter defined
-
-
+        }
+        // if setTimeout wasn't available but was latter defined
         if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
           cachedSetTimeout = setTimeout;
           return setTimeout(fun, 0);
         }
-
         try {
           // when when somebody has screwed with setTimeout but no I.E. maddness
           return cachedSetTimeout(fun, 0);
@@ -16500,19 +15766,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
         }
       }
-
       function runClearTimeout(marker) {
         if (cachedClearTimeout === clearTimeout) {
           //normal enviroments in sane situations
           return clearTimeout(marker);
-        } // if clearTimeout wasn't available but was latter defined
-
-
+        }
+        // if clearTimeout wasn't available but was latter defined
         if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
           cachedClearTimeout = clearTimeout;
           return clearTimeout(marker);
         }
-
         try {
           // when when somebody has screwed with setTimeout but no I.E. maddness
           return cachedClearTimeout(marker);
@@ -16527,94 +15790,74 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
         }
       }
-
       var queue = [];
       var draining = false;
       var currentQueue;
       var queueIndex = -1;
-
       function cleanUpNextTick() {
         if (!draining || !currentQueue) {
           return;
         }
-
         draining = false;
-
         if (currentQueue.length) {
           queue = currentQueue.concat(queue);
         } else {
           queueIndex = -1;
         }
-
         if (queue.length) {
           drainQueue();
         }
       }
-
       function drainQueue() {
         if (draining) {
           return;
         }
-
         var timeout = runTimeout(cleanUpNextTick);
         draining = true;
         var len = queue.length;
-
         while (len) {
           currentQueue = queue;
           queue = [];
-
           while (++queueIndex < len) {
             if (currentQueue) {
               currentQueue[queueIndex].run();
             }
           }
-
           queueIndex = -1;
           len = queue.length;
         }
-
         currentQueue = null;
         draining = false;
         runClearTimeout(timeout);
       }
-
       process.nextTick = function (fun) {
         var args = new Array(arguments.length - 1);
-
         if (arguments.length > 1) {
           for (var i = 1; i < arguments.length; i++) {
             args[i - 1] = arguments[i];
           }
         }
-
         queue.push(new Item(fun, args));
-
         if (queue.length === 1 && !draining) {
           runTimeout(drainQueue);
         }
-      }; // v8 likes predictible objects
+      };
 
-
+      // v8 likes predictible objects
       function Item(fun, array) {
         this.fun = fun;
         this.array = array;
       }
-
       Item.prototype.run = function () {
         this.fun.apply(null, this.array);
       };
-
       process.title = 'browser';
       process.browser = true;
       process.env = {};
       process.argv = [];
       process.version = ''; // empty string to avoid regexp issues
-
       process.versions = {};
-
       function noop() {}
-
       process.on = noop;
       process.addListener = noop;
       process.once = noop;
@@ -16624,23 +15867,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       process.emit = noop;
       process.prependListener = noop;
       process.prependOnceListener = noop;
-
       process.listeners = function (name) {
         return [];
       };
-
       process.binding = function (name) {
         throw new Error('process.binding is not supported');
       };
-
       process.cwd = function () {
         return '/';
       };
-
       process.chdir = function (dir) {
         throw new Error('process.chdir is not supported');
       };
-
       process.umask = function () {
         return 0;
       };
@@ -16661,30 +15899,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       // Generated by CoffeeScript 1.7.1
       (function () {
         var $,
-            Range,
-            Util,
-            xpath,
-            __hasProp = {}.hasOwnProperty,
-            __extends = function __extends(child, parent) {
-          for (var key in parent) {
-            if (__hasProp.call(parent, key)) child[key] = parent[key];
-          }
-
-          function ctor() {
-            this.constructor = child;
-          }
-
-          ctor.prototype = parent.prototype;
-          child.prototype = new ctor();
-          child.__super__ = parent.prototype;
-          return child;
-        };
-
+          Range,
+          Util,
+          xpath,
+          __hasProp = {}.hasOwnProperty,
+          __extends = function __extends(child, parent) {
+            for (var key in parent) {
+              if (__hasProp.call(parent, key)) child[key] = parent[key];
+            }
+            function ctor() {
+              this.constructor = child;
+            }
+            ctor.prototype = parent.prototype;
+            child.prototype = new ctor();
+            child.__super__ = parent.prototype;
+            return child;
+          };
         xpath = require('./xpath');
         Util = require('./util');
         $ = window.jQuery;
         Range = {};
-
         Range.sniff = function (r) {
           if (r.commonAncestorContainer != null) {
             return new Range.BrowserRange(r);
@@ -16697,21 +15931,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             return false;
           }
         };
-
         Range.RangeError = function (_super) {
           __extends(RangeError, _super);
-
           function RangeError(type, message, parent) {
             this.type = type;
             this.message = message;
             this.parent = parent != null ? parent : null;
-
             RangeError.__super__.constructor.call(this, this.message);
           }
-
           return RangeError;
         }(Error);
-
         Range.BrowserRange = function () {
           function BrowserRange(obj) {
             this.commonAncestorContainer = obj.commonAncestorContainer;
@@ -16720,25 +15949,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             this.endContainer = obj.endContainer;
             this.endOffset = obj.endOffset;
           }
-
           BrowserRange.prototype.normalize = function (root) {
             var nr, r;
-
             if (this.tainted) {
               console.error("You may only call normalize() once on a BrowserRange!");
               return false;
             } else {
               this.tainted = true;
             }
-
             r = {};
-
             this._normalizeStart(r);
-
             this._normalizeEnd(r);
-
             nr = {};
-
             if (r.startOffset > 0) {
               if (r.start.nodeValue.length > r.startOffset) {
                 nr.start = r.start.splitText(r.startOffset);
@@ -16748,30 +15970,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             } else {
               nr.start = r.start;
             }
-
             if (r.start === r.end) {
               if (nr.start.nodeValue.length > r.endOffset - r.startOffset) {
                 nr.start.splitText(r.endOffset - r.startOffset);
               }
-
               nr.end = nr.start;
             } else {
               if (r.end.nodeValue.length > r.endOffset) {
                 r.end.splitText(r.endOffset);
               }
-
               nr.end = r.end;
             }
-
             nr.commonAncestor = this.commonAncestorContainer;
-
             while (nr.commonAncestor.nodeType !== Util.NodeTypes.ELEMENT_NODE) {
               nr.commonAncestor = nr.commonAncestor.parentNode;
             }
-
             return new Range.NormalizedRange(nr);
           };
-
           BrowserRange.prototype._normalizeStart = function (r) {
             if (this.startContainer.nodeType === Util.NodeTypes.ELEMENT_NODE) {
               r.start = Util.getFirstTextNodeNotBefore(this.startContainer.childNodes[this.startOffset]);
@@ -16781,33 +15996,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return r.startOffset = this.startOffset;
             }
           };
-
           BrowserRange.prototype._normalizeEnd = function (r) {
             var n, node;
-
             if (this.endContainer.nodeType === Util.NodeTypes.ELEMENT_NODE) {
               node = this.endContainer.childNodes[this.endOffset];
-
               if (node != null) {
                 n = node;
-
                 while (n != null && n.nodeType !== Util.NodeTypes.TEXT_NODE) {
                   n = n.firstChild;
                 }
-
                 if (n != null) {
                   r.end = n;
                   r.endOffset = 0;
                 }
               }
-
               if (r.end == null) {
                 if (this.endOffset) {
                   node = this.endContainer.childNodes[this.endOffset - 1];
                 } else {
                   node = this.endContainer.previousSibling;
                 }
-
                 r.end = Util.getLastTextNodeUpTo(node);
                 return r.endOffset = r.end.nodeValue.length;
               }
@@ -16816,82 +16024,64 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               return r.endOffset = this.endOffset;
             }
           };
-
           BrowserRange.prototype.serialize = function (root, ignoreSelector) {
             return this.normalize(root).serialize(root, ignoreSelector);
           };
-
           return BrowserRange;
         }();
-
         Range.NormalizedRange = function () {
           function NormalizedRange(obj) {
             this.commonAncestor = obj.commonAncestor;
             this.start = obj.start;
             this.end = obj.end;
           }
-
           NormalizedRange.prototype.normalize = function (root) {
             return this;
           };
-
           NormalizedRange.prototype.limit = function (bounds) {
             var nodes, parent, startParents, _i, _len, _ref;
-
             nodes = $.grep(this.textNodes(), function (node) {
               return node.parentNode === bounds || $.contains(bounds, node.parentNode);
             });
-
             if (!nodes.length) {
               return null;
             }
-
             this.start = nodes[0];
             this.end = nodes[nodes.length - 1];
             startParents = $(this.start).parents();
             _ref = $(this.end).parents();
-
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               parent = _ref[_i];
-
               if (startParents.index(parent) !== -1) {
                 this.commonAncestor = parent;
                 break;
               }
             }
-
             return this;
           };
-
           NormalizedRange.prototype.serialize = function (root, ignoreSelector) {
             var end, serialization, start;
-
             serialization = function serialization(node, isEnd) {
               var n, nodes, offset, origParent, path, textNodes, _i, _len;
-
               if (ignoreSelector) {
                 origParent = $(node).parents(":not(" + ignoreSelector + ")").eq(0);
               } else {
                 origParent = $(node).parent();
               }
-
               path = xpath.fromNode(origParent, root)[0];
               textNodes = Util.getTextNodes(origParent);
               nodes = textNodes.slice(0, textNodes.index(node));
               offset = 0;
-
               for (_i = 0, _len = nodes.length; _i < _len; _i++) {
                 n = nodes[_i];
                 offset += n.nodeValue.length;
               }
-
               if (isEnd) {
                 return [path, offset + node.nodeValue.length];
               } else {
                 return [path, offset];
               }
             };
-
             start = serialization(this.start);
             end = serialization(this.end, true);
             return new Range.SerializedRange({
@@ -16901,36 +16091,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               endOffset: end[1]
             });
           };
-
           NormalizedRange.prototype.text = function () {
             var node;
             return function () {
               var _i, _len, _ref, _results;
-
               _ref = this.textNodes();
               _results = [];
-
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 node = _ref[_i];
-
                 _results.push(node.nodeValue);
               }
-
               return _results;
             }.call(this).join('');
           };
-
           NormalizedRange.prototype.textNodes = function () {
             var end, start, textNodes, _ref;
-
             textNodes = Util.getTextNodes($(this.commonAncestor));
             _ref = [textNodes.index(this.start), textNodes.index(this.end)], start = _ref[0], end = _ref[1];
             return $.makeArray(textNodes.slice(start, +end + 1 || 9e9));
           };
-
           return NormalizedRange;
         }();
-
         Range.SerializedRange = function () {
           function SerializedRange(obj) {
             this.start = obj.start;
@@ -16938,39 +16119,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             this.end = obj.end;
             this.endOffset = obj.endOffset;
           }
-
           SerializedRange.prototype.normalize = function (root) {
             var contains, e, length, node, p, range, targetOffset, tn, _i, _j, _len, _len1, _ref, _ref1;
-
             range = {};
             _ref = ['start', 'end'];
-
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               p = _ref[_i];
-
               try {
                 node = xpath.toNode(this[p], root);
               } catch (_error) {
                 e = _error;
                 throw new Range.RangeError(p, "Error while finding " + p + " node: " + this[p] + ": " + e, e);
               }
-
               if (!node) {
                 throw new Range.RangeError(p, "Couldn't find " + p + " node: " + this[p]);
               }
-
               length = 0;
               targetOffset = this[p + 'Offset'];
-
               if (p === 'end') {
                 targetOffset -= 1;
               }
-
               _ref1 = Util.getTextNodes($(node));
-
               for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
                 tn = _ref1[_j];
-
                 if (length + tn.nodeValue.length > targetOffset) {
                   range[p + 'Container'] = tn;
                   range[p + 'Offset'] = this[p + 'Offset'] - length;
@@ -16979,12 +16150,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   length += tn.nodeValue.length;
                 }
               }
-
               if (range[p + 'Offset'] == null) {
                 throw new Range.RangeError("" + p + "offset", "Couldn't find offset " + this[p + 'Offset'] + " in element " + this[p]);
               }
             }
-
             contains = document.compareDocumentPosition != null ? function (a, b) {
               return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_CONTAINED_BY;
             } : function (a, b) {
@@ -16992,13 +16161,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             };
             $(range.startContainer).parents().each(function () {
               var endContainer;
-
               if (range.endContainer.nodeType === Util.NodeTypes.TEXT_NODE) {
                 endContainer = range.endContainer.parentNode;
               } else {
                 endContainer = range.endContainer;
               }
-
               if (contains(this, endContainer)) {
                 range.commonAncestorContainer = this;
                 return false;
@@ -17006,11 +16173,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             });
             return new Range.BrowserRange(range).normalize(root);
           };
-
           SerializedRange.prototype.serialize = function (root, ignoreSelector) {
             return this.normalize(root).serialize(root, ignoreSelector);
           };
-
           SerializedRange.prototype.toObject = function () {
             return {
               start: this.start,
@@ -17019,10 +16184,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               endOffset: this.endOffset
             };
           };
-
           return SerializedRange;
         }();
-
         module.exports = Range;
       }).call(this);
     }, {
@@ -17049,132 +16212,99 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           DOCUMENT_FRAGMENT_NODE: 11,
           NOTATION_NODE: 12
         };
-
         Util.getFirstTextNodeNotBefore = function (n) {
           var result;
-
           switch (n.nodeType) {
             case Util.NodeTypes.TEXT_NODE:
               return n;
-
             case Util.NodeTypes.ELEMENT_NODE:
               if (n.firstChild != null) {
                 result = Util.getFirstTextNodeNotBefore(n.firstChild);
-
                 if (result != null) {
                   return result;
                 }
               }
-
               break;
           }
-
           n = n.nextSibling;
-
           if (n != null) {
             return Util.getFirstTextNodeNotBefore(n);
           } else {
             return null;
           }
         };
-
         Util.getLastTextNodeUpTo = function (n) {
           var result;
-
           switch (n.nodeType) {
             case Util.NodeTypes.TEXT_NODE:
               return n;
-
             case Util.NodeTypes.ELEMENT_NODE:
               if (n.lastChild != null) {
                 result = Util.getLastTextNodeUpTo(n.lastChild);
-
                 if (result != null) {
                   return result;
                 }
               }
-
               break;
           }
-
           n = n.previousSibling;
-
           if (n != null) {
             return Util.getLastTextNodeUpTo(n);
           } else {
             return null;
           }
         };
-
         Util.getTextNodes = function (jq) {
           var _getTextNodes;
-
           _getTextNodes = function getTextNodes(node) {
             var nodes;
-
             if (node && node.nodeType !== Util.NodeTypes.TEXT_NODE) {
               nodes = [];
-
               if (node.nodeType !== Util.NodeTypes.COMMENT_NODE) {
                 node = node.lastChild;
-
                 while (node) {
                   nodes.push(_getTextNodes(node));
                   node = node.previousSibling;
                 }
               }
-
               return nodes.reverse();
             } else {
               return node;
             }
           };
-
           return jq.map(function () {
             return Util.flatten(_getTextNodes(this));
           });
         };
-
         Util.getGlobal = function () {
           return function () {
             return this;
           }();
         };
-
         Util.contains = function (parent, child) {
           var node;
           node = child;
-
           while (node != null) {
             if (node === parent) {
               return true;
             }
-
             node = node.parentNode;
           }
-
           return false;
         };
-
         Util.flatten = function (array) {
           var _flatten;
-
           _flatten = function flatten(ary) {
             var el, flat, _i, _len;
-
             flat = [];
-
             for (_i = 0, _len = ary.length; _i < _len; _i++) {
               el = ary[_i];
               flat = flat.concat(el && $.isArray(el) ? _flatten(el) : el);
             }
-
             return flat;
           };
-
           return _flatten(array);
         };
-
         module.exports = Util;
       }).call(this);
     }, {}],
@@ -17184,45 +16314,37 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var $, Util, evaluateXPath, findChild, fromNode, getNodeName, getNodePosition, simpleXPathJQuery, simpleXPathPure, toNode;
         $ = window.jQuery;
         Util = require('./util');
-
         evaluateXPath = function evaluateXPath(xp, root, nsResolver) {
           var exception, idx, name, node, step, steps, _i, _len, _ref;
-
           if (root == null) {
             root = document;
           }
-
           if (nsResolver == null) {
             nsResolver = null;
           }
-
           try {
             return document.evaluate('.' + xp, root, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
           } catch (_error) {
-            exception = _error; //console.log("XPath evaluation failed.");
+            exception = _error;
+            //console.log("XPath evaluation failed.");
             //console.log("Trying fallback...");
-
             steps = xp.substring(1).split("/");
             node = root;
-
             for (_i = 0, _len = steps.length; _i < _len; _i++) {
               step = steps[_i];
               _ref = step.split("["), name = _ref[0], idx = _ref[1];
               idx = idx != null ? parseInt((idx != null ? idx.split("]") : void 0)[0]) : 1;
               node = findChild(node, name.toLowerCase(), idx);
             }
-
             return node;
           }
         };
-
         simpleXPathJQuery = function simpleXPathJQuery($el, relativeRoot) {
           var jq;
           jq = $el.map(function () {
             var elem, idx, path, tagName;
             path = '';
             elem = this;
-
             while ((elem != null ? elem.nodeType : void 0) === Util.NodeTypes.ELEMENT_NODE && elem !== relativeRoot) {
               tagName = elem.tagName.replace(":", "\\:");
               idx = $(elem.parentNode).children(tagName).index(elem) + 1;
@@ -17230,42 +16352,33 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               path = "/" + elem.tagName.toLowerCase() + idx + path;
               elem = elem.parentNode;
             }
-
             return path;
           });
           return jq.get();
         };
-
         simpleXPathPure = function simpleXPathPure($el, relativeRoot) {
           var getPathSegment, getPathTo, jq, rootNode;
-
           getPathSegment = function getPathSegment(node) {
             var name, pos;
             name = getNodeName(node);
             pos = getNodePosition(node);
             return "" + name + "[" + pos + "]";
           };
-
           rootNode = relativeRoot;
-
           getPathTo = function getPathTo(node) {
             var xpath;
             xpath = '';
-
             while (node !== rootNode) {
               if (node == null) {
                 throw new Error("Called getPathTo on a node which was not a descendant of @rootNode. " + rootNode);
               }
-
               xpath = getPathSegment(node) + '/' + xpath;
               node = node.parentNode;
             }
-
             xpath = '/' + xpath;
             xpath = xpath.replace(/\/$/, '');
             return xpath;
           };
-
           jq = $el.map(function () {
             var path;
             path = getPathTo(this);
@@ -17273,117 +16386,88 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           });
           return jq.get();
         };
-
         findChild = function findChild(node, type, index) {
           var child, children, found, name, _i, _len;
-
           if (!node.hasChildNodes()) {
             throw new Error("XPath error: node has no children!");
           }
-
           children = node.childNodes;
           found = 0;
-
           for (_i = 0, _len = children.length; _i < _len; _i++) {
             child = children[_i];
             name = getNodeName(child);
-
             if (name === type) {
               found += 1;
-
               if (found === index) {
                 return child;
               }
             }
           }
-
           throw new Error("XPath error: wanted child not found.");
         };
-
         getNodeName = function getNodeName(node) {
           var nodeName;
           nodeName = node.nodeName.toLowerCase();
-
           switch (nodeName) {
             case "#text":
               return "text()";
-
             case "#comment":
               return "comment()";
-
             case "#cdata-section":
               return "cdata-section()";
-
             default:
               return nodeName;
           }
         };
-
         getNodePosition = function getNodePosition(node) {
           var pos, tmp;
           pos = 0;
           tmp = node;
-
           while (tmp) {
             if (tmp.nodeName === node.nodeName) {
               pos += 1;
             }
-
             tmp = tmp.previousSibling;
           }
-
           return pos;
         };
-
         fromNode = function fromNode($el, relativeRoot) {
           var exception, result;
-
           try {
             result = simpleXPathJQuery($el, relativeRoot);
           } catch (_error) {
-            exception = _error; //console.log("jQuery-based XPath construction failed! Falling back to manual.");
-
+            exception = _error;
+            //console.log("jQuery-based XPath construction failed! Falling back to manual.");
             result = simpleXPathPure($el, relativeRoot);
           }
-
           return result;
         };
-
         toNode = function toNode(path, root) {
           var customResolver, namespace, node, segment;
-
           if (root == null) {
             root = document;
           }
-
           if (!$.isXMLDoc(document.documentElement)) {
             return evaluateXPath(path, root);
           } else {
             customResolver = document.createNSResolver(document.ownerDocument === null ? document.documentElement : document.ownerDocument.documentElement);
             node = evaluateXPath(path, root, customResolver);
-
             if (!node) {
               path = function () {
                 var _i, _len, _ref, _results;
-
                 _ref = path.split('/');
                 _results = [];
-
                 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                   segment = _ref[_i];
-
                   if (segment && segment.indexOf(':') === -1) {
                     _results.push(segment.replace(/^([a-z]+)/, 'xhtml:$1'));
                   } else {
                     _results.push(segment);
                   }
                 }
-
                 return _results;
               }().join('/');
-
               namespace = document.lookupNamespaceURI(null);
-
               customResolver = function customResolver(ns) {
                 if (ns === 'xhtml') {
                   return namespace;
@@ -17391,14 +16475,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   return document.documentElement.getAttribute('xmlns:' + ns);
                 }
               };
-
               node = evaluateXPath(path, root, customResolver);
             }
-
             return node;
           }
         };
-
         module.exports = {
           fromNode: fromNode,
           toNode: toNode
@@ -17410,15 +16491,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     11: [function (require, module, exports) {
       // Main module: default UI
       // exports.main = require('./ui/main').main;
+
       // Export submodules for browser environments
-      exports.adder = require('./ui/adder'); // exports.editor = require('./ui/editor');
+      exports.adder = require('./ui/adder');
+      // exports.editor = require('./ui/editor');
       // exports.filter = require('./ui/filter');
-
-      exports.highlighter = require('./ui/highlighter'); // exports.markdown = require('./ui/markdown');
+      exports.highlighter = require('./ui/highlighter');
+      // exports.markdown = require('./ui/markdown');
       // exports.tags = require('./ui/tags');
-
-      exports.textselector = require('./ui/textselector'); // exports.viewer = require('./ui/viewer');
-
+      exports.textselector = require('./ui/textselector');
+      // exports.viewer = require('./ui/viewer');
       exports.widget = require('./ui/widget');
     }, {
       "./ui/adder": 12,
@@ -17430,13 +16512,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       "use strict";
 
       var Widget = require('./widget').Widget,
-          util = require('../util');
-
+        util = require('../util');
       var $ = util.$;
       var _t = util.gettext;
-      var NS = 'annotator-adder'; // Adder shows and hides an annotation adder button that can be clicked on to
-      // create an annotation.
+      var NS = 'annotator-adder';
 
+      // Adder shows and hides an annotation adder button that can be clicked on to
+      // create an annotation.
       var Adder = Widget.extend({
         constructor: function constructor(options) {
           Widget.call(this, options);
@@ -17493,7 +16575,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               left: position.left
             });
           }
-
           Widget.prototype.show.call(this);
         },
         // Event callback: called when the mouse button is depressed on the adder.
@@ -17506,10 +16587,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           if (event.which > 1) {
             return;
           }
-
-          event.preventDefault(); // Prevent the selection code from firing when the mouse button is
+          event.preventDefault();
+          // Prevent the selection code from firing when the mouse button is
           // released
-
           this.ignoreMouseup = true;
         },
         // Event callback: called when the mouse button is released
@@ -17521,10 +16601,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           // Do nothing for right-clicks, middle-clicks, etc.
           if (event.which > 1) {
             return;
-          } // Prevent the selection code from firing when the ignoreMouseup flag is
+          }
+
+          // Prevent the selection code from firing when the ignoreMouseup flag is
           // set
-
-
           if (this.ignoreMouseup) {
             event.stopImmediatePropagation();
           }
@@ -17541,19 +16621,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           if (event.which > 1) {
             return;
           }
+          event.preventDefault();
 
-          event.preventDefault(); // Hide the adder
-
+          // Hide the adder
           this.hide();
-          this.ignoreMouseup = false; // Create a new annotation
+          this.ignoreMouseup = false;
 
+          // Create a new annotation
           if (this.annotation !== null && typeof this.onCreate === 'function') {
             this.onCreate(this.annotation, event);
           }
         }
       });
-      Adder.template = ['<div class="annotator-adder annotator-hide">', '  <button type="button">' + _t('Annotate') + '</button>', '</div>'].join('\n'); // Configuration options
+      Adder.template = ['<div class="annotator-adder annotator-hide">', '  <button type="button">' + _t('Annotate') + '</button>', '</div>'].join('\n');
 
+      // Configuration options
       Adder.options = {
         // Callback, called when the user clicks the adder when an
         // annotation is loaded.
@@ -17569,35 +16651,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         "use strict";
 
         var xpathRange = require('xpath-range');
-
         var util = require('../util');
-
         var $ = util.$;
-        var Promise = util.Promise; // highlightRange wraps the DOM Nodes within the provided range with a highlight
+        var Promise = util.Promise;
+
+        // highlightRange wraps the DOM Nodes within the provided range with a highlight
         // element of the specified class and returns the highlight Elements.
         //
         // normedRange - A NormalizedRange to be highlighted.
         // cssClass - A CSS class to use for the highlight (default: 'annotator-hl')
         //
         // Returns an array of highlight Elements.
-
         function highlightRange(normedRange, cssClass) {
           if (typeof cssClass === 'undefined' || cssClass === null) {
             cssClass = 'annotator-hl';
           }
+          var white = /^\s*$/;
 
-          var white = /^\s*$/; // Ignore text nodes that contain only whitespace characters. This prevents
+          // Ignore text nodes that contain only whitespace characters. This prevents
           // spans being injected between elements that can only contain a restricted
           // subset of nodes such as table rows and lists. This does mean that there
           // may be the odd abandoned whitespace node in a paragraph that is skipped
           // but better than breaking table layouts.
-
           var nodes = normedRange.textNodes(),
-              results = [];
-
+            results = [];
           for (var i = 0, len = nodes.length; i < len; i++) {
             var node = nodes[i];
-
             if (!white.test(node.nodeValue)) {
               var hl = global.document.createElement('span');
               hl.className = cssClass;
@@ -17606,12 +16685,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               results.push(hl);
             }
           }
-
           return results;
-        } // reanchorRange will attempt to normalize a range, swallowing Range.RangeErrors
+        }
+
+        // reanchorRange will attempt to normalize a range, swallowing Range.RangeErrors
         // for those ranges which are not reanchorable in the current document.
-
-
         function reanchorRange(range, rootElement) {
           try {
             return xpathRange.Range.sniff(range).normalize(rootElement);
@@ -17619,13 +16697,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             if (!(e instanceof xpathRange.Range.RangeError)) {
               // Oh Javascript, why you so crap? This will lose the traceback.
               throw e;
-            } // Otherwise, we simply swallow the error. Callers are responsible
+            }
+            // Otherwise, we simply swallow the error. Callers are responsible
             // for only trying to draw valid annotations.
-
           }
 
           return null;
-        } // Highlighter provides a simple way to draw highlighted <span> tags over
+        }
+
+        // Highlighter provides a simple way to draw highlighted <span> tags over
         // annotated ranges within a document.
         //
         // element - The root Element on which to dereference annotation ranges and
@@ -17633,42 +16713,36 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         // options - An options Object containing configuration options for the plugin.
         //           See `Highlighter.options` for available options.
         //
-
-
         var Highlighter = exports.Highlighter = function Highlighter(element, options) {
           this.element = element;
           this.options = $.extend(true, {}, Highlighter.options, options);
         };
-
         Highlighter.prototype.destroy = function () {
           $(this.element).find("." + this.options.highlightClass).each(function (_, el) {
             $(el).contents().insertBefore(el);
             $(el).remove();
           });
-        }; // Public: Draw highlights for all the given annotations
+        };
+
+        // Public: Draw highlights for all the given annotations
         //
         // annotations - An Array of annotation Objects for which to draw highlights.
         //
         // Returns nothing.
-
-
         Highlighter.prototype.drawAll = function (annotations) {
           var self = this;
           var p = new Promise(function (resolve) {
             var highlights = [];
-
             function loader(annList) {
               if (typeof annList === 'undefined' || annList === null) {
                 annList = [];
               }
-
               var now = annList.splice(0, self.options.chunkSize);
-
               for (var i = 0, len = now.length; i < len; i++) {
                 highlights = highlights.concat(self.draw(now[i]));
-              } // If there are more to do, do them after a delay
+              }
 
-
+              // If there are more to do, do them after a delay
               if (annList.length > 0) {
                 setTimeout(function () {
                   loader(annList);
@@ -17677,89 +16751,77 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 resolve(highlights);
               }
             }
-
             var clone = annotations.slice();
             loader(clone);
           });
           return p;
-        }; // Public: Draw highlights for the annotation.
+        };
+
+        // Public: Draw highlights for the annotation.
         //
         // annotation - An annotation Object for which to draw highlights.
         //
         // Returns an Array of drawn highlight elements.
-
-
         Highlighter.prototype.draw = function (annotation) {
-          var normedRanges = []; //annotation.ranges = annotation.ranges.ranges;//searchWATargets(annotation, "ranges", this.element);
-
+          var normedRanges = [];
+          //annotation.ranges = annotation.ranges.ranges;//searchWATargets(annotation, "ranges", this.element);
           for (var i = 0, ilen = annotation.ranges.length; i < ilen; i++) {
             var r = reanchorRange(annotation.ranges[i], this.element);
-
             if (r !== null) {
               normedRanges.push(r);
             }
           }
-
           var hasLocal = typeof annotation._local !== 'undefined' && annotation._local !== null;
-
           if (!hasLocal) {
             annotation._local = {};
           }
-
           var hasHighlights = typeof annotation._local.highlights !== 'undefined' && annotation._local.highlights === null;
-
           if (!hasHighlights) {
             annotation._local.highlights = [];
           }
-
           for (var j = 0, jlen = normedRanges.length; j < jlen; j++) {
             var normed = normedRanges[j];
             $.merge(annotation._local.highlights, highlightRange(normed, this.options.highlightClass));
-          } // Save the annotation data on each highlighter element.
+          }
 
+          // Save the annotation data on each highlighter element.
+          $(annotation._local.highlights).data('annotation', annotation);
 
-          $(annotation._local.highlights).data('annotation', annotation); // Add a data attribute for annotation id if the annotation has one
-
+          // Add a data attribute for annotation id if the annotation has one
           if (typeof annotation.id !== 'undefined' && annotation.id !== null) {
             $(annotation._local.highlights).attr('data-annotation-id', annotation.id);
           }
-
           return annotation._local.highlights;
-        }; // Public: Remove the drawn highlights for the given annotation.
+        };
+
+        // Public: Remove the drawn highlights for the given annotation.
         //
         // annotation - An annotation Object for which to purge highlights.
         //
         // Returns nothing.
-
-
         Highlighter.prototype.undraw = function (annotation) {
           var hasHighlights = typeof annotation._local !== 'undefined' && annotation._local !== null && typeof annotation._local.highlights !== 'undefined' && annotation._local.highlights !== null;
-
           if (!hasHighlights) {
             return;
           }
-
           for (var i = 0, len = annotation._local.highlights.length; i < len; i++) {
             var h = annotation._local.highlights[i];
-
             if (h.parentNode !== null) {
               $(h).replaceWith(h.childNodes);
             }
           }
-
           delete annotation._local.highlights;
-        }; // Public: Redraw the highlights for the given annotation.
+        };
+
+        // Public: Redraw the highlights for the given annotation.
         //
         // annotation - An annotation Object for which to redraw highlights.
         //
         // Returns the list of newly-drawn highlights.
-
-
         Highlighter.prototype.redraw = function (annotation) {
           this.undraw(annotation);
           return this.draw(annotation);
         };
-
         Highlighter.options = {
           // The CSS class to apply to drawn highlights
           highlightClass: 'annotator-hl',
@@ -17767,9 +16829,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           chunkSize: 10,
           // Time (in ms) to pause between drawing chunks of annotations
           chunkDelay: 10
-        }; // standalone is a module that uses the Highlighter to draw/undraw highlights
-        // automatically when annotations are created and removed.
+        };
 
+        // standalone is a module that uses the Highlighter to draw/undraw highlights
+        // automatically when annotations are created and removed.
         exports.standalone = function standalone(element, options) {
           var widget = exports.Highlighter(element, options);
           return {
@@ -17800,29 +16863,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         "use strict";
 
         var xpathRange = require('xpath-range');
-
         var util = require('../util');
-
         var $ = util.$;
-        var TEXTSELECTOR_NS = 'annotator-textselector'; // isAnnotator determines if the provided element is part of Annotator. Useful
+        var TEXTSELECTOR_NS = 'annotator-textselector';
+
+        // isAnnotator determines if the provided element is part of Annotator. Useful
         // for ignoring mouse actions on the annotator elements.
         //
         // element - An Element or TextNode to check.
         //
         // Returns true if the element is a child of an annotator element.
-
         function isAnnotator(element) {
           var elAndParents = $(element).parents().addBack();
           return elAndParents.filter('[class^=annotator-]').length !== 0;
-        } // TextSelector monitors a document (or a specific element) for text selections
+        }
+
+        // TextSelector monitors a document (or a specific element) for text selections
         // and can notify another object of a selection event
-
-
         function TextSelector(element, options) {
           this.element = element;
           this.options = $.extend(true, {}, TextSelector.options, options);
           this.onSelection = this.options.onSelection;
-
           if (typeof this.element.ownerDocument !== 'undefined' && this.element.ownerDocument !== null) {
             var self = this;
             this.document = this.element.ownerDocument;
@@ -17837,7 +16898,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               if (self.selectionEndTimeout) {
                 clearTimeout(self.selectionEndTimeout);
               }
-
               self.selectionEndTimeout = setTimeout(function () {
                 self._checkForEndSelection(e);
               }, 500);
@@ -17846,107 +16906,95 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             console.warn("You created an instance of the TextSelector on an " + "element that doesn't have an ownerDocument. This won't " + "work! Please ensure the element is added to the DOM " + "before the plugin is configured:", this.element);
           }
         }
-
         TextSelector.prototype.destroy = function () {
           if (this.document) {
             $(this.document.body).off("." + TEXTSELECTOR_NS);
           }
-        }; // Public: capture the current selection from the document, excluding any nodes
+        };
+
+        // Public: capture the current selection from the document, excluding any nodes
         // that fall outside of the adder's `element`.
         //
         // Returns an Array of NormalizedRange instances.
-
-
         TextSelector.prototype.captureDocumentSelection = function () {
           var i,
-              len,
-              ranges = [],
-              rangesToIgnore = [],
-              selection = global.getSelection();
-
+            len,
+            ranges = [],
+            rangesToIgnore = [],
+            selection = global.getSelection();
           if (selection.isCollapsed) {
             return [];
           }
-
           for (i = 0; i < selection.rangeCount; i++) {
             var r = selection.getRangeAt(i),
-                browserRange = new xpathRange.Range.BrowserRange(r),
-                normedRange = browserRange.normalize().limit(this.element); // If the new range falls fully outside our this.element, we should
+              browserRange = new xpathRange.Range.BrowserRange(r),
+              normedRange = browserRange.normalize().limit(this.element);
+            // If the new range falls fully outside our this.element, we should
             // add it back to the document but not return it from this method.
-
             if (normedRange === null) {
               rangesToIgnore.push(r);
             } else {
               ranges.push(normedRange);
             }
-          } // BrowserRange#normalize() modifies the DOM structure and deselects the
+          }
+
+          // BrowserRange#normalize() modifies the DOM structure and deselects the
           // underlying text as a result. So here we remove the selected ranges and
           // reapply the new ones.
-
-
           selection.removeAllRanges();
-
           for (i = 0, len = rangesToIgnore.length; i < len; i++) {
             selection.addRange(rangesToIgnore[i]);
-          } // Add normed ranges back to the selection
+          }
 
-
+          // Add normed ranges back to the selection
           for (i = 0, len = ranges.length; i < len; i++) {
             var range = ranges[i],
-                drange = this.document.createRange();
+              drange = this.document.createRange();
             drange.setStartBefore(range.start);
             drange.setEndAfter(range.end);
             selection.addRange(drange);
           }
-
           return ranges;
-        }; // Event callback: called when the mouse button is released. Checks to see if a
+        };
+
+        // Event callback: called when the mouse button is released. Checks to see if a
         // selection has been made and if so displays the adder.
         //
         // event - A mouseup Event object.
         //
         // Returns nothing.
-
-
         TextSelector.prototype._checkForEndSelection = function (event) {
           var self = this;
-
           var _nullSelection = function _nullSelection() {
             if (typeof self.onSelection === 'function') {
               self.onSelection([], event);
             }
-          }; // Get the currently selected ranges.
+          };
 
-
+          // Get the currently selected ranges.
           var selectedRanges = this.captureDocumentSelection();
-
           if (selectedRanges.length === 0) {
             _nullSelection();
-
             return;
-          } // Don't show the adder if the selection was of a part of Annotator itself.
+          }
 
-
+          // Don't show the adder if the selection was of a part of Annotator itself.
           for (var i = 0, len = selectedRanges.length; i < len; i++) {
             var container = selectedRanges[i].commonAncestor;
-
             if ($(container).hasClass('annotator-hl')) {
               container = $(container).parents('[class!=annotator-hl]')[0];
             }
-
             if (!isAnnotator(container)) {
               _nullSelection();
-
               return;
             }
           }
-
           if (typeof this.onSelection === 'function') {
             this.onSelection(selectedRanges, event);
           }
-        }; // Configuration options
+        };
 
-
+        // Configuration options
         TextSelector.options = {
           // Callback, called when the user makes a selection.
           // Receives the list of selected ranges (may be empty) and  the DOM Event
@@ -17964,27 +17012,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         "use strict";
 
         var extend = require('backbone-extend-standalone');
-
         var util = require('../util');
+        var $ = util.$;
 
-        var $ = util.$; // Public: Base class for the Editor and Viewer elements. Contains methods that
+        // Public: Base class for the Editor and Viewer elements. Contains methods that
         // are shared between the two.
-
         function Widget(options) {
           this.element = $(this.constructor.template);
           this.classes = $.extend({}, Widget.classes, this.constructor.classes);
           this.options = $.extend({}, Widget.options, this.constructor.options, options);
           this.extensionsInstalled = false;
-        } // Public: Destroy the Widget, unbinding all events and removing the element.
+        }
+
+        // Public: Destroy the Widget, unbinding all events and removing the element.
         //
         // Returns nothing.
-
-
         Widget.prototype.destroy = function () {
           this.element.remove();
-        }; // Executes all given widget-extensions
+        };
 
-
+        // Executes all given widget-extensions
         Widget.prototype.installExtensions = function () {
           if (this.options.extensions) {
             for (var i = 0, len = this.options.extensions.length; i < len; i++) {
@@ -17993,37 +17040,38 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
           }
         };
-
         Widget.prototype._maybeInstallExtensions = function () {
           if (!this.extensionsInstalled) {
             this.extensionsInstalled = true;
             this.installExtensions();
           }
-        }; // Public: Attach the widget to a css selector or element
+        };
+
+        // Public: Attach the widget to a css selector or element
         // Plus do any post-construction install
-
-
         Widget.prototype.attach = function () {
           this.element.appendTo(this.options.appendTo);
-
           this._maybeInstallExtensions();
-        }; // Public: Show the widget.
+        };
+
+        // Public: Show the widget.
         //
         // Returns nothing.
-
-
         Widget.prototype.show = function () {
-          this.element.removeClass(this.classes.hide); // invert if necessary
+          this.element.removeClass(this.classes.hide);
 
+          // invert if necessary
           this.checkOrientation();
-        }; // Public: Hide the widget.
+        };
+
+        // Public: Hide the widget.
         //
         // Returns nothing.
-
-
         Widget.prototype.hide = function () {
           $(this.element).addClass(this.classes.hide);
-        }; // Public: Returns true if the widget is currently displayed, false otherwise.
+        };
+
+        // Public: Returns true if the widget is currently displayed, false otherwise.
         //
         // Examples
         //
@@ -18034,88 +17082,82 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         //   widget.isShown() # => false
         //
         // Returns true if the widget is visible.
-
-
         Widget.prototype.isShown = function () {
           return !$(this.element).hasClass(this.classes.hide);
         };
-
         Widget.prototype.checkOrientation = function () {
           this.resetOrientation();
           var $win = $(global),
-              $widget = this.element.children(":first"),
-              offset = $widget.offset(),
-              viewport = {
-            top: $win.scrollTop(),
-            right: $win.width() + $win.scrollLeft()
-          },
-              current = {
-            top: offset.top,
-            right: offset.left + $widget.width()
-          };
-
+            $widget = this.element.children(":first"),
+            offset = $widget.offset(),
+            viewport = {
+              top: $win.scrollTop(),
+              right: $win.width() + $win.scrollLeft()
+            },
+            current = {
+              top: offset.top,
+              right: offset.left + $widget.width()
+            };
           if (current.top - viewport.top < 0) {
             this.invertY();
           }
-
           if (current.right - viewport.right > 0) {
             this.invertX();
           }
-
           return this;
-        }; // Public: Resets orientation of widget on the X & Y axis.
+        };
+
+        // Public: Resets orientation of widget on the X & Y axis.
         //
         // Examples
         //
         //   widget.resetOrientation() # Widget is original way up.
         //
         // Returns itself for chaining.
-
-
         Widget.prototype.resetOrientation = function () {
           this.element.removeClass(this.classes.invert.x).removeClass(this.classes.invert.y);
           return this;
-        }; // Public: Inverts the widget on the X axis.
+        };
+
+        // Public: Inverts the widget on the X axis.
         //
         // Examples
         //
         //   widget.invertX() # Widget is now right aligned.
         //
         // Returns itself for chaining.
-
-
         Widget.prototype.invertX = function () {
           this.element.addClass(this.classes.invert.x);
           return this;
-        }; // Public: Inverts the widget on the Y axis.
+        };
+
+        // Public: Inverts the widget on the Y axis.
         //
         // Examples
         //
         //   widget.invertY() # Widget is now upside down.
         //
         // Returns itself for chaining.
-
-
         Widget.prototype.invertY = function () {
           this.element.addClass(this.classes.invert.y);
           return this;
-        }; // Public: Find out whether or not the widget is currently upside down
+        };
+
+        // Public: Find out whether or not the widget is currently upside down
         //
         // Returns a boolean: true if the widget is upside down
-
-
         Widget.prototype.isInvertedY = function () {
           return this.element.hasClass(this.classes.invert.y);
-        }; // Public: Find out whether or not the widget is currently right aligned
+        };
+
+        // Public: Find out whether or not the widget is currently right aligned
         //
         // Returns a boolean: true if the widget is right aligned
-
-
         Widget.prototype.isInvertedX = function () {
           return this.element.hasClass(this.classes.invert.x);
-        }; // Classes used to alter the widgets state.
+        };
 
-
+        // Classes used to alter the widgets state.
         Widget.classes = {
           hide: 'annotator-hide',
           invert: {
@@ -18123,8 +17165,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             y: 'annotator-invert-y'
           }
         };
-        Widget.template = "<div></div>"; // Default options for the widget.
+        Widget.template = "<div></div>";
 
+        // Default options for the widget.
         Widget.options = {
           // A CSS selector or Element to append the Widget to.
           appendTo: 'body'
@@ -18141,9 +17184,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         "use strict";
 
         var $ = window.jQuery;
-
         var Promise = require('es6-promise').Promise;
-
         var ESCAPE_MAP = {
           "&": "&amp;",
           "<": "&lt;",
@@ -18151,61 +17192,57 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           '"': "&quot;",
           "'": "&#39;",
           "/": "&#47;"
-        }; // escapeHtml sanitizes special characters in text that could be interpreted as
-        // HTML.
+        };
 
+        // escapeHtml sanitizes special characters in text that could be interpreted as
+        // HTML.
         function escapeHtml(string) {
           return String(string).replace(/[&<>"'\/]/g, function (c) {
             return ESCAPE_MAP[c];
           });
-        } // I18N
+        }
 
-
+        // I18N
         var gettext = function () {
           if (typeof global.Gettext === 'function') {
             var _gettext = new global.Gettext({
               domain: "annotator"
             });
-
             return function (msgid) {
               return _gettext.gettext(msgid);
             };
           }
-
           return function (msgid) {
             return msgid;
           };
-        }(); // Returns the absolute position of the mouse relative to the top-left rendered
+        }();
+
+        // Returns the absolute position of the mouse relative to the top-left rendered
         // corner of the page (taking into account padding/margin/border on the body
         // element as necessary).
-
-
         function mousePosition(event) {
           var body = global.document.body;
           var offset = {
             top: 0,
             left: 0
           };
-
           if ($(body).css('position') !== "static") {
             offset = $(body).offset();
           }
-
           var top = event.pageY - offset.top;
-          var left = event.pageX - offset.left; // in case user is selecting via keyboard, this sets the adder to top-left corner
+          var left = event.pageX - offset.left;
 
+          // in case user is selecting via keyboard, this sets the adder to top-left corner
           if (event.type.indexOf("mouse") === -1 && event.type.indexOf("click") === -1) {
             var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
             top = boundingBox.top - offset.top + boundingBox.height;
             left = boundingBox.left - offset.left + boundingBox.width;
           }
-
           return {
             top: top,
             left: left
           };
         }
-
         exports.$ = $;
         exports.Promise = Promise;
         exports.gettext = gettext;
@@ -29158,14 +28195,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.19';
+  var VERSION = '4.17.21';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
   var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
-      FUNC_ERROR_TEXT = 'Expected a function';
+      FUNC_ERROR_TEXT = 'Expected a function',
+      INVALID_TEMPL_VAR_ERROR_TEXT = 'Invalid `variable` option passed into `_.template`';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -29298,10 +28336,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
       reHasRegExpChar = RegExp(reRegExpChar.source);
 
-  /** Used to match leading and trailing whitespace. */
-  var reTrim = /^\s+|\s+$/g,
-      reTrimStart = /^\s+/,
-      reTrimEnd = /\s+$/;
+  /** Used to match leading whitespace. */
+  var reTrimStart = /^\s+/;
+
+  /** Used to match a single whitespace character. */
+  var reWhitespace = /\s/;
 
   /** Used to match wrap detail comments. */
   var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/,
@@ -29310,6 +28349,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
   /** Used to match words composed of alphanumeric characters. */
   var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+  /**
+   * Used to validate the `validate` option in `_.template` variable.
+   *
+   * Forbids characters which could potentially change the meaning of the function argument definition:
+   * - "()," (modification of function parameters)
+   * - "=" (default value)
+   * - "[]{}" (destructuring of function parameters)
+   * - "/" (beginning of a comment)
+   * - whitespace
+   */
+  var reForbiddenIdentifierChars = /[()=,{}\[\]\/\s]/;
 
   /** Used to match backslashes in property paths. */
   var reEscapeChar = /\\(\\)?/g;
@@ -30140,6 +29191,19 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
   }
 
   /**
+   * The base implementation of `_.trim`.
+   *
+   * @private
+   * @param {string} string The string to trim.
+   * @returns {string} Returns the trimmed string.
+   */
+  function baseTrim(string) {
+    return string
+      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+      : string;
+  }
+
+  /**
    * The base implementation of `_.unary` without support for storing metadata.
    *
    * @private
@@ -30470,6 +29534,21 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     return hasUnicode(string)
       ? unicodeToArray(string)
       : asciiToArray(string);
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+   * character of `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the index of the last non-whitespace character.
+   */
+  function trimmedEndIndex(string) {
+    var index = string.length;
+
+    while (index-- && reWhitespace.test(string.charAt(index))) {}
+    return index;
   }
 
   /**
@@ -41640,7 +40719,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
       if (typeof value != 'string') {
         return value === 0 ? value : +value;
       }
-      value = value.replace(reTrim, '');
+      value = baseTrim(value);
       var isBinary = reIsBinary.test(value);
       return (isBinary || reIsOctal.test(value))
         ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
@@ -44012,6 +43091,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
       }
+      // Throw an error if a forbidden character was found in `variable`, to prevent
+      // potential command injection attacks.
+      else if (reForbiddenIdentifierChars.test(variable)) {
+        throw new Error(INVALID_TEMPL_VAR_ERROR_TEXT);
+      }
+
       // Cleanup code by stripping empty strings.
       source = (isEvaluating ? source.replace(reEmptyStringLeading, '') : source)
         .replace(reEmptyStringMiddle, '$1')
@@ -44125,7 +43210,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     function trim(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrim, '');
+        return baseTrim(string);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -44160,7 +43245,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     function trimEnd(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrimEnd, '');
+        return string.slice(0, trimmedEndIndex(string) + 1);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -44734,7 +43819,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * // => [{ 'a': 4, 'b': 5, 'c': 6 }]
      *
      * // Checking for several possible values
-     * _.filter(users, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
+     * _.filter(objects, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
      * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matches(source) {
@@ -44771,7 +43856,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
      * // => { 'a': 4, 'b': 5, 'c': 6 }
      *
      * // Checking for several possible values
-     * _.filter(users, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
+     * _.filter(objects, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
      * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matchesProperty(path, srcValue) {
@@ -57928,29 +57013,21 @@ var __webpack_exports__ = {};
 
 
 
- // vendors
 
+
+// vendors
 __webpack_require__(2666);
+__webpack_require__(1752);
 
-__webpack_require__(1752); // common Hxighlighter object
-
-
+// common Hxighlighter object
 __webpack_require__(488);
-
 __webpack_require__(3405);
-
 __webpack_require__(7826);
-
 __webpack_require__(4800);
-
 __webpack_require__(9405);
-
 __webpack_require__(1508);
-
 __webpack_require__(8135);
-
 __webpack_require__(9305);
-
 __webpack_require__(7715);
 })();
 
