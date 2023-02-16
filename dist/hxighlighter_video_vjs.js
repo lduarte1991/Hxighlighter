@@ -1214,7 +1214,7 @@ exports.AsyncStream = AsyncStream;
 
 /***/ }),
 
-/***/ 8135:
+/***/ 4225:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -1348,11 +1348,11 @@ exports.AsyncStream = AsyncStream;
     editedMedia = editedMedia.toLowerCase();
     return editedMedia.charAt(0).toUpperCase() + editedMedia.slice(1);
   };
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 8856:
+/***/ 8602:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -1508,11 +1508,11 @@ exports.AsyncStream = AsyncStream;
     return foundAnnotation;
   };
   $.drawers.push($.TimeRangeDrawer);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 6989:
+/***/ 5201:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -2097,7 +2097,7 @@ exports.getNodeFromXpath = getNodeFromXpath;
 
 /***/ }),
 
-/***/ 3405:
+/***/ 1202:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -2256,11 +2256,11 @@ exports.getNodeFromXpath = getNodeFromXpath;
     e.returnValue = false;
     return false;
   };
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 488:
+/***/ 8571:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2343,7 +2343,7 @@ Hxighlighter.globals = {};
 
 /***/ }),
 
-/***/ 2934:
+/***/ 9171:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -2394,11 +2394,11 @@ __webpack_require__(7373);
     value: "AdminButton"
   });
   $.plugins.push($.AdminButton);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 4304:
+/***/ 8222:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -2509,11 +2509,11 @@ __webpack_require__(3058);
     value: "HxAlert"
   });
   $.plugins.push($.HxAlert);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 4800:
+/***/ 1544:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -2633,11 +2633,11 @@ __webpack_require__(9970);
     value: "Badges"
   });
   $.plugins.push($.Badges);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 3247:
+/***/ 6630:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -2825,11 +2825,11 @@ __webpack_require__(2638);
     value: "ColorTags"
   });
   $.plugins.push($.ColorTags);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 5911:
+/***/ 8817:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -2840,7 +2840,7 @@ __webpack_require__(2638);
  *
  */
 
-__webpack_require__(4817);
+__webpack_require__(1746);
 __webpack_require__(2295);
 __webpack_require__(1806);
 __webpack_require__(6764);
@@ -3047,11 +3047,11 @@ __webpack_require__(1979);
     value: "DropdownTags"
   });
   $.plugins.push($.DropdownTags);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 7290:
+/***/ 4013:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -3309,11 +3309,11 @@ __webpack_require__(1979);
     return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
   };
   $.plugins.push($.ExportPlugin);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 6775:
+/***/ 8198:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -3381,11 +3381,11 @@ __webpack_require__(1979);
     value: "HxPermissions"
   });
   $.plugins.push($.HxPermissions);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 7715:
+/***/ 2734:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -3453,11 +3453,11 @@ __webpack_require__(6164);
     value: "PrevNextButton"
   });
   $.plugins.push($.PrevNextButton);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 7826:
+/***/ 9399:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3931,11 +3931,11 @@ __webpack_require__(8540);
     value: "Reply"
   });
   $.plugins.push($.Reply);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 1416:
+/***/ 2237:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -4034,11 +4034,11 @@ __webpack_require__(7710);
     value: "SidebarTagTokens"
   });
   $.plugins.push($.SidebarTagTokens);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 4817:
+/***/ 1746:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -4126,11 +4126,11 @@ __webpack_require__(2295);
     value: "SimpleTags"
   });
   $.plugins.push($.SimpleTags);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 2741:
+/***/ 1777:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -4437,11 +4437,11 @@ __webpack_require__(9108);
     value: "SummernoteRichText"
   });
   $.plugins.push($.SummernoteRichText);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 7773:
+/***/ 3369:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -4619,11 +4619,11 @@ __webpack_require__(9108);
     callBack(annotation);
   };
   $.plugins.push($.Websockets);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 998:
+/***/ 1091:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -5048,11 +5048,11 @@ __webpack_require__(9108);
       name: 'BackAnDisplay'
     });
   });
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 7536:
+/***/ 2621:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -5114,11 +5114,11 @@ __webpack_require__(9108);
       name: 'TranscriptToggle'
     });
   });
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 9962:
+/***/ 7612:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
@@ -5531,11 +5531,11 @@ __webpack_require__(9108);
       name: 'RangeSliderText'
     });
   });
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 5394:
+/***/ 8694:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -5543,7 +5543,7 @@ __webpack_require__(9108);
  */
 
 var jQuery = __webpack_require__(9755);
-var hrange = __webpack_require__(6989);
+var hrange = __webpack_require__(5201);
 (function ($) {
   $.TimeSelector = function (element, inst_id) {
     var defaultOpts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -5623,17 +5623,17 @@ var hrange = __webpack_require__(6989);
     });
   };
   $.selectors.push($.TimeSelector);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 9305:
+/***/ 6889:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
 /* provided dependency */ var toastr = __webpack_require__(8901);
 //var xpathrange = xpathrange ? xpathrange : require('xpath-range');
-var hrange = __webpack_require__(6989);
+var hrange = __webpack_require__(5201);
 (function ($) {
   $.CatchPy = function (options, inst_id) {
     this.options = options;
@@ -6410,36 +6410,36 @@ var hrange = __webpack_require__(6989);
     return s;
   };
   $.storage.push($.CatchPy);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 2699:
+/***/ 9748:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
-__webpack_require__(5394);
-__webpack_require__(8856);
-__webpack_require__(1416);
-__webpack_require__(2934);
-__webpack_require__(931);
-__webpack_require__(9185);
-__webpack_require__(6775);
-__webpack_require__(4304);
-__webpack_require__(2741);
-__webpack_require__(4817);
-__webpack_require__(5911);
-__webpack_require__(3247);
-__webpack_require__(7826);
-__webpack_require__(7773);
-__webpack_require__(7290);
-__webpack_require__(7715);
-__webpack_require__(7536);
-__webpack_require__(998);
-__webpack_require__(9962);
-__webpack_require__(9305);
+__webpack_require__(8694);
+__webpack_require__(8602);
+__webpack_require__(2237);
+__webpack_require__(9171);
+__webpack_require__(7949);
+__webpack_require__(7072);
+__webpack_require__(8198);
+__webpack_require__(8222);
+__webpack_require__(1777);
+__webpack_require__(1746);
+__webpack_require__(8817);
+__webpack_require__(6630);
+__webpack_require__(9399);
+__webpack_require__(3369);
+__webpack_require__(4013);
+__webpack_require__(2734);
+__webpack_require__(2621);
+__webpack_require__(1091);
+__webpack_require__(7612);
+__webpack_require__(6889);
 __webpack_require__(7017);
-__webpack_require__(670);
+__webpack_require__(1474);
 __webpack_require__(2575);
 (function ($) {
   var videojs = __webpack_require__(7017);
@@ -6957,11 +6957,11 @@ __webpack_require__(2575);
       });
     });
   };
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 9185:
+/***/ 7072:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6973,7 +6973,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * 
  */
-var annotator = annotator ? annotator : __webpack_require__(1272);
+var annotator = annotator ? annotator : __webpack_require__(5463);
 
 
 
@@ -7431,11 +7431,11 @@ var annotator = annotator ? annotator : __webpack_require__(1272);
     jQuery(viewerElement).css('left', newLeft);
   };
   $.viewers.push($.FloatingViewer);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
-/***/ 931:
+/***/ 7949:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7449,7 +7449,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * 
  */
-var annotator = annotator ? annotator : __webpack_require__(1272);
+var annotator = annotator ? annotator : __webpack_require__(5463);
 
 
 
@@ -8272,7 +8272,7 @@ __webpack_require__(6764);
     }
   };
   $.viewers.push($.Sidebar);
-})(Hxighlighter ? Hxighlighter : __webpack_require__(488));
+})(Hxighlighter ? Hxighlighter : __webpack_require__(8571));
 
 /***/ }),
 
@@ -15808,7 +15808,7 @@ this.decorators.push("return fn;"),d?this.decorators=Function.apply(this,["fn","
 
 /***/ }),
 
-/***/ 1272:
+/***/ 5463:
 /***/ ((module, exports, __webpack_require__) => {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*** IMPORTS FROM imports-loader ***/
@@ -18607,7 +18607,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 /***/ }),
 
-/***/ 670:
+/***/ 1474:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var videojs = __webpack_require__(7017);
@@ -117312,11 +117312,11 @@ __webpack_require__(2666);
 __webpack_require__(1752);
 
 // common Hxighlighter object
-__webpack_require__(488);
-__webpack_require__(4800);
-__webpack_require__(3405);
-__webpack_require__(2699);
-__webpack_require__(8135);
+__webpack_require__(8571);
+__webpack_require__(1544);
+__webpack_require__(1202);
+__webpack_require__(9748);
+__webpack_require__(4225);
 })();
 
 /******/ })()

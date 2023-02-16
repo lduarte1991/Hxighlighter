@@ -79,7 +79,7 @@ module.exports = {
           ],
     },
     externals: {
-
+        'Mirador': 'Mirador'
     },
     module: {
         rules: [
@@ -119,10 +119,10 @@ module.exports = {
                     }
                 }]
             },
-            {
-                test: /mirador\.js/,
-                use: 'script-loader'
-            },
+            // {
+            //     test: /mirador\.js/,
+            //     use: 'script-loader'
+            // },
             {
                 test: /videojs-transcript.js/,
                 use: [{
