@@ -10,7 +10,7 @@
         var offset = {top: 0, left: 0};
 
         if (jQuery(body).css('position') !== "static") {
-            offset = $(body).offset();
+            offset = jQuery(body).offset();
         }
 
         try {

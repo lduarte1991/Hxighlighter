@@ -2891,7 +2891,7 @@ exports.Widget = Widget;
 (function (global){
 "use strict";
 
-var $ = window.jQuery;
+var $ = jQuery;
 var Promise = require('es6-promise').Promise;
 
 var ESCAPE_MAP = {

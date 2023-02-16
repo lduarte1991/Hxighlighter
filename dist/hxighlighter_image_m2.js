@@ -728,7 +728,6 @@ exports.getNodeFromXpath = getNodeFromXpath;
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 /* provided dependency */ var jQuery = __webpack_require__(9755);
-/* provided dependency */ var $ = __webpack_require__(9755);
 (function ($$) {
   /**
    * Gets the current top/left position for an event (in particular your mouse pointer)
@@ -743,7 +742,7 @@ exports.getNodeFromXpath = getNodeFromXpath;
       left: 0
     };
     if (jQuery(body).css('position') !== "static") {
-      offset = $(body).offset();
+      offset = jQuery(body).offset();
     }
     try {
       var top = event.pageY - offset.top;
@@ -14220,6 +14219,7 @@ this.decorators.push("return fn;"),d?this.decorators=Function.apply(this,["fn","
 /***/ 5463:
 /***/ ((module, exports, __webpack_require__) => {
 
+/* provided dependency */ var jQuery = __webpack_require__(9755);
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*** IMPORTS FROM imports-loader ***/
 
 
@@ -16942,7 +16942,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       (function (global) {
         "use strict";
 
-        var $ = window.jQuery;
+        var $ = jQuery;
         var Promise = require('es6-promise').Promise;
         var ESCAPE_MAP = {
           "&": "&amp;",

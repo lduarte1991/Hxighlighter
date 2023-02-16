@@ -31,8 +31,6 @@
     "handlebars-loader": "^1.7.3",
     "jquery-confirm": "^3.3.4",
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
-    "mirador": "^2.7.2",
-    "node-gyp": "^6.1.0",
     "script-loader": "^0.7.2",
     "summernote": "^0.8.18",
     "timeago": "^1.6.7",

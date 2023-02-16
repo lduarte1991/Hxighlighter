@@ -114,7 +114,8 @@ module.exports = {
                     options: {
                         imports: [
                             "defaults jquery $",
-                            "defaults jquery window.jQuery"
+                            "defaults jquery window.jQuery",
+                            "defaults jquery jQuery"
                         ]
                     }
                 }]
