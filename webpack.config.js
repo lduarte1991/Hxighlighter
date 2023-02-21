@@ -62,6 +62,7 @@ module.exports = {
         mainFields: ['main', 'module'], 
         alias: {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
+            'jQuery': 'jquery',
             'CodeMirror': 'codemirror',
             'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
             'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
