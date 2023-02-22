@@ -10,24 +10,24 @@
     var Component = videojs.getComponent('Component');
 
     // Allows the triggering of the creation annotations
-    var AnnotationViewerButton = videojs.extend(Component, {
+    class AnnotationViewerButton extends Component {
 
         // The constructor of a component receives two arguments: the
         // player it will be associated with and an object of options.
-        constructor: function(player, options) {
+        constructor(player, options) {
           // It is important to invoke the superclass before anything else, 
           // to get all the features of components out of the box!
-          Component.apply(this, arguments);
+          super(player, options);
           this.player = player;
           this.annotating = false;
           this.app_instance_id = player.options.instance_id;
           this.player.on('toggleAnnotations', this.toggleAnnotationsDisplay.bind(this));
 
           return this;
-        },
+        }
 
         // The `createEl` function of a component creates its DOM element.
-        createEl: function() {
+        createEl() {
           return videojs.dom.createEl('button', {
             className: 'vjs-annotation-viewer-button vjs-control vjs-button fas fa-comments',
             title: 'View Annotations',
@@ -38,9 +38,9 @@
               });
             }.bind(this)
           });
-        },
+        }
 
-        toggleAnnotationsDisplay: function(event, params) {
+        toggleAnnotationsDisplay(event, params) {
             if (params.isAnnotating) {
                 this.el().style.color = 'rgb(255, 255, 0)';
                 this.player.trigger('toggleCreateAnnotation', {
@@ -49,12 +49,12 @@
             } else {
                 this.el().style.color = null;
             }
-        },
-    });
+        }
+    };
     
-    var BackAnDisplay = videojs.extend(Component, {
-        constructor: function(player, options) {
-            Component.apply(this, arguments);
+    class BackAnDisplay extends Component {
+        constructor(player, options) {
+            super(player, options);
             this.player = player;
             this.inStatsView = false;
             this.seekBar = player.controlBar.progressControl.seekBar;
@@ -70,17 +70,17 @@
             this.marginBottom = 0;
             this.selectedAnimatedElement = undefined;
             return this;
-        },
+        }
 
-        createEl: function() {
+        createEl() {
 
             return videojs.dom.createEl('div', {
                 className: 'vjs-back-anpanel-annotation',
                 innerHTML: '<div class="vjs-hx-buttons annotation-view-togglers"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" tabindex="0" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-selection-display"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
             })
-        },
+        }
 
-        toggleAnnotationsDisplay: function(event, params) {
+        toggleAnnotationsDisplay(event, params) {
             if (params.isAnnotating) {
                 this.resizeDisplay(event);
                 this.el().style.display = 'block';
@@ -93,9 +93,9 @@
                 this.shutDownListeners();
                 jQuery('.video-js .vjs-progress-control').removeClass('stats-view')
             }
-        },
+        }
 
-        resizeDisplay: function(event) {
+        resizeDisplay(event) {
             var playerHeight = this.player.el().scrollHeight;
             var controlBarHeight = this.player.controlBar.el().scrollHeight;
             var progressControlHeight = this.player.controlBar.progressControl.el().scrollHeight;
@@ -111,17 +111,17 @@
             jQuery(annotationPanel).css('width', progressControl.el().offsetWidth - 16);
             jQuery(statsPanel).css('left', progressControl.el().offsetLeft);
             jQuery(statsPanel).css('width', progressControl.el().offsetWidth - 16);
-        },
+        }
 
-        getProgress: function(prog) {
+        getProgress(prog) {
             const duration = this.player.duration();
             if (isNaN(duration) || isNaN(prog)) {
                 return 0;
             }
             return Math.min(1.0, Math.max(0.0, ((prog) / duration))) * 100.0;
-        },
+        }
 
-        drawAnnotation: function(event, data) {
+        drawAnnotation(event, data) {
             var annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
             var progressControl = this.player.controlBar.progressControl;
 
@@ -145,9 +145,9 @@
                 'highlights': [node]
             }
             node.data('annotation', ann);
-        },
+        }
 
-        playAnnotation: function(event, ann) {
+        playAnnotation(event, ann) {
             var self = this;
             
             // get start/end values pass it to playBetween
@@ -177,9 +177,9 @@
                 self._playBetween(ann.ranges[0].start, ann.ranges[0].end);
             });
             
-        },
+        }
 
-        _playBetween: function(start, end) {
+        _playBetween(start, end) {
             // seek to start point
             this.player.currentTime(start);
             this.player.play();
@@ -189,18 +189,18 @@
             this.player_.on("timeupdate", videojs.bind(this,this._processPlay));
             // set universal end point
             // console.log("Ran playBetween");
-        },
+        }
 
-        suspendPlay: function(promise) {
+        suspendPlay(promise) {
             this.fired = false;
             this.player_.off("timeupdate", videojs.bind(this,this._processPlay));
             if (typeof(promise) == "function") {
                 // console.log("Ran suspendPlay");
                 promise();
             }
-        },
+        }
 
-        _processPlay: function () {
+        _processPlay () {
             var self = this;
             //Check if current time is between start and end
             if(this.player_.currentTime() >= Math.floor(this.startTime) && (this.endTime < 0 || this.player_.currentTime() < this.endTime)){
@@ -220,9 +220,9 @@
                 this.player_.currentTime(this.endTime);
                 this.suspendPlay();
             }
-        },
+        }
 
-        _getNumberAnnotations: function(time1, end, allannotations) {
+        _getNumberAnnotations(time1, end, allannotations) {
             var num = (typeof end !== 'undefined' && end) ? -1 : 0;
             // console.log(num, end, time1)
             var time = parseInt(time1)
@@ -232,9 +232,9 @@
                     num++;
             }
             return num;
-        },
+        }
 
-        _drawCanvas: function() {
+        _drawCanvas() {
             var statsPanel = this.el().querySelector('.vjs-back-stats-panel');
             this.canvas = jQuery('.vjs-char-anstat-annotation')[0];
             this.canvas.width = statsPanel.offsetWidth;
@@ -316,9 +316,9 @@
                 ctx.dashedLine(0, 0, duration * w.X, 0, 8);
                 ctx.stroke();
             }.bind(this));
-        },
+        }
 
-        _getMaxArray: function(points, variable) {
+        _getMaxArray(points, variable) {
             var highest = 0;
             var tmp;
             for (var index in points) {
@@ -326,9 +326,9 @@
                 if (tmp > highest) highest = tmp;
             }
             return highest;
-        },
+        }
 
-        _getWeights: function(points){
+        _getWeights(points){
             var weight = {};
             var panel = jQuery('.vjs-char-anstat-annotation');
             var maxSe = this.player.duration();
@@ -339,9 +339,9 @@
             weight.X = maxSe != 0 ? (panelW / maxSe) : 0;
             weight.Y = maxEn != 0 ? (panelH / maxEn) : 0;
             return weight;
-        },
+        }
 
-        _getPoints: function(callback) {
+        _getPoints(callback) {
             var self = this;
             Hxighlighter.publishEvent('getDrawnAnnotations', this.app_instance_id, [function(anns) {
                 var points_prep = {};
@@ -373,9 +373,9 @@
                 // console.log('POINTS', points);
                 callback(points)
             }]);
-        },
+        }
 
-        toggleStatsView: function(event, params) {
+        toggleStatsView(event, params) {
             if (params.statsView) {
                 jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'none')
                 jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'block')
@@ -394,16 +394,16 @@
                 jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 0)')
                 jQuery('.video-js .vjs-progress-control').removeClass('stats-view')
             }
-        },
+        }
 
-        toggleStats: function() {
+        toggleStats() {
             this.inStatsView = !this.inStatsView;
             this.player.trigger('toggleStatsView', {
                 'statsView': this.inStatsView
             });
-        },
+        }
 
-        setUpListeners: function() {
+        setUpListeners() {
             var self = this;
             jQuery('.annotation-view-togglers').on('click', this.toggleStats.bind(this));
             Hxighlighter.subscribeEvent('StorageAnnotationLoad', this.app_instance_id, this._drawCanvas.bind(this));
@@ -417,13 +417,13 @@
                 }
                 jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '))
             });
-        },
+        }
 
-        shutDownListeners: function() {
+        shutDownListeners() {
             jQuery('.annotation-view-togglers').off('click');
         }
 
-    });
+    };
 
     /***************************** Installing Components *****************************/
     // Register the component with Video.js, so it can be used in players.
