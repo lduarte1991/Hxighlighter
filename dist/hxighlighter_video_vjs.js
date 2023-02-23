@@ -9815,7 +9815,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         this.startTime = start;
         this.endTime = end;
         //this.suspendPlay();
-        this.player_.on("timeupdate", videojs.bind(this, this._processPlay));
+        this.player_.on("timeupdate", this._processPlay.bind(this));
         // set universal end point
         // console.log("Ran playBetween");
       }
@@ -9823,7 +9823,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       key: "suspendPlay",
       value: function suspendPlay(promise) {
         this.fired = false;
-        this.player_.off("timeupdate", videojs.bind(this, this._processPlay));
+        this.player_.off("timeupdate", this._processPlay.bind(this));
         if (typeof promise == "function") {
           // console.log("Ran suspendPlay");
           promise();
