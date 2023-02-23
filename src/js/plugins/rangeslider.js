@@ -72,7 +72,7 @@ function RangeSlider_(options){
 					break;
 			}
 		});
-		player.on('firstplay', initialVideoFinished);
+		player.one('play', initialVideoFinished);
 	}else{
 		player.one('playing', initialVideoFinished);
 	}
