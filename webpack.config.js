@@ -100,7 +100,7 @@ module.exports = {
                 test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
                 type: 'asset/resource',
                 generator: {
-                    publicPath: '../fonts/',
+                    publicPath: 'hxighlighter/fonts/',
                     outputPath: 'dist/fonts/'
                 }
             }, 
