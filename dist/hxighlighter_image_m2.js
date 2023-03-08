@@ -5340,7 +5340,7 @@ var hrange = __webpack_require__(5201);
       method: 'GET',
       data: data,
       headers: {
-        'x-annotator-auth-token': self.options.storageOptions.token
+        'Authorization': "token " + self.options.storageOptions.token
       },
       success: function success(result) {
         $.totalAnnotations = result.total;

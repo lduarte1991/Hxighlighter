@@ -101,7 +101,7 @@ module.exports = {
                 type: 'asset/resource',
                 generator: {
                     publicPath: 'hxighlighter/fonts/',
-                    outputPath: 'dist/fonts/'
+                    outputPath: 'dist/hxighlighter/fonts/'
                 }
             }, 
             {
