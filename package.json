@@ -38,7 +38,7 @@
     "video.js": "^8.0.4",
     "videojs-transcript-ac": "^0.8.8",
     "videojs-youtube": "^2.6.1",
-    "webpack": "^5.75.0"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
