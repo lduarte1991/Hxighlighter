@@ -72,7 +72,7 @@ var hrange = require('../h-range.js');
             method: 'GET',
             data: data,
             headers: {
-                'x-annotator-auth-token': self.options.storageOptions.token,
+                'Authorization': "token " + self.options.storageOptions.token,
             },
             success: function(result) {
                 $.totalAnnotations = result.total;

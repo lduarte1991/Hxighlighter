@@ -2,7 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackAutoInject = require('webpack-auto-inject-version');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const WebpackAutoInject = require('webpack-auto-inject-version-next');
 
 const PATHS = {
     vendor: path.join(__dirname, 'src/js/vendors/'),
@@ -32,10 +33,13 @@ module.exports = {
         new webpack.DefinePlugin({
           'require.specified': 'require.resolve'
         }),
-        new webpack.IgnorePlugin(/^codemirror$/),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^codemirror$/
+        }),
         new WebpackAutoInject({
             components: {
-                InjectAsComment: true
+                InjectAsComment: true,
+                InjectByTag: false
             },
             componentsOptions: {
                 InjectAsComment: {
@@ -48,7 +52,8 @@ module.exports = {
     ],
     output: {
         path: __dirname,
-        filename: 'dist/hxighlighter_[name].js'
+        filename: 'dist/hxighlighter_[name].js',
+        assetModuleFilename: '[hash][ext][query]'
     },
     resolve: {
         extensions: ['.js'],
@@ -57,6 +62,7 @@ module.exports = {
         mainFields: ['main', 'module'], 
         alias: {
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
+            'jQuery': 'jquery',
             'CodeMirror': 'codemirror',
             'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
             'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
@@ -66,7 +72,15 @@ module.exports = {
         }
     },
     optimization: {
-        minimize: false
+        minimize: false,
+        minimizer: [
+            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+            `...`,
+            new CssMinimizerPlugin(),
+          ],
+    },
+    externals: {
+        'Mirador': 'Mirador'
     },
     module: {
         rules: [
@@ -83,20 +97,44 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(eot|gif|svg|png|jpg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-                use: require.resolve('url-loader')
+                test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+                type: 'asset/resource',
+                generator: {
+                    publicPath: 'hxighlighter/fonts/',
+                    outputPath: 'dist/hxighlighter/fonts/'
+                }
+            }, 
+            {
+                test: /\.(gif|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?/,
+                type: 'asset/inline'
             },
             {
                 test: /annotator\.ui\.js/,
-                use: ["imports-loader?$=jquery&window.jQuery=jquery"]
+                use: [{
+                    loader: "imports-loader",
+                    options: {
+                        imports: [
+                            "defaults jquery $",
+                            "defaults jquery window.jQuery",
+                            "defaults jquery jQuery"
+                        ]
+                    }
+                }]
             },
-            {
-                test: /mirador\.js/,
-                use: 'script-loader'
-            },
+            // {
+            //     test: /mirador\.js/,
+            //     use: 'script-loader'
+            // },
             {
                 test: /videojs-transcript.js/,
-                use: ["imports-loader?videojs=videojs"]
+                use: [{
+                    loader: "imports-loader",
+                    options: {
+                        imports: [
+                            "defaults videojs videojs"
+                        ]
+                    }
+                }]
             },
             {
                 test: /(floating|sidebar)\.html$/,

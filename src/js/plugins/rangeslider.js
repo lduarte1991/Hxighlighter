@@ -72,7 +72,7 @@ function RangeSlider_(options){
 					break;
 			}
 		});
-		player.on('firstplay', initialVideoFinished);
+		player.one('play', initialVideoFinished);
 	}else{
 		player.one('playing', initialVideoFinished);
 	}
@@ -80,7 +80,7 @@ function RangeSlider_(options){
 	
 	//console.log("Loaded Plugin RangeSlider");
 }
-videojs.plugin('rangeslider', RangeSlider_);
+videojs.registerPlugin('rangeslider', RangeSlider_);
 
 
 
@@ -147,13 +147,13 @@ RangeSlider.prototype = {
 		this.options.locked = true;
 		this.ctp.enable(false);
 		if (typeof this.box != 'undefined')
-			videojs.addClass(this.box.el_, 'locked');
+			videojs.dom.addClass(this.box.el_, 'locked');
 	},
 	unlock: function() {
 		this.options.locked = false;
 		this.ctp.enable();
 		if (typeof this.box !='undefined')
-			videojs.removeClass(this.box.el_, 'locked');
+			videojs.dom.removeClass(this.box.el_, 'locked');
 	},
 	show:function(){
 		this.options.hidden = false;
@@ -173,12 +173,12 @@ RangeSlider.prototype = {
 	showPanel:function(){
 		this.options.panel = true;
 		if (typeof this.tp !='undefined')
-			videojs.removeClass(this.tp.el_, 'disable');			
+			videojs.dom.removeClass(this.tp.el_, 'disable');			
 	},
 	hidePanel:function(){
 		this.options.panel = false;
 		if (typeof this.tp !='undefined')
-			videojs.addClass(this.tp.el_, 'disable');	
+			videojs.dom.addClass(this.tp.el_, 'disable');	
 	},
 	showcontrolTime:function(){
 		this.options.controlTime = true;
@@ -232,9 +232,9 @@ RangeSlider.prototype = {
         var player = this.player;
 
         if (player) {
-            player.on("pause", videojs.bind(this, function () {
+            player.on("pause", function () {
                 this.looping = false;
-            }));
+            }.bind(this));
 
             show = typeof show === 'undefined' ? true : show;
 
@@ -254,7 +254,7 @@ RangeSlider.prototype = {
             this.player.currentTime(start);
             this.player.play();
 
-            this.player.on("timeupdate", videojs.bind(this, this.bar.process_loop));
+            this.player.on("timeupdate", this.bar.process_loop.bind(this));
         }
     },
 	_getArrowValue: function(index) {
@@ -526,8 +526,8 @@ videojs.SeekRSBar.prototype.onMouseDown = function(event) {
 	videojs.blockTextSelection();
 	
 	if(!this.rs.options.locked) {
-		videojs.on(document, "mousemove", videojs.bind(this,this.onMouseMove));
-		videojs.on(document, "mouseup", videojs.bind(this,this.onMouseUp));
+		videojs.on(document, "mousemove", this.onMouseMove.bind(this));
+		videojs.on(document, "mouseup", this.onMouseUp.bind(this));
 	}
 };
 
@@ -597,7 +597,7 @@ videojs.SeekRSBar.prototype.setPosition = function(index,left,writeControlTime) 
 		}
 		
 		//-- Panel
-		var TimeText = videojs.formatTime(this.rs._seconds(left)),
+		var TimeText = videojs.time.formatTime(this.rs._seconds(left)),
 			tplTextLegth = tpl.children[0].innerHTML.length;
 		var MaxP,MinP,MaxDisP;
 		if (tplTextLegth<=4) //0:00
@@ -749,12 +749,12 @@ videojs.SelectionBar.prototype.activatePlay = function(start,end){
 	
 	this.suspendPlay();
 	
-	this.player_.on("timeupdate", videojs.bind(this,this._processPlay));
+	this.player_.on("timeupdate", this._processPlay.bind(this));
 };
 
 videojs.SelectionBar.prototype.suspendPlay = function(){
 	this.fired = false;
-	this.player_.off("timeupdate", videojs.bind(this,this._processPlay));
+	this.player_.off("timeupdate", this._processPlay.bind(this));
 };
 
 videojs.SelectionBar.prototype._processPlay = function (){
@@ -818,14 +818,14 @@ videojs.SelectionBarLeft.prototype.onMouseDown = function(event) {
 	videojs.blockTextSelection();
 	if(!this.rs.options.locked) {
 		this.pressed = true;
-		videojs.on(document, "mouseup", videojs.bind(this,this.onMouseUp));
-		videojs.addClass(this.el_, 'active');
+		videojs.on(document, "mouseup", this.onMouseUp.bind(this));
+		videojs.dom.addClass(this.el_, 'active');
 	}
 };
 
 videojs.SelectionBarLeft.prototype.onMouseUp = function(event) {
 	videojs.off(document, "mouseup", this.onMouseUp, false);
-	videojs.removeClass(this.el_, 'active');
+	videojs.dom.removeClass(this.el_, 'active');
 	if(!this.rs.options.locked) {
 		this.pressed = false;
 	}
@@ -865,14 +865,14 @@ videojs.SelectionBarRight.prototype.onMouseDown = function(event) {
 	videojs.blockTextSelection();
 	if(!this.rs.options.locked) {
 		this.pressed = true;
-		videojs.on(document, "mouseup", videojs.bind(this,this.onMouseUp));
-		videojs.addClass(this.el_, 'active');
+		videojs.on(document, "mouseup", this.onMouseUp.bind(this));
+		videojs.dom.addClass(this.el_, 'active');
 	}
 };
 
 videojs.SelectionBarRight.prototype.onMouseUp = function(event) {
 	videojs.off(document, "mouseup", this.onMouseUp, false);
-	videojs.removeClass(this.el_, 'active');
+	videojs.dom.removeClass(this.el_, 'active');
 	if(!this.rs.options.locked) {
 		this.pressed = false;
 	}

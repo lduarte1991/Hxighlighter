@@ -22,7 +22,17 @@ require('./storage/catchpy.js');
 
 require('video.js');
 require('videojs-transcript');
-require('videojs-youtube');
+
+
+// We are officially not supporting Youtube videos, due to
+// 1) not wanting to rely on persistent video links/ids
+// 2) not wanting to rely on Youtube api changes in the future that may break things
+
+// If you would like to annotate Youtube videos, check if videojs-youtube now supports videojs 8.x
+//require('videojs-youtube');
+// If it doesn't support 8.x, run npm build in this project: https://github.com/lduarte1991/videojs-youtube
+// And copy the Youtube.min.js file to the vendors folder before building Hxighlighter, uncomment line below
+// import "./vendors/Youtube.min.js"
 
 (function($) {
     var videojs = require('video.js');
@@ -101,6 +111,15 @@ require('videojs-youtube');
             },
             playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
             "instance_id": self.instance_id
+            // uncomment the following if using videojs-youtube,
+            // NOTE: Youtube API does not allow branding off and showinfo has been deprecated
+            // "techOrder": ["html5", "Youtube"],
+            // "youtube": {
+            //     "controls": 0,
+            //     "iv_load_policy": 3,
+            //     "modestbranding": 1,
+            //     "showinfo": 0,
+            // }
         }, function onPlayerReady() {
             $.publishEvent('targetLoaded', self.instance_id, [jQuery('#viewer')]);
             jQuery.each($.globals.vjs.components, function(_, callback) {

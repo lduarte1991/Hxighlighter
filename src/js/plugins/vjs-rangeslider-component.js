@@ -5,14 +5,14 @@
   var Component = videojs.getComponent('Component');
 
   // Allows the triggering of the creation annotations
-  var AnnotateButton = videojs.extend(Component, {
+  class AnnotateButton extends Component {
 
     // The constructor of a component receives two arguments: the
     // player it will be associated with and an object of options.
-    constructor: function(player, options) {
+    constructor(player, options) {
       // It is important to invoke the superclass before anything else, 
       // to get all the features of components out of the box!
-      Component.apply(this, arguments);
+      super(player, options);
       this.player = player;
       this.annotating = false;
       this.app_instance_id = player.options.instance_id;
@@ -27,10 +27,10 @@
         })
       });
       return this;
-    },
+    }
 
     // The `createEl` function of a component creates its DOM element.
-    createEl: function() {
+    createEl() {
       return videojs.dom.createEl('button', {
         className: 'vjs-annotate-button vjs-control vjs-button fas fa-highlighter',
         title: 'Annotate Clip',
@@ -41,9 +41,9 @@
           });
         }.bind(this)
       });
-    },
+    }
 
-    toggleAnnotationsDisplay: function(event, params) {
+    toggleAnnotationsDisplay(event, params) {
         if (params.isAnnotating) {
             this.el().style.color = 'rgb(255, 255, 0)';
             this.player.trigger('toggleAnnotations', {
@@ -53,13 +53,13 @@
             this.el().style.color = null;
             jQuery('.hx-confirm-button').remove();
         }
-    },
-  });
+    }
+  };
 
-  var LeftRangeSlider = videojs.extend(Component, {
+  class LeftRangeSlider extends Component {
 
-    constructor: function(player, options) {
-      Component.apply(this, arguments);
+    constructor(player, options) {
+      super(player, options);
       this.player = player;
       this.seekBar = player.controlBar.progressControl.seekBar;
       this.player.on('seeking', this.handleMouseMove.bind(this));
@@ -71,9 +71,9 @@
       this.app_instance_id = player.options.instance_id;
       // console.log('look here plase', player, options);
       return this;
-    },
+    }
 
-    createEl: function() {
+    createEl() {
       var self = this;
       return videojs.dom.createEl('div', {
         className: 'vjs-lrs',
@@ -84,18 +84,18 @@
           this.heldDown = false;
         }.bind(this)
       });
-    },
+    }
 
-    getProgress: function() {
+    getProgress() {
       const duration = this.player.duration();
       const prog = this.player.currentTime();
       if (isNaN(duration) || isNaN(prog)) {
         return 0;
       }
       return Math.min(1.0, Math.max(0.0, ((prog) / duration))) * 100.0;
-    },
+    }
 
-    handleMouseMove: function() {
+    handleMouseMove() {
       if(this.heldDown){
         const prog = this.getProgress();
         if ( prog < this.limit-1) {
@@ -104,9 +104,9 @@
         }
         
       }
-    },
+    }
 
-    toggleSlider: function(event, params) {
+    toggleSlider(event, params) {
 
       if (params.isAnnotating) {
           this.el().style.display = 'block';
@@ -117,21 +117,21 @@
           this.el().style.display = 'none';
         }
       
-    },
+    }
 
-    setLimit: function(event, percent) {
+    setLimit(event, percent) {
       this.limit = percent;
-    },
+    }
 
-    setLeft: function(event, percent) {
+    setLeft(event, percent) {
       this.el().style.left = percent + '%';
     }
-  });
+  };
 
-  var RightRangeSlider = videojs.extend(Component, {
+  class RightRangeSlider extends Component {
 
-    constructor: function(player, options) {
-      Component.apply(this, arguments);
+    constructor(player, options) {
+      super(player, options);
       this.player = player;
       this.seekBar = player.controlBar.progressControl.seekBar;
       //this.on('mousedown', this.handleMouseMove.bind(this));
@@ -143,9 +143,9 @@
       this.limit = 0.0;
       this.app_instance_id = player.options.instance_id;
       return this;
-    },
+    }
 
-    createEl: function() {
+    createEl() {
       return videojs.dom.createEl('div', {
         className: 'vjs-rrs',
         onmousedown: function() {
@@ -155,9 +155,9 @@
           this.heldDown = false;
         }.bind(this)
       });
-    },
+    }
 
-    getProgress: function(offset) {
+    getProgress(offset) {
       if (isNaN(offset)) {
         offset = 0.0;
       }
@@ -167,9 +167,9 @@
         return 0;
       }
       return Math.min(1.0, Math.max(0.0, ((prog) / duration) + (offset / 100.0))) * 100.0;
-    },
+    }
 
-    handleMouseMove: function(event) {
+    handleMouseMove(event) {
       if(this.heldDown){
         const prog = this.getProgress();
         if (prog > this.limit+1) {
@@ -179,9 +179,9 @@
         
       }
       
-    },
+    }
 
-    toggleSlider: function(event, params) {
+    toggleSlider(event, params) {
 
       if (params.isAnnotating) {
           this.el().style.display = 'block';
@@ -192,20 +192,20 @@
           this.el().style.display = 'none';
         }
       
-    },
+    }
 
-    setLimit: function(event, percent) {
+    setLimit(event, percent) {
       this.limit = percent;
-    },
+    }
 
-    setRight: function(event, percent) {
+    setRight(event, percent) {
       this.el().style.left = percent + '%';
     }
-  });
+  };
 
-  var RangeSlider = videojs.extend(Component, {
-    constructor: function(player, options) {
-      Component.apply(this, arguments);
+  class RangeSlider extends Component {
+    constructor(player, options) {
+      super(player, options);
       this.player = player;
       this.seekBar = player.controlBar.progressControl.seekBar;
       this.player.on('toggleCreateAnnotation', this.toggleSlider.bind(this));
@@ -216,9 +216,9 @@
       this.limitr = 0.0;
       this.app_instance_id = player.options.instance_id;
       return this;
-    },
+    }
 
-    createEl: function() {
+    createEl() {
       return videojs.dom.createEl('div', {
         className: 'vjs-rs',
         onmousedown: function() {
@@ -228,19 +228,19 @@
           this.heldDown = false;
         }.bind(this)
       });
-    },
+    }
 
-    setLimitLeft: function(event, percent) {
+    setLimitLeft(event, percent) {
       this.limitL = percent;
       this.updateElement();
-    },
+    }
 
-    setLimitRight: function(event, percent) {
+    setLimitRight(event, percent) {
       this.limitR = percent;
       this.updateElement();
-    },
+    }
 
-    updateElement: function() {
+    updateElement() {
       let width = this.limitR - this.limitL;
       this.el().style.width = width + '%';
       this.el().style.left = this.limitL + '%';
@@ -251,9 +251,9 @@
       var secondRight = percentRight * duration;
       Hxighlighter.publishEvent('videoRangeSelected', this.app_instance_id, [this.el(), {start: secondLeft, startLabel: this.humanReadable(secondLeft), end: secondRight, endLabel: this.humanReadable(secondRight)}])
       this.player.pause();
-    },
+    }
 
-    toggleSlider: function(event, params) {
+    toggleSlider(event, params) {
 
       if (params.isAnnotating) {
           this.el().style.display = 'block';
@@ -261,9 +261,9 @@
           this.el().style.display = 'none';
         }
       
-    },
+    }
 
-    humanReadable: function(seconds_float) {
+    humanReadable(seconds_float) {
       var dur = this.player.duration();
       if (dur < 60) {
         return parseInt(seconds_float, 10) + "s";
@@ -278,9 +278,9 @@
         var secs = parseInt(leftovers % 60, 10);
         return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
       }
-    },
+    }
 
-    pad: function(num, size) {
+    pad(num, size) {
       var s = num+"";
       while (s.length < size) s = "0" + s;
       return s;
@@ -289,12 +289,12 @@
 
     // TODO: slide together?
 
-  });
+  };
 
 
-  var RangeSliderText = videojs.extend(Component, {
-    constructor: function(player, options) {
-      Component.apply(this, arguments);
+  class RangeSliderText extends Component {
+    constructor(player, options) {
+      super(player, options);
       this.player = player;
       this.seekBar = player.controlBar.progressControl.seekBar;
       this.app_instance_id = player.options.instance_id;
@@ -302,16 +302,16 @@
       this.player.on('setLeftRangeLimit', this.setStart.bind(this));
       this.player.on('setRightRangeLimit', this.setEnd.bind(this));
       return this;
-    },
+    }
 
-    createEl: function() {
+    createEl() {
       return videojs.dom.createEl('div', {
         className: 'vjs-rangeslider-text-input',
         innerHTML: '<span>Start:</span><input type="text" id="vjs-start-range-text-input" /><br><span>End:</span><input type="text" id="vjs-end-range-text-input"/><br><button id="vjs-range-text-update">Update Time Range</button><button id="vjs-range-text-preview-clip">Play Clip</button><br><button id="vjs-range-text-annotate">Annotate Selection</button>'
       });
-    },
+    }
 
-    toggleSlider: function(event, params) {
+    toggleSlider(event, params) {
 
       if (params.isAnnotating) {
           this.el().style.display = 'block';
@@ -321,9 +321,9 @@
           this.closeUpListeners();
         }
       
-    },
+    }
 
-    updateTime: function() {
+    updateTime() {
       var startTimes = jQuery('#vjs-start-range-text-input').val()
       var endTimes = jQuery('#vjs-end-range-text-input').val()
 
@@ -342,13 +342,13 @@
       this.player.trigger('setLeft', startPercent);
       this.player.trigger('setRight', endPercent);
 
-    },
+    }
 
-    getPercent: function(prog, duration) {
+    getPercent(prog, duration) {
       return Math.min(1.0, Math.max(0.0, ((prog) / duration))) * 100.0;
-    },
+    }
 
-    parseTime: function(timeString) {
+    parseTime(timeString) {
       var timeRange = timeString.split(':')
       var timeDivisor = Math.pow(60, (timeRange.length - 1))
       var timeCounter = parseInt(timeRange.pop().replace(/\D/g,''), 10)
@@ -357,9 +357,9 @@
         timeDivisor = timeDivisor / 60;
       });
       return timeCounter
-    },
+    }
 
-    previewClip: function() {
+    previewClip() {
       this.updateTime();
       var startTimes = jQuery('#vjs-start-range-text-input').val()
       var endTimes = jQuery('#vjs-end-range-text-input').val()
@@ -377,37 +377,37 @@
         }]
       }
       this.player.trigger('playAnnotation', fakeAnn);
-    },
+    }
 
-    annotateClip: function() {
+    annotateClip() {
       jQuery('.hx-confirm-button button').trigger('click');
-    },
+    }
 
-    setUpListeners: function() {
+    setUpListeners() {
       jQuery('#vjs-range-text-update').on('click', this.updateTime.bind(this));
       jQuery('#vjs-range-text-preview-clip').on('click', this.previewClip.bind(this));
       jQuery('#vjs-range-text-annotate').on('click', this.annotateClip.bind(this));
-    },
+    }
 
-    closeUpListeners: function() {
+    closeUpListeners() {
       jQuery('#vjs-range-text-update').off('click');
       jQuery('#vjs-range-text-preview-clip').off('click');
       jQuery('#vjs-range-text-annotate').off('click');
-    },
+    }
 
-    setStart: function(event, percent) {
+    setStart(event, percent) {
       var dur = this.player.duration();
       var humanReadableVal = this.humanReadable((percent/100.0) * dur);
       jQuery('#vjs-start-range-text-input').val(humanReadableVal);
-    },
+    }
 
-    setEnd: function(event, percent) {
+    setEnd(event, percent) {
       var dur = this.player.duration();
       var humanReadableVal = this.humanReadable((percent/100.0) * dur);
       jQuery('#vjs-end-range-text-input').val(humanReadableVal);
-    },
+    }
 
-    humanReadable: function(seconds_float) {
+    humanReadable(seconds_float) {
       var dur = this.player.duration();
       if (dur < 60) {
         return parseInt(seconds_float, 10) + "s";
@@ -422,14 +422,14 @@
         var secs = parseInt(leftovers % 60, 10);
         return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
       }
-    },
+    }
 
-    pad: function(num, size) {
+    pad(num, size) {
       var s = num+"";
       while (s.length < size) s = "0" + s;
       return s;
     }
-  });
+  };
 
 
 
