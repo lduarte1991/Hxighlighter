@@ -35,10 +35,10 @@
     "summernote": "^0.8.20",
     "timeago": "^1.6.7",
     "toastr": "^2.1.4",
-    "video.js": "^8.0.4",
+    "video.js": "^8.3.0",
     "videojs-transcript-ac": "^0.8.8",
     "videojs-youtube": "^2.6.1",
-    "webpack": "^5.75.0"
+    "webpack": "^5.80.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
@@ -64,7 +64,7 @@
     "npm-check-updates": "^16.10.9",
     "nyc": "^15.1.0",
     "popper.js": "^1.16.1",
-    "puppeteer": "^19.7.2",
+    "puppeteer": "^19.11.1",
     "regenerator-runtime": "^0.13.11",
     "serve-static": "^1.15.0",
     "style-loader": "^3.3.2",
