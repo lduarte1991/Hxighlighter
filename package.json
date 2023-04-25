@@ -37,7 +37,7 @@
     "toastr": "^2.1.4",
     "video.js": "^8.3.0",
     "videojs-transcript-ac": "^0.8.8",
-    "videojs-youtube": "^2.6.1",
+    "videojs-youtube": "^3.0.0",
     "webpack": "^5.80.0"
   },
   "devDependencies": {
@@ -51,7 +51,7 @@
     "chai": "^4.3.7",
     "connect": "^3.7.0",
     "css-loader": "^6.7.3",
-    "css-minimizer-webpack-plugin": "^4.2.2",
+    "css-minimizer-webpack-plugin": "^5.0.0",
     "exports-loader": "^4.0.0",
     "http-server": "^14.1.1",
     "ignore-styles": "^5.0.1",

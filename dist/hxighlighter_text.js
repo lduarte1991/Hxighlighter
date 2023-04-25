@@ -17298,7 +17298,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.6.3
+ * jQuery JavaScript Library v3.6.4
  * https://jquery.com/
  *
  * Includes Sizzle.js
@@ -17308,7 +17308,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2022-12-20T21:28Z
+ * Date: 2023-03-08T15:28Z
  */
 ( function( global, factory ) {
 
@@ -17450,7 +17450,7 @@ function toType( obj ) {
 
 
 var
-	version = "3.6.3",
+	version = "3.6.4",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -17821,14 +17821,14 @@ function isArrayLike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.3.9
+ * Sizzle CSS Selector Engine v2.3.10
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2022-12-19
+ * Date: 2023-02-14
  */
 ( function( window ) {
 var i,
@@ -17932,7 +17932,7 @@ var i,
 		whitespace + "+$", "g" ),
 
 	rcomma = new RegExp( "^" + whitespace + "*," + whitespace + "*" ),
-	rcombinators = new RegExp( "^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace +
+	rleadingCombinator = new RegExp( "^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace +
 		"*" ),
 	rdescend = new RegExp( whitespace + "|>" ),
 
@@ -18149,7 +18149,7 @@ function Sizzle( selector, context, results, seed ) {
 				// as such selectors are not recognized by querySelectorAll.
 				// Thanks to Andrew Dupont for this technique.
 				if ( nodeType === 1 &&
-					( rdescend.test( selector ) || rcombinators.test( selector ) ) ) {
+					( rdescend.test( selector ) || rleadingCombinator.test( selector ) ) ) {
 
 					// Expand context for sibling selectors
 					newContext = rsibling.test( selector ) && testContext( context.parentNode ) ||
@@ -18178,27 +18178,6 @@ function Sizzle( selector, context, results, seed ) {
 				}
 
 				try {
-
-					// `qSA` may not throw for unrecognized parts using forgiving parsing:
-					// https://drafts.csswg.org/selectors/#forgiving-selector
-					// like the `:has()` pseudo-class:
-					// https://drafts.csswg.org/selectors/#relational
-					// `CSS.supports` is still expected to return `false` then:
-					// https://drafts.csswg.org/css-conditional-4/#typedef-supports-selector-fn
-					// https://drafts.csswg.org/css-conditional-4/#dfn-support-selector
-					if ( support.cssSupportsSelector &&
-
-						// eslint-disable-next-line no-undef
-						!CSS.supports( "selector(:is(" + newSelector + "))" ) ) {
-
-						// Support: IE 11+
-						// Throw to get to the same code path as an error directly in qSA.
-						// Note: once we only support browser supporting
-						// `CSS.supports('selector(...)')`, we can most likely drop
-						// the `try-catch`. IE doesn't implement the API.
-						throw new Error();
-					}
-
 					push.apply( results,
 						newContext.querySelectorAll( newSelector )
 					);
@@ -18494,29 +18473,22 @@ setDocument = Sizzle.setDocument = function( node ) {
 			!el.querySelectorAll( ":scope fieldset div" ).length;
 	} );
 
-	// Support: Chrome 105+, Firefox 104+, Safari 15.4+
-	// Make sure forgiving mode is not used in `CSS.supports( "selector(...)" )`.
-	//
-	// `:is()` uses a forgiving selector list as an argument and is widely
-	// implemented, so it's a good one to test against.
-	support.cssSupportsSelector = assert( function() {
-		/* eslint-disable no-undef */
-
-		return CSS.supports( "selector(*)" ) &&
-
-			// Support: Firefox 78-81 only
-			// In old Firefox, `:is()` didn't use forgiving parsing. In that case,
-			// fail this test as there's no selector to test against that.
-			// `CSS.supports` uses unforgiving parsing
-			document.querySelectorAll( ":is(:jqfake)" ) &&
-
-			// `*` is needed as Safari & newer Chrome implemented something in between
-			// for `:has()` - it throws in `qSA` if it only contains an unsupported
-			// argument but multiple ones, one of which is supported, are fine.
-			// We want to play safe in case `:is()` gets the same treatment.
-			!CSS.supports( "selector(:is(*,:jqfake))" );
-
-		/* eslint-enable */
+	// Support: Chrome 105 - 110+, Safari 15.4 - 16.3+
+	// Make sure the the `:has()` argument is parsed unforgivingly.
+	// We include `*` in the test to detect buggy implementations that are
+	// _selectively_ forgiving (specifically when the list includes at least
+	// one valid selector).
+	// Note that we treat complete lack of support for `:has()` as if it were
+	// spec-compliant support, which is fine because use of `:has()` in such
+	// environments will fail in the qSA path and fall back to jQuery traversal
+	// anyway.
+	support.cssHas = assert( function() {
+		try {
+			document.querySelector( ":has(*,:jqfake)" );
+			return false;
+		} catch ( e ) {
+			return true;
+		}
 	} );
 
 	/* Attributes
@@ -18785,14 +18757,14 @@ setDocument = Sizzle.setDocument = function( node ) {
 		} );
 	}
 
-	if ( !support.cssSupportsSelector ) {
+	if ( !support.cssHas ) {
 
-		// Support: Chrome 105+, Safari 15.4+
-		// `:has()` uses a forgiving selector list as an argument so our regular
-		// `try-catch` mechanism fails to catch `:has()` with arguments not supported
-		// natively like `:has(:contains("Foo"))`. Where supported & spec-compliant,
-		// we now use `CSS.supports("selector(:is(SELECTOR_TO_BE_TESTED))")`, but
-		// outside that we mark `:has` as buggy.
+		// Support: Chrome 105 - 110+, Safari 15.4 - 16.3+
+		// Our regular `try-catch` mechanism fails to detect natively-unsupported
+		// pseudo-classes inside `:has()` (such as `:has(:contains("Foo"))`)
+		// in browsers that parse the `:has()` argument as a forgiving selector list.
+		// https://drafts.csswg.org/selectors/#relational now requires the argument
+		// to be parsed unforgivingly, but browsers have not yet fully adjusted.
 		rbuggyQSA.push( ":has" );
 	}
 
@@ -19705,7 +19677,7 @@ tokenize = Sizzle.tokenize = function( selector, parseOnly ) {
 		matched = false;
 
 		// Combinators
-		if ( ( match = rcombinators.exec( soFar ) ) ) {
+		if ( ( match = rleadingCombinator.exec( soFar ) ) ) {
 			matched = match.shift();
 			tokens.push( {
 				value: matched,
@@ -45947,11 +45919,11 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1145__;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
+var __nested_webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 // ESM COMPAT FLAG
-__nested_webpack_require_6498__.r(__webpack_exports__);
+__nested_webpack_require_6498__.r(__nested_webpack_exports__);
 
 // EXTERNAL MODULE: external "jQuery"
 var external_jQuery_ = __nested_webpack_require_6498__(1145);
@@ -55903,7 +55875,7 @@ var ui = function ui(editorOptions) {
 }, 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 })();
 
-/******/ 	return __webpack_exports__;
+/******/ 	return __nested_webpack_exports__;
 /******/ })()
 ;
 });
@@ -56852,7 +56824,7 @@ __p += '\n			' +
  }); ;
 __p += '\n        ';
  if (annotationItems.length == 0) { ;
-__p += '\n            <li id=\'empty-alert\' style="padding:20px;text-align:center;">Create an annotation by highlighting a portion of the text to the right.</li>\n        ';
+__p += '\n            <li id=\'empty-alert\' style="padding:20px;text-align:center;">Create an annotation by selecting content in the workspace to the right.</li>\n        ';
  } else {;
 __p += '\n            <li>\n                <button type="button" class="btn btn-default loadMoreButton" id="loadMoreButton" aria-label="Load more annotations" style="margin-left:-999999px">Load More Annotations</button>\n            </li>\n        ';
  } ;
