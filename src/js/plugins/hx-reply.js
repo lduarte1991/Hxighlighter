@@ -3,8 +3,8 @@
  *  
  *
  */
-require('bs4-summernote/dist/summernote-bs4.css')
-require('bs4-summernote/dist/summernote-bs4.js');
+require('summernote/dist/summernote-bs4.css')
+require('summernote/dist/summernote-bs4.js');
 require('./hx-reply.css');
 import 'jquery-confirm';
 import 'jquery-confirm/css/jquery-confirm.css'
