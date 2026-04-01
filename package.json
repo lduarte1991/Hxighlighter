@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./test_server.sh",
+    "prebuild": "rm -rf dist/hxighlighter/fonts/",
     "build": "webpack --mode production",
     "start": "http-server dist/",
     "all": "npm-run-all build start"
@@ -36,7 +37,7 @@
     "handlebars": "^4.7.9",
     "jquery-confirm": "^3.3.4",
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
-    "summernote": "^0.8.20",
+    "summernote": "^0.9.1",
     "timeago": "^1.6.7",
     "toastr": "^2.1.4",
     "video.js": "^8.23.8",
