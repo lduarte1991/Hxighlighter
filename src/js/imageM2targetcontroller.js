@@ -426,7 +426,7 @@ require('./storage/catchpy.js');
 
         $.subscribeEvent('wysiwygOpened', self.instance_id, function(e) {
             setTimeout(function() {
-                jQuery('.note-editable.card-block')[0].focus();
+                jQuery('.note-editable')[0].focus();
             }, 500);
         });
     }

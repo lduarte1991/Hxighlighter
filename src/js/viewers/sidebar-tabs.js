@@ -316,7 +316,7 @@ import 'timeago';
     $.Sidebar.prototype.ViewerEditorOpen = function(event, annotation, updating, interactionPoint) {
         var self = this;
         var editor = jQuery('.side.item-' + annotation.id);
-        editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><div class="plugin-area"></div><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-default cancel action-button">Cancel</button></div>');
+        editor.find('.body').after('<div class="editor-area side"><textarea id="annotation-text-field")></textarea><div class="plugin-area"></div><button tabindex="0" class="btn btn-primary save action-button">Save</button><button tabindex="0" class="btn btn-secondary cancel action-button">Cancel</button></div>');
         editor.find('.body').hide();
         editor.find('.tagList').hide();
 

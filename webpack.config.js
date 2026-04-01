@@ -155,5 +155,8 @@ module.exports = {
     },
     performance: {
         'hints': false
-    }
+    },
+    ignoreWarnings: [
+        /Failed to parse source map.*summernote/,
+    ]
 }

@@ -147,7 +147,7 @@ var hrange = require('../h-range.js');
         $.subscribeEvent('wysiwygOpened', self.instance_id, function(e) {
             if (self.currentSelection) {
                 var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
-                jQuery('.note-editable.card-block').attr('aria-label', 'The quote you have selected is: <em>' + ser.text.exact + '</em>. You are now in a text box. Add your annotation.');
+                jQuery('.note-editable').attr('aria-label', 'The quote you have selected is: <em>' + ser.text.exact + '</em>. You are now in a text box. Add your annotation.');
             }
         });
 
@@ -329,7 +329,7 @@ var hrange = require('../h-range.js');
                         self.element.blur();
                     } else {
                         setTimeout(function() {
-                            jQuery('.note-editable.card-block')[0].focus();
+                            jQuery('.note-editable')[0].focus();
                             //console.log("should be focusing on", document.activeElement);
                         }, 250);
                     }

@@ -1,5 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap-theme.min.css';
+import './css/hxighlighter-styling.css';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 import '@fortawesome/fontawesome-free/css/solid.min.css';
 // import 'mirador/dist/css/mirador-combined.css';
@@ -9,8 +8,7 @@ import './css/image.css';
 
 // vendors
 require('handlebars');
-require('bootstrap/dist/js/bootstrap.min.js');
-require('jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js');
+require('./js/vendors/jquery-tiny-pubsub.js');
 // require('mirador/dist/mirador.js');
 
 // common Hxighlighter object

@@ -20,6 +20,11 @@
   "engines": {
     "node": ">=20"
   },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ],
   "author": "lduarte1991",
   "license": "UNLICENSED",
   "bugs": {
@@ -27,7 +32,6 @@
   },
   "homepage": "https://github.com/lduarte1991/Hxighlighter#readme",
   "dependencies": {
-    "bootstrap": "^3.4.1",
     "codemirror": "^6.0.1",
     "handlebars": "^4.7.9",
     "jquery-confirm": "^3.3.4",
@@ -56,15 +60,12 @@
     "ignore-styles": "^5.0.1",
     "imports-loader": "^4.0.1",
     "jquery": "^3.7.1",
-    "jquery-tiny-pubsub": "^0.7.1",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.10.2",
     "mocha": "^10.8.2",
     "npm-check-updates": "^16.10.9",
     "nyc": "^15.1.0",
-    "popper.js": "^1.16.1",
     "puppeteer": "^19.11.1",
-    "regenerator-runtime": "^0.13.11",
     "style-loader": "^3.3.4",
     "underscore-template-loader": "^1.2.0",
     "webpack": "^5.105.4",
