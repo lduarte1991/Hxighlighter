@@ -4,6 +4,7 @@ import '@fortawesome/fontawesome-free/css/solid.min.css';
 import './css/text.css';
 
 // vendors
+require('./js/vendors/micro-template.js');
 require('./js/vendors/jquery-tiny-pubsub.js');
 
 // common Hxighlighter object

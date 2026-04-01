@@ -22,7 +22,6 @@ module.exports = {
             "jquery": require.resolve('jquery'),
             "$": require.resolve('jquery'),
             'jQuery': require.resolve('jquery'),
-            _: require.resolve('lodash'),
             'toastr': require.resolve('toastr'),
             "videojs": require.resolve('video.js')
         }),
