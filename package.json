@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "./test_server.sh",
-    "webp": "webpack --mode production",
-    "start": "cd dist && http-server",
-    "all": "webpack --mode production && cd dist && http-server"
+    "build": "webpack --mode production",
+    "start": "http-server dist/",
+    "all": "npm-run-all build start"
   },
   "repository": {
     "type": "git",
@@ -63,8 +63,9 @@
     "mini-css-extract-plugin": "^2.10.2",
     "mocha": "^10.8.2",
     "npm-check-updates": "^16.10.9",
-    "nyc": "^15.1.0",
-    "puppeteer": "^19.11.1",
+    "c8": "^10.1.3",
+    "npm-run-all2": "^7.0.2",
+    "puppeteer": "^24.9.0",
     "style-loader": "^3.3.4",
     "underscore-template-loader": "^1.2.0",
     "webpack": "^5.105.4",
