@@ -60,6 +60,7 @@ module.exports = {
         //       between video.es.js and video.cjs.js
         mainFields: ['main', 'module'], 
         alias: {
+            'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery.js'),
             'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
             'jQuery': 'jquery',
             'CodeMirror': 'codemirror',

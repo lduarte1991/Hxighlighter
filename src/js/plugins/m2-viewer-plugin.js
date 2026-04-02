@@ -391,7 +391,7 @@
             })
             window.jQuery.each(annotations, function(index, annotation) {
                 tags = [];
-                if (window.jQuery.isArray(annotation.resource)) {
+                if (Array.isArray(annotation.resource)) {
                     window.jQuery.each(annotation.resource, function(index, value) {
                         if (value['@type'] === "oa:Tag") {
                             tags.push(value.chars);

@@ -44,7 +44,7 @@
 
       this.selector = jQuery(selector);
       if (!jQuery.isEmptyObject(_this.annotation)) {
-        if (jQuery.isArray(_this.annotation.resource)) {
+        if (Array.isArray(_this.annotation.resource)) {
           jQuery.each(_this.annotation.resource, function(index, value) {
             if (value['@type'] === "oa:Tag") {
               tags.push(value.chars);

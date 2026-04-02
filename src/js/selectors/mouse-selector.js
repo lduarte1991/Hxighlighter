@@ -25,6 +25,7 @@ var hrange = require('../h-range.js');
         var self = this;
         this.element.addEventListener('mouseup', function(event) {
             var selection = window.getSelection();
+            if (!selection.rangeCount) return;
             var selectionRange = selection.getRangeAt(0);
             //console.log(selectionRange.cloneContents());
             self.onSelection(selectionRange, event);
@@ -35,6 +36,7 @@ var hrange = require('../h-range.js');
             var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
             if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
                 var selection = window.getSelection();
+                if (!selection.rangeCount) return;
                 var selectionRange = selection.getRangeAt(0);
                 //console.log(selectionRange.cloneContents());
                 self.onSelection(selectionRange, event);

@@ -261,3 +261,33 @@
 .fade:not(.show) {
     opacity: 0;
 }
+
+/* ========================================================================
+   jquery-confirm grid helpers (Bootstrap replacement)
+   ======================================================================== */
+
+.jconfirm,
+.jconfirm .jconfirm-box {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+.jconfirm .jconfirm-box-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 33.3333%;   /* col-md-4 equivalent */
+}
+
+@media (max-width: 991px) {
+    .jconfirm .jconfirm-box-container {
+        max-width: 50%;     /* col-sm-6 equivalent */
+    }
+}
+
+@media (max-width: 767px) {
+    .jconfirm .jconfirm-box-container {
+        max-width: 83.3333%; /* col-xs-10 equivalent */
+    }
+}

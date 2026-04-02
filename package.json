@@ -60,7 +60,7 @@
     "http-server": "^14.1.1",
     "ignore-styles": "^5.0.1",
     "imports-loader": "^5.0.0",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "mini-css-extract-plugin": "^2.10.2",
     "mocha": "^11.7.5",
     "npm-check-updates": "^20.0.0",

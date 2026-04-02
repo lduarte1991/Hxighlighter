@@ -1926,7 +1926,7 @@ process.umask = function() { return 0; };
       flat = [];
       for (_i = 0, _len = ary.length; _i < _len; _i++) {
         el = ary[_i];
-        flat = flat.concat(el && $.isArray(el) ? flatten(el) : el);
+        flat = flat.concat(el && Array.isArray(el) ? flatten(el) : el);
       }
       return flat;
     };
