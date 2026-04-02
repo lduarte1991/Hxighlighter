@@ -1,0 +1,263 @@
+/*
+ * Hxighlighter Base Styles
+ * 
+ * Core styling for the Hxighlighter annotation tool: typography,
+ * buttons, form controls, input groups, collapse, and a minimal
+ * reset/normalize layer.
+ */
+
+/* ========================================================================
+   Minimal Reset / Normalize
+   ======================================================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.hxighlighter-container a,
+.annotationSection a,
+.annotation-editor a,
+.annotation-slot a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.hxighlighter-container a:hover,
+.annotationSection a:hover,
+.annotation-editor a:hover,
+.annotation-slot a:hover {
+    text-decoration: none;
+}
+
+/* ========================================================================
+   Typography
+   ======================================================================== */
+
+.hxighlighter-container,
+.annotationSection,
+.annotation-editor,
+.annotation-slot {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================================================
+   Buttons
+   ======================================================================== */
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    font-family: inherit;
+}
+
+.btn:hover {
+    text-decoration: none;
+}
+
+.btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.btn-secondary {
+    color: #333;
+    background-color: #ededed;
+    border-color: #ccc;
+}
+
+.btn-secondary:hover {
+    background-color: #ddd;
+    border-color: #b8b8b8;
+}
+
+.btn-secondary:focus {
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.25);
+}
+
+/* ========================================================================
+   Button Group
+   ======================================================================== */
+
+.btn-group {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-group > .btn {
+    position: relative;
+    float: left;
+}
+
+.btn-group > .btn:not(:first-child) {
+    margin-left: -1px;
+}
+
+.btn-group > .btn:first-child:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.btn-group > .btn:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-group > .btn:not(:first-child):not(:last-child) {
+    border-radius: 0;
+}
+
+/* ========================================================================
+   Form Controls
+   ======================================================================== */
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.custom-select {
+    display: inline-block;
+    width: 100%;
+    padding: 6px 30px 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 12px center/8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    appearance: none;
+    font-family: inherit;
+}
+
+.custom-select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* ========================================================================
+   Input Group
+   ======================================================================== */
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group > .form-control,
+.input-group > .custom-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+}
+
+.input-group > .form-control:not(:last-child),
+.input-group > .custom-select:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group-append {
+    display: flex;
+    margin-left: -1px;
+}
+
+.input-group-append > .btn,
+.input-group-append > .custom-select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* ========================================================================
+   Collapse
+   ======================================================================== */
+
+.collapse:not(.show) {
+    display: none;
+}
+
+.collapse.show {
+    display: block;
+}
+
+/* ========================================================================
+   Utilities
+   ======================================================================== */
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.fade {
+    transition: opacity 0.15s linear;
+}
+
+.fade:not(.show) {
+    opacity: 0;
+}

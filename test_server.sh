@@ -1,6 +1,7 @@
 #!/bin/bash
-node server.js &
+npx http-server dist/ -p 9000 -s &
 temp=$!
-nyc mocha --require @babel/register --require ignore-styles --recursive tests
+sleep 1
+c8 mocha --require @babel/register --require ignore-styles --recursive tests
 sleep 2
 kill -9 $temp

@@ -32,11 +32,6 @@ body {
     min-width: calc(733px - var(--sidebar-width));
 }
 
-.btn-default {
-    background: #ededed;
-    background: var(--lighter-background);
-}
-
 .hx-selector-img {
     width: 0;
     height: 0;

@@ -30,7 +30,7 @@ require('./hx-toggle-annotations.css');
 
     $.ToggleAnnotations.prototype.setUpButton= function() {
         var self = this;
-        jQuery(self.options.slot).prepend('<button class="hx-toggle-annotations btn btn-default"></button>');
+        jQuery(self.options.slot).prepend('<button class="hx-toggle-annotations btn btn-secondary"></button>');
         jQuery(self.options.slot).find('.hx-toggle-annotations').click(function() {
             var toggleButton = jQuery(this);
             if (!toggleButton.hasClass('should-show')) {
