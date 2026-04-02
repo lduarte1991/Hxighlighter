@@ -15,4 +15,5 @@ env
 
 # Testing
 .nyc_output
+coverage
 sample*
