@@ -317,7 +317,7 @@
     },
 
     editorTemplate: $.Handlebars.compile([
-      '<nav class="annotation-editor-nav-bar"><a tabindex="0" href="#cancel" class="cancel"><i class="fa fa-times-circle-o fa-fw"></i></a></nav>',
+      '<nav class="annotation-editor-nav-bar"><a tabindex="0" href="#cancel" class="cancel"><i class="fas fa-times-circle"></i></a></nav>',
       '<textarea id="annotation-text-field"></textarea>',
       '<div class="plugin-area"></div>'
     ].join(''))
