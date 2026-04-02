@@ -71,6 +71,6 @@
     "underscore-template-loader": "^1.2.0",
     "webpack": "^5.105.4",
     "webpack-auto-inject-version-next": "^1.2.4",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^7.0.2"
   }
 }
