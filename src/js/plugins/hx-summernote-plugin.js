@@ -4,8 +4,8 @@
  *  Should be generic, but its main purpose is to be used in tandem with annotations.
  *
  */
-require('summernote/dist/summernote-bs4.css')
-require('summernote/dist/summernote-bs4.js');
+require('summernote/dist/summernote-lite.css')
+require('summernote/dist/summernote-lite.js');
 require('./hx-summernote-plugin.css');
 
 (function($){

@@ -1,12 +1,12 @@
-button.hx-toggle-annotations.btn.btn-default:before {
+button.hx-toggle-annotations.btn.btn-secondary:before {
     content: "Hide Annotations";
 }
 
-button.hx-toggle-annotations.btn.btn-default.should-show:before {
+button.hx-toggle-annotations.btn.btn-secondary.should-show:before {
     content: "Show Annotations";
 }
 
-button.hx-toggle-annotations.btn.btn-default {
+button.hx-toggle-annotations.btn.btn-secondary {
     /*margin-top: -114px;
     font-size: 8pt;
     padding: 2px 20px;*/

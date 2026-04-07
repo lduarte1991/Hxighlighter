@@ -22,7 +22,6 @@ module.exports = {
             "jquery": require.resolve('jquery'),
             "$": require.resolve('jquery'),
             'jQuery': require.resolve('jquery'),
-            _: require.resolve('lodash'),
             'toastr': require.resolve('toastr'),
             "videojs": require.resolve('video.js')
         }),
@@ -72,7 +71,7 @@ module.exports = {
         }
     },
     optimization: {
-        minimize: false,
+        minimize: true,
         minimizer: [
             // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
             `...`,
@@ -155,5 +154,8 @@ module.exports = {
     },
     performance: {
         'hints': false
-    }
+    },
+    ignoreWarnings: [
+        /Failed to parse source map.*summernote/,
+    ]
 }

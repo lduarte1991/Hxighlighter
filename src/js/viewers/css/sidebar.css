@@ -229,6 +229,7 @@ button.sidebar-button#hide_label {
     top: 30px;
     left: 0;
     width: 100%;
+    display: block;
 }
 
 .annotation-filter-buttons.btn-group .btn {
@@ -317,7 +318,7 @@ button.sidebar-button#hide_label {
     font-size: 2.25em;
 }
 
-.search-bar .input-group .input-group-btn {
+.search-bar .input-group .input-group-append {
     width: 120px;
 }
 

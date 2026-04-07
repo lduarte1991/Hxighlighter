@@ -226,7 +226,7 @@
                     buttons: {
                         'no': {
                             label: i18next.t('no'),
-                            className: 'btn-default',
+                            className: 'btn-secondary',
                             callback: function() {
                                 return;
                             }

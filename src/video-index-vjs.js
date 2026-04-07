@@ -1,5 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap-theme.min.css';
+import './css/hxighlighter-styling.css';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 import '@fortawesome/fontawesome-free/css/solid.min.css';
 import 'toastr/build/toastr.min.css';
@@ -9,8 +8,8 @@ require('!style-loader!css-loader!video.js/dist/video-js.css');
 
 // vendors
 require('handlebars');
-require('bootstrap/dist/js/bootstrap.min.js');
-require('jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js');
+require('./js/vendors/micro-template.js');
+require('./js/vendors/jquery-tiny-pubsub.js');
 
 // common Hxighlighter object
 require('./js/hxighlighter.js');
