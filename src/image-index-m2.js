@@ -7,6 +7,7 @@ import './css/image.css';
 
 
 // vendors
+require('./js/vendors/jquery4-compat.js');
 require('handlebars');
 require('./js/vendors/micro-template.js');
 require('./js/vendors/jquery-tiny-pubsub.js');

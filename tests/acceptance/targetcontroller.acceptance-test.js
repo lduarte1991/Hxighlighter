@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const puppeteer = require('puppeteer');
+import { expect } from 'chai';
+import puppeteer from 'puppeteer';
 
 describe('Text Annotation Target Area', function() {
     let browser;

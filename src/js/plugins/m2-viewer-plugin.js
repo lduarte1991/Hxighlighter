@@ -391,7 +391,7 @@
             })
             window.jQuery.each(annotations, function(index, annotation) {
                 tags = [];
-                if (window.jQuery.isArray(annotation.resource)) {
+                if (Array.isArray(annotation.resource)) {
                     window.jQuery.each(annotation.resource, function(index, value) {
                         if (value['@type'] === "oa:Tag") {
                             tags.push(value.chars);
@@ -437,7 +437,7 @@
                 if (annotation.endpoint !== 'manifest') {
                     instructors = annotation.endpoint.instructors;
                     if (instructors.indexOf(userId) > -1) {
-                        username = common_name + '&nbsp;<span class="fa fa-certificate fa-fw"></span>';
+                        username = common_name + '&nbsp;<span class="fas fa-certificate"></span>';
                     }
                 }
                 var catchAnn= annotation.endpoint.annotationsListCatch.find(function(x) {
@@ -518,8 +518,8 @@
             '<div>',
             // need to add a delete, if permissions allow
             '<div class="button-container">',
-            '<a href="#cancel" class="cancel"><i class="fa fa-times-circle-o fa-fw"></i>{{t "cancel"}}</a>',
-            '<a href="#save" class="save"><i class="fa fa-database fa-fw"></i>{{t "save"}}</a>',
+            '<a href="#cancel" class="cancel"><i class="fas fa-times-circle"></i>{{t "cancel"}}</a>',
+            '<a href="#save" class="save"><i class="fas fa-database"></i>{{t "save"}}</a>',
             '</div>',
             '</div>',
             '</form>'
@@ -536,8 +536,8 @@
             '{{#if username}}<p class="user annotation-username">{{{username}}}</p>{{/if}}',
             '{{#if date}}<p class="annotation-date" title="{{date}}">{{convertTime date}}</p>{{/if}}',
             '<div class="button-container">',
-                '{{#if showUpdate}}<a href="#edit" class="edit"><i class="fa fa-pencil-square-o fa-fw"></i>{{t "edit"}}</a>{{/if}}',
-                '{{#if showDelete}}<a href="#delete" class="delete"><i class="fa fa-trash-o fa-fw"></i>{{t "delete"}}</a>{{/if}}',
+                '{{#if showUpdate}}<a href="#edit" class="edit"><i class="fas fa-pen-to-square"></i>{{t "edit"}}</a>{{/if}}',
+                '{{#if showDelete}}<a href="#delete" class="delete"><i class="fas fa-trash"></i>{{t "delete"}}</a>{{/if}}',
             '</div>',
             '<div style="text-align: center;"><img style="display: none;" class="annotation-thumbnail" data-src="{{{thumb}}}" data-svg=".thumbnail-{{{id}}}" alt="Thumbnail Preview" />{{{svg}}}</div>',
             '<p>{{{annoText}}}</p>',

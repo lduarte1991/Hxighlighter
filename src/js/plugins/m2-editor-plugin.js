@@ -44,7 +44,7 @@
 
       this.selector = jQuery(selector);
       if (!jQuery.isEmptyObject(_this.annotation)) {
-        if (jQuery.isArray(_this.annotation.resource)) {
+        if (Array.isArray(_this.annotation.resource)) {
           jQuery.each(_this.annotation.resource, function(index, value) {
             if (value['@type'] === "oa:Tag") {
               tags.push(value.chars);
@@ -317,7 +317,7 @@
     },
 
     editorTemplate: $.Handlebars.compile([
-      '<nav class="annotation-editor-nav-bar"><a tabindex="0" href="#cancel" class="cancel"><i class="fa fa-times-circle-o fa-fw"></i></a></nav>',
+      '<nav class="annotation-editor-nav-bar"><a tabindex="0" href="#cancel" class="cancel"><i class="fas fa-times-circle"></i></a></nav>',
       '<textarea id="annotation-text-field"></textarea>',
       '<div class="plugin-area"></div>'
     ].join(''))
