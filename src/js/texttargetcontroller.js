@@ -122,7 +122,7 @@ require('./plugins/hx-websockets.js');
         this.guid = $.getUniqueId();
         var slot = jQuery(selector);
         slot.addClass('annotation-slot');
-        slot.attr('id', this.guid); 
+        slot.prop('id', this.guid); 
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen

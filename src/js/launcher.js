@@ -11,6 +11,8 @@
         this.annotations = document.querySelector('#annotations-url').innerHTML;
         this.mediatype = document.querySelector('#media-type').innerHTML;
         this.commonname = document.querySelector('#common-inst-display-name').innerHTML;
+        this.method = document.querySelector('#method')?.innerHTML ?? 'url';
+        this.target_selector = document.querySelector('#target-selector')?.innerHTML ?? '.container1';
         this.inst_id = $.getUniqueId();
         this.extraoptions = {};
         this.initListeners();
@@ -40,9 +42,9 @@
                 },
                 'targets': [{
                     'mediaType': 'text',
-                    'method': 'url',
+                    'method': self.method,
                     'object_source': self.object_url,
-                    'target_selector': '.container1',
+                    'target_selector': self.target_selector,
                     'template_urls': '',
                     'DropdownTags': {
                         'tags': Object.keys(self.tagDict),
