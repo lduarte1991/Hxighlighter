@@ -146,8 +146,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         var intPt = interactionPoint;
         // situate it on its proper location
+        var fvContainer = Hxighlighter.getContainer(self.element);
+        var editorScrollOffset = fvContainer ? fvContainer.scrollTop : jQuery(window).scrollTop();
         self.annotation_tool.editor.css({
-            'top': intPt.top - jQuery(window).scrollTop(),
+            'top': intPt.top - editorScrollOffset,
             'left': intPt.left
         });
 
@@ -228,8 +230,16 @@ import 'jquery-confirm/css/jquery-confirm.css'
             delete self.annotation_tool.viewer
         }
         self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
-        var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
-        var newLeft = annotator.util.mousePosition(event).left + 30
+        var viewerContainer = Hxighlighter.getContainer(self.element);
+        var viewerCoords;
+        if (viewerContainer) {
+            viewerCoords = Hxighlighter.mouseFixedPosition(event);
+        } else {
+            viewerCoords = annotator.util.mousePosition(event);
+        }
+        var viewerScrollOffset = viewerContainer ? viewerContainer.scrollTop : jQuery(window).scrollTop();
+        var newTop = viewerCoords.top - viewerScrollOffset + 20;
+        var newLeft = viewerCoords.left + 30
         self.annotation_tool.viewer.css({
             'top': newTop,
             'left': newLeft

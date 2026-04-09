@@ -287,11 +287,21 @@ var hrange = require('../h-range.js');
                     self.start = self.copySelection(getSelection());
                     var bcr = self.getBoundingClientRect(self.start);
                     //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
-                    jQuery('body').append('<div class="hx-selector-img"></div>');
-                    jQuery('.hx-selector-img').css({
-                        top: bcr.top + jQuery(window).scrollTop() - 5,
-                        left: bcr.left - 5
-                    });
+                    var kbContainer = Hxighlighter.getContainer(self.element);
+                    if (kbContainer) {
+                        var kbContainerRect = kbContainer.getBoundingClientRect();
+                        jQuery(kbContainer).append('<div class="hx-selector-img"></div>');
+                        jQuery('.hx-selector-img').css({
+                            top: bcr.top - kbContainerRect.top + kbContainer.scrollTop - 5,
+                            left: bcr.left - kbContainerRect.left + kbContainer.scrollLeft - 5
+                        });
+                    } else {
+                        jQuery('body').append('<div class="hx-selector-img"></div>');
+                        jQuery('.hx-selector-img').css({
+                            top: bcr.top + jQuery(window).scrollTop() - 5,
+                            left: bcr.left - 5
+                        });
+                    }
                     jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {

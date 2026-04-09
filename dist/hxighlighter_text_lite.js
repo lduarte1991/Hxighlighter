@@ -948,9 +948,11 @@ exports.getNodeFromXpath = getNodeFromXpath;
     };
     if (container) {
       var containerRect = container.getBoundingClientRect();
+      // pageX/Y are document-relative; containerRect is viewport-relative.
+      // Convert containerRect to document-relative by adding window scroll.
       offset = {
-        top: containerRect.top + container.scrollTop,
-        left: containerRect.left + container.scrollLeft
+        top: containerRect.top + window.scrollY - container.scrollTop,
+        left: containerRect.left + window.scrollX - container.scrollLeft
       };
     } else {
       var body = window.document.body;
@@ -966,6 +968,7 @@ exports.getNodeFromXpath = getNodeFromXpath;
         var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
         if (container) {
           var containerRect2 = container.getBoundingClientRect();
+          // boundingBox is viewport-relative; convert to container-relative
           top = boundingBox.top - containerRect2.top + container.scrollTop + boundingBox.height;
           left = boundingBox.left - containerRect2.left + container.scrollLeft + boundingBox.width;
         } else {
@@ -3618,11 +3621,21 @@ var hrange = __webpack_require__(9445);
           self.start = self.copySelection(getSelection());
           var bcr = self.getBoundingClientRect(self.start);
           //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
-          jQuery('body').append('<div class="hx-selector-img"></div>');
-          jQuery('.hx-selector-img').css({
-            top: bcr.top + jQuery(window).scrollTop() - 5,
-            left: bcr.left - 5
-          });
+          var kbContainer = Hxighlighter.getContainer(self.element);
+          if (kbContainer) {
+            var kbContainerRect = kbContainer.getBoundingClientRect();
+            jQuery(kbContainer).append('<div class="hx-selector-img"></div>');
+            jQuery('.hx-selector-img').css({
+              top: bcr.top - kbContainerRect.top + kbContainer.scrollTop - 5,
+              left: bcr.left - kbContainerRect.left + kbContainer.scrollLeft - 5
+            });
+          } else {
+            jQuery('body').append('<div class="hx-selector-img"></div>');
+            jQuery('.hx-selector-img').css({
+              top: bcr.top + jQuery(window).scrollTop() - 5,
+              left: bcr.left - 5
+            });
+          }
           jQuery('.sr-alert').html();
           jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
         } else {
@@ -3969,7 +3982,12 @@ var hrange = __webpack_require__(9445);
       iP.top = 49;
     }
     var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
-    jQuery('body').append(confirmButtonTemplate);
+    var container = Hxighlighter.getContainer(self.element);
+    if (container) {
+      jQuery(container).append(confirmButtonTemplate);
+    } else {
+      jQuery('body').append(confirmButtonTemplate);
+    }
     jQuery('.hx-confirm-button button').click(function () {
       $.publishEvent('drawTemp', self.instance_id, [[range]]);
       $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event]);
@@ -5415,8 +5433,10 @@ var annotator = annotator ? annotator : __webpack_require__(6880);
     self.annotation_tool.editor = jQuery('#annotation-editor-' + self.instance_id.replace(/\W/g, '-'));
     var intPt = interactionPoint;
     // situate it on its proper location
+    var fvContainer = Hxighlighter.getContainer(self.element);
+    var editorScrollOffset = fvContainer ? fvContainer.scrollTop : jQuery(window).scrollTop();
     self.annotation_tool.editor.css({
-      'top': intPt.top - jQuery(window).scrollTop(),
+      'top': intPt.top - editorScrollOffset,
       'left': intPt.left
     });
 
@@ -5488,8 +5508,16 @@ var annotator = annotator ? annotator : __webpack_require__(6880);
       delete self.annotation_tool.viewer;
     }
     self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
-    var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
-    var newLeft = annotator.util.mousePosition(event).left + 30;
+    var viewerContainer = Hxighlighter.getContainer(self.element);
+    var viewerCoords;
+    if (viewerContainer) {
+      viewerCoords = Hxighlighter.mouseFixedPosition(event);
+    } else {
+      viewerCoords = annotator.util.mousePosition(event);
+    }
+    var viewerScrollOffset = viewerContainer ? viewerContainer.scrollTop : jQuery(window).scrollTop();
+    var newTop = viewerCoords.top - viewerScrollOffset + 20;
+    var newLeft = viewerCoords.left + 30;
     self.annotation_tool.viewer.css({
       'top': newTop,
       'left': newLeft

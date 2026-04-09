@@ -740,9 +740,11 @@ exports.getNodeFromXpath = getNodeFromXpath;
     };
     if (container) {
       var containerRect = container.getBoundingClientRect();
+      // pageX/Y are document-relative; containerRect is viewport-relative.
+      // Convert containerRect to document-relative by adding window scroll.
       offset = {
-        top: containerRect.top + container.scrollTop,
-        left: containerRect.left + container.scrollLeft
+        top: containerRect.top + window.scrollY - container.scrollTop,
+        left: containerRect.left + window.scrollX - container.scrollLeft
       };
     } else {
       var body = window.document.body;
@@ -758,6 +760,7 @@ exports.getNodeFromXpath = getNodeFromXpath;
         var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
         if (container) {
           var containerRect2 = container.getBoundingClientRect();
+          // boundingBox is viewport-relative; convert to container-relative
           top = boundingBox.top - containerRect2.top + container.scrollTop + boundingBox.height;
           left = boundingBox.left - containerRect2.left + container.scrollLeft + boundingBox.width;
         } else {

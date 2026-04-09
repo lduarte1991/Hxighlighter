@@ -4622,12 +4622,20 @@ body {
     --sidebar-button-color-accent: #ededed;
     --sidebar-search-bar-height-open: 73px;
     --sidebar-footer-height: 15px;
+    /* Create an explicit stacking context so no child z-index
+       can escape above the host page's elements */
+    isolation: isolate;
 }
 
 
 /* --- Sidebar: fixed → absolute within container --- */
 
 .hxighlighter-container .annotationSection.side {
+    position: absolute;
+}
+
+/* Sidebar navbar (admin/nav buttons bar above content) */
+.hxighlighter-container .sidebar-navbar {
     position: absolute;
 }
 

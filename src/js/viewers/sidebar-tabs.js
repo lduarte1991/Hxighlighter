@@ -85,11 +85,13 @@ import 'timeago';
         self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
 
         self.element.on('mouseover', '.annotationsHolder', function(event) {
-            jQuery('body').css('overflow-y', 'hidden');
+            var stContainer = jQuery(Hxighlighter.getContainer(self.element[0]) || 'body');
+            stContainer.css('overflow-y', 'hidden');
         });
 
         self.element.on('mouseleave', '.annotationsHolder', function(event) {
-            jQuery('body').css('overflow-y', 'scroll');
+            var stContainer = jQuery(Hxighlighter.getContainer(self.element[0]) || 'body');
+            stContainer.css('overflow-y', 'scroll');
         });
 
         // toggle search
