@@ -4628,6 +4628,22 @@ body {
 }
 
 
+/* --- Hide configuration divs (replaces inline style="display:none") --- */
+
+#text_url,
+#text-container,
+#method,
+#tags,
+#annotations-url,
+#annotation-mode,
+#media-type,
+#extra_options,
+#common-inst-display-name,
+#target-selector {
+    display: none;
+}
+
+
 /* --- Sidebar: fixed → absolute within container --- */
 
 .hxighlighter-container .annotationSection.side {

@@ -1225,7 +1225,8 @@ Hxighlighter.getContainer = function (fromElement) {
 /* provided dependency */ var jQuery = __webpack_require__(9515);
 (function ($) {
   $.Launcher = function () {
-    this.object_url = document.querySelector('#text_url').innerHTML;
+    var textContainerEl = document.querySelector('#text-container') || document.querySelector('#text_url');
+    this.object_url = textContainerEl ? textContainerEl.innerHTML : '';
     var tags = document.querySelector('#tags').innerHTML.split(',');
     var self = this;
     this.tagDict = {};
@@ -1233,17 +1234,43 @@ Hxighlighter.getContainer = function (fromElement) {
       var pair = tagval.split(':');
       self.tagDict[pair[0]] = pair[1];
     });
-    this.annotations = document.querySelector('#annotations-url').innerHTML.trim();
-    this.inlineMode = this.annotations === 'inline';
     this.mediatype = document.querySelector('#media-type').innerHTML;
     this.commonname = document.querySelector('#common-inst-display-name').innerHTML;
     this.method = document.querySelector('#method')?.innerHTML ?? 'url';
     this.target_selector = document.querySelector('#target-selector')?.innerHTML ?? '.container1';
     this.inst_id = $.getUniqueId();
+
+    // Resolve annotation mode: prefer #annotation-mode, fall back to #annotations-url
+    this.resolveAnnotationMode();
     this.extraoptions = this.parseExtraOptions();
     this.applyExtraOptions();
     this.initListeners();
     this.init();
+  };
+  $.Launcher.prototype.resolveAnnotationMode = function () {
+    var modeEl = document.querySelector('#annotation-mode');
+    var urlEl = document.querySelector('#annotations-url');
+    var mode = modeEl ? modeEl.innerHTML.trim() : '';
+    var annotations = urlEl ? urlEl.innerHTML.trim() : '';
+    if (mode === 'learner') {
+      // Learner mode: read-only, annotations injected inline via data-annotations
+      this.isReadonly = true;
+      this.isAuthoring = false;
+      this.inlineMode = true;
+      this.annotations = '';
+    } else if (mode === 'author') {
+      // Author mode: full editing, no pre-loaded annotations
+      this.isReadonly = false;
+      this.isAuthoring = true;
+      this.inlineMode = false;
+      this.annotations = '';
+    } else {
+      // No annotation-mode set — fall back to annotations-url behavior
+      this.annotations = annotations;
+      this.inlineMode = annotations === 'inline';
+      this.isReadonly = annotations !== '' || this.inlineMode;
+      this.isAuthoring = annotations === '' && !this.inlineMode;
+    }
   };
   $.Launcher.prototype.parseExtraOptions = function () {
     var el = document.querySelector('#extra_options');
@@ -1313,11 +1340,11 @@ Hxighlighter.getContainer = function (fromElement) {
           tabsAvailable: ['mine'],
           sidebarversion: 'sidemenu',
           pagination: 100,
-          readonly: self.annotations !== "" || self.inlineMode
+          readonly: self.isReadonly
         },
         AdminButton: {},
         LiteVersionChanges: {
-          authoring_mode: self.annotations == "" && !self.inlineMode
+          authoring_mode: self.isAuthoring
         },
         storageOptions: {
           external_url: {
@@ -4037,9 +4064,9 @@ var hrange = __webpack_require__(9445);
     try {
       if (self.options.storageOptions.external_url.inline_mode) {
         // Inline mode: read annotations from data-annotations attribute
+        var inlineEl = document.querySelector('#annotations-url') || document.querySelector('#annotation-mode');
         var processInlineData = function () {
-          var annotationsEl = document.querySelector('#annotations-url');
-          var rawData = annotationsEl ? annotationsEl.getAttribute('data-annotations') : null;
+          var rawData = inlineEl ? inlineEl.getAttribute('data-annotations') : null;
           if (rawData) {
             try {
               var data = JSON.parse(rawData);
@@ -4052,6 +4079,7 @@ var hrange = __webpack_require__(9445);
               callB(data, true);
               return true;
             } catch (parseErr) {
+              console.error('[TempJSON] Failed to parse inline data-annotations:', parseErr);
               return false;
             }
           }
@@ -4061,8 +4089,7 @@ var hrange = __webpack_require__(9445);
         // Check if data-annotations is already present
         if (!processInlineData()) {
           // Not yet available — watch for it
-          var annotationsEl = document.querySelector('#annotations-url');
-          if (annotationsEl) {
+          if (inlineEl) {
             var observer = new MutationObserver(function (mutations) {
               for (var i = 0; i < mutations.length; i++) {
                 if (mutations[i].attributeName === 'data-annotations') {
@@ -4073,7 +4100,7 @@ var hrange = __webpack_require__(9445);
                 }
               }
             });
-            observer.observe(annotationsEl, {
+            observer.observe(inlineEl, {
               attributes: true,
               attributeFilter: ['data-annotations']
             });
@@ -4088,7 +4115,9 @@ var hrange = __webpack_require__(9445);
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('[TempJSON] Error in setUpListeners:', e);
+    }
   };
   $.TempJSON.prototype.onLoad = function (element, opts) {};
   $.TempJSON.prototype.search = function (options, callBack, errfun) {};

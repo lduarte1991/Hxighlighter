@@ -40,9 +40,9 @@ var hrange = require('../h-range.js');
         try {
             if (self.options.storageOptions.external_url.inline_mode) {
                 // Inline mode: read annotations from data-annotations attribute
+                var inlineEl = document.querySelector('#annotations-url') || document.querySelector('#annotation-mode');
                 var processInlineData = function() {
-                    var annotationsEl = document.querySelector('#annotations-url');
-                    var rawData = annotationsEl ? annotationsEl.getAttribute('data-annotations') : null;
+                    var rawData = inlineEl ? inlineEl.getAttribute('data-annotations') : null;
                     if (rawData) {
                         try {
                             var data = JSON.parse(rawData);
@@ -53,6 +53,7 @@ var hrange = require('../h-range.js');
                             callB(data, true);
                             return true;
                         } catch(parseErr) {
+                            console.error('[TempJSON] Failed to parse inline data-annotations:', parseErr);
                             return false;
                         }
                     }
@@ -62,8 +63,7 @@ var hrange = require('../h-range.js');
                 // Check if data-annotations is already present
                 if (!processInlineData()) {
                     // Not yet available — watch for it
-                    var annotationsEl = document.querySelector('#annotations-url');
-                    if (annotationsEl) {
+                    if (inlineEl) {
                         var observer = new MutationObserver(function(mutations) {
                             for (var i = 0; i < mutations.length; i++) {
                                 if (mutations[i].attributeName === 'data-annotations') {
@@ -74,7 +74,7 @@ var hrange = require('../h-range.js');
                                 }
                             }
                         });
-                        observer.observe(annotationsEl, { attributes: true, attributeFilter: ['data-annotations'] });
+                        observer.observe(inlineEl, { attributes: true, attributeFilter: ['data-annotations'] });
                     }
                 }
             } else if(self.options.storageOptions.external_url.json_url != '') {
@@ -87,7 +87,7 @@ var hrange = require('../h-range.js');
                 });
             }
         } catch(e) {
-
+            console.error('[TempJSON] Error in setUpListeners:', e);
         }
     }
 
