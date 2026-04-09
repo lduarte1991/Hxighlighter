@@ -8,7 +8,8 @@
                 var pair = tagval.split(':');
                 self.tagDict[pair[0]] = pair[1]
             });
-        this.annotations = document.querySelector('#annotations-url').innerHTML;
+        this.annotations = document.querySelector('#annotations-url').innerHTML.trim();
+        this.inlineMode = this.annotations === 'inline';
         this.mediatype = document.querySelector('#media-type').innerHTML;
         this.commonname = document.querySelector('#common-inst-display-name').innerHTML;
         this.method = document.querySelector('#method')?.innerHTML ?? 'url';
@@ -63,15 +64,16 @@
                         tabsAvailable: ['mine'],
                         sidebarversion: 'sidemenu',
                         pagination: 100,
-                        readonly: self.annotations !== ""
+                        readonly: self.annotations !== "" || self.inlineMode
                     },
                     AdminButton: {},
                     LiteVersionChanges: {
-                        authoring_mode: self.annotations == ""
+                        authoring_mode: self.annotations == "" && !self.inlineMode
                     },
                     storageOptions: {
                         external_url: {
-                            json_url: self.annotations,
+                            json_url: self.inlineMode ? '' : self.annotations,
+                            inline_mode: self.inlineMode,
                         },
                         token: '',
                         pagination: 100, 

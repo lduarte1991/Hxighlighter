@@ -1233,7 +1233,9 @@ Hxighlighter.getContainer = function (fromElement) {
       var pair = tagval.split(':');
       self.tagDict[pair[0]] = pair[1];
     });
-    this.annotations = document.querySelector('#annotations-url').innerHTML;
+    this.annotations = document.querySelector('#annotations-url').innerHTML.trim();
+    this.inlineMode = this.annotations === 'inline';
+    console.log('[Launcher] annotations-url value:', JSON.stringify(this.annotations), '| inlineMode:', this.inlineMode);
     this.mediatype = document.querySelector('#media-type').innerHTML;
     this.commonname = document.querySelector('#common-inst-display-name').innerHTML;
     this.method = document.querySelector('#method')?.innerHTML ?? 'url';
@@ -1287,15 +1289,16 @@ Hxighlighter.getContainer = function (fromElement) {
           tabsAvailable: ['mine'],
           sidebarversion: 'sidemenu',
           pagination: 100,
-          readonly: self.annotations !== ""
+          readonly: self.annotations !== "" || self.inlineMode
         },
         AdminButton: {},
         LiteVersionChanges: {
-          authoring_mode: self.annotations == ""
+          authoring_mode: self.annotations == "" && !self.inlineMode
         },
         storageOptions: {
           external_url: {
-            json_url: self.annotations
+            json_url: self.inlineMode ? '' : self.annotations,
+            inline_mode: self.inlineMode
           },
           token: '',
           pagination: 100,
@@ -3992,19 +3995,87 @@ var hrange = __webpack_require__(9445);
       });
       callBack(annotations);
     });
+    var callB = function (result, skipConvert) {
+      jQuery.each(result.rows, function (_, ann) {
+        var waAnnotation;
+        if (skipConvert) {
+          // Data is already in internal format (e.g. from inline injection)
+          waAnnotation = ann;
+          console.log('[TempJSON] callB: using annotation as-is (skipConvert)', ann.id || ann.exact?.substring(0, 30));
+        } else {
+          waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
+          console.log('[TempJSON] callB: converted annotation from WebAnnotation format', ann.id);
+        }
+        self.store.push(ann);
+        setTimeout(function () {
+          $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
+          $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+        }, 250);
+      });
+    };
     try {
-      if (self.options.storageOptions.external_url.json_url != '') {
-        var callB = function (result) {
-          jQuery.each(result.rows, function (_, ann) {
-            var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
-            self.store.push(ann);
-            setTimeout(function () {
-              // console.log('definitely getting to here');
-              $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
-              $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
-            }, 250);
-          });
+      console.log('[TempJSON] storageOptions.external_url:', JSON.stringify(self.options.storageOptions.external_url));
+      if (self.options.storageOptions.external_url.inline_mode) {
+        console.log('[TempJSON] Inline mode detected');
+        // Inline mode: read annotations from data-annotations attribute
+        var processInlineData = function () {
+          var annotationsEl = document.querySelector('#annotations-url');
+          console.log('[TempJSON] #annotations-url element found:', !!annotationsEl);
+          var rawData = annotationsEl ? annotationsEl.getAttribute('data-annotations') : null;
+          console.log('[TempJSON] data-annotations raw value:', rawData ? rawData.substring(0, 200) + '...' : null);
+          if (rawData) {
+            try {
+              var data = JSON.parse(rawData);
+              // Normalize: if data is a plain array, wrap it in { rows: [...] }
+              if (Array.isArray(data)) {
+                console.log('[TempJSON] data-annotations is a plain array, wrapping in { rows: [...] }');
+                data = {
+                  rows: data
+                };
+              }
+              console.log('[TempJSON] Parsed inline data — rows:', data.rows ? data.rows.length : 'NO ROWS KEY', '| keys:', Object.keys(data));
+              $.totalAnnotations = data.rows.length;
+              callB(data, true);
+              return true;
+            } catch (parseErr) {
+              console.error('[TempJSON] Failed to parse data-annotations JSON:', parseErr.message);
+              return false;
+            }
+          }
+          return false;
         };
+
+        // Check if data-annotations is already present
+        if (!processInlineData()) {
+          console.log('[TempJSON] data-annotations not yet present, setting up MutationObserver');
+          // Not yet available — watch for it
+          var annotationsEl = document.querySelector('#annotations-url');
+          if (annotationsEl) {
+            var observer = new MutationObserver(function (mutations) {
+              console.log('[TempJSON] MutationObserver fired, mutations:', mutations.length);
+              for (var i = 0; i < mutations.length; i++) {
+                if (mutations[i].attributeName === 'data-annotations') {
+                  console.log('[TempJSON] data-annotations attribute changed');
+                  if (processInlineData()) {
+                    observer.disconnect();
+                    console.log('[TempJSON] Observer disconnected after processing');
+                  }
+                  break;
+                }
+              }
+            });
+            observer.observe(annotationsEl, {
+              attributes: true,
+              attributeFilter: ['data-annotations']
+            });
+            console.log('[TempJSON] MutationObserver attached to #annotations-url');
+          } else {
+            console.error('[TempJSON] #annotations-url element not found for observer');
+          }
+        } else {
+          console.log('[TempJSON] Inline data processed immediately (was already present)');
+        }
+      } else if (self.options.storageOptions.external_url.json_url != '') {
         jQuery.ajax({
           url: self.options.storageOptions.external_url.json_url,
           success: function (data) {
