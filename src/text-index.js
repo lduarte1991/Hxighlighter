@@ -2,6 +2,7 @@ import './css/hxighlighter-styling.css';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 import '@fortawesome/fontawesome-free/css/solid.min.css';
 import './css/text.css';
+import './css/common.css';
 
 // vendors
 require('./js/vendors/jquery4-compat.js');

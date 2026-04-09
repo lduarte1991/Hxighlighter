@@ -77,7 +77,12 @@ var hrange = require('../h-range.js');
         }
         var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+(iP.top- 10)+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
         // console.log(confirmButtonTemplate, iP);
-        jQuery('body').append(confirmButtonTemplate);
+        var tsContainer = Hxighlighter.getContainer(self.element);
+        if (tsContainer) {
+            jQuery(tsContainer).append(confirmButtonTemplate);
+        } else {
+            jQuery('body').append(confirmButtonTemplate);
+        }
         jQuery('.hx-confirm-button button').click(function(event1) {
             //$.publishEvent('drawTemp', self.instance_id, [[range]])
             $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event1]);

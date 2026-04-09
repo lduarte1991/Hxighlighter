@@ -72,7 +72,7 @@ module.exports = {
         }
     },
     optimization: {
-        minimize: true,
+        minimize: false,
         minimizer: [
             // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
             `...`,
@@ -98,11 +98,7 @@ module.exports = {
             },
             {
                 test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-                type: 'asset/resource',
-                generator: {
-                    publicPath: 'hxighlighter/fonts/',
-                    outputPath: 'dist/hxighlighter/fonts/'
-                }
+                type: 'asset/inline'
             }, 
             {
                 test: /\.(gif|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?/,

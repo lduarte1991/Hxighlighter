@@ -130,14 +130,17 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 var editorObj = self.elementObj.closest('.annotation-editor');
                 var newTop = parseInt(editorObj.css('top'), 10);;
                 var newLeft = parseInt(editorObj.css('left'), 10);
+                var container = Hxighlighter.getContainer(editorObj);
+                var containerHeight = container ? container.clientHeight : window.innerHeight;
+                var containerWidth = container ? container.clientWidth : window.innerWidth;
 
                 // console.log(editorObj, newTop, newLeft);
 
-                if (newTop + editorObj.outerHeight() > window.innerHeight) {
-                    newTop = window.innerHeight - editorObj.outerHeight();
+                if (newTop + editorObj.outerHeight() > containerHeight) {
+                    newTop = containerHeight - editorObj.outerHeight();
                 }
-                if (newLeft + editorObj.outerWidth() > window.innerWidth) {
-                    newLeft = window.innerWidth - editorObj.outerWidth();
+                if (newLeft + editorObj.outerWidth() > containerWidth) {
+                    newLeft = containerWidth - editorObj.outerWidth();
                 }
                 if (newTop < 0) {
                     newTop = 0;
