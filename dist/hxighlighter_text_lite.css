@@ -4637,6 +4637,10 @@ body {
 /* Sidebar navbar (admin/nav buttons bar above content) */
 .hxighlighter-container .sidebar-navbar {
     position: absolute;
+    width: auto;
+    margin-left: 0;
+    left: calc(var(--sidebar-width) - 15px);
+    right: 0;
 }
 
 /* Sidebar open/close tabs: fixed → absolute */
