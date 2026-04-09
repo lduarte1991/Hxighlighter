@@ -1240,9 +1240,34 @@ Hxighlighter.getContainer = function (fromElement) {
     this.method = document.querySelector('#method')?.innerHTML ?? 'url';
     this.target_selector = document.querySelector('#target-selector')?.innerHTML ?? '.container1';
     this.inst_id = $.getUniqueId();
-    this.extraoptions = {};
+    this.extraoptions = this.parseExtraOptions();
+    this.applyExtraOptions();
     this.initListeners();
     this.init();
+  };
+  $.Launcher.prototype.parseExtraOptions = function () {
+    var el = document.querySelector('#extra_options');
+    if (!el) return {};
+    var raw = el.innerHTML.trim();
+    if (!raw) return {};
+    var opts = {};
+    raw.split(',').forEach(function (pair) {
+      var parts = pair.split(':');
+      if (parts.length === 2) {
+        opts[parts[0].trim()] = parts[1].trim();
+      }
+    });
+    return opts;
+  };
+  $.Launcher.prototype.applyExtraOptions = function () {
+    var self = this;
+    if (self.extraoptions.height) {
+      var section = document.querySelector('.annotations-section');
+      if (section) {
+        section.style.maxHeight = self.extraoptions.height;
+        section.style.overflowY = 'auto';
+      }
+    }
   };
   $.Launcher.prototype.initListeners = function () {
     var self = this;
