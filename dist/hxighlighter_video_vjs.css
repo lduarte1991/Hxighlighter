@@ -10,9 +10,9 @@
    Minimal Reset / Normalize
    ======================================================================== */
 
-*,
-*::before,
-*::after {
+.hxighlighter-container *,
+.hxighlighter-container *::before,
+.hxighlighter-container *::after {
     box-sizing: border-box;
 }
 

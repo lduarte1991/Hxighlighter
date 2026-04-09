@@ -315,9 +315,13 @@ var hrange = require('../h-range.js');
                             self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
                         }
                     }
+                    var container = Hxighlighter.getContainer(self.element);
+                    var scrollOffset = container ? container.scrollTop : jQuery(window).scrollTop();
+                    var rect = self.currentSelection.getBoundingClientRect();
+                    var containerRect = container ? container.getBoundingClientRect() : {top: 0, left: 0};
                     boundingBox = {
-                        top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
-                        left: self.currentSelection.getBoundingClientRect().left - 5
+                        top: rect.top - containerRect.top + scrollOffset - 5,
+                        left: rect.left - containerRect.left - 5
                     }
                     var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
                     jQuery('.sr-alert').html('');

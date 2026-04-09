@@ -941,13 +941,22 @@ exports.getNodeFromXpath = getNodeFromXpath;
    * @return     {Object}  { description_of_the_return_value }
    */
   $$.mouseFixedPosition = function (event, annotation) {
-    var body = window.document.body;
+    var container = Hxighlighter.getContainer(event.target);
     var offset = {
       top: 0,
       left: 0
     };
-    if (jQuery(body).css('position') !== "static") {
-      offset = jQuery(body).offset();
+    if (container) {
+      var containerRect = container.getBoundingClientRect();
+      offset = {
+        top: containerRect.top + container.scrollTop,
+        left: containerRect.left + container.scrollLeft
+      };
+    } else {
+      var body = window.document.body;
+      if (jQuery(body).css('position') !== "static") {
+        offset = jQuery(body).offset();
+      }
     }
     try {
       var top = event.pageY - offset.top;
@@ -955,8 +964,14 @@ exports.getNodeFromXpath = getNodeFromXpath;
       // in case user is selecting via keyboard, this sets the adder to top-left corner
       if (event.type.indexOf("mouse") === -1 && event.type.indexOf('key') > -1) {
         var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
-        top = boundingBox.top - offset.top + boundingBox.height;
-        left = boundingBox.left - offset.left + boundingBox.width;
+        if (container) {
+          var containerRect2 = container.getBoundingClientRect();
+          top = boundingBox.top - containerRect2.top + container.scrollTop + boundingBox.height;
+          left = boundingBox.left - containerRect2.left + container.scrollLeft + boundingBox.width;
+        } else {
+          top = boundingBox.top - offset.top + boundingBox.height;
+          left = boundingBox.left - offset.left + boundingBox.width;
+        }
       }
       return {
         top: top,
@@ -1096,12 +1111,15 @@ exports.getNodeFromXpath = getNodeFromXpath;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* provided dependency */ var jQuery = __webpack_require__(9515);
 /**
  * Hxighlighter is the superclass that will contain all instances of the tool.
  * It will allow users to set up targets to annotate and then ways to annotate
  */
 
-
+/* common.css is imported by each full-version entry point (text-index, image-index-m2,
+   video-index-vjs). The lite entry point imports common_lite.css instead.
+   This keeps host-page-affecting body/html rules out of the lite bundle. */
 
 /* istanbul ignore next */
 var root = __webpack_require__.g || window;
@@ -1165,6 +1183,33 @@ Hxighlighter.viewers = [];
 Hxighlighter.plugins = [];
 Hxighlighter.storage = [];
 Hxighlighter.globals = {};
+
+/**
+ * Gets the .hxighlighter-container element when it acts as a positioning
+ * context (i.e. has position:relative, set by the lite/embedded CSS).
+ * Returns null for full-page/iframe mode so callers fall back to
+ * viewport-relative logic (body, window.innerHeight, :root, etc.).
+ *
+ * @param      {Element|jQuery}  [fromElement]  Optional element to search from
+ * @return     {Element|null}    The container DOM element, or null
+ */
+Hxighlighter.getContainer = function (fromElement) {
+  var container = null;
+  if (fromElement) {
+    var el = fromElement instanceof jQuery ? fromElement[0] : fromElement;
+    container = el.closest('.hxighlighter-container');
+  } else {
+    container = document.querySelector('.hxighlighter-container');
+  }
+  // Only return the container when it is a positioning context.
+  // The lite CSS sets position:relative on .hxighlighter-container;
+  // the full-page CSS leaves it static. This ensures the full/iframe
+  // version continues to use viewport-relative coordinates.
+  if (container && getComputedStyle(container).position !== 'static') {
+    return container;
+  }
+  return null;
+};
 
 // comment out following line when not webpacking
 /* harmony default export */ __webpack_exports__["default"] = (Hxighlighter);
@@ -2693,14 +2738,17 @@ __webpack_require__(892);
         var newTop = parseInt(editorObj.css('top'), 10);
         ;
         var newLeft = parseInt(editorObj.css('left'), 10);
+        var container = Hxighlighter.getContainer(editorObj);
+        var containerHeight = container ? container.clientHeight : window.innerHeight;
+        var containerWidth = container ? container.clientWidth : window.innerWidth;
 
         // console.log(editorObj, newTop, newLeft);
 
-        if (newTop + editorObj.outerHeight() > window.innerHeight) {
-          newTop = window.innerHeight - editorObj.outerHeight();
+        if (newTop + editorObj.outerHeight() > containerHeight) {
+          newTop = containerHeight - editorObj.outerHeight();
         }
-        if (newLeft + editorObj.outerWidth() > window.innerWidth) {
-          newLeft = window.innerWidth - editorObj.outerWidth();
+        if (newLeft + editorObj.outerWidth() > containerWidth) {
+          newLeft = containerWidth - editorObj.outerWidth();
         }
         if (newTop < 0) {
           newTop = 0;
@@ -3098,7 +3146,8 @@ __webpack_require__(5652);
   $.SidebarTagTokens.prototype.setUpTokens = function () {
     var self = this;
     if (self.options.tagList.length === 0 || self.options.tagList.length === 1 && self.options.tagList[0] === "") {
-      document.documentElement.style.setProperty('--sidebar-search-bar-height-open', 72 + "px");
+      var containerEl = Hxighlighter.getContainer() || document.documentElement;
+      containerEl.style.setProperty('--sidebar-search-bar-height-open', 72 + "px");
       return;
     }
     if (self.first_time) {
@@ -3113,7 +3162,8 @@ __webpack_require__(5652);
     jQuery('.search-bar.side').after(tokenHTML);
     setTimeout(function () {
       var tag_list_height = jQuery('.annotationSection > .tag-token-list').height();
-      document.documentElement.style.setProperty('--sidebar-search-bar-height-open', tag_list_height + 72 + "px");
+      var containerEl = Hxighlighter.getContainer() || document.documentElement;
+      containerEl.style.setProperty('--sidebar-search-bar-height-open', tag_list_height + 72 + "px");
       jQuery('#empty-alert').show();
     }, 150);
   };
@@ -3442,14 +3492,17 @@ __webpack_require__(3453);
         var newTop = parseInt(editorObj.css('top'), 10);
         ;
         var newLeft = parseInt(editorObj.css('left'), 10);
+        var container = Hxighlighter.getContainer(editorObj);
+        var containerHeight = container ? container.clientHeight : window.innerHeight;
+        var containerWidth = container ? container.clientWidth : window.innerWidth;
 
         // console.log(editorObj, newTop, newLeft);
 
-        if (newTop + editorObj.outerHeight() > window.innerHeight) {
-          newTop = window.innerHeight - editorObj.outerHeight();
+        if (newTop + editorObj.outerHeight() > containerHeight) {
+          newTop = containerHeight - editorObj.outerHeight();
         }
-        if (newLeft + editorObj.outerWidth() > window.innerWidth) {
-          newLeft = window.innerWidth - editorObj.outerWidth();
+        if (newLeft + editorObj.outerWidth() > containerWidth) {
+          newLeft = containerWidth - editorObj.outerWidth();
         }
         if (newTop < 0) {
           newTop = 0;
@@ -4157,9 +4210,16 @@ var hrange = __webpack_require__(9445);
               self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
             }
           }
+          var container = Hxighlighter.getContainer(self.element);
+          var scrollOffset = container ? container.scrollTop : jQuery(window).scrollTop();
+          var rect = self.currentSelection.getBoundingClientRect();
+          var containerRect = container ? container.getBoundingClientRect() : {
+            top: 0,
+            left: 0
+          };
           boundingBox = {
-            top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
-            left: self.currentSelection.getBoundingClientRect().left - 5
+            top: rect.top - containerRect.top + scrollOffset - 5,
+            left: rect.left - containerRect.left - 5
           };
           var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
           jQuery('.sr-alert').html('');
@@ -5346,15 +5406,17 @@ __webpack_require__(3397);
       innerElem.style.width = '30px';
       innerElem.style.height = '60px';
       scrollableElem.appendChild(innerElem);
-      document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
+      var container = Hxighlighter.getContainer() || document.body;
+      container.appendChild(scrollableElem); // Elements only have width if they're in the layout
       var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
-      document.body.removeChild(scrollableElem);
+      container.removeChild(scrollableElem);
       return diff > 0;
     }
     window.addEventListener('load', function () {
       // Show scrollbars if they're hidden.
       if (!areScrollbarsVisible()) {
-        document.body.classList.add('force-show-scrollbars');
+        var container = Hxighlighter.getContainer() || document.body;
+        container.classList.add('force-show-scrollbars');
       }
     });
   };
@@ -6134,10 +6196,10 @@ var annotator = annotator ? annotator : __webpack_require__(6880);
         self.annotation_tool.isStatic = true;
       }
     });
-    jQuery('body').on('click', '.annotation-username', function (e) {
+    self.element.on('click', '.annotation-username', function (e) {
       $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
     });
-    jQuery('body').on('click', '.annotation-tag', function (e) {
+    self.element.on('click', '.annotation-tag', function (e) {
       $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
     });
     this.setUpPinAndMove();
@@ -6460,11 +6522,14 @@ var annotator = annotator ? annotator : __webpack_require__(6880);
       if (newLeft < 0) {
         newLeft = 0;
       }
-      if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
-        newTop = window.innerHeight - self.itemMoving.outerHeight();
+      var container = Hxighlighter.getContainer(self.element);
+      var containerHeight = container ? container.clientHeight : window.innerHeight;
+      var containerWidth = container ? container.clientWidth : window.innerWidth;
+      if (newTop + self.itemMoving.outerHeight() > containerHeight) {
+        newTop = containerHeight - self.itemMoving.outerHeight();
       }
-      if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
-        newLeft = window.innerWidth - self.itemMoving.outerWidth();
+      if (newLeft + self.itemMoving.outerWidth() > containerWidth) {
+        newLeft = containerWidth - self.itemMoving.outerWidth();
       }
 
       /* TODO: Set boundaries for far right and far down */
@@ -6506,15 +6571,18 @@ var annotator = annotator ? annotator : __webpack_require__(6880);
     if (newLeft < 0) {
       newLeft = 0;
     }
-    if (newTop + elHeight > window.innerHeight) {
-      if (interactionPoint && interactionPoint.top < window.innerHeight) {
+    var container = Hxighlighter.getContainer(viewerElement);
+    var containerHeight = container ? container.clientHeight : window.innerHeight;
+    var containerWidth = container ? container.clientWidth : window.innerWidth;
+    if (newTop + elHeight > containerHeight) {
+      if (interactionPoint && interactionPoint.top < containerHeight) {
         newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off 
       } else {
-        newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+        newTop = containerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
       }
     }
-    if (newLeft + elWidth > window.innerWidth) {
-      newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
+    if (newLeft + elWidth > containerWidth) {
+      newLeft = containerWidth - elWidth - 12; // 12 is the width of the scroll bar
     }
     jQuery(viewerElement).css('top', newTop);
     jQuery(viewerElement).css('left', newLeft);
@@ -6796,7 +6864,8 @@ __webpack_require__(9386);
       Hxighlighter.publishEvent('SelectedFilterTypesChanged', self.instance_id, [filteroptions]);
     });
     jQuery('.sidebar-button#hide_label').click(function () {
-      jQuery(':root').css('--sidebar-width', '0px');
+      var container = jQuery(Hxighlighter.getContainer(self.element) || ':root');
+      container.css('--sidebar-width', '0px');
       jQuery('.annotationSection').hide();
       $.publishEvent('resizeWindow', self.instance_id, []);
       self.showSidebarTab(self.options.viewer_options.sidebarversion);
@@ -6860,15 +6929,17 @@ __webpack_require__(9386);
     });
   };
   $.Sidebar.prototype.showSidebarTab = function (type) {
+    var self = this;
+    var container = jQuery(Hxighlighter.getContainer(self.element) || ':root');
     // if (type === "smalltab") {
-    jQuery(':root').css('--sidebar-width', '40px');
+    container.css('--sidebar-width', '40px');
     jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>');
     // }
 
     jQuery('.open-sidebar').click(function () {
       jQuery('.open-sidebar').remove();
       jQuery('.annotationSection').show();
-      jQuery(':root').css('--sidebar-width', '300px');
+      container.css('--sidebar-width', '300px');
     });
   };
   $.Sidebar.prototype.setUpListeners = function () {
@@ -7092,7 +7163,8 @@ __webpack_require__(9386);
       if (self.options.mediaType.toLowerCase() !== "video" && self.options.mediaType.toLowerCase() !== "audio") {
         jQuery('.side.item-' + ann.id).click(function (e) {
           if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
-            var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
+            var containerEl = Hxighlighter.getContainer(self.element) || document.body;
+            var nav_offset = getComputedStyle(containerEl).getPropertyValue('--nav-bar-offset');
             jQuery(self.element).parent().animate({
               scrollTop: jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140
             });
@@ -31123,6 +31195,7 @@ var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 !function() {
 "use strict";
+
 
 
 

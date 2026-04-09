@@ -4,6 +4,7 @@ import '@fortawesome/fontawesome-free/css/solid.min.css';
 // import 'mirador/dist/css/mirador-combined.css';
 import 'toastr/build/toastr.min.css';
 import './css/image.css';
+import './css/common.css';
 
 
 // vendors

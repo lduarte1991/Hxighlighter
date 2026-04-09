@@ -274,7 +274,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         });
 
         jQuery('.sidebar-button#hide_label').click(function() {
-            jQuery(':root').css('--sidebar-width', '0px');
+            var container = jQuery(Hxighlighter.getContainer(self.element) || ':root');
+            container.css('--sidebar-width', '0px');
             jQuery('.annotationSection').hide();
             $.publishEvent('resizeWindow', self.instance_id, []);
 
@@ -343,15 +344,17 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     };
 
     $.Sidebar.prototype.showSidebarTab = function(type) {
+        var self = this;
+        var container = jQuery(Hxighlighter.getContainer(self.element) || ':root');
         // if (type === "smalltab") {
-            jQuery(':root').css('--sidebar-width', '40px');
+            container.css('--sidebar-width', '40px');
             jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button" id="sidebaropen" aria-pressed="false" aria-label="Toggle sidebar" title="Toggle Sidebar"><span class="fas fa-angle-double-right"></span></div>');
         // }
 
         jQuery('.open-sidebar').click(function() {
             jQuery('.open-sidebar').remove();
             jQuery('.annotationSection').show();
-            jQuery(':root').css('--sidebar-width', '300px');
+            container.css('--sidebar-width', '300px');
         });
     };
 
@@ -589,7 +592,8 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             if (self.options.mediaType.toLowerCase() !== "video" && self.options.mediaType.toLowerCase() !== "audio") {
                 jQuery('.side.item-' + ann.id).click(function(e) {
                     if (self.options.mediaType.toLowerCase() === "text" && ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
-                        var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
+                        var containerEl = Hxighlighter.getContainer(self.element) || document.body;
+                        var nav_offset = getComputedStyle(containerEl).getPropertyValue('--nav-bar-offset');
                         jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 140)});
                         //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
                         setTimeout(function() {

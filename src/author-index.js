@@ -17,3 +17,4 @@ require('./js/storage/TempJSON.js');
 require('./js/plugins/hx-lite-version-changes.js');
 require('./js/launcher.js');
 require('./css/common_lite.css');
+require('./css/lite-overrides.css');

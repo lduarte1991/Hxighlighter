@@ -73,11 +73,11 @@ import 'jquery-confirm/css/jquery-confirm.css'
             }
         });
 
-        jQuery('body').on('click', '.annotation-username', function(e) {
+        self.element.on('click', '.annotation-username', function(e) {
             $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
         });
 
-        jQuery('body').on('click', '.annotation-tag', function(e) {
+        self.element.on('click', '.annotation-tag', function(e) {
             $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
         });
 
@@ -434,11 +434,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
             if (newLeft < 0) {
                 newLeft = 0;
             }
-            if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
-                newTop = window.innerHeight - self.itemMoving.outerHeight();
+            var container = Hxighlighter.getContainer(self.element);
+            var containerHeight = container ? container.clientHeight : window.innerHeight;
+            var containerWidth = container ? container.clientWidth : window.innerWidth;
+            if (newTop + self.itemMoving.outerHeight() > containerHeight) {
+                newTop = containerHeight - self.itemMoving.outerHeight();
             }
-            if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
-                newLeft = window.innerWidth - self.itemMoving.outerWidth();
+            if (newLeft + self.itemMoving.outerWidth() > containerWidth) {
+                newLeft = containerWidth - self.itemMoving.outerWidth();
             }
 
             /* TODO: Set boundaries for far right and far down */
@@ -485,15 +488,18 @@ import 'jquery-confirm/css/jquery-confirm.css'
         if (newLeft < 0) {
             newLeft = 0;
         }
-        if (newTop + elHeight > window.innerHeight) {
-            if (interactionPoint && interactionPoint.top < window.innerHeight) {
+        var container = Hxighlighter.getContainer(viewerElement);
+        var containerHeight = container ? container.clientHeight : window.innerHeight;
+        var containerWidth = container ? container.clientWidth : window.innerWidth;
+        if (newTop + elHeight > containerHeight) {
+            if (interactionPoint && interactionPoint.top < containerHeight) {
                 newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off 
             } else {
-                newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+                newTop = containerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
             }
         }
-        if (newLeft + elWidth > window.innerWidth) {
-            newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
+        if (newLeft + elWidth > containerWidth) {
+            newLeft = containerWidth - elWidth - 12; // 12 is the width of the scroll bar
         }
         jQuery(viewerElement).css('top', newTop);
         jQuery(viewerElement).css('left', newLeft);

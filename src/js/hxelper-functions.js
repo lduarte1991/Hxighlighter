@@ -6,11 +6,20 @@
      * @return     {Object}  { description_of_the_return_value }
      */
     $$.mouseFixedPosition = function(event, annotation) {
-        var body = window.document.body;
+        var container = Hxighlighter.getContainer(event.target);
         var offset = {top: 0, left: 0};
 
-        if (jQuery(body).css('position') !== "static") {
-            offset = jQuery(body).offset();
+        if (container) {
+            var containerRect = container.getBoundingClientRect();
+            offset = {
+                top: containerRect.top + container.scrollTop,
+                left: containerRect.left + container.scrollLeft
+            };
+        } else {
+            var body = window.document.body;
+            if (jQuery(body).css('position') !== "static") {
+                offset = jQuery(body).offset();
+            }
         }
 
         try {
@@ -19,8 +28,14 @@
             // in case user is selecting via keyboard, this sets the adder to top-left corner
             if (event.type.indexOf("mouse") === -1 && event.type.indexOf('key') > -1) {
                 var boundingBox = window.getSelection().getRangeAt(0).getBoundingClientRect();
-                top = boundingBox.top - offset.top + boundingBox.height;
-                left = boundingBox.left - offset.left + boundingBox.width;
+                if (container) {
+                    var containerRect2 = container.getBoundingClientRect();
+                    top = boundingBox.top - containerRect2.top + container.scrollTop + boundingBox.height;
+                    left = boundingBox.left - containerRect2.left + container.scrollLeft + boundingBox.width;
+                } else {
+                    top = boundingBox.top - offset.top + boundingBox.height;
+                    left = boundingBox.left - offset.left + boundingBox.width;
+                }
             }
             return {
                 top: top,
