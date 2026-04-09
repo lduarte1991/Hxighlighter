@@ -1235,7 +1235,6 @@ Hxighlighter.getContainer = function (fromElement) {
     });
     this.annotations = document.querySelector('#annotations-url').innerHTML.trim();
     this.inlineMode = this.annotations === 'inline';
-    console.log('[Launcher] annotations-url value:', JSON.stringify(this.annotations), '| inlineMode:', this.inlineMode);
     this.mediatype = document.querySelector('#media-type').innerHTML;
     this.commonname = document.querySelector('#common-inst-display-name').innerHTML;
     this.method = document.querySelector('#method')?.innerHTML ?? 'url';
@@ -3999,12 +3998,9 @@ var hrange = __webpack_require__(9445);
       jQuery.each(result.rows, function (_, ann) {
         var waAnnotation;
         if (skipConvert) {
-          // Data is already in internal format (e.g. from inline injection)
           waAnnotation = ann;
-          console.log('[TempJSON] callB: using annotation as-is (skipConvert)', ann.id || ann.exact?.substring(0, 30));
         } else {
           waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
-          console.log('[TempJSON] callB: converted annotation from WebAnnotation format', ann.id);
         }
         self.store.push(ann);
         setTimeout(function () {
@@ -4014,31 +4010,23 @@ var hrange = __webpack_require__(9445);
       });
     };
     try {
-      console.log('[TempJSON] storageOptions.external_url:', JSON.stringify(self.options.storageOptions.external_url));
       if (self.options.storageOptions.external_url.inline_mode) {
-        console.log('[TempJSON] Inline mode detected');
         // Inline mode: read annotations from data-annotations attribute
         var processInlineData = function () {
           var annotationsEl = document.querySelector('#annotations-url');
-          console.log('[TempJSON] #annotations-url element found:', !!annotationsEl);
           var rawData = annotationsEl ? annotationsEl.getAttribute('data-annotations') : null;
-          console.log('[TempJSON] data-annotations raw value:', rawData ? rawData.substring(0, 200) + '...' : null);
           if (rawData) {
             try {
               var data = JSON.parse(rawData);
-              // Normalize: if data is a plain array, wrap it in { rows: [...] }
               if (Array.isArray(data)) {
-                console.log('[TempJSON] data-annotations is a plain array, wrapping in { rows: [...] }');
                 data = {
                   rows: data
                 };
               }
-              console.log('[TempJSON] Parsed inline data — rows:', data.rows ? data.rows.length : 'NO ROWS KEY', '| keys:', Object.keys(data));
               $.totalAnnotations = data.rows.length;
               callB(data, true);
               return true;
             } catch (parseErr) {
-              console.error('[TempJSON] Failed to parse data-annotations JSON:', parseErr.message);
               return false;
             }
           }
@@ -4047,18 +4035,14 @@ var hrange = __webpack_require__(9445);
 
         // Check if data-annotations is already present
         if (!processInlineData()) {
-          console.log('[TempJSON] data-annotations not yet present, setting up MutationObserver');
           // Not yet available — watch for it
           var annotationsEl = document.querySelector('#annotations-url');
           if (annotationsEl) {
             var observer = new MutationObserver(function (mutations) {
-              console.log('[TempJSON] MutationObserver fired, mutations:', mutations.length);
               for (var i = 0; i < mutations.length; i++) {
                 if (mutations[i].attributeName === 'data-annotations') {
-                  console.log('[TempJSON] data-annotations attribute changed');
                   if (processInlineData()) {
                     observer.disconnect();
-                    console.log('[TempJSON] Observer disconnected after processing');
                   }
                   break;
                 }
@@ -4068,12 +4052,7 @@ var hrange = __webpack_require__(9445);
               attributes: true,
               attributeFilter: ['data-annotations']
             });
-            console.log('[TempJSON] MutationObserver attached to #annotations-url');
-          } else {
-            console.error('[TempJSON] #annotations-url element not found for observer');
           }
-        } else {
-          console.log('[TempJSON] Inline data processed immediately (was already present)');
         }
       } else if (self.options.storageOptions.external_url.json_url != '') {
         jQuery.ajax({
@@ -5394,8 +5373,18 @@ var annotator = annotator ? annotator : __webpack_require__(6880);
     });
     Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function (_, event1, annotations) {
       if (self.annotation_tool.isStatic) {
-        alert("Dismiss opened annotation before selecting a new one.");
-        return;
+        if (self.options.viewer_options && self.options.viewer_options.readonly) {
+          // In readonly mode, close current viewer and open the new one
+          jQuery('.annotation-selected').removeClass('annotation-selected');
+          if (self.annotation_tool.viewer) {
+            self.annotation_tool.viewer.remove();
+            delete self.annotation_tool.viewer;
+          }
+          self.annotation_tool.isStatic = false;
+        } else {
+          alert("Dismiss opened annotation before selecting a new one.");
+          return;
+        }
       }
       jQuery(event1.target).addClass('annotation-selected');
       clearTimeout(self.hideTimer);

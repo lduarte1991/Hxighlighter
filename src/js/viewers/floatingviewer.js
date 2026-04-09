@@ -58,8 +58,18 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
             if (self.annotation_tool.isStatic) {
-                alert("Dismiss opened annotation before selecting a new one.")
-                return;
+                if (self.options.viewer_options && self.options.viewer_options.readonly) {
+                    // In readonly mode, close current viewer and open the new one
+                    jQuery('.annotation-selected').removeClass('annotation-selected');
+                    if (self.annotation_tool.viewer) {
+                        self.annotation_tool.viewer.remove();
+                        delete self.annotation_tool.viewer;
+                    }
+                    self.annotation_tool.isStatic = false;
+                } else {
+                    alert("Dismiss opened annotation before selecting a new one.")
+                    return;
+                }
             }
             jQuery(event1.target).addClass('annotation-selected');
             clearTimeout(self.hideTimer);
