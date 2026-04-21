@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const WebpackAutoInject = require('webpack-auto-inject-version-next');
+const { version } = require('./package.json');
 
 const PATHS = {
     vendor: path.join(__dirname, 'src/js/vendors/'),
@@ -35,18 +35,8 @@ module.exports = {
         new webpack.IgnorePlugin({
             resourceRegExp: /^codemirror$/
         }),
-        new WebpackAutoInject({
-            components: {
-                InjectAsComment: true,
-                InjectByTag: false
-            },
-            componentsOptions: {
-                InjectAsComment: {
-                    tag: 'Version: {version} - {date}',
-                    dateFormat: 'dddd, mmmm dS, yyyy, h:MM:ss TT',
-                    multiLineCommentType: false,
-                }
-            }
+        new webpack.BannerPlugin({
+            banner: `Version: ${version} - ${new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' })}`,
         }),
     ],
     output: {
