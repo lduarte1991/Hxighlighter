@@ -13,6 +13,9 @@ simple-server.py
 env
 *.mp4
 
+# Build output
+dist/
+
 # Testing
 .nyc_output
 coverage
