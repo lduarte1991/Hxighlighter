@@ -63,7 +63,8 @@ require('./hx-sidebar-tag-tokens.css');
     $.SidebarTagTokens.prototype.setUpTokens = function() {
         var self = this;
         if (self.options.tagList.length === 0 || (self.options.tagList.length === 1 && self.options.tagList[0] === "")) {
-            document.documentElement.style.setProperty('--sidebar-search-bar-height-open', (72) + "px")
+            var containerEl = Hxighlighter.getContainer() || document.documentElement;
+            containerEl.style.setProperty('--sidebar-search-bar-height-open', (72) + "px")
             return;
         }
         if (self.first_time) {
@@ -78,7 +79,8 @@ require('./hx-sidebar-tag-tokens.css');
         jQuery('.search-bar.side').after(tokenHTML);
         setTimeout(function() {
             var tag_list_height = jQuery('.annotationSection > .tag-token-list').height()
-            document.documentElement.style.setProperty('--sidebar-search-bar-height-open', (tag_list_height + 72) + "px")
+            var containerEl = Hxighlighter.getContainer() || document.documentElement;
+            containerEl.style.setProperty('--sidebar-search-bar-height-open', (tag_list_height + 72) + "px")
             jQuery('#empty-alert').show();
         }, 150);
     };

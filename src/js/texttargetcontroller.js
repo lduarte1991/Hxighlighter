@@ -72,16 +72,18 @@ require('./plugins/hx-websockets.js');
             innerElem.style.width = '30px';
             innerElem.style.height = '60px';
             scrollableElem.appendChild(innerElem);
-            document.body.appendChild(scrollableElem); // Elements only have width if they're in the layout
+            var container = Hxighlighter.getContainer() || document.body;
+            container.appendChild(scrollableElem); // Elements only have width if they're in the layout
             var diff = scrollableElem.offsetWidth - scrollableElem.clientWidth;
-            document.body.removeChild(scrollableElem);
+            container.removeChild(scrollableElem);
             return diff > 0;
         }
 
         window.addEventListener('load', function() {
             // Show scrollbars if they're hidden.
             if (!areScrollbarsVisible()) {
-                document.body.classList.add('force-show-scrollbars');
+                var container = Hxighlighter.getContainer() || document.body;
+                container.classList.add('force-show-scrollbars');
             }
         });
 
@@ -122,7 +124,7 @@ require('./plugins/hx-websockets.js');
         this.guid = $.getUniqueId();
         var slot = jQuery(selector);
         slot.addClass('annotation-slot');
-        slot.attr('id', this.guid); 
+        slot.prop('id', this.guid); 
         jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
         
         // lets core know that the target has finished loading on screen

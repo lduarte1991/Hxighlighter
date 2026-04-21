@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Lite Overrides
+   
+   Loaded LAST in the lite bundle to override shared CSS files 
+   (text.css, sidebar.css, floatingviewer.css, hxighlighter-styling.css)
+   that assume the tool owns the full page.
+   
+   Principles:
+   - No body/html/:root selectors (don't leak to host)
+   - position:fixed → position:absolute (contained by .hxighlighter-container)
+   - vh/vw → % (relative to container, not viewport)
+   - Wildcard resets scoped to container
+   ========================================================================== */
+
+/* --- Neutralize global selectors from shared CSS that leak to host --- */
+
+/* text.css (shared) sets body { overflow-y: scroll; width: 100%; }
+   We can't remove it from text.css without affecting the full version.
+   Reset body/html back to browser defaults so the host page is unaffected. */
+body {
+    overflow-y: revert !important;
+    width: revert !important;
+}
+
+
+/* --- Scope the wildcard box-sizing reset to the container --- */
+/* hxighlighter-styling.css has: *, *::before, *::after { box-sizing: border-box }
+   Override it back to normal outside, re-apply inside container */
+
+.hxighlighter-container *,
+.hxighlighter-container *::before,
+.hxighlighter-container *::after {
+    box-sizing: border-box;
+}
+
+
+/* --- Move :root variables from text.css to container scope --- */
+
+.hxighlighter-container {
+    --text-background: #FFFFFF;
+    --text-accent-color: #687864;
+    --accent-color: #595959;
+    --light-font-color: #fff;
+    --accent-font-color: #888;
+    --dark-font-color: #000;
+    --pop-color: #2E75AF;
+    --lighter-background: #ededed;
+    --floating-button-color: #595959;
+    --sidebar-width: 300px;
+    --sidebar-background: #fff;
+    --sidebar-border: 1px solid #888;
+    --sidebar-button-back: #fff;
+    --sidebar-button-back-accent: #595959;
+    --sidebar-button-color: #595959;
+    --sidebar-button-color-accent: #ededed;
+    --sidebar-search-bar-height-open: 73px;
+    --sidebar-footer-height: 15px;
+    /* Create an explicit stacking context so no child z-index
+       can escape above the host page's elements */
+    isolation: isolate;
+}
+
+
+/* --- Hide configuration divs (replaces inline style="display:none") --- */
+
+#text_url,
+#text-container,
+#method,
+#tags,
+#annotations-url,
+#annotation-mode,
+#media-type,
+#extra_options,
+#common-inst-display-name,
+#target-selector {
+    display: none;
+}
+
+
+/* --- Sidebar: fixed → absolute within container --- */
+
+.hxighlighter-container .annotationSection.side {
+    position: absolute;
+}
+
+/* Sidebar navbar (admin/nav buttons bar above content) */
+.hxighlighter-container .sidebar-navbar {
+    position: absolute;
+    width: auto;
+    margin-left: 0;
+    left: calc(var(--sidebar-width) - 15px);
+    right: 0;
+}
+
+/* Sidebar open/close tabs: fixed → absolute */
+.hxighlighter-container .smalltab {
+    position: absolute;
+}
+
+.hxighlighter-container .sidemenu {
+    position: absolute;
+}
+
+
+/* --- Floating viewer/editor: fixed → absolute within container --- */
+
+.hxighlighter-container .annotation-editor,
+.hxighlighter-container .annotation-viewer {
+    position: absolute;
+}
+
+.hxighlighter-container .annotation-dashboard {
+    position: absolute;
+}
+
+.hxighlighter-container #navigation_bar {
+    position: absolute;
+}
+
+
+/* --- #viewer panel: fixed → absolute within container --- */
+
+.hxighlighter-container #viewer {
+    position: absolute;
+}
+
+
+/* --- Load-more button: keep absolute but ensure within container --- */
+
+.hxighlighter-container .load-more {
+    position: absolute;
+}

@@ -287,11 +287,21 @@ var hrange = require('../h-range.js');
                     self.start = self.copySelection(getSelection());
                     var bcr = self.getBoundingClientRect(self.start);
                     //console.log($.mouseFixedPositionFromRange(self.start), bcr, jQuery(window).scrollTop());
-                    jQuery('body').append('<div class="hx-selector-img"></div>');
-                    jQuery('.hx-selector-img').css({
-                        top: bcr.top + jQuery(window).scrollTop() - 5,
-                        left: bcr.left - 5
-                    });
+                    var kbContainer = Hxighlighter.getContainer(self.element);
+                    if (kbContainer) {
+                        var kbContainerRect = kbContainer.getBoundingClientRect();
+                        jQuery(kbContainer).append('<div class="hx-selector-img"></div>');
+                        jQuery('.hx-selector-img').css({
+                            top: bcr.top - kbContainerRect.top + kbContainer.scrollTop - 5,
+                            left: bcr.left - kbContainerRect.left + kbContainer.scrollLeft - 5
+                        });
+                    } else {
+                        jQuery('body').append('<div class="hx-selector-img"></div>');
+                        jQuery('.hx-selector-img').css({
+                            top: bcr.top + jQuery(window).scrollTop() - 5,
+                            left: bcr.left - 5
+                        });
+                    }
                     jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
@@ -315,9 +325,13 @@ var hrange = require('../h-range.js');
                             self.currentSelection.setEnd(self.start.startContainer, self.start.startOffset);
                         }
                     }
+                    var container = Hxighlighter.getContainer(self.element);
+                    var scrollOffset = container ? container.scrollTop : jQuery(window).scrollTop();
+                    var rect = self.currentSelection.getBoundingClientRect();
+                    var containerRect = container ? container.getBoundingClientRect() : {top: 0, left: 0};
                     boundingBox = {
-                        top: self.currentSelection.getBoundingClientRect().top + jQuery(window).scrollTop() - 5,
-                        left: self.currentSelection.getBoundingClientRect().left - 5
+                        top: rect.top - containerRect.top + scrollOffset - 5,
+                        left: rect.left - containerRect.left - 5
                     }
                     var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
                     jQuery('.sr-alert').html('');

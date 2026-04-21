@@ -85,11 +85,13 @@ import 'timeago';
         self.sidebar.parent().css('width', 'calc(100% - var(--sidebar-width))');
 
         self.element.on('mouseover', '.annotationsHolder', function(event) {
-            jQuery('body').css('overflow-y', 'hidden');
+            var stContainer = jQuery(Hxighlighter.getContainer(self.element[0]) || 'body');
+            stContainer.css('overflow-y', 'hidden');
         });
 
         self.element.on('mouseleave', '.annotationsHolder', function(event) {
-            jQuery('body').css('overflow-y', 'scroll');
+            var stContainer = jQuery(Hxighlighter.getContainer(self.element[0]) || 'body');
+            stContainer.css('overflow-y', 'scroll');
         });
 
         // toggle search
@@ -251,7 +253,8 @@ import 'timeago';
 
             jQuery('.side.item-' + ann.id).find('.quoteText').click(function() {
                 if (ann._local && ann._local.highlights && ann._local.highlights.length > 0) {
-                    var nav_offset = getComputedStyle(document.body).getPropertyValue('--nav-bar-offset');
+                    var containerEl = Hxighlighter.getContainer(self.element) || document.body;
+                    var nav_offset = getComputedStyle(containerEl).getPropertyValue('--nav-bar-offset');
                     jQuery(self.element).parent().animate({scrollTop: (jQuery(ann._local.highlights[0]).offset().top + jQuery(self.element).parent().scrollTop() - parseInt(nav_offset, 10) - 20)});
                     //jQuery(ann._local.highlights).animate({'outline': '2px solid black'}, 1000)
                     setTimeout(function() {

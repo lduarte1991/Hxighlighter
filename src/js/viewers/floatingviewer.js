@@ -58,8 +58,18 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
             if (self.annotation_tool.isStatic) {
-                alert("Dismiss opened annotation before selecting a new one.")
-                return;
+                if (self.options.viewer_options && self.options.viewer_options.readonly) {
+                    // In readonly mode, close current viewer and open the new one
+                    jQuery('.annotation-selected').removeClass('annotation-selected');
+                    if (self.annotation_tool.viewer) {
+                        self.annotation_tool.viewer.remove();
+                        delete self.annotation_tool.viewer;
+                    }
+                    self.annotation_tool.isStatic = false;
+                } else {
+                    alert("Dismiss opened annotation before selecting a new one.")
+                    return;
+                }
             }
             jQuery(event1.target).addClass('annotation-selected');
             clearTimeout(self.hideTimer);
@@ -73,11 +83,11 @@ import 'jquery-confirm/css/jquery-confirm.css'
             }
         });
 
-        jQuery('body').on('click', '.annotation-username', function(e) {
+        self.element.on('click', '.annotation-username', function(e) {
             $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'User']);
         });
 
-        jQuery('body').on('click', '.annotation-tag', function(e) {
+        self.element.on('click', '.annotation-tag', function(e) {
             $.publishEvent('autosearch', self.instance_id, [jQuery(this).text().trim(), 'Tag']);
         });
 
@@ -146,8 +156,10 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         var intPt = interactionPoint;
         // situate it on its proper location
+        var fvContainer = Hxighlighter.getContainer(self.element);
+        var editorScrollOffset = fvContainer ? fvContainer.scrollTop : jQuery(window).scrollTop();
         self.annotation_tool.editor.css({
-            'top': intPt.top - jQuery(window).scrollTop(),
+            'top': intPt.top - editorScrollOffset,
             'left': intPt.left
         });
 
@@ -228,8 +240,16 @@ import 'jquery-confirm/css/jquery-confirm.css'
             delete self.annotation_tool.viewer
         }
         self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
-        var newTop = annotator.util.mousePosition(event).top - jQuery(window).scrollTop() + 20;
-        var newLeft = annotator.util.mousePosition(event).left + 30
+        var viewerContainer = Hxighlighter.getContainer(self.element);
+        var viewerCoords;
+        if (viewerContainer) {
+            viewerCoords = Hxighlighter.mouseFixedPosition(event);
+        } else {
+            viewerCoords = annotator.util.mousePosition(event);
+        }
+        var viewerScrollOffset = viewerContainer ? viewerContainer.scrollTop : jQuery(window).scrollTop();
+        var newTop = viewerCoords.top - viewerScrollOffset + 20;
+        var newLeft = viewerCoords.left + 30
         self.annotation_tool.viewer.css({
             'top': newTop,
             'left': newLeft
@@ -434,11 +454,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
             if (newLeft < 0) {
                 newLeft = 0;
             }
-            if (newTop + self.itemMoving.outerHeight() > window.innerHeight) {
-                newTop = window.innerHeight - self.itemMoving.outerHeight();
+            var container = Hxighlighter.getContainer(self.element);
+            var containerHeight = container ? container.clientHeight : window.innerHeight;
+            var containerWidth = container ? container.clientWidth : window.innerWidth;
+            if (newTop + self.itemMoving.outerHeight() > containerHeight) {
+                newTop = containerHeight - self.itemMoving.outerHeight();
             }
-            if (newLeft + self.itemMoving.outerWidth() > window.innerWidth) {
-                newLeft = window.innerWidth - self.itemMoving.outerWidth();
+            if (newLeft + self.itemMoving.outerWidth() > containerWidth) {
+                newLeft = containerWidth - self.itemMoving.outerWidth();
             }
 
             /* TODO: Set boundaries for far right and far down */
@@ -485,15 +508,18 @@ import 'jquery-confirm/css/jquery-confirm.css'
         if (newLeft < 0) {
             newLeft = 0;
         }
-        if (newTop + elHeight > window.innerHeight) {
-            if (interactionPoint && interactionPoint.top < window.innerHeight) {
+        var container = Hxighlighter.getContainer(viewerElement);
+        var containerHeight = container ? container.clientHeight : window.innerHeight;
+        var containerWidth = container ? container.clientWidth : window.innerWidth;
+        if (newTop + elHeight > containerHeight) {
+            if (interactionPoint && interactionPoint.top < containerHeight) {
                 newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off 
             } else {
-                newTop = window.innerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+                newTop = containerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
             }
         }
-        if (newLeft + elWidth > window.innerWidth) {
-            newLeft = window.innerWidth - elWidth - 12; // 12 is the width of the scroll bar
+        if (newLeft + elWidth > containerWidth) {
+            newLeft = containerWidth - elWidth - 12; // 12 is the width of the scroll bar
         }
         jQuery(viewerElement).css('top', newTop);
         jQuery(viewerElement).css('left', newLeft);

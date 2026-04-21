@@ -1,94 +1,85 @@
-/* Common Root Variables */
-:root {
+/* ==========================================================================
+   Lite Version: CSS Isolation & Containment
+   
+   When injected into a host page, the container must:
+   1) Not be affected by the parent page's CSS
+   2) Not leak its own CSS to the parent page
+   3) Use container-relative positioning (no fixed, no vh/vw)
+   ========================================================================== */
+
+/* Variables scoped to the container, not :root */
+.hxighlighter-container {
     --nav-bar-offset: 0px;
     --main-background: #F7F9FB;
-};
-
-
-/* Persistent Scrollbar */
-/*::-webkit-scrollbar {
-    width: 12px;
 }
 
-::-webkit-scrollbar-track {
-    background-color: #ddd;
-}
- 
-::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background-color: #555;
-    box-shadow: 
-        inset 0 2px 3px rgba(255,255,255,0.3),
-        inset 0 -2px 3px rgba(0,0,0,0.3),
-        0 1px 1px rgba(255,255,255,0.9);
-}*/
+/* Persistent Scrollbar — scoped to container */
 
-.force-show-scrollbars ::-webkit-scrollbar-track:vertical {
+.hxighlighter-container .force-show-scrollbars ::-webkit-scrollbar-track:vertical {
     border-left: 1px solid #E7E7E7;
     box-shadow: 1px 0 1px 0 #F6F6F6 inset, -1px 0 1px 0 #F6F6F6 inset;
     border-radius: 5px;
 }
 
-.force-show-scrollbars ::-webkit-scrollbar-track:horizontal {
+.hxighlighter-container .force-show-scrollbars ::-webkit-scrollbar-track:horizontal {
     border-top: 1px solid #E7E7E7;
     box-shadow: 0 1px 1px 0 #F6F6F6 inset, 0 -1px 1px 0 #F6F6F6 inset;
 }
 
-.force-show-scrollbars ::-webkit-scrollbar {
+.hxighlighter-container .force-show-scrollbars ::-webkit-scrollbar {
     -webkit-appearance: none;
     background-color: #FAFAFA;
     width: 16px;
     border-radius: 5px;
 }
 
-.force-show-scrollbars ::-webkit-scrollbar-thumb {
+.hxighlighter-container .force-show-scrollbars ::-webkit-scrollbar-thumb {
     background-clip: padding-box;
     background-color: #C1C1C1;
     border-color: transparent;
     border-radius: 9px 8px 8px 9px;
     border-style: solid;
-    border-width: 3px 3px 3px 4px; /* Workaround because margins aren't supported */
+    border-width: 3px 3px 3px 4px;
     box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
-/* Unfortunately scrollbars can't use CSS transitions. Also, it's not possible
-   to highlight the thumb when the scrollbar track is hovered without some
-   JavaScript acrobatics; https://jsfiddle.net/QcqBM/6/ is a start, but you
-   also have to check whether the element has a scrollbar and if so how wide
-   it is. */
-.force-show-scrollbars ::-webkit-scrollbar-thumb:hover {
+.hxighlighter-container .force-show-scrollbars ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Background-Specific CSS */
-
-body {
-    background-color: #F7F9FB;
-    background-color: var(--main-background);
-    overflow-y: initial!important;
-}
-html {
-    font-size: initial!important;
-}
-
+/* Container isolation: reset inherited styles from parent, establish
+   positioning context so all absolute/fixed children are contained here */
 .hxighlighter-container {
+    all: initial;
+    display: block;
+    position: relative;
     padding: 10px 10px;
     height: 100%;
-    height: 100vh;
     overflow: auto;
-    height: calc(100vh - var(--nav-bar-offset));
-    margin-top: var(--nav-bar-offset);
+    background-color: #F7F9FB;
+    background-color: var(--main-background);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    direction: ltr;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
 }
 
-#navigationBar {
-    position: fixed;
+/* Navigation bar: absolute within container instead of fixed to viewport */
+.hxighlighter-container #navigationBar {
+    position: absolute;
     height: 50px;
     background: black;
     top: 0;
+    left: 0;
     display: none;
     width: 100%;
-    z-index:999;
-    overflow:hidden;
+    z-index: 999;
+    overflow: hidden;
 }
 
 .pagination {
@@ -154,6 +145,11 @@ a#next_target_object {
     position: absolute;
     top:-999999px;
     left:-999999px
+}
+
+.sr-only:active, .sr-only:focus {
+    top: auto;
+    left: auto;
 }
 
 /*.hx-confirm-button button:after {

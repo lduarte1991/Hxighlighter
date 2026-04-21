@@ -21,19 +21,63 @@ var hrange = require('../h-range.js');
             callBack(annotations);
         });
 
-        try {
-            if(self.options.storageOptions.external_url.json_url != '') {
-                var callB = function(result) {
-                    jQuery.each(result.rows, function(_, ann) {
-                        var waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
-                        self.store.push(ann);
-                        setTimeout(function() {
-                            // console.log('definitely getting to here');
-                            $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
-                            $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
-                        }, 250);
-                    });
+        var callB = function(result, skipConvert) {
+            jQuery.each(result.rows, function(_, ann) {
+                var waAnnotation;
+                if (skipConvert) {
+                    waAnnotation = ann;
+                } else {
+                    waAnnotation = self.convertFromWebAnnotation(ann, jQuery(self.options.target_selector).find('.annotator-wrapper'));
                 }
+                self.store.push(ann);
+                setTimeout(function() {
+                    $.publishEvent('annotationLoaded', self.instance_id, [waAnnotation]);
+                    $.publishEvent('TargetAnnotationDraw', self.instance_id, [waAnnotation]);
+                }, 250);
+            });
+        };
+
+        try {
+            if (self.options.storageOptions.external_url.inline_mode) {
+                // Inline mode: read annotations from data-annotations attribute
+                var inlineEl = document.querySelector('#annotations-url') || document.querySelector('#annotation-mode');
+                var processInlineData = function() {
+                    var rawData = inlineEl ? inlineEl.getAttribute('data-annotations') : null;
+                    if (rawData) {
+                        try {
+                            var data = JSON.parse(rawData);
+                            if (Array.isArray(data)) {
+                                data = { rows: data };
+                            }
+                            $.totalAnnotations = data.rows.length;
+                            callB(data, true);
+                            return true;
+                        } catch(parseErr) {
+                            console.error('[TempJSON] Failed to parse inline data-annotations:', parseErr);
+                            return false;
+                        }
+                    }
+                    return false;
+                };
+
+                // Check if data-annotations is already present
+                if (!processInlineData()) {
+                    // Not yet available — watch for it
+                    if (inlineEl) {
+                        var observer = new MutationObserver(function(mutations) {
+                            for (var i = 0; i < mutations.length; i++) {
+                                if (mutations[i].attributeName === 'data-annotations') {
+                                    if (processInlineData()) {
+                                        observer.disconnect();
+                                    }
+                                    break;
+                                }
+                            }
+                        });
+                        observer.observe(inlineEl, { attributes: true, attributeFilter: ['data-annotations'] });
+                    }
+                }
+            } else if(self.options.storageOptions.external_url.json_url != '') {
                 jQuery.ajax({
                     url: self.options.storageOptions.external_url.json_url,
                     success: function(data) {
@@ -43,7 +87,7 @@ var hrange = require('../h-range.js');
                 });
             }
         } catch(e) {
-
+            console.error('[TempJSON] Error in setUpListeners:', e);
         }
     }
 

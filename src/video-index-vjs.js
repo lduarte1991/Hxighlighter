@@ -4,6 +4,7 @@ import '@fortawesome/fontawesome-free/css/solid.min.css';
 import 'toastr/build/toastr.min.css';
 import 'videojs-transcript-ac/css/videojs-transcript3.css';
 import './css/video.css';
+import './css/common.css';
 require('!style-loader!css-loader!video.js/dist/video-js.css');
 
 // vendors

@@ -3,7 +3,9 @@
  * It will allow users to set up targets to annotate and then ways to annotate
  */
 
-import '../css/common.css';
+/* common.css is imported by each full-version entry point (text-index, image-index-m2,
+   video-index-vjs). The lite entry point imports common_lite.css instead.
+   This keeps host-page-affecting body/html rules out of the lite bundle. */
 
 /* istanbul ignore next */
 var root = global || window;
@@ -85,6 +87,33 @@ Hxighlighter.viewers = [];
 Hxighlighter.plugins = [];
 Hxighlighter.storage = [];
 Hxighlighter.globals = {};
+
+/**
+ * Gets the .hxighlighter-container element when it acts as a positioning
+ * context (i.e. has position:relative, set by the lite/embedded CSS).
+ * Returns null for full-page/iframe mode so callers fall back to
+ * viewport-relative logic (body, window.innerHeight, :root, etc.).
+ *
+ * @param      {Element|jQuery}  [fromElement]  Optional element to search from
+ * @return     {Element|null}    The container DOM element, or null
+ */
+Hxighlighter.getContainer = function(fromElement) {
+    var container = null;
+    if (fromElement) {
+        var el = fromElement instanceof jQuery ? fromElement[0] : fromElement;
+        container = el.closest('.hxighlighter-container');
+    } else {
+        container = document.querySelector('.hxighlighter-container');
+    }
+    // Only return the container when it is a positioning context.
+    // The lite CSS sets position:relative on .hxighlighter-container;
+    // the full-page CSS leaves it static. This ensures the full/iframe
+    // version continues to use viewport-relative coordinates.
+    if (container && getComputedStyle(container).position !== 'static') {
+        return container;
+    }
+    return null;
+};
 
 // comment out following line when not webpacking
 export default Hxighlighter;
