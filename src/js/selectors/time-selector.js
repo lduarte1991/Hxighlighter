@@ -50,7 +50,7 @@ var hrange = require('../h-range.js');
     $.TimeSelector.prototype.confirm = function(range, anchor) {
         var self = this;
         self.hideConfirm();
-        if (self.element.querySelectorAll('.annotation-editor-nav-bar').length == 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length == 0) {
+        if (self.element.querySelectorAll('.annotation-editor-nav-bar').length === 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length === 0) {
             var rect1 = anchor.getBoundingClientRect();
 
             self.interactionPoint = {

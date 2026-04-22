@@ -84,7 +84,7 @@ var hrange = require('../h-range.js');
                     toastr.error("You do not have permission to access the database. If refreshing page does not work contact instructor.", "(Error code 401)")
                 } else if (xhr.status === 500) {
                     toastr.error("Annotations Server is down for maintanence. Wait 10 minutes and try again.", "(Error code 500)")
-                } else if (xhr.status == 403) {
+                } else if (xhr.status === 403) {
                     toastr.error("I'm sorry, I'm afraid I cannot let you do that. User not authorized to perform action.", "(Error code 403)")
                 } else {
                     if (self.options.instructors.indexOf(self.options.user_id) !== -1) {
@@ -446,7 +446,7 @@ var hrange = require('../h-range.js');
                 return webAnn['target']['items']
             } else if (annType === "Video") {
                 var fragmentSelectorItem = webAnn['target']['items'][0]['selector']['items'][0];
-                if (fragmentSelectorItem.type == "FragmentSelector") {
+                if (fragmentSelectorItem.type === "FragmentSelector") {
                     var timeValue = fragmentSelectorItem.value.replace('t=', '').split(',');
                     var startTime = parseFloat(timeValue[0]);
                     var endTime = parseFloat(timeValue[1]);
@@ -533,12 +533,12 @@ var hrange = require('../h-range.js');
                     }
                     ranges.push(rangeFound)
                 }
-            } else if (media.toLowerCase() == "image") {
+            } else if (media.toLowerCase() === "image") {
                 // console.log(webAnn['target'])
                 return webAnn['target']['items'];
-            } else if (media.toLowerCase() == "comment") {
+            } else if (media.toLowerCase() === "comment") {
                 return webAnn['target']['items'];
-            } else if (media.toLowerCase() == "video" || media.toLowerCase() == 'audio') {
+            } else if (media.toLowerCase() === "video" || media.toLowerCase() === 'audio') {
                 var ranges = [];
                 jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
                     return ranges.push(targetItem)
@@ -560,7 +560,7 @@ var hrange = require('../h-range.js');
         try {
             var found = [];
             jQuery.each(webAnn['body']['items'], function(_, bodyItem) {
-                if (bodyItem.purpose == "commenting" || bodyItem.purpose == "replying") {
+                if (bodyItem.purpose === "commenting" || bodyItem.purpose === "replying") {
                     found.push(bodyItem.value);
                 }
             });
@@ -591,7 +591,7 @@ var hrange = require('../h-range.js');
             var quote = '';
             jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
                 
-                if (targetItem['type'] == "TextQuoteSelector") {
+                if (targetItem['type'] === "TextQuoteSelector") {
                     quote += targetItem['exact'];
                 } else {
                     return '';
@@ -616,7 +616,7 @@ var hrange = require('../h-range.js');
         try {
             var tags = [];
             jQuery.each(webAnn['body']['items'], function(_, bodyItem) {
-                if (bodyItem.purpose == "tagging") {
+                if (bodyItem.purpose === "tagging") {
                     tags.push(bodyItem.value);
                 }
             });

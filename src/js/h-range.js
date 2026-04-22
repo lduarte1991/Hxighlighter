@@ -59,7 +59,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
                         }
                     }
                     xpath = "/" + currentName.toLowerCase() + '[' + nodeCount + ']' + xpath;
-                } else if (currentNode.nodeName == "IMG") {
+                } else if (currentNode.nodeName === "IMG") {
 
                 } else {
                     var traverseNode = currentNode;
@@ -130,7 +130,7 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
 function getGlobalOffset(range, root, ignoreSelector) {
     var preRangeRange = document.createRange(); //range.cloneRange();
     var root = jQuery(root)[0];
-    if (root.className.indexOf('annotator-wrapper') == -1) {
+    if (root.className.indexOf('annotator-wrapper') === -1) {
         root = root.querySelector('.annotator-wrapper')
     }
     preRangeRange.selectNodeContents(jQuery(root)[0]);
@@ -142,7 +142,7 @@ function getGlobalOffset(range, root, ignoreSelector) {
 }
 
 function getExactText(range) {
-    var exact = (range.toString() == "[object Object]") ? range.exact : range.toString();
+    var exact = (range.toString() === "[object Object]") ? range.exact : range.toString();
     var rangeContents = range.cloneContents();
     var possibleImageList = rangeContents.querySelectorAll('img');
     var rangeContainsImage = possibleImageList.length;
@@ -246,7 +246,7 @@ function compareExactText(text1, text2) {
 
 function serializeRange(range, root, ignoreSelector) {
     var root = jQuery(root)[0];
-    if (root.className.indexOf('annotator-wrapper') == -1) {
+    if (root.className.indexOf('annotator-wrapper') === -1) {
         root = root.querySelector('.annotator-wrapper')
     }
     //console.log(root);
@@ -359,10 +359,10 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
             return el1.matches(selector);
         });
         foundNodes = [].slice.call(foundNodes).filter(function(node) {
-            return node.className.indexOf(ignoreSelector) == -1;
+            return node.className.indexOf(ignoreSelector) === -1;
         })
         // //console.log(foundNodes, counter);
-        if (counter == NaN || counter < 0) {
+        if (counter === NaN || counter < 0) {
             counter = 0;
             traversingDown = foundNodes[counter];
             while(traversingDown.className.indexOf(ignoreSelector) > -1) {
@@ -388,7 +388,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
 // https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
 function getIndicesOf(searchStr, str, caseSensitive) {
     var searchStrLen = searchStr.length;
-    if (searchStrLen == 0) {
+    if (searchStrLen === 0) {
         return [];
     }
     var startIndex = 0, index, indices = [];
@@ -406,7 +406,7 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 
 function normalizeRange(serializedRange, root, ignoreSelector) {
     var root = jQuery(root)[0];
-    if (root.className.indexOf('annotator-wrapper') == -1) {
+    if (root.className.indexOf('annotator-wrapper') === -1) {
         root = root.querySelector('.annotator-wrapper')
     }
     var sR = serializedRange.xpath ? serializedRange.xpath : serializedRange;
@@ -472,7 +472,7 @@ function checkNode(currentNode, range) {
     var foundEnd = false;
     var nodeList = [];
     if (currentNode) {
-        if (currentNode.nodeType == Node.TEXT_NODE) {
+        if (currentNode.nodeType === Node.TEXT_NODE) {
             if (currentNode === range.startContainer) {
                 currentNode = currentNode.splitText(range.startOffset)
                 // console.log('Beginning', currentNode);

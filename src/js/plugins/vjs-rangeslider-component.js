@@ -241,7 +241,7 @@
     }
 
     updateElement() {
-      let width = this.limitR - this.limitL;
+      const width = this.limitR - this.limitL;
       this.el().style.width = width + '%';
       this.el().style.left = this.limitL + '%';
       var percentLeft = this.limitL / 100.00;

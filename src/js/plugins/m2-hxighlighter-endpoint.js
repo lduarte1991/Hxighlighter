@@ -195,17 +195,17 @@
             var bodyItems = annotation.body.items;
             var targetItems = annotation.target.items;
             var tagItems = bodyItems.filter(function(item) {
-                if (item.purpose == "tagging") {
+                if (item.purpose === "tagging") {
                     return item;
                 }
             });
             var annotationTextItems = bodyItems.filter(function(item) {
-                if (item.purpose == "commenting") {
+                if (item.purpose === "commenting") {
                     return item;
                 }
             });
             var parentItem = targetItems.filter(function(item) {
-                if (item.type == "Annotation") {
+                if (item.type === "Annotation") {
                     return item;
                 }
             });

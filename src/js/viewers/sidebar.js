@@ -154,7 +154,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         });
 
         jQuery('#srch-term').on('keydown', function(event) {
-            if (event.key == "Enter") {
+            if (event.key === "Enter") {
                 jQuery('#search-submit').trigger('click');
             }
         });
@@ -181,7 +181,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             } else {
                 if (jQuery(this).hasClass('active')) {
                     self.latestOpenedTabs.splice(self.latestOpenedTabs.indexOf(this.id), 1);
-                    if (jQuery('.btn.user-filter.active').length == 1) {
+                    if (jQuery('.btn.user-filter.active').length === 1) {
                         jQuery(this).removeClass('active');
                         
                         jQuery(this).find('.fas.fa-toggle-on').addClass('fa-flip-horizontal');
@@ -191,11 +191,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                         var messageVals = [];
                         var pluralMessage = '';
                         jQuery.each(jQuery('.btn.user-filter'), function(a, b) {
-                            if (b.id == 'mine') {
+                            if (b.id === 'mine') {
                                 messageVals.push("your annotations")
-                            } else if (b.id == 'instructor') {
+                            } else if (b.id === 'instructor') {
                                 messageVals.push("instructor annotations");
-                            } else if (b.id == 'peer') {
+                            } else if (b.id === 'peer') {
                                 messageVals.push("peer annotations");
                             }
                         })
@@ -260,7 +260,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             }
 
             if (self.options.instructors.indexOf(self.options.user_id) > -1) {
-                if (filteroptions.indexOf('peer') > -1 && ((filteroptions.indexOf('mine') > -1 && filteroptions.indexOf('instructor') == -1) || (filteroptions.indexOf('mine') == -1 && filteroptions.indexOf('instructor') > -1))) {
+                if (filteroptions.indexOf('peer') > -1 && ((filteroptions.indexOf('mine') > -1 && filteroptions.indexOf('instructor') === -1) || (filteroptions.indexOf('mine') === -1 && filteroptions.indexOf('instructor') > -1))) {
                     // jQuery('.btn.user-filter#instructor').addClass('active');
                     // jQuery('.btn.user-filter#instructor').find('.fas').removeClass('fa-toggle-off').addClass('fa-toggle-on');
                     // jQuery('.btn.user-filter#mynotes').addClass('active');
@@ -284,7 +284,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         jQuery('.side.annotationsHolder').on('scroll', function() {
             if(jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight) {
                 var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
-                if (total_left > 0 && jQuery('.load-more').length == 0) {
+                if (total_left > 0 && jQuery('.load-more').length === 0) {
                     jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
                     jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load Next ' + self.options.viewer_options.pagination + ' Annotations</div>');
                     self.load_more_open = true;
@@ -372,7 +372,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 if (annotation.media !== "comment") {
                     // console.log(annotation, self.options)
                     // console.log(annotation.creator.id == self.options.user_id);
-                    if (annotation.creator.id == self.options.user_id) {
+                    if (annotation.creator.id === self.options.user_id) {
                         jQuery('.sr-real-alert').html('Your annotation was saved but the annotation list is not currently showing your annotations. Toggle "Mine" button to view your annotation.');
                     }
                     //$.publishEvent('increaseBadgeCount', self.instance_id, [jQuery('#mine')]);
@@ -399,11 +399,11 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             var isInstructor = self.options.instructors.indexOf(annotation.creator.id) > -1;
             var isPeer = !isMine && !isInstructor;
 
-            if (isMine && filteroptions.indexOf('mine') == -1) {
+            if (isMine && filteroptions.indexOf('mine') === -1) {
                 $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#mine'), annotation.id]);
-            } else if (isInstructor && filteroptions.indexOf('instructor') == -1) {
+            } else if (isInstructor && filteroptions.indexOf('instructor') === -1) {
                 $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#instructor'), annotation.id]);
-            } else if (isPeer && filteroptions.indexOf('peer') == -1) {
+            } else if (isPeer && filteroptions.indexOf('peer') === -1) {
                 $.publishEvent('decreaseBadgeCount', self.instance_id, [jQuery('#peer'), annotation.id]);
             }
         });
@@ -464,7 +464,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             callBack(filteroptions);
         });
 
-        if(self.options.mediaType == "image") {
+        if(self.options.mediaType === "image") {
             $.subscribeEvent('tryLazyLoad', self.instance_id, function(_, scrollElement) {
                 self.lazyLoadImages(scrollElement);
             });
@@ -480,7 +480,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
         var scrolly = scrollEl || '.side.annotationsHolder';
         var thumbnails = Array.from(document.querySelectorAll(scrolly + ' img.annotation-thumbnail'));
         var unloaded_images = thumbnails.filter(function(x) {
-            if (!x.dataset['loaded'] || x.dataset['loaded'] == "false") {
+            if (!x.dataset['loaded'] || x.dataset['loaded'] === "false") {
                 return true;
             }
         });
@@ -731,12 +731,12 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
             self.load_more_open = false;
             jQuery('.side.load-more').remove();
             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-            if (results.rows.length == 0) {
+            if (results.rows.length === 0) {
                 jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations to show! Create an annotation by highlighting a portion of the text to the right.</div>');
             }
         }, function(err) {
             jQuery('.loading-obj').remove();
-            if (jQuery('.ann-item').length == 0) {
+            if (jQuery('.ann-item').length === 0) {
                 jQuery('#empty-alert').remove();
                 jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations to show! Create an annotation by highlighting a portion of the text to the right.</div>');
             }
@@ -804,7 +804,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     
     $.Sidebar.prototype.StorageAnnotationDelete = function(annotation) {
         jQuery('.item-' + annotation.id).remove();
-        if (jQuery('.annotationItem').length == 0) {
+        if (jQuery('.annotationItem').length === 0) {
             jQuery('#empty-alert').css('display', 'block');
         } 
     };
@@ -821,13 +821,13 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
                 $.publishEvent('undrawAll', self.instance_id, [function(annList) {
                     self.foundList = [];
                     self.tempAnnotationList.forEach(function(ann) {
-                        if (type == "Tag") {
+                        if (type === "Tag") {
                             if(ann.tags.indexOf(term) > -1) {
                                self.foundList.push(ann);
                             } else {
                                 jQuery('.ann-item.item-' + ann.id).hide();
                             }
-                        } else if (type == "User") {
+                        } else if (type === "User") {
                             if(ann.creator.name === term) {
                                 self.foundList.push(ann);
                             } else {

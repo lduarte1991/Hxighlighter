@@ -49,7 +49,7 @@ require('./hx-alert.css');
                         return;
                     }
                     var currTitle = jQuery(but).html().trim();
-                    var onclick = theseOptions.buttons.find(function(b) { if (b.title == currTitle) {return b}}).action;
+                    var onclick = theseOptions.buttons.find(function(b) { if (b.title === currTitle) {return b}}).action;
                     jQuery(but).on('click', onclick);
                 });
                 setTimeout(function() { self.current_alert.addClass('opened'); }, 500);

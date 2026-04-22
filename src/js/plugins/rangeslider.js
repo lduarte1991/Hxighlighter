@@ -41,16 +41,16 @@ function RangeSlider_(options){
 		if(plugin.options.locked) 
 			plugin.lock(); //Lock the Range Slider
 			
-		if(plugin.options.panel==false) 
+		if(plugin.options.panel===false) 
 			plugin.hidePanel(); //Hide the second Panel
 			
-		if(plugin.options.controlTime==false) 
+		if(plugin.options.controlTime===false) 
 			plugin.hidecontrolTime(); //Hide the control time panel
 
 		plugin._reset();
 		player.trigger('loadedRangeSlider'); //Let know if the Range Slider DOM is ready
 	}
-	if (player.techName == 'Youtube'){
+	if (player.techName === 'Youtube'){
 		//Detect youtube problems
 		player.one('error', function(e){
 			switch (player.error) {
@@ -264,7 +264,7 @@ RangeSlider.prototype = {
 		duration = typeof duration == 'undefined'? 0 : duration;
 		
 		var percentage = this[index === 0? "left" : "right"].el_.style.left.replace("%","");
-		if (percentage == "")
+		if (percentage === "")
 			percentage = index === 0? 0 : 100;
 			
 		return videojs.round(this._seconds(percentage / 100),this.updatePrecision-1);
@@ -317,15 +317,15 @@ RangeSlider.prototype = {
 			obj, objNew, objOld;
 		index = index || 0;
 		
-		if (newHour != timeOld[0]){
+		if (newHour !== timeOld[0]){
 			obj = h;
 			objNew = newHour;
 			objOld = timeOld[0];
-		}else if (newMin != timeOld[1]){
+		}else if (newMin !== timeOld[1]){
 			obj = m;
 			objNew = newMin;
 			objOld = timeOld[1];
-		}else if(newSec != timeOld[2]){
+		}else if(newSec !== timeOld[2]){
 			obj = s;
 			objNew = newSec;
 			objOld = timeOld[2];
@@ -338,12 +338,12 @@ RangeSlider.prototype = {
 		
 		var intRegex = /^\d+$/;//check if the objNew is an integer
 		if(!intRegex.test(objNew) || objNew>60){
-			objNew = objNew ==""?"":objOld;
+			objNew = objNew ===""?"":objOld;
 		}
 	
-		newHour = newHour == ""?0:newHour;
-		newMin = newMin == ""?0:newMin;
-		newSec = newSec == ""?0:newSec;
+		newHour = newHour === ""?0:newHour;
+		newMin = newMin === ""?0:newMin;
+		newSec = newSec === ""?0:newSec;
 	
 		durationSel = videojs.TextTrack.prototype.parseCueTime(newHour+":"+newMin+":"+newSec);
 		if (durationSel > duration){
@@ -634,7 +634,7 @@ videojs.SeekRSBar.prototype.setPosition = function(index,left,writeControlTime) 
 		if(writeControlTime){
 			var time = TimeText.split(":"),
 				h,m,s;
-			if(time.length == 2){
+			if(time.length === 2){
 				h = '00';
 				m = time[0];
 				s = time[1];
@@ -714,7 +714,7 @@ videojs.SelectionBar.prototype.onMouseUp = function(){
 };
 
 videojs.SelectionBar.prototype.updateLeft = function(left) {
-	var rightVal = this.rs.right.el_.style.left!=''?this.rs.right.el_.style.left:100;
+	var rightVal = this.rs.right.el_.style.left!==''?this.rs.right.el_.style.left:100;
 	var right = parseFloat(rightVal) / 100;
 	
 	var width = videojs.round((right - left),this.rs.updatePrecision); //round necessary for not get 0.6e-7 for example that it's not able for the html css width
@@ -729,7 +729,7 @@ videojs.SelectionBar.prototype.updateLeft = function(left) {
 };
 		
 videojs.SelectionBar.prototype.updateRight = function(right) {
-	var leftVal = this.rs.left.el_.style.left!=''?this.rs.left.el_.style.left:0;
+	var leftVal = this.rs.left.el_.style.left!==''?this.rs.left.el_.style.left:0;
 	var left = parseFloat(leftVal) / 100;
 	
 	var width = videojs.round((right - left),this.rs.updatePrecision);//round necessary for not get 0.6e-7 for example that it's not able for the html css width

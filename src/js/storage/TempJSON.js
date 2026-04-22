@@ -77,7 +77,7 @@ var hrange = require('../h-range.js');
                         observer.observe(inlineEl, { attributes: true, attributeFilter: ['data-annotations'] });
                     }
                 }
-            } else if(self.options.storageOptions.external_url.json_url != '') {
+            } else if(self.options.storageOptions.external_url.json_url !== '') {
                 jQuery.ajax({
                     url: self.options.storageOptions.external_url.json_url,
                     success: function(data) {
@@ -118,7 +118,7 @@ var hrange = require('../h-range.js');
         var self = this;
         var save_ann = self.convertToWebAnnotation(ann_to_update, jQuery(elem).find('.annotator-wrapper'));
         self.store.map(function(ann) {
-            if (ann.id == save_ann.id) {
+            if (ann.id === save_ann.id) {
                 return save_ann;
             }
             return ann
@@ -264,7 +264,7 @@ var hrange = require('../h-range.js');
     $.TempJSON.prototype.getAnnotationTargetItems = function(webAnn) {
         try {
             // console.log("reached getAnnotationTargetItems", webAnn);
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
+            if (webAnn['target']['items'][0]['type'] === "Annotation") {
                 // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
                 return [{'parent':webAnn['target']['items'][0]['source']}]
             }
@@ -328,7 +328,7 @@ var hrange = require('../h-range.js');
                     ranges.push(serializedRange);
                 }
             }
-            if (webAnn['target']['items'][0]['type'] == "Annotation") {
+            if (webAnn['target']['items'][0]['type'] === "Annotation") {
                 return ranges;
             }
             //console.log('getAnnotationTarget', ranges, element);
@@ -347,7 +347,7 @@ var hrange = require('../h-range.js');
         try {
             var found = [];
             jQuery.each(webAnn['body']['items'], function(_, bodyItem) {
-                if (bodyItem.purpose == "commenting" || bodyItem.purpose == "replying") {
+                if (bodyItem.purpose === "commenting" || bodyItem.purpose === "replying") {
                     found.push(bodyItem.value);
                 }
             });
@@ -378,7 +378,7 @@ var hrange = require('../h-range.js');
             var quote = '';
             jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
                 
-                if (targetItem['type'] == "TextQuoteSelector") {
+                if (targetItem['type'] === "TextQuoteSelector") {
                     quote += targetItem['exact'];
                 } else {
                     return '';
@@ -403,7 +403,7 @@ var hrange = require('../h-range.js');
         try {
             var tags = [];
             jQuery.each(webAnn['body']['items'], function(_, bodyItem) {
-                if (bodyItem.purpose == "tagging") {
+                if (bodyItem.purpose === "tagging") {
                     tags.push(bodyItem.value);
                 }
             });

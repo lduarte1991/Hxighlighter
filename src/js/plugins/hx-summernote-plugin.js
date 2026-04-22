@@ -61,10 +61,10 @@ require('./hx-summernote-plugin.css');
                     if ('Escape' === (e.key)) {
                         $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
                         jQuery('.sr-real-alert').html('You have closed the editor and unselected text for annotation.');
-                    } else if (t.trim().length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) == -1)) {
+                    } else if (t.trim().length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) === -1)) {
                         // prevents everything that could add a new character
                         var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
-                        if (allowedKeys.indexOf(e.key) == -1 ||  (e.key == 'a' && !(e.ctrlKey || e.metaKey)) || (e.key == 'c' && !(e.ctrlKey || e.metaKey)) || (e.key == 'v' && !(e.ctrlKey || e.metaKey))){
+                        if (allowedKeys.indexOf(e.key) === -1 ||  (e.key === 'a' && !(e.ctrlKey || e.metaKey)) || (e.key === 'c' && !(e.ctrlKey || e.metaKey)) || (e.key === 'v' && !(e.ctrlKey || e.metaKey))){
                             e.preventDefault();
                             alert('You have reached the character limit for this annotation (max 1000 characters).')
                         }
@@ -81,7 +81,7 @@ require('./hx-summernote-plugin.css');
                     var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
                     var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
 
-                    if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) == -1) ) {
+                    if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) === -1) ) {
                         var regex = new RegExp(/<img([\w\W ]+?)\/?>/g)
                         var inside = bufferHTML.match(regex);
                         jQuery.each(inside, function(_, image_tags) {
@@ -96,7 +96,7 @@ require('./hx-summernote-plugin.css');
                         }, 100)
                     }
                             
-                    if (t.length + bufferText.length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) == -1)) {
+                    if (t.length + bufferText.length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) === -1)) {
                         e.preventDefault();
                         var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
                         setTimeout(function() { // wrap in a timer to prevent issues in Firefox

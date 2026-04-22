@@ -37,7 +37,7 @@ require('./hx-dropdowntags-plugin.css');
         //   jQuery('#tag-list-options').append('<option value="' + tag + '" />');
         // });
         jQuery('.search-bar select').on('change', function() {
-          if (jQuery(this).val() == "Tag") {
+          if (jQuery(this).val() === "Tag") {
             jQuery.each(tags, function(_, tag) {
               jQuery('#tag-list-options').append('<option value="' + tag + '" />');
             });

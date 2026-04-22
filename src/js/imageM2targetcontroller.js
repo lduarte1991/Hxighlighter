@@ -48,7 +48,7 @@ require('./storage/catchpy.js');
         this.media = "image";
         this.setUpListeners();
 
-        if (this.options.method == "manifest") {
+        if (this.options.method === "manifest") {
             // console.log("Loading manifest...", this.options.manifest_url)
             this.createImageSlotFromManifest(this.options.manifest_url);
         }
@@ -243,7 +243,7 @@ require('./storage/catchpy.js');
             self.mir.eventEmitter.subscribe('imageRectangleUpdated', function(event, options){
                 self.imageLimits = {}
                 jQuery.each(self.mir.saveController.slots[0].window.imagesList, function(index, value) {
-                    if (value["@id"] == self.mir.saveController.slots[0].window.canvasID) {
+                    if (value["@id"] === self.mir.saveController.slots[0].window.canvasID) {
                         self.imageLimits = {
                             'height': value.height,
                             'width': value.width
@@ -365,14 +365,14 @@ require('./storage/catchpy.js');
             overlay.onDrawFinish();
         }
         jQuery(document).on('keydown', function(event){
-            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '1' && (event.altKey || event.ctrlKey)) || (event.key === '\'' && (event.altKey || event.ctrlKey))) {
                 event.preventDefault();
                 snapshot();
                 return false;
-            } else if (event.key == 'Escape') {
+            } else if (event.key === 'Escape') {
             }
 
-            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '2' && (event.altKey || event.ctrlKey))) {
                 event.preventDefault();
                 var currentInst = jQuery('.sr-alert').html();
                 if (currentInst.trim() === "") {
@@ -383,11 +383,11 @@ require('./storage/catchpy.js');
                     jQuery('.sr-alert').html(currentInst);
                 }, 250);
             }
-            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '3' && (event.altKey || event.ctrlKey))) {
                 var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
-                var newVal = (currVal == "off") ? 'assertive' : 'off';
-                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-                if (newVal == "off") {
+                var newVal = (currVal === "off") ? 'assertive' : 'off';
+                var newAlert = currVal === "off" ? 'Help text is on' : 'Help text is off';
+                if (newVal === "off") {
                     jQuery('.sr-real-alert').html(newAlert);
                     setTimeout(function() {
                         jQuery('#hx-sr-notifications').attr('aria-live', newVal);
@@ -407,7 +407,7 @@ require('./storage/catchpy.js');
             }
         });
         jQuery(document).on('keyup', '*[role="button"]', function(evt) {
-            if (evt.key == 'Enter' || evt.key == ' ') {
+            if (evt.key === 'Enter' || evt.key === ' ') {
                 jQuery(evt.currentTarget).click();
                 return $.pauseEvent(evt);;
             }

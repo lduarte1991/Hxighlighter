@@ -29,7 +29,7 @@ require('./hx-adminbutton.css');
             self.url = self.options.AdminButton.homeURL;
             self.allowed = self.options.AdminButton.has_staff_permissions;
             // console.log(self.url, self.allowed);
-            if (self.allowed && self.url && self.url != '') {
+            if (self.allowed && self.url && self.url !== '') {
                 self.setUpButtons();
             } else {
                 jQuery(self.options.slot).before('<div class="sidebar-navbar"></div>');

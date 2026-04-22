@@ -334,10 +334,10 @@
                 }
             } else {
                 var oldAnnotations = api.cache.annotations;
-                var isTheSame = oldAnnotations.length == params.annotations.length;
+                var isTheSame = oldAnnotations.length === params.annotations.length;
                 if (isTheSame) {
                     for (var i = 0; i < params.annotations.length; i++) {
-                        if (oldAnnotations[i] != params.annotations[i]) {
+                        if (oldAnnotations[i] !== params.annotations[i]) {
                             isTheSame = false;
                             break;
                         }

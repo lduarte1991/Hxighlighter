@@ -147,7 +147,7 @@ import 'timeago';
         jQuery('.side.annotationsHolder').on('scroll', function() {
             if(jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight) {
                 var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
-                if (total_left > 0 && jQuery('.load-more').length == 0) {
+                if (total_left > 0 && jQuery('.load-more').length === 0) {
                     jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
                     jQuery('.side.annotationsHolder').after('<div role="button" tabindex="0" class="load-more side make-jiggle">Load All ' + $.totalAnnotations + ' Annotations</div>');
                     self.load_more_open = true;
@@ -205,7 +205,7 @@ import 'timeago';
 
         $.subscribeEvent('StorageAnnotationDelete', self.instance_id, function(_, annotation, updating) {
             jQuery('.item-' + annotation.id).remove();
-            if (jQuery('.annotationItem').length == 0) {
+            if (jQuery('.annotationItem').length === 0) {
                 jQuery('#empty-alert').css('display', 'block');
             } 
         });
@@ -299,7 +299,7 @@ import 'timeago';
             self.load_more_open = false;
             jQuery('.side.load-more').remove();
             jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
-            if (results.rows.length == 0) {
+            if (results.rows.length === 0) {
                 jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>')
             }
         }, function(err) {

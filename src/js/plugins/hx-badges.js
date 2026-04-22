@@ -97,7 +97,7 @@ require('./hx-badges.css');
         if (typeof(content_id) !== "undefined") {
             if (content.indexOf(content_id) > -1) {
                 content.splice(content.indexOf(content_id))
-                if (content.length == 0) {
+                if (content.length === 0) {
                     self.clearBadge(elem)
                 } else {
                     jQuery(elem).data('hxbadge', counter);

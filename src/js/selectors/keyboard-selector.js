@@ -47,7 +47,7 @@ var hrange = require('../h-range.js');
         var textSearch = jQuery(element).text();
         for (var i = 0; i < this.delimiter_list.length; i++) {
             var testDelimiter = this.delimiter_list[i];
-            if (textSearch.indexOf(testDelimiter) == -1) {
+            if (textSearch.indexOf(testDelimiter) === -1) {
                 return testDelimiter;
             }
         }
@@ -57,14 +57,14 @@ var hrange = require('../h-range.js');
     $.KeyboardSelector.prototype.setUpButton = function() {
         var self = this;
         jQuery(document).on('keydown', function(event){
-            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '1' && (event.altKey || event.ctrlKey)) || (event.key === '\'' && (event.altKey || event.ctrlKey))) {
                 event.preventDefault();
                 //move this to external button
                 if(!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')){
                     self.turnSelectionModeOn();
                 }
                 return false;
-            } else if (event.key == 'Escape') {
+            } else if (event.key === 'Escape') {
                 //console.log("hello");
                 self.turnSelectionModeOff();
             // } else if (event.key == ' ') {
@@ -72,7 +72,7 @@ var hrange = require('../h-range.js');
             //     return false;
             }
 
-            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '2' && (event.altKey || event.ctrlKey))) {
                 event.preventDefault();
                 var currentInst = jQuery('.sr-alert').html();
                 if (currentInst.trim() === "") {
@@ -83,11 +83,11 @@ var hrange = require('../h-range.js');
                     jQuery('.sr-alert').html(currentInst);
                 }, 250);
             }
-            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '3' && (event.altKey || event.ctrlKey))) {
                 var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
-                var newVal = (currVal == "off") ? 'assertive' : 'off';
-                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-                if (newVal == "off") {
+                var newVal = (currVal === "off") ? 'assertive' : 'off';
+                var newAlert = currVal === "off" ? 'Help text is on' : 'Help text is off';
+                if (newVal === "off") {
                     jQuery('.sr-real-alert').html(newAlert);
                     setTimeout(function() {
                         jQuery('#hx-sr-notifications').attr('aria-live', newVal);
@@ -107,7 +107,7 @@ var hrange = require('../h-range.js');
             }
         });
         jQuery(document).on('keyup', '*[role="button"]', function(evt) {
-            if (evt.key == 'Enter' || evt.key == ' ') {
+            if (evt.key === 'Enter' || evt.key === ' ') {
                 jQuery(evt.currentTarget).click();
                 return $.pauseEvent(evt);;
             }
@@ -247,9 +247,9 @@ var hrange = require('../h-range.js');
             case "3":
                 if (keyPressed.altKey || keyPressed.ctrlKey) {
                     var currVal = jQuery('.sr-alert').attr('aria-live');
-                    var newVal = currVal == "off" ? 'polite' : 'off';
+                    var newVal = currVal === "off" ? 'polite' : 'off';
                     jQuery('.sr-alert').attr('aria-live', newVal);
-                    var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
+                    var newAlert = currVal === "off" ? 'Help text is on' : 'Help text is off';
                     jQuery('.sr-real-alert').html(newAlert);
                 }
                 keyPressed.preventDefault();
@@ -338,7 +338,7 @@ var hrange = require('../h-range.js');
                     //jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
                     Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [ser], boundingBox]);
                     //console.log("Active Element", document.activeElement.className);
-                    if (document.activeElement.className.indexOf('note-editable') == -1) {
+                    if (document.activeElement.className.indexOf('note-editable') === -1) {
                         //console.log("BLURRING");
                         self.element.blur();
                     } else {
@@ -416,7 +416,7 @@ var hrange = require('../h-range.js');
         // publish selection made
         Hxighlighter.publishEvent('TargetSelectionMade', this.instance_id, [this.element, [hrange.serializeRange(r, self.element, 'annotator-hl')], boundingBox]);
         //console.log("Element Focused", document.activeElement);
-        if (document.activeElement.className.indexOf('note-editable') == -1) {
+        if (document.activeElement.className.indexOf('note-editable') === -1) {
             self.element.blur();
         }
         self.turnSelectionModeOff();
@@ -424,7 +424,7 @@ var hrange = require('../h-range.js');
     };
 
     $.KeyboardSelector.prototype.startComesAfter = function(start, end) {
-        if (start.anchorNode == end.anchorNode) {
+        if (start.anchorNode === end.anchorNode) {
             if (start.anchorOffset > end.anchorOffset) {
                 start.anchorOffset += 1;
                 return [end, start];
@@ -437,7 +437,7 @@ var hrange = require('../h-range.js');
         var children = jQuery(commonAncestor).children();
         var startCounter = 0;
         jQuery.each(children, function(_, el) {
-            if (el == start.parentElement) {  
+            if (el === start.parentElement) {  
                 startCounter += start.anchorOffset;
                 return false;
             } else {
@@ -446,7 +446,7 @@ var hrange = require('../h-range.js');
         });
         var endCounter = 0;
         jQuery.each(children, function(_, el) {
-            if (el == end.parentElement) {  
+            if (el === end.parentElement) {  
                 endCounter += end.anchorOffset;
                 return false;
             } else {
@@ -479,7 +479,7 @@ var hrange = require('../h-range.js');
             var thisa = this;
 
             $parentsb.each(function() {
-                if (thisa == this)
+                if (thisa === this)
                 {
                     found = this;
                     return false;
@@ -560,7 +560,7 @@ var hrange = require('../h-range.js');
         r.setStart(s.anchorNode, startOffset);
         r.setEnd(s.anchorNode, startOffset + 1);
 
-        return r.toString() == this.delimiter;
+        return r.toString() === this.delimiter;
     };
     
     $.selectors.push($.KeyboardSelector);

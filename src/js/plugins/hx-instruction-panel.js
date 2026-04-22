@@ -32,7 +32,7 @@ require('./hx-instruction-panel.css');
 
     $.InstructionPanel.prototype.setUpInstructions = function() {
         var self = this;
-        if (!self.options.instructions || self.options.instructions.length == 0) {
+        if (!self.options.instructions || self.options.instructions.length === 0) {
             return;
         }
         // console.log(self.options.instructions, typeof(self.options.instructions));
@@ -43,7 +43,7 @@ require('./hx-instruction-panel.css');
         inst_area.click(function (){
             var body = jQuery(self.options.slot).find('.instructions-body');
             body.toggleClass('show');
-            if (inst_area.html() == "Collapse Instructions") {
+            if (inst_area.html() === "Collapse Instructions") {
                 inst_area.html('Expand Instructions');
                 body.attr('aria-expanded', 'false');
             } else {

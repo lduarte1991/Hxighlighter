@@ -80,13 +80,13 @@ require('./hx-font-resize.css');
         while(nodes.length > 0) {
             curnode = nodes.pop();
             // handle case where a <font> is embedded (deprecated tag... but still out there in the wild)
-            if(curnode.tagName.toLowerCase() == 'font') {
+            if(curnode.tagName.toLowerCase() === 'font') {
                 computed = window.getComputedStyle(curnode);
                 curnode.style.fontSize = computed['font-size'];
                 curnode.size = "";
             }
             // handle case where a class like "msoNormal" from an embedded stylesheet has applied a font size
-            if(curnode != $content[0] && curnode.className != "") {
+            if(curnode !== $content[0] && curnode.className !== "") {
                 curnode.style.fontSize = "inherit";
             }
 

@@ -20,7 +20,7 @@
     $.ExportPlugin.prototype.setUpButton = function() {
         var self = this;
         jQuery('#print-annotations').show();
-        if (self.options.instructors.indexOf(self.options.user_id) == -1) {
+        if (self.options.instructors.indexOf(self.options.user_id) === -1) {
             jQuery('#export-annotations').remove();
         } else {
             jQuery('#export-annotations').show();
@@ -197,7 +197,7 @@
         $.publishEvent('dumpStore', self.instance_id, [function(annotations) {
             var filtered = self.filterByWhose(annotations, whose);
             var html = JSON.stringify(filtered, function(key, value) {
-                if (key == "_local") { return undefined; } else { return value; }
+                if (key === "_local") { return undefined; } else { return value; }
             }, 4);
             self.download('annotations.json', html);
         }]);

@@ -347,14 +347,14 @@ require('videojs-transcript');
             }, 500);
         }
         jQuery(document).on('keydown', function(event){
-            if ((event.key == '1' && (event.altKey || event.ctrlKey)) || (event.key == '\'' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '1' && (event.altKey || event.ctrlKey)) || (event.key === '\'' && (event.altKey || event.ctrlKey))) {
                 event.preventDefault();
                 snapshot();
                 return false;
-            } else if (event.key == 'Escape') {
+            } else if (event.key === 'Escape') {
             }
 
-            if ((event.key == '2' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '2' && (event.altKey || event.ctrlKey))) {
                 event.preventDefault();
                 var currentInst = jQuery('.sr-alert').html();
                 if (currentInst.trim() === "") {
@@ -365,11 +365,11 @@ require('videojs-transcript');
                     jQuery('.sr-alert').html(currentInst);
                 }, 250);
             }
-            if ((event.key == '3' && (event.altKey || event.ctrlKey))) {
+            if ((event.key === '3' && (event.altKey || event.ctrlKey))) {
                 var currVal = jQuery('#hx-sr-notifications').attr('aria-live');
-                var newVal = (currVal == "off") ? 'assertive' : 'off';
-                var newAlert = currVal == "off" ? 'Help text is on' : 'Help text is off';
-                if (newVal == "off") {
+                var newVal = (currVal === "off") ? 'assertive' : 'off';
+                var newAlert = currVal === "off" ? 'Help text is on' : 'Help text is off';
+                if (newVal === "off") {
                     jQuery('.sr-real-alert').html(newAlert);
                     setTimeout(function() {
                         jQuery('#hx-sr-notifications').attr('aria-live', newVal);
@@ -389,7 +389,7 @@ require('videojs-transcript');
             }
         });
         jQuery(document).on('keyup', '*[role="button"]', function(evt) {
-            if (evt.key == 'Enter' || evt.key == ' ') {
+            if (evt.key === 'Enter' || evt.key === ' ') {
                 jQuery(evt.currentTarget).click();
                 return $.pauseEvent(evt);;
             }

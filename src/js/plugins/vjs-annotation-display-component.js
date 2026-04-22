@@ -153,9 +153,9 @@
             // get start/end values pass it to playBetween
             jQuery('.annotation-viewer.static .cancel').click();
             if (typeof(ann.id) !== "undefined") {
-                let annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
-                let orig = jQuery('#hx-ann-' + ann.id)
-                let animated = orig.clone(true);
+                const annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
+                const orig = jQuery('#hx-ann-' + ann.id)
+                const animated = orig.clone(true);
                 jQuery('div[id$="animated"]').remove()
                 this.selectedAnimatedElement = "hx-ann-" + ann.id + '-animated'
                 animated.attr('id', this.selectedAnimatedElement)
@@ -270,9 +270,9 @@
                         while (q++ < dashes) {
                          x1 += dashX;
                          y1 += dashY;
-                         this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+                         this[q % 2 === 0 ? 'moveTo' : 'lineTo'](x1, y1);
                         }
-                        this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+                        this[q % 2 === 0 ? 'moveTo' : 'lineTo'](x2, y2);
 
                         this.stroke();
                         this.closePath();
@@ -336,8 +336,8 @@
             var panelW = parseFloat(panel.css('width'));
             var panelH = parseFloat(panel.css('height')) - (this.marginTop + this.marginBottom);
             // console.log(maxSe, maxEn, panelW, panelH);
-            weight.X = maxSe != 0 ? (panelW / maxSe) : 0;
-            weight.Y = maxEn != 0 ? (panelH / maxEn) : 0;
+            weight.X = maxSe !== 0 ? (panelW / maxSe) : 0;
+            weight.Y = maxEn !== 0 ? (panelH / maxEn) : 0;
             return weight;
         }
 
@@ -352,7 +352,7 @@
                     var endIndex = Math.ceil(end).toString();
                     if (!(startIndex in points_prep)) {
                         points_prep[startIndex] = self._getNumberAnnotations(startIndex, false, anns);
-                        if (startIndex == endIndex) { // is a point
+                        if (startIndex === endIndex) { // is a point
                             points_prep[endIndex] = self._getNumberAnnotations(endIndex, true, anns)
                         }
                     }

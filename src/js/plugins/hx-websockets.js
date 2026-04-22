@@ -77,7 +77,7 @@
         var self = this;
         var message = response['message'];
         var annotation = eval( "(" + message + ")");
-        if (annotation.platform.target_source_id != self.currentObjectId) {
+        if (annotation.platform.target_source_id !== self.currentObjectId) {
             return
         }
         self.convertAnnotation(annotation, function(wa) {

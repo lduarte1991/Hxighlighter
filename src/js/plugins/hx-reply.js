@@ -45,7 +45,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                     var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text');
                     var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
 
-                    if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) == -1) ) {
+                    if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) === -1) ) {
                         var regex = new RegExp(/<img([\w\W ]+?)\/?>/g)
                         var inside = bufferHTML.match(regex);
                         jQuery.each(inside, function(_, image_tags) {
@@ -110,7 +110,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
      */
     $.Reply.prototype.addWYSIWYG = function(element, selector) {
         var self = this;
-        if (self.elementObj != undefined) {
+        if (self.elementObj !== undefined) {
             return;
         }
         // adds the summernote WYSIWIG to the editor to the selector's location
@@ -201,14 +201,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
         });
 
         $.subscribeEvent('addReplyToViewer', self.instanceID, function(_, viewer, reply, prefix, annotation) {
-            if (self.last_added != reply.id) {
+            if (self.last_added !== reply.id) {
                 setTimeout(self.addReplyToViewer(viewer, reply, prefix, annotation), 500);
             }
         });
 
         $.subscribeEvent('removeReply', self.instanceID, function(_, reply) {
             // console.log(reply);
-            if ((reply.media === "Annotation" || reply.media === "comment") && self.last_delete != reply.id) {
+            if ((reply.media === "Annotation" || reply.media === "comment") && self.last_delete !== reply.id) {
                 $.publishEvent('GetSpecificAnnotationData', self.instance_id, [reply.ranges[0].source, function(annotation_data) {
                     // console.log(annotation_data);
                     // console.log(reply)
@@ -372,7 +372,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     $.Reply.prototype.viewRepliesToAnnotation = function(annotation, viewer, prefix) {
         var self = this;
         if (annotation.totalReplies > 0) {
-            if (annotation.replies && annotation.totalReplies == annotation.replies.length) {
+            if (annotation.replies && annotation.totalReplies === annotation.replies.length) {
                 annotation.replies.forEach(function(rep) {
                     self.addReplyToViewer(viewer, rep, prefix, annotation);
                 });
@@ -452,7 +452,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                                 });
                                 jQuery('.reply.reply-item-' + reply.id).remove();
                                 jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
-                                if (annotation.totalReplies == 0) {
+                                if (annotation.totalReplies === 0) {
                                     jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').show();
                                     jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').hide();
                                 } else {
@@ -484,7 +484,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     };
 
     $.Reply.prototype.pluralize = function(num, singular, plural) {
-        return num == 1 ? ('1 ' + singular) : (num + ' ' + plural);
+        return num === 1 ? ('1 ' + singular) : (num + ' ' + plural);
     };
 
     Object.defineProperty($.Reply, 'name', {

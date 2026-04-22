@@ -53,10 +53,10 @@ require('./plugins/hx-websockets.js');
         this.target_selector = this.options.target_selector;
 
         // sets up listeners from core and other places
-        if (this.options.method == "url") {
+        if (this.options.method === "url") {
             // if the text exists externally, this will load it into the DOM
             this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector)
-        } else if (this.options.method == "inline") {
+        } else if (this.options.method === "inline") {
             // if the text is already in the DOM, this sets up what is left
             // console.log('Loading Target via Inline');
             this.createTextSlotFromSelector(this.options.object_source, this.instance_id);
@@ -338,7 +338,7 @@ require('./plugins/hx-websockets.js');
             annotationText: [""],
             ranges: range,
             id: $.getUniqueId(),
-            exact: range.map(function(r) { return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/    /g, '&nbsp;') }),
+            exact: range.map(function(r) { return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/ {4}/g, '&nbsp;') }),
             media: "text",
             totalReplies: 0,
             creator: {
