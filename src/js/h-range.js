@@ -42,7 +42,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
             if (currentNode.nodeType === Node.TEXT_NODE) {
                 var traverseNode = currentNode;
                 // //console.log(traverseNode.parentNode.childNodes);
-                while (traverseNode = traverseNode.previousSibling) {
+                while ((traverseNode = traverseNode.previousSibling)) {
                     //console.log(traverseNode);
                     totalOffset += traverseNode.textContent.length;
                 }
@@ -51,7 +51,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
                     var nodeCount = 1;
                     var currentName = currentNode.nodeName;
                     var counterNode = currentNode;
-                    while (counterNode = counterNode.previousSibling) {
+                    while ((counterNode = counterNode.previousSibling)) {
                         if (counterNode.nodeName === currentName) {
                             nodeCount += 1;
                         }
@@ -61,7 +61,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
                     // IMG nodes handled by xpath above
                 } else {
                     traverseNode = currentNode;
-                    while (traverseNode = traverseNode.previousSibling) {
+                    while ((traverseNode = traverseNode.previousSibling)) {
                         totalOffset += traverseNode.textContent.length;
                     }
                 }
