@@ -14,6 +14,7 @@ export default [
         jQuery: "readonly",
         $: "readonly",
         Hxighlighter: "readonly",
+        toastr: "readonly",
       },
     },
     rules: {

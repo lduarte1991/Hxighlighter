@@ -1,7 +1,7 @@
 /**
  * 
  */
- var annotator = annotator ? annotator : require('annotator');
+ var annotator = annotator ? annotator : require('annotator'); // eslint-disable-line no-useless-assignment
 
 import './css/sidebar-tabs.css';
 import 'jquery-confirm';
