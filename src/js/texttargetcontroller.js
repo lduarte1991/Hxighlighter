@@ -44,7 +44,6 @@ require('./plugins/hx-websockets.js');
      * { function_description }
      */
     $.TextTarget.prototype.init = function () {
-        var self = this;
         // this target is only meant to work with text/html objects
         this.media = "text";
         this.setUpListeners();
@@ -436,7 +435,6 @@ require('./plugins/hx-websockets.js');
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
-            var timer = new Date();
             viewer.ViewerEditorClose(annotation);
             // console.log("Finished: " + (new Date() - timer) + 'ms')
         });

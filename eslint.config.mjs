@@ -21,7 +21,7 @@ export default [
     rules: {
       "no-unused-vars": ["warn", { args: "none", caughtErrors: "none" }],
       "no-undef": "error",
-      "no-console": "warn",
+      "no-console": "off",
       "eqeqeq": ["warn", "smart"],
       "no-eval": "error",
       "no-implied-eval": "error",

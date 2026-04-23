@@ -170,15 +170,12 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
         // closes the editor and does save annotations
         self.annotation_tool.editor.find('.save').click(function () {
-            var timer = new Date();
             var text = self.annotation_tool.editor.find('#annotation-text-field').val();
             if (updating) {
                 annotation.annotationText.pop();
             }
             annotation.annotationText.push(text);
-            var timer2 = new Date()
             $.publishEvent('ViewerEditorClose', self.instance_id, [annotation, !updating, false]);
-            var end = new Date()
             // console.log("Finished Save Call: " + (end - timer) + " ms : " + (end - timer2) + 'ms');
         });
 
@@ -191,7 +188,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     $.FloatingViewer.prototype.ViewerEditorClose = function(annotation, redraw, should_erase) {
         var self = this;
-        var timer = new Date()
         jQuery('.edit').prop('disabled', false);
         jQuery('.note-link-popover').remove();
         
@@ -496,7 +492,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
     };
 
     $.FloatingViewer.prototype.checkOrientation = function(viewerElement, interactionPoint) {
-        var self = this;
         var newTop = parseInt(jQuery(viewerElement).css('top'), 10);
         var newLeft = parseInt(jQuery(viewerElement).css('left'), 10);
         var elWidth = parseInt(jQuery(viewerElement).outerWidth());

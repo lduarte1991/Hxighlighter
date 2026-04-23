@@ -375,11 +375,9 @@
         },
 
         getViewerContent: function(annotations_unsorted) {
-            var self = this;
             var annoText,
                 tags = [],
-                htmlAnnotations = [],
-                id;
+                htmlAnnotations = [];
             var annotations = annotations_unsorted.sort(function(ann1, ann2) {
                 if (ann1 < ann2) {
                     return -1;

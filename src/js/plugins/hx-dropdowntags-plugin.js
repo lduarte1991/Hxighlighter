@@ -54,7 +54,6 @@ require('./hx-dropdowntags-plugin.css');
      * @return     {String}  HTML value found in the WYSIWYG
      */
     $.DropdownTags.prototype.returnValue = function() {
-        var self = this;
         var tags = jQuery('.token-input-token-facebook p').map(function(_, token) {
             return jQuery(token).html();
         });

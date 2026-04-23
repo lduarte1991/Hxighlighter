@@ -3,7 +3,6 @@
  */
 
 var jQuery = require('jquery');
-var hrange = require('../h-range.js');
 
 (function($){
     $.TimeSelector = function(element, inst_id, defaultOpts={}) {

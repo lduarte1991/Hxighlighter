@@ -111,7 +111,6 @@ var hrange = require('../h-range.js');
     };
 
     $.TempJSON.prototype.StorageAnnotationDelete = function(ann_to_delete, elem) {
-        var self = this;
     };
 
     $.TempJSON.prototype.StorageAnnotationUpdate = function(ann_to_update, elem) {
@@ -277,7 +276,6 @@ var hrange = require('../h-range.js');
     };
 
     $.TempJSON.prototype.getAnnotationTarget = function(webAnn, element) {
-        var self = this;
         try {
             var ranges = [];
             var xpathRanges = [];
@@ -486,10 +484,8 @@ var hrange = require('../h-range.js');
     };
 
     $.TempJSON.prototype.normalizeRanges = function(ranges, elem) {
-        var self = this;
 
         var normalizedRanges = [];
-        var foundRange;
         jQuery.each(ranges, function(_, range) {
             // try {
             //    //console.log(xpathrange.toRange, elem.ownerDocument, range);

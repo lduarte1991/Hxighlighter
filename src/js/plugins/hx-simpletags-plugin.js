@@ -52,7 +52,6 @@ require('./hx-simpletags-plugin.css');
      * Turns on the specific listeners when the plug in is initiated.
      */
     $.SimpleTags.prototype.annotationListeners = function() {
-        var self = this;
     };
 
     /**

@@ -132,7 +132,6 @@
     // Util functions
 
     $.Core.prototype.callFuncInList = function(objectList, funcName, params) {
-        var self = this;
         jQuery.each(objectList, function(_, component) {
             if (typeof component[funcName] === "function") {
                 component[funcName].apply(component, params)

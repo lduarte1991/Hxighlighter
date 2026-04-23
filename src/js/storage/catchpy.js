@@ -468,7 +468,6 @@ var hrange = require('../h-range.js');
     };
 
     $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element, media) {
-        var self = this;
         try {
             // console.log(media);
             if (media.toLowerCase() === "text") {
@@ -699,10 +698,8 @@ var hrange = require('../h-range.js');
     };
 
     $.CatchPy.prototype.normalizeRanges = function(ranges, elem) {
-        var self = this;
 
         var normalizedRanges = [];
-        var foundRange;
         jQuery.each(ranges, function(_, range) {
             // try {
             //    //console.log(xpathrange.toRange, elem.ownerDocument, range);

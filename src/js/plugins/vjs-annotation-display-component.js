@@ -123,7 +123,6 @@
 
         drawAnnotation(event, data) {
             var annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
-            var progressControl = this.player.controlBar.progressControl;
 
             this.seekBarOffset = this.seekBar.el().offsetLeft + this.progressControl.el().offsetLeft;
             this.seekBarWidth = this.seekBar.el().offsetWidth + this.progressControl.el().offsetWidth - 16;

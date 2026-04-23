@@ -74,7 +74,6 @@
     }
 
     createEl() {
-      var self = this;
       return videojs.dom.createEl('div', {
         className: 'vjs-lrs',
         onmousedown: function() {

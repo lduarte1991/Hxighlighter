@@ -400,7 +400,6 @@ var hrange = require('../h-range.js');
 
     $.KeyboardSelector.prototype.processSelection = function(start, end) {
         var self = this;
-        const s = getSelection();
         //console.log("LOOK HERE", start, end);
         const r = this.removeMarkers(start, end);
         self.start = undefined;
@@ -493,7 +492,6 @@ var hrange = require('../h-range.js');
     };
 
     $.KeyboardSelector.prototype.removeMarkers = function(start, end) {
-        var self = this;
         const _start = start.anchorNode;
         const _startOffset = start.anchorOffset - 1;
         const _end = end.anchorNode;

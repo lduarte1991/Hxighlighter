@@ -57,7 +57,6 @@ require('videojs-transcript');
      * { function_description }
      */
     $.VideoTarget.prototype.init = function () {
-        var self = this;
         // this target is only meant to work with text/html objects
         this.media = "video";
         this.setUpListeners();
@@ -463,7 +462,6 @@ require('videojs-transcript');
         }
 
         jQuery.each(self.viewers, function(_, viewer) {
-            var timer = new Date();
             viewer.ViewerEditorClose(annotation);
             // console.log("Finished: " + (new Date() - timer) + 'ms')
         });

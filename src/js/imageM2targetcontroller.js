@@ -43,7 +43,6 @@ require('./storage/catchpy.js');
      * { function_description }
      */
     $.ImageTarget.prototype.init = function () {
-        var self = this;
         // this target is only meant to work with text/html objects
         this.media = "image";
         this.setUpListeners();
@@ -432,7 +431,6 @@ require('./storage/catchpy.js');
     }
 
     $.ImageTarget.prototype.convertFromOA = function(miradorAnnotation) {
-        var self = this;
         var annotation = {
             annotationText: [miradorAnnotation.text],
             created: miradorAnnotation.created,
@@ -451,7 +449,6 @@ require('./storage/catchpy.js');
     };
 
     $.ImageTarget.prototype.setUpSvg = function(item) {
-        var self = this;
         var svgVal = item.rangePosition[0].selector.item.value;
 
         var leftmargin = "-150px";

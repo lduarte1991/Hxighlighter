@@ -2,7 +2,6 @@
  * Should be listening for ways to select a text and then return an xpath 
  * object with the range that was selected.
  */
-var $ = require('jquery');
 var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : annotator;
 
 (function($){

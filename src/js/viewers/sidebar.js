@@ -476,7 +476,6 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     };
 
     $.Sidebar.prototype.lazyLoadImages = function(scrollEl) {
-        var self = this;
         var scrolly = scrollEl || '.side.annotationsHolder';
         var thumbnails = Array.from(document.querySelectorAll(scrolly + ' img.annotation-thumbnail'));
         var unloaded_images = thumbnails.filter(function(x) {

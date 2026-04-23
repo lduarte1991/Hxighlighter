@@ -24,7 +24,6 @@
      * Initializes instance
      */
     $.HxPermissions.prototype.init = function() {
-        var self = this;
     };
 
     $.HxPermissions.prototype.saving = function(annotation) {

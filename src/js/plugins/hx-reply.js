@@ -244,11 +244,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
             jQuery.each(annotations, function(_, annotation) {
                 if (typeof(annotation.id) === "undefined") {
                     $.publishEvent('convertToEndpoint', self.instanceID, [annotation, function(ann) {
-                        var ann_display = viewer.find('.item-'+ann.id);
                         self.annotationShown(viewer.find('.item-'+ann.id), ann, false);
                     }.bind(self)]);
                 } else {
-                    var ann_display = viewer.find('.item-'+annotation.id);
                     self.annotationShown(viewer.find('.item-'+annotation.id), annotation, false);
                 }
                 
@@ -433,7 +431,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 } else {
                     // console.log("List is empty");
                     jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
-                    reply_list.append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + reply.creator.name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+                    reply_list.append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + display_name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
                     jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
                         'title': 'Delete Reply?',
                         'content': 'Would you like to delete your reply? This is permanent.',

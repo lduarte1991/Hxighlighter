@@ -24,8 +24,6 @@
   $.SummernoteAnnotationBodyEditor.prototype = {
     init: function() {
       var _this = this;
-      var annoText = "",
-        tags = [];
 
       this.editorMarkup = this.editorTemplate({
         annotation: _this.annotation,
@@ -167,8 +165,7 @@
       tags = Array.from(tags);
 
       var motivation = [],
-        resource = [],
-        on;
+        resource = [];
 
       if (tags && tags.length > 0) {
         motivation.push("oa:tagging");
@@ -288,9 +285,6 @@
         }());
       }
       tags = Array.from(tags);
-
-      var motivation = [],
-        resource = [];
 
       //remove all tag-related content in annotation
       oaAnno.motivation = jQuery.grep(oaAnno.motivation, function(value) {

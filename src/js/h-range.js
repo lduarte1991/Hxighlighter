@@ -14,7 +14,6 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
         var actualNode = root.childNodes[offset];
         if (actualNode.nodeType === Node.TEXT_NODE) {
             xpath = "/";
-            var nodeList = root.childNodes;
 
         } else {
             var likeNodesList = root.querySelectorAll(actualNode.nodeName.toLowerCase());
@@ -41,7 +40,6 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
     } else {
         while(currentNode !== null && currentNode !== root) {
             if (currentNode.nodeType === Node.TEXT_NODE) {
-                var textNodeCount = 1;
                 var traverseNode = currentNode;
                 // //console.log(traverseNode.parentNode.childNodes);
                 while (traverseNode = traverseNode.previousSibling) {

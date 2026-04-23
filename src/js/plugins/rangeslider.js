@@ -209,7 +209,7 @@ RangeSlider.prototype = {
 		this._setValuesLocked(start,end,writeControlTime);
 	},
 	getValues: function() { //get values in seconds
-		var values = {}, start, end;
+		var start, end;
 		start = this.start || this._getArrowValue(0);
 		end = this.end || this._getArrowValue(1);
 		return {start:start, end:end};
@@ -259,9 +259,6 @@ RangeSlider.prototype = {
     },
 	_getArrowValue: function(index) {
 		index = index || 0;
-		var duration = this.player.duration();
-		
-		duration = typeof duration == 'undefined'? 0 : duration;
 		
 		var percentage = this[index === 0? "left" : "right"].el_.style.left.replace("%","");
 		if (percentage === "")
@@ -573,7 +570,6 @@ videojs.SeekRSBar.prototype.setPosition = function(index,left,writeControlTime) 
 		
 	// Alias
 	var ObjLeft = this.rs.left.el_,
-		ObjRight = this.rs.right.el_,
 		Obj = this.rs[index === 0 ? 'left' : 'right'].el_,
 		tpr = this.rs.tpr.el_,
 		tpl = this.rs.tpl.el_,

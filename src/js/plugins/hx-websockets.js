@@ -163,7 +163,6 @@
     };
 
     $.Websockets.prototype.convertingFromAnnotatorJS = function(annotation, callBack) {
-        var self = this;
         var ranges = annotation.ranges;
         var rangeList = [];
         ranges.forEach(function(range) {

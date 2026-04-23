@@ -228,7 +228,6 @@
                 motivation.push("oa:replying");
                 on = parentItem[0].value;  //need to make URI
             } else {
-                var value; 
                 motivation.push("oa:commenting");
                 var default_value = "";
                 var item_value = "";
@@ -340,7 +339,7 @@
             var uri = "";
             var svgVal = "";
             var annotation_id = oaAnnotation['@id'] || Hxighlighter.getUniqueId();
-            var rangeVals = oaAnnotation.on.forEach(function(targetItem) {
+            oaAnnotation.on.forEach(function(targetItem) {
                 uri = targetItem.full;
                 target.items.push({
                     type: "Image",
