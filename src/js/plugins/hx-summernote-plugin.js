@@ -329,7 +329,9 @@ require('./hx-summernote-plugin.css');
             return fullsetup;
         }
 
-        if (type.indexOf('no-style')) {}
+        if (type.indexOf('no-style')) {
+            // no-style type requires no additional setup
+        }
     }
 
     Object.defineProperty($.SummernoteRichText, 'name', {

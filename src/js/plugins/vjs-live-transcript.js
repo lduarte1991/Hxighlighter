@@ -49,10 +49,10 @@
   // Register the component with Video.js, so it can be used in players.
   videojs.registerComponent('TranscriptToggle', TranscriptToggle);
 
-  if (!$.globals.hasOwnProperty('vjs')) {
+  if (!Object.prototype.hasOwnProperty.call($.globals, 'vjs')) {
     $.globals['vjs'] = {};
   }
-  if (!$.globals.vjs.hasOwnProperty('components')) {
+  if (!Object.prototype.hasOwnProperty.call($.globals.vjs, 'components')) {
     $.globals.vjs['components'] = []
   }
 

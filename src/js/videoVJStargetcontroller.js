@@ -351,6 +351,7 @@ require('videojs-transcript');
                 snapshot();
                 return false;
             } else if (event.key === 'Escape') {
+                // no action needed
             }
 
             if ((event.key === '2' && (event.altKey || event.ctrlKey))) {

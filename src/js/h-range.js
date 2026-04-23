@@ -58,7 +58,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
                     }
                     xpath = "/" + currentName.toLowerCase() + '[' + nodeCount + ']' + xpath;
                 } else if (currentNode.nodeName === "IMG") {
-
+                    // IMG nodes handled by xpath above
                 } else {
                     traverseNode = currentNode;
                     while (traverseNode = traverseNode.previousSibling) {

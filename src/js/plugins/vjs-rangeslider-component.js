@@ -440,10 +440,10 @@
   videojs.registerComponent('RangeSlider', RangeSlider);
   videojs.registerComponent('RangeSliderText', RangeSliderText);
 
-  if (!$.globals.hasOwnProperty('vjs')) {
+  if (!Object.prototype.hasOwnProperty.call($.globals, 'vjs')) {
     $.globals['vjs'] = {};
   }
-  if (!$.globals.vjs.hasOwnProperty('components')) {
+  if (!Object.prototype.hasOwnProperty.call($.globals.vjs, 'components')) {
     $.globals.vjs['components'] = []
   }
 

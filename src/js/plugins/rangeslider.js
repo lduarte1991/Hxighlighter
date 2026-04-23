@@ -96,16 +96,16 @@ function RangeSlider(player,options){
 
 	options = options || {}; // plugin options
 	
-	if(!options.hasOwnProperty('locked')) 
+	if(!Object.prototype.hasOwnProperty.call(options, 'locked')) 
 		options.locked = false; // lock slider handles
 		
-	if(!options.hasOwnProperty('hidden')) 
+	if(!Object.prototype.hasOwnProperty.call(options, 'hidden')) 
 		options.hidden = true; // hide slider handles
 		
-	if(!options.hasOwnProperty('panel')) 
+	if(!Object.prototype.hasOwnProperty.call(options, 'panel')) 
 		options.panel = true; // Show Second Panel
 		
-	if(!options.hasOwnProperty('controlTime')) 
+	if(!Object.prototype.hasOwnProperty.call(options, 'controlTime')) 
 		options.controlTime = true; // Show Control Time to set the arrows in the edition
 	
 	this.options = options;
