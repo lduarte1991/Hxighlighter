@@ -41,7 +41,7 @@ require('./hx-simpletags-plugin.css');
     $.SimpleTags.prototype.returnValue = function() {
         var self = this;
         var delimiter = ('delimiter' in self.options) ? self.options.delimiter : ',';
-        result = jQuery('#tag-list').val().split(delimiter);
+        var result = jQuery('#tag-list').val().split(delimiter);
         return result;
     };
 

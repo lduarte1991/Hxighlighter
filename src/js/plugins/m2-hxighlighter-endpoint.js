@@ -309,7 +309,7 @@
         getThumbnailFromFragmentSelector: function(fragmentSelector, uri) {
             var self = this;
             var nums = fragmentSelector.replace('xywh=', '');
-            split_nums = nums.split(',');
+            var split_nums = nums.split(',');
             var canvas = self.imagesList[$.getImageIndexById(self.imagesList, uri)];
             var scale = '/300,/'
             var fragmentwidth = parseInt(split_nums[2], 10);

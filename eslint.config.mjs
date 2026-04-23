@@ -16,6 +16,8 @@ export default [
         Hxighlighter: "readonly",
         toastr: "readonly",
         Mirador: "readonly",
+        _: "readonly",
+        i18next: "readonly",
       },
     },
     rules: {

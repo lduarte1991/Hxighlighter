@@ -465,7 +465,7 @@ var hrange = require('../h-range.js');
                 // we are borrowing the xpath range library from annotatorjs
                 // to keep them consistent
                 //console.log("LOOK HERE:",r, hrange.serializeRange(r, contextEl, 'annotator-hl'));
-                serializedRange = hrange.serializeRange(r, contextEl, 'annotator-hl');
+                var serializedRange = hrange.serializeRange(r, contextEl, 'annotator-hl');
                 serializedRanges.push(serializedRange.xpath);
                 extraRanges.push({
                     startOffset: serializedRange.position.globalStartOffset,
@@ -511,7 +511,7 @@ var hrange = require('../h-range.js');
 
     $.TempJSON.prototype.contains = function(elem1, elem2) {
         if (document.compareDocumentPosition != null) {
-        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_CONTAINED_BY;
+        return elem1.compareDocumentPosition(elem2) & Node.DOCUMENT_POSITION_CONTAINED_BY;
       }
       return false;
     };

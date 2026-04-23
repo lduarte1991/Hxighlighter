@@ -37,7 +37,7 @@ require('./hx-alert.css');
         })
         $.subscribeEvent('HxAlert', self.instanceID, function(_, message, options) {
             var theseOptions = jQuery.extend({}, self.defaultOptions, options);
-            constructedAlert = self.createNotification(message, theseOptions.modal, theseOptions.buttons);
+            var constructedAlert = self.createNotification(message, theseOptions.modal, theseOptions.buttons);
             jQuery('body').append(constructedAlert);
 
             // if (theseOptions.modal) {

@@ -32,7 +32,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
             onCreateLink: function(link) {
                 var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/
                 if (link.match(linkValidator)) {
-                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
+                    var linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
                     return linkUrl;
                 } else {
                     alert("You did not enter a valid URL, it has been removed.");

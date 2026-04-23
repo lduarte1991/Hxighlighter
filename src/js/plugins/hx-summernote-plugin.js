@@ -48,7 +48,7 @@ require('./hx-summernote-plugin.css');
             onCreateLink: function(link) {
                 var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/
                 if (link.match(linkValidator)) {
-                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
+                    var linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
                     return linkUrl;
                 } else {
                     alert("You did not enter a valid URL, it has been removed.");
@@ -293,13 +293,6 @@ require('./hx-summernote-plugin.css');
             if ($.exists(annotation.annotationText)) {
                 annotationText = annotation.annotationText;
                 self.elementObj.summernote('code', annotation.annotationText);
-            } else /*if (annotation.schema_version && annotation.schema_version === "catch_v2")*/ {
-                annotationText = returnWAText(annotation);
-                if (typeof annotationText !== "undefined") {
-                    self.elementObj.summernote('code', annotationText);
-                    self.updating = true;
-                    self.updatingText = annotationText;
-                }
             }
             if (typeof(annotationText) === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
                 editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.")

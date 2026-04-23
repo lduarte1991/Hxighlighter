@@ -208,7 +208,7 @@ var hrange = require('../h-range.js');
      */
     $.KeyboardSelector.prototype.filterKeys = function(keyPressed) {
         var self = this;
-        const key = keyPressed.key || keypressed.keyCode;
+        const key = keyPressed.key || keyPressed.keyCode;
         switch (key) {
             case self.delimiter:
                 return false;
@@ -469,8 +469,8 @@ var hrange = require('../h-range.js');
      */
     $.KeyboardSelector.prototype.getCommonAncestor = function(a, b)
     {
-        $parentsa = jQuery(a).parents();
-        $parentsb = jQuery(b).parents();
+        var $parentsa = jQuery(a).parents();
+        var $parentsb = jQuery(b).parents();
 
         var found = null;
 
