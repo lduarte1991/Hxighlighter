@@ -62,7 +62,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
                 } else if (currentNode.nodeName === "IMG") {
 
                 } else {
-                    var traverseNode = currentNode;
+                    traverseNode = currentNode;
                     while (traverseNode = traverseNode.previousSibling) {
                         totalOffset += traverseNode.textContent.length;
                     }
@@ -129,7 +129,7 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
 // https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
 function getGlobalOffset(range, root, ignoreSelector) {
     var preRangeRange = document.createRange(); //range.cloneRange();
-    var root = jQuery(root)[0];
+    root = jQuery(root)[0];
     if (root.className.indexOf('annotator-wrapper') === -1) {
         root = root.querySelector('.annotator-wrapper')
     }
@@ -245,7 +245,7 @@ function compareExactText(text1, text2) {
 };
 
 function serializeRange(range, root, ignoreSelector) {
-    var root = jQuery(root)[0];
+    root = jQuery(root)[0];
     if (root.className.indexOf('annotator-wrapper') === -1) {
         root = root.querySelector('.annotator-wrapper')
     }
@@ -405,7 +405,7 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 
 
 function normalizeRange(serializedRange, root, ignoreSelector) {
-    var root = jQuery(root)[0];
+    root = jQuery(root)[0];
     if (root.className.indexOf('annotator-wrapper') === -1) {
         root = root.querySelector('.annotator-wrapper')
     }
@@ -559,7 +559,7 @@ function recurseFromNodeToNode(currentNode, range) {
         }
         currentNode = currentNode.parentNode.nextSibling;
         //console.log("RENTS");
-        var res = recurseFromNodeToNode(currentNode, range);
+        res = recurseFromNodeToNode(currentNode, range);
         if (!foundEnd) {
             foundEnd = res.foundEnd;
         }

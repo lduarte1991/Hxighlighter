@@ -308,7 +308,7 @@ require('./hx-summernote-plugin.css');
     };
 
     $.SummernoteRichText.prototype.setUpEditor = function(type) {
-        var type = type.toLowerCase();
+        type = type.toLowerCase();
         if (!type || type === "default" || type === "") {
             return [
                 ['font', ['bold', 'italic', 'underline', 'clear']],

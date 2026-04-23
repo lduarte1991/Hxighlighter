@@ -274,8 +274,8 @@
       } else {
         var hours = parseInt(seconds_float / 3600, 10);
         var leftovers = seconds_float % 3600;
-        var mins = parseInt(leftovers / 60, 10);
-        var secs = parseInt(leftovers % 60, 10);
+        mins = parseInt(leftovers / 60, 10);
+        secs = parseInt(leftovers % 60, 10);
         return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
       }
     }
@@ -418,8 +418,8 @@
       } else {
         var hours = parseInt(seconds_float / 3600, 10);
         var leftovers = seconds_float % 3600;
-        var mins = parseInt(leftovers / 60, 10);
-        var secs = parseInt(leftovers % 60, 10);
+        mins = parseInt(leftovers / 60, 10);
+        secs = parseInt(leftovers % 60, 10);
         return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
       }
     }

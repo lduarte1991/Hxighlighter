@@ -406,7 +406,7 @@ var hrange = require('../h-range.js');
                         } catch(e) {
                             if (typeof(selector['@type']) !== "undefined") {
                                 fragVal = 'class="thumbnail-svg-'+annotation['id']+'" viewBox="' + selector['selector']['default']['value'].replace('xywh=', '').split(',').join(' ') + '"';
-                                var svgVal = selector['selector']['item']['value'];
+                                svgVal = selector['selector']['item']['value'];
                                 svgVal = svgVal.replace('svg xmlns', 'svg ' + fragVal + ' xmlns');
                                 annotation['svg'] = svgVal;
                             }
@@ -539,7 +539,7 @@ var hrange = require('../h-range.js');
             } else if (media.toLowerCase() === "comment") {
                 return webAnn['target']['items'];
             } else if (media.toLowerCase() === "video" || media.toLowerCase() === 'audio') {
-                var ranges = [];
+                ranges = [];
                 jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
                     return ranges.push(targetItem)
                 });
@@ -803,8 +803,8 @@ var hrange = require('../h-range.js');
         } else {
             var hours = parseInt(seconds_float / 3600, 10);
             var leftovers = seconds_float % 3600;
-            var mins = parseInt(leftovers / 60, 10);
-            var secs = parseInt(leftovers % 60, 10);
+            mins = parseInt(leftovers / 60, 10);
+            secs = parseInt(leftovers % 60, 10);
             return self.pad(hours, 2) + ":" + self.pad(mins,2) + ":" + self.pad(secs, 2);
         }
     };

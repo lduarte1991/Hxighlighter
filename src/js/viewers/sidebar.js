@@ -693,7 +693,7 @@ require('jquery-tokeninput/build/jquery.tokeninput.min.js');
     $.Sidebar.prototype.filterByType= function(searchValue, type, options) {
         var self = this;
         searchValue = searchValue.trim();
-        var options = options ? options : { 'type': self.options.mediaType }
+        options = options ? options : { 'type': self.options.mediaType }
         if (searchValue === "") {
             jQuery('.annotationsHolder .annotationItem').show();
             return;

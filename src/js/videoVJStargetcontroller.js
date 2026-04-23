@@ -375,7 +375,7 @@ require('videojs-transcript');
                         jQuery('#hx-sr-notifications').attr('aria-live', newVal);
                         jQuery('.sr-real-alert').html('');
                     }, 500);
-                    var currVal = jQuery('.sr-alert').html();
+                    currVal = jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('');
                     jQuery('.sr-alert').data('old', currVal);
                 } else {
@@ -527,7 +527,7 @@ require('videojs-transcript');
     };
 
     $.VideoTarget.prototype.TargetSelectionMade = function(range, event) {
-        var range = Array.isArray(range) ? range : [range];
+        range = Array.isArray(range) ? range : [range];
         var self = this;
         var annotation = {
             annotationText: [""],

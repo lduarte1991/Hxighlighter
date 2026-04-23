@@ -80,7 +80,7 @@
                 self.first = false;
                 return;
             }
-            var self = this;
+            self = this;
             var options = searchOptions;
             if (options.uri) {
                 options.source_id = options.uri;

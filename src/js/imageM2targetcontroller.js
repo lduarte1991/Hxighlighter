@@ -393,7 +393,7 @@ require('./storage/catchpy.js');
                         jQuery('#hx-sr-notifications').attr('aria-live', newVal);
                         jQuery('.sr-real-alert').html('');
                     }, 500);
-                    var currVal = jQuery('.sr-alert').html();
+                    currVal = jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('');
                     jQuery('.sr-alert').data('old', currVal);
                 } else {

@@ -332,7 +332,7 @@ require('./plugins/hx-websockets.js');
      * @class      TargetSelectionMade (name)
      */
     $.TextTarget.prototype.TargetSelectionMade = function(range, event) {
-        var range = Array.isArray(range) ? range : [range];
+        range = Array.isArray(range) ? range : [range];
         var self = this;
         var annotation = {
             annotationText: [""],

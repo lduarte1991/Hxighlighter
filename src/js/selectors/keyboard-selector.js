@@ -93,7 +93,7 @@ var hrange = require('../h-range.js');
                         jQuery('#hx-sr-notifications').attr('aria-live', newVal);
                         jQuery('.sr-real-alert').html('');
                     }, 500);
-                    var currVal = jQuery('.sr-alert').html();
+                    currVal = jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('');
                     jQuery('.sr-alert').data('old', currVal);
                 } else {
@@ -312,7 +312,7 @@ var hrange = require('../h-range.js');
                         //console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
                         
                     } else {
-                        var end = self.copySelection(getSelection())
+                        end = self.copySelection(getSelection())
                         var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
                         var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
                         var boundingBox = undefined;
@@ -367,9 +367,9 @@ var hrange = require('../h-range.js');
             case 39:
             case 40:
                 if (self.start) {
-                    var end = self.copySelection(getSelection())
-                    var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
-                    var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl')
+                    end = self.copySelection(getSelection())
+                    posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
+                    posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl')
                     self.currentSelection = document.createRange();
                     if(posStart.startOffset < posEnd.startOffset) {
                         self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
@@ -409,7 +409,7 @@ var hrange = require('../h-range.js');
         try {
             var boundingBox = r.end.parentElement.getBoundingClientRect();
         } catch(e) {
-            var boundingBox = r.endContainer.parentElement.getBoundingClientRect();
+            boundingBox = r.endContainer.parentElement.getBoundingClientRect();
         }
         //console.log(boundingBox);
 

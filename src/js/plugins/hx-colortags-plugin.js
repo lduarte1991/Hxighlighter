@@ -87,8 +87,8 @@ require('./hx-colortags-plugin.css');
             return rgbaVal;
         }
         if (value in self.options) {
-            var rgbaColor = self.hexToRGBa(self.options[value]);
-            var rgbaVal = 'rgba(' + rgbaColor.join(',') + ')';
+            rgbaColor = self.hexToRGBa(self.options[value]);
+            rgbaVal = 'rgba(' + rgbaColor.join(',') + ')';
             return rgbaVal;
         }
         return undefined;

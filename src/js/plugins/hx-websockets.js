@@ -176,7 +176,7 @@
                 }
             })
         });
-        var annotation = {
+        annotation = {
             annotationText: [annotation.text],
             created: annotation.created,
             creator: annotation.user,

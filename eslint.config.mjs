@@ -15,6 +15,7 @@ export default [
         $: "readonly",
         Hxighlighter: "readonly",
         toastr: "readonly",
+        Mirador: "readonly",
       },
     },
     rules: {

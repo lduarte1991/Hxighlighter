@@ -86,7 +86,7 @@ videojs.registerPlugin('rangeslider', RangeSlider_);
 
 //-- Plugin
 function RangeSlider(player,options){
-	var player = player || this;
+	player = player || this;
 	
 	this.player = player;
 	
@@ -192,7 +192,7 @@ RangeSlider.prototype = {
 	},
 	setValue: function(index, seconds, writeControlTime) {
 		//index = 0 for the left Arrow and 1 for the right Arrow. Value in seconds
-		var writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
+		writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
 		
 		var percent = this._percent(seconds);
 		var isValidIndex = (index === 0 || index === 1);
@@ -202,7 +202,7 @@ RangeSlider.prototype = {
 	},
 	setValues: function(start, end, writeControlTime) {
 		//index = 0 for the left Arrow and 1 for the right Arrow. Value in seconds
-		var writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
+		writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
 		
 		this._reset();
 		
@@ -258,7 +258,7 @@ RangeSlider.prototype = {
         }
     },
 	_getArrowValue: function(index) {
-		var index = index || 0;
+		index = index || 0;
 		var duration = this.player.duration();
 		
 		duration = typeof duration == 'undefined'? 0 : duration;
@@ -291,7 +291,7 @@ RangeSlider.prototype = {
 	},
 	_setValuesLocked: function(start,end, writeControlTime){
 		var triggerSliderChange = typeof writeControlTime!='undefined';
-		var writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
+		writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
 		if(this.options.locked) {
 			this.unlock();//It is unlocked to change the bar position. In the end it will return the value.
 			this.setValue(0,start,writeControlTime);
@@ -555,9 +555,9 @@ videojs.SeekRSBar.prototype.onMouseMove = function(event) {
 };
 
 videojs.SeekRSBar.prototype.setPosition = function(index,left,writeControlTime) {
-	var writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
+	writeControlTime = typeof writeControlTime!='undefined'?writeControlTime:true;
 	//index = 0 for left side, index = 1 for right side
-	var index = index || 0;
+	index = index || 0;
 	
 	// Position shouldn't change when handle is locked
 	if(this.rs.options.locked)
@@ -992,7 +992,7 @@ videojs.ControlTimePanel.prototype.createEl = function(){
 };
 
 videojs.ControlTimePanel.prototype.enable = function(enable){
-	var enable = typeof enable != 'undefined'? enable:true;
+	enable = typeof enable != 'undefined'? enable:true;
 	this.rs.ctpl.el_.children[0].disabled = enable?"":"disabled";
 	this.rs.ctpl.el_.children[1].disabled = enable?"":"disabled";
 	this.rs.ctpl.el_.children[2].disabled = enable?"":"disabled";
