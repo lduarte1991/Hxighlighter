@@ -5,7 +5,7 @@
  *
  */
 
-require('./hx-colortags-plugin.css');
+require('./css/hx-colortags-plugin.css');
 
 (function($) {
 
@@ -200,4 +200,4 @@ require('./hx-colortags-plugin.css');
   });
 
   $.plugins.push($.ColorTags);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

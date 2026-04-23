@@ -1,4 +1,4 @@
-var hrange = require('../h-range.js');
+var hrange = require('../core/h-range.js');
 
 (function($) {
   $.XPathDrawer = function(element, inst_id, hClass, options) {
@@ -222,4 +222,4 @@ var hrange = require('../h-range.js');
 
   $.drawers.push($.XPathDrawer);
 
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

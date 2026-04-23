@@ -6,10 +6,10 @@
  */
 
 require('./hx-simpletags-plugin.js');
-require('./hx-simpletags-plugin.css');
+require('./css/hx-simpletags-plugin.css');
 require('jquery-tokeninput/styles/token-input-facebook.css');
 require('jquery-tokeninput/build/jquery.tokeninput.min.js');
-require('./hx-dropdowntags-plugin.css');
+require('./css/hx-dropdowntags-plugin.css');
 
 (function($) {
 
@@ -215,4 +215,4 @@ require('./hx-dropdowntags-plugin.css');
   });
 
   $.plugins.push($.DropdownTags);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

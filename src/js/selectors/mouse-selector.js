@@ -4,7 +4,7 @@
  */
 
 var jQuery = require('jquery');
-var hrange = require('../h-range.js');
+var hrange = require('../core/h-range.js');
 
 (function($) {
   $.MouseSelector = function(element, inst_id, defaultOpts = {}) {
@@ -115,4 +115,4 @@ var hrange = require('../h-range.js');
   };
 
   $.selectors.push($.MouseSelector);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

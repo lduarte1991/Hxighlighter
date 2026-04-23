@@ -9,12 +9,12 @@ require('./js/vendors/micro-template.js');
 require('./js/vendors/jquery-tiny-pubsub.js');
 
 // common Hxighlighter object
-require('./js/hxighlighter.js');
-require('./js/hxelper-functions.js');
-require('./js/texttargetcontroller.js');
-require('./js/core.js');
+require('./js/core/hxighlighter.js');
+require('./js/core/hxelper-functions.js');
+require('./js/media/text/texttargetcontroller.js');
+require('./js/core/core.js');
 require('./js/storage/TempJSON.js');
 require('./js/plugins/hx-lite-version-changes.js');
-require('./js/launcher.js');
+require('./js/core/launcher.js');
 require('./css/common_lite.css');
 require('./css/lite-overrides.css');

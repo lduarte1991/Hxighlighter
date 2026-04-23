@@ -522,4 +522,4 @@ import 'jquery-confirm/css/jquery-confirm.css';
   $.viewers.push($.FloatingViewer);
 
 
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

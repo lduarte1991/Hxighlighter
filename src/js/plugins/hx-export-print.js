@@ -220,4 +220,4 @@
   };
 
   $.plugins.push($.ExportPlugin);
-}(Hxighlighter ? Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ? Hxighlighter : require('../core/hxighlighter.js')));

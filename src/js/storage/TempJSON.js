@@ -1,4 +1,4 @@
-var hrange = require('../h-range.js');
+var hrange = require('../core/h-range.js');
 (function($) {
   $.TempJSON = function(options, inst_id) {
     this.options = options;
@@ -568,4 +568,4 @@ var hrange = require('../h-range.js');
   };
   $.storage.push($.TempJSON);
 
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

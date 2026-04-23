@@ -5,7 +5,7 @@
  *
  */
 
-require('./hx-simpletags-plugin.css');
+require('./css/hx-simpletags-plugin.css');
 
 (function($) {
 
@@ -89,4 +89,4 @@ require('./hx-simpletags-plugin.css');
 
 
   $.plugins.push($.SimpleTags);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

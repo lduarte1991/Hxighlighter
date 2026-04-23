@@ -5,7 +5,7 @@
  */
 
 // uncomment to add css file
-require('./hx-alert.css');
+require('./css/hx-alert.css');
 
 (function($) {
 
@@ -89,4 +89,4 @@ require('./hx-alert.css');
 
 
   $.plugins.push($.HxAlert);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

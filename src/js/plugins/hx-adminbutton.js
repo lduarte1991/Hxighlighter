@@ -5,7 +5,7 @@
  */
 
 // uncomment to add css file
-require('./hx-adminbutton.css');
+require('./css/hx-adminbutton.css');
 
 (function($) {
 
@@ -52,4 +52,4 @@ require('./hx-adminbutton.css');
 
 
   $.plugins.push($.AdminButton);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

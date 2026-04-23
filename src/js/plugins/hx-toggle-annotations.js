@@ -4,7 +4,7 @@
  *
  */
 
-require('./hx-toggle-annotations.css');
+require('./css/hx-toggle-annotations.css');
 
 (function($) {
 
@@ -70,4 +70,4 @@ require('./hx-toggle-annotations.css');
 
 
   $.plugins.push($.ToggleAnnotations);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

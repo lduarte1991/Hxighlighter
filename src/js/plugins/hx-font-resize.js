@@ -4,7 +4,7 @@
  *
  */
 
-require('./hx-font-resize.css');
+require('./css/hx-font-resize.css');
 
 (function($) {
 
@@ -113,4 +113,4 @@ require('./hx-font-resize.css');
 
 
   $.plugins.push($.FontResize);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

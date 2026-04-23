@@ -15,8 +15,8 @@ require('./js/vendors/jquery-tiny-pubsub.js');
 // require('mirador/dist/mirador.js');
 
 // common Hxighlighter object
-require('./js/hxighlighter.js');
+require('./js/core/hxighlighter.js');
 require('./js/plugins/hx-badges.js');
-require('./js/hxelper-functions.js');
-require('./js/imageM2targetcontroller.js');
-require('./js/core.js');
+require('./js/core/hxelper-functions.js');
+require('./js/media/mirador/imageM2targetcontroller.js');
+require('./js/core/core.js');

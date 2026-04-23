@@ -80,4 +80,4 @@ var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : anno
   };
 
   $.selectors.push($.MouseSelector);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));
