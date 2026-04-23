@@ -98,7 +98,7 @@ Hxighlighter.globals = {};
  * @return     {Element|null}    The container DOM element, or null
  */
 Hxighlighter.getContainer = function(fromElement) {
-    var container = null;
+    var container;
     if (fromElement) {
         var el = fromElement instanceof jQuery ? fromElement[0] : fromElement;
         container = el.closest('.hxighlighter-container');

@@ -233,6 +233,7 @@ var hrange = require('../h-range.js');
                     self.start = undefined;
                     return true;
                 }
+                // falls through
             case "Escape":
                 self.turnSelectionModeOff();
                 keyPressed.preventDefault();
@@ -305,7 +306,7 @@ var hrange = require('../h-range.js');
                     jQuery('.sr-alert').html();
                     jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
                 } else {
-                    var end = self.copySelection(getSelection());
+                    var end;
                     jQuery('.hx-selector-img').remove();
                     //console.log("Found end", end);
                     if (self.currentSelection) {
@@ -315,7 +316,7 @@ var hrange = require('../h-range.js');
                         end = self.copySelection(getSelection())
                         var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
                         var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
-                        var boundingBox = undefined;
+                        var boundingBox;
                         self.currentSelection = document.createRange();
                         if(posStart.startOffset < posEnd.startOffset) {
                             self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);

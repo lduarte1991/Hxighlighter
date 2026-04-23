@@ -56,8 +56,10 @@ function RangeSlider_(options){
 			switch (player.error) {
 				case 2:
 					alert("The request contains an invalid parameter value. For example, this error occurs if you specify a video ID that does not have 11 characters, or if the video ID contains invalid characters, such as exclamation points or asterisks.");
+					break;
 				case 5:
 					alert("The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred.");
+					break;
 				case 100:
 					alert("The video requested was not found. This error occurs when a video has been removed (for any reason) or has been marked as private.");
 					break;

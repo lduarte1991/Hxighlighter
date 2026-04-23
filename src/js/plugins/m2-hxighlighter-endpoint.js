@@ -174,14 +174,7 @@
         },
         createCatchpyAnnotation: function(catchAnnotation, successCallback, errorCallback){},
         userAuthorize: function(action, annotation) {
-            var self = this;
             return true;
-            if (typeof(annotation) !== undefined && typeof(annotation.permissions) !== "undefined")  {
-                var permissions = annotation.permissions;
-                return self.instructors.indexOf(self.userid) > -1 || permissions['can_' + action].indexOf(self.userid) > -1;
-            } else {
-                return true;
-            }
             
         },
         getAnnotationInOA: function(annotation) {

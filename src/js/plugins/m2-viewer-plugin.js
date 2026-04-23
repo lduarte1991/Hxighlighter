@@ -431,7 +431,7 @@
                     common_name = annotation.endpoint.common_name;
                 }
 
-                var instructors = [];
+                var instructors;
                 if (annotation.endpoint !== 'manifest') {
                     instructors = annotation.endpoint.instructors;
                     if (instructors.indexOf(userId) > -1) {

@@ -636,10 +636,10 @@ var hrange = require('../h-range.js');
                 ranges: []
             };
         }
-        var text = [],
+        var text,
             serializedRanges = [],
-            previous = "",
-            next = "",
+            previous,
+            next,
             extraRanges = [],
             contextEl = elem[0];
 

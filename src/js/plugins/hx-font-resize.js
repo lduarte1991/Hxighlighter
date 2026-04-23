@@ -51,7 +51,7 @@ require('./hx-font-resize.css');
         var $label = jQuery("#annotations-text-size-label");
         var nodes = [], curnode, stylesize, styleunit, computed;
         var minsize = 8;
-        var sizediff = 0;
+        var sizediff;
 
         if(typeof this.defaultFontSize === "undefined") {
             this.defaultFontSize = 14;
