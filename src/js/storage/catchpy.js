@@ -1,5 +1,5 @@
 // var xpathrange = xpathrange ? xpathrange : require('xpath-range');
-var hrange = require('../h-range.js');
+var hrange = require('../core/h-range.js');
 (function($) {
   $.CatchPy = function(options, inst_id) {
     this.options = options;
@@ -805,4 +805,4 @@ var hrange = require('../h-range.js');
 
   $.storage.push($.CatchPy);
 
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

@@ -6,7 +6,7 @@
  */
 require('summernote/dist/summernote-lite.css');
 require('summernote/dist/summernote-lite.js');
-require('./hx-summernote-plugin.css');
+require('./css/hx-summernote-plugin.css');
 
 (function($) {
 
@@ -340,4 +340,4 @@ require('./hx-summernote-plugin.css');
 
 
   $.plugins.push($.SummernoteRichText);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

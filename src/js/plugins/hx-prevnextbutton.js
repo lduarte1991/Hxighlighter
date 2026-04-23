@@ -5,7 +5,7 @@
  */
 
 // uncomment to add css file
-require('./hx-prevnextbutton.css');
+require('./css/hx-prevnextbutton.css');
 
 (function($) {
 
@@ -68,4 +68,4 @@ require('./hx-prevnextbutton.css');
 
 
   $.plugins.push($.PrevNextButton);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

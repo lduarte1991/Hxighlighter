@@ -5,7 +5,7 @@
  */
 
 // uncomment to add css file
-require('./hx-badges.css');
+require('./css/hx-badges.css');
 
 
 (function($) {
@@ -126,4 +126,4 @@ require('./hx-badges.css');
 
 
   $.plugins.push($.Badges);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

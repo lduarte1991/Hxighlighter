@@ -131,4 +131,4 @@ var annotator = annotator ? annotator : require('annotator');
 
   $.drawers.push($.XPathDrawer);
 
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

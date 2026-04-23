@@ -14,8 +14,8 @@ require('./js/vendors/micro-template.js');
 require('./js/vendors/jquery-tiny-pubsub.js');
 
 // common Hxighlighter object
-require('./js/hxighlighter.js');
+require('./js/core/hxighlighter.js');
 require('./js/plugins/hx-badges.js');
-require('./js/hxelper-functions.js');
-require('./js/videoVJStargetcontroller.js');
-require('./js/core.js');
+require('./js/core/hxelper-functions.js');
+require('./js/media/videojs/videoVJStargetcontroller.js');
+require('./js/core/core.js');

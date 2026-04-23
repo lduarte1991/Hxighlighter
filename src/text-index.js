@@ -10,12 +10,12 @@ require('./js/vendors/micro-template.js');
 require('./js/vendors/jquery-tiny-pubsub.js');
 
 // common Hxighlighter object
-require('./js/hxighlighter.js');
-require('./js/hxelper-functions.js');
+require('./js/core/hxighlighter.js');
+require('./js/core/hxelper-functions.js');
 require('./js/plugins/hx-reply.js');
 require('./js/plugins/hx-badges.js');
-require('./js/texttargetcontroller.js');
+require('./js/media/text/texttargetcontroller.js');
 require('./js/plugins/hx-style-mine.js');
-require('./js/core.js');
+require('./js/core/core.js');
 require('./js/storage/catchpy.js');
 require('./js/plugins/hx-prevnextbutton.js');

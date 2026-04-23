@@ -3,25 +3,25 @@
  */
 
 // during deployment, this is what decides what gets instantiated, should be moved elsewhere
-require('./selectors/mouse-selector.js');
-require('./drawers/xpath-drawer.js');
-require('./viewers/sidebar.js');
-require('./viewers/floatingviewer.js');
-require('./plugins/hx-summernote-plugin.js');
-require('./plugins/hx-simpletags-plugin.js');
-require('./plugins/hx-dropdowntags-plugin.js');
-require('./plugins/hx-colortags-plugin.js');
-require('./plugins/hx-instruction-panel.js');
-require('./plugins/hx-font-resize.js');
-require('./selectors/keyboard-selector.js');
-require('./plugins/hx-toggle-annotations.js');
-require('./plugins/hx-display-resize.js');
-require('./plugins/hx-sidebar-tag-tokens.js');
-require('./plugins/hx-adminbutton.js');
-require('./plugins/hx-permissions.js');
-require('./plugins/hx-alert.js');
-require('./plugins/hx-export-print.js');
-require('./plugins/hx-websockets.js');
+require('../../selectors/mouse-selector.js');
+require('../../drawers/xpath-drawer.js');
+require('../../viewers/sidebar.js');
+require('../../viewers/floatingviewer.js');
+require('../../plugins/hx-summernote-plugin.js');
+require('../../plugins/hx-simpletags-plugin.js');
+require('../../plugins/hx-dropdowntags-plugin.js');
+require('../../plugins/hx-colortags-plugin.js');
+require('../../plugins/hx-instruction-panel.js');
+require('../../plugins/hx-font-resize.js');
+require('../../selectors/keyboard-selector.js');
+require('../../plugins/hx-toggle-annotations.js');
+require('../../plugins/hx-display-resize.js');
+require('../../plugins/hx-sidebar-tag-tokens.js');
+require('../../plugins/hx-adminbutton.js');
+require('../../plugins/hx-permissions.js');
+require('../../plugins/hx-alert.js');
+require('../../plugins/hx-export-print.js');
+require('../../plugins/hx-websockets.js');
 
 (function($) {
 
@@ -548,4 +548,4 @@ require('./plugins/hx-websockets.js');
       store.search(search_options, callback, errfun);
     });
   };
-}(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../../core/hxighlighter.js')));

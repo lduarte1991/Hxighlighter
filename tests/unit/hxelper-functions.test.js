@@ -1,8 +1,8 @@
 import {expect} from "chai";
 import jQuery from 'jquery';
 
-import Hxighlighter from '../../src/js/hxighlighter.js';
-import '../../src/js/hxelper-functions';
+import Hxighlighter from '../../src/js/core/hxighlighter.js';
+import '../../src/js/core/hxelper-functions.js';
 
 describe('Hxighlighter Helper Functions', function() {
 

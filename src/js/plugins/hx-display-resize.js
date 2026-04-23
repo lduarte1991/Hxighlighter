@@ -5,7 +5,7 @@
  */
 var annotator = annotator ? annotator : require('annotator');
 // uncomment to add css file
-require('./hx-display-resize.css');
+require('./css/hx-display-resize.css');
 
 (function($) {
 
@@ -97,4 +97,4 @@ require('./hx-display-resize.css');
 
 
   $.plugins.push($.DisplayResize);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

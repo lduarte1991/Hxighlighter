@@ -5,7 +5,7 @@
  */
 
 // uncomment to add css file
-require('./hx-sidebar-tag-tokens.css');
+require('./css/hx-sidebar-tag-tokens.css');
 
 (function($) {
 
@@ -104,4 +104,4 @@ require('./hx-sidebar-tag-tokens.css');
 
 
   $.plugins.push($.SidebarTagTokens);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

@@ -1,4 +1,4 @@
-var hrange = require('../h-range.js');
+var hrange = require('../core/h-range.js');
 (function($) {
   $.KeyboardSelector = function(element, inst_id) {
     this.element = element;
@@ -563,4 +563,4 @@ var hrange = require('../h-range.js');
   };
 
   $.selectors.push($.KeyboardSelector);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

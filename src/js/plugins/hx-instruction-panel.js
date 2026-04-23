@@ -5,7 +5,7 @@
  */
 
 // uncomment to add css file
-require('./hx-instruction-panel.css');
+require('./css/hx-instruction-panel.css');
 
 (function($) {
 
@@ -63,4 +63,4 @@ require('./hx-instruction-panel.css');
 
 
   $.plugins.push($.InstructionPanel);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

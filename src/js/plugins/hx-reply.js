@@ -5,7 +5,7 @@
  */
 require('summernote/dist/summernote-lite.css');
 require('summernote/dist/summernote-lite.js');
-require('./hx-reply.css');
+require('./css/hx-reply.css');
 import 'jquery-confirm';
 import 'jquery-confirm/css/jquery-confirm.css';
 
@@ -491,4 +491,4 @@ import 'jquery-confirm/css/jquery-confirm.css';
 
 
   $.plugins.push($.Reply);
-}(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../core/hxighlighter.js')));

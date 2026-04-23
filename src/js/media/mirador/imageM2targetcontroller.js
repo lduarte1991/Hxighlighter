@@ -3,23 +3,23 @@
  *
  */
 
-require('./plugins/hx-sidebar-tag-tokens.js');
-require('./plugins/hx-adminbutton.js');
-require('./viewers/sidebar.js');
-require('./plugins/hx-permissions.js');
-require('./plugins/hx-alert.js');
-require('./plugins/hx-summernote-plugin.js');
-require('./plugins/hx-simpletags-plugin.js');
-require('./plugins/hx-dropdowntags-plugin.js');
-require('./plugins/hx-colortags-plugin.js');
-require('./plugins/m2-editor-plugin.js');
-require('./plugins/m2-viewer-plugin.js');
-require('./plugins/m2-hxighlighter-endpoint.js');
-require('./plugins/hx-reply.js');
-require('./plugins/hx-websockets.js');
-require('./plugins/hx-prevnextbutton.js');
-require('./plugins/hx-export-print.js');
-require('./storage/catchpy.js');
+require('../../plugins/hx-sidebar-tag-tokens.js');
+require('../../plugins/hx-adminbutton.js');
+require('../../viewers/sidebar.js');
+require('../../plugins/hx-permissions.js');
+require('../../plugins/hx-alert.js');
+require('../../plugins/hx-summernote-plugin.js');
+require('../../plugins/hx-simpletags-plugin.js');
+require('../../plugins/hx-dropdowntags-plugin.js');
+require('../../plugins/hx-colortags-plugin.js');
+require('./m2-editor-plugin.js');
+require('./m2-viewer-plugin.js');
+require('./m2-hxighlighter-endpoint.js');
+require('../../plugins/hx-reply.js');
+require('../../plugins/hx-websockets.js');
+require('../../plugins/hx-prevnextbutton.js');
+require('../../plugins/hx-export-print.js');
+require('../../storage/catchpy.js');
 
 (function($) {
 
@@ -779,4 +779,4 @@ require('./storage/catchpy.js');
     });
   };
 
-}(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));
+}(Hxighlighter ?  Hxighlighter : require('../../core/hxighlighter.js')));
