@@ -468,7 +468,6 @@ var hrange = require('../h-range.js');
     };
 
     $.CatchPy.prototype.getAnnotationTarget = function(webAnn, element, media) {
-        try {
             // console.log(media);
             if (media.toLowerCase() === "text") {
                 var ranges = [];
@@ -545,14 +544,6 @@ var hrange = require('../h-range.js');
             }
             //console.log('getAnnotationTarget', ranges, element);
             return ranges;
-        } catch(e) {
-            // console.log(ranges, element[0]);
-                throw(e);
-            // console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
-            //return self.normalizeRanges(ranges, window.document);
-            // console.log(e);
-            return []
-        }
     };
 
     $.CatchPy.prototype.getAnnotationText = function(webAnn) {

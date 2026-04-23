@@ -276,7 +276,6 @@ var hrange = require('../h-range.js');
     };
 
     $.TempJSON.prototype.getAnnotationTarget = function(webAnn, element) {
-        try {
             var ranges = [];
             var xpathRanges = [];
             var positionRanges = [];
@@ -331,14 +330,6 @@ var hrange = require('../h-range.js');
             }
             //console.log('getAnnotationTarget', ranges, element);
             return ranges;
-        } catch(e) {
-            // console.log(ranges, element[0]);
-                throw(e);
-            // console.log(ranges, element[0], this.getAnnotationTargetItems(webAnn));
-            //return self.normalizeRanges(ranges, window.document);
-            // console.log(e);
-            return []
-        }
     };
 
     $.TempJSON.prototype.getAnnotationText = function(webAnn) {
