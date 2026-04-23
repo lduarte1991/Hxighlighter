@@ -5,12 +5,12 @@
   var Component = videojs.getComponent('Component');
 
   // Allows the triggering of the creation annotations
-  class TranscriptToggle extends Component{
+  class TranscriptToggle extends Component {
 
     // The constructor of a component receives two arguments: the
     // player it will be associated with and an object of options.
     constructor(player, options) {
-      // It is important to invoke the superclass before anything else, 
+      // It is important to invoke the superclass before anything else,
       // to get all the features of components out of the box!
       super(player, options);
       this.player = player;
@@ -34,26 +34,26 @@
     }
 
     toggleTranscriptDisplay(event, params) {
-        if (params.transcript) {
-            // console.log(jQuery('.video-js.vjs-fill'))
-            this.el().style.color = 'rgb(255, 255, 0)';
-            jQuery('.video-js.vjs-fill').css('height', '75%');
-        } else {
-            this.el().style.color = 'rgb(255, 255, 255)';
-            jQuery('.video-js.vjs-fill').css('height', '100%');
-        }
-        this.player.trigger('playerresize')
+      if (params.transcript) {
+        // console.log(jQuery('.video-js.vjs-fill'))
+        this.el().style.color = 'rgb(255, 255, 0)';
+        jQuery('.video-js.vjs-fill').css('height', '75%');
+      } else {
+        this.el().style.color = 'rgb(255, 255, 255)';
+        jQuery('.video-js.vjs-fill').css('height', '100%');
+      }
+      this.player.trigger('playerresize');
     }
   };
-/***************************** Installing Components *****************************/
+  /** *************************** Installing Components *****************************/
   // Register the component with Video.js, so it can be used in players.
   videojs.registerComponent('TranscriptToggle', TranscriptToggle);
 
-  if (!$.globals.hasOwnProperty('vjs')) {
+  if (!Object.prototype.hasOwnProperty.call($.globals, 'vjs')) {
     $.globals['vjs'] = {};
   }
-  if (!$.globals.vjs.hasOwnProperty('components')) {
-    $.globals.vjs['components'] = []
+  if (!Object.prototype.hasOwnProperty.call($.globals.vjs, 'components')) {
+    $.globals.vjs['components'] = [];
   }
 
   $.globals.vjs.components.push(function(player) {
