@@ -49,6 +49,6 @@ export default [
     },
   },
   {
-    ignores: ["dist/", "coverage/", "node_modules/", "src/js/vendors/"],
+    ignores: ["dist/", "coverage/", "node_modules/", "src/js/vendors/", "src/js/plugins/plugin-template.js"],
   },
 ];

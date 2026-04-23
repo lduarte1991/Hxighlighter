@@ -360,7 +360,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
             return node.className.indexOf(ignoreSelector) === -1;
         })
         // //console.log(foundNodes, counter);
-        if (counter === NaN || counter < 0) {
+        if (isNaN(counter) || counter < 0) {
             counter = 0;
             traversingDown = foundNodes[counter];
             while(traversingDown.className.indexOf(ignoreSelector) > -1) {
