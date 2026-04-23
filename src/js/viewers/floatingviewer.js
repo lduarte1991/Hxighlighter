@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 var annotator = annotator ? annotator : require('annotator');
 
 import './css/floatingviewer.css';
 import 'jquery-confirm';
-import 'jquery-confirm/css/jquery-confirm.css'
+import 'jquery-confirm/css/jquery-confirm.css';
 
 (function($) {
   $.FloatingViewer = function(options, inst_id) {
@@ -67,7 +67,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
           }
           self.annotation_tool.isStatic = false;
         } else {
-          alert("Dismiss opened annotation before selecting a new one.")
+          alert("Dismiss opened annotation before selecting a new one.");
           return;
         }
       }
@@ -76,7 +76,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
       try {
         self.annotation_tool.viewer.addClass('static');
         self.annotation_tool.isStatic = true;
-      } catch(e) {
+      } catch (e) {
         self.ViewerDisplayOpen(event1, annotations);
         self.annotation_tool.viewer.addClass('static');
         self.annotation_tool.isStatic = true;
@@ -96,14 +96,14 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
   $.FloatingViewer.prototype.setUpTemplates = function (suffix) {
     var self = this;
-    var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName){
+    var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName) {
       if (templateName in self.options.TEMPLATES) {
         return;
       }
       var options = {
         url: self.options.template_urls + templateName + '-' + suffix + '.html',
         type: "GET",
-        contentType:"charset=utf-8",
+        contentType: "charset=utf-8",
         success: function (data) {
           var template = _.template(data);
           self.options.TEMPLATES[templateName] = template;
@@ -113,7 +113,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
       return jQuery.ajax(options);
     });
 
-    jQuery.when.apply(jQuery, deferreds).done(function (){
+    jQuery.when.apply(jQuery, deferreds).done(function () {
       self.annotation_tool.editorTemplate = self.options.TEMPLATES.editor({
         editorid: self.instance_id.replace(/\W/g, '-')
       });
@@ -190,7 +190,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     var self = this;
     jQuery('.edit').prop('disabled', false);
     jQuery('.note-link-popover').remove();
-        
+
     if (self.annotation_tool.editor) {
       self.annotation_tool.editor.remove();
     }
@@ -207,7 +207,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     // if the timer is set for the tool to be hidden, this intercepts it
     if (self.hideTimer !== undefined) {
       clearTimeout(self.hideTimer);
-            
+
     }
 
     if (jQuery('.annotation-editor').is(':visible') || jQuery('.hx-confirm-button').is(':visible') || self.annotation_tool.editing || self.annotation_tool.updating || (self.annotation_tool.isStatic && Hxighlighter.exists(self.annotation_tool.viewer))) {
@@ -216,7 +216,6 @@ import 'jquery-confirm/css/jquery-confirm.css'
     }
 
 
-        
     self.annotation_tool.viewerTemplate = self.options.TEMPLATES['viewer']({
       'viewerid': self.instance_id.replace(/\W/g, '-'),
       'annotations': annotations,
@@ -225,7 +224,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     });
 
     if (self.options.viewer_options.readonly) {
-      self.annotation_tool.viewerTemplate = self.annotation_tool.viewerTemplate.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '')
+      self.annotation_tool.viewerTemplate = self.annotation_tool.viewerTemplate.replace(/<button class="edit".*?<\/button>/g, '').replace(/<button class="delete".*?<\/button>/g, '');
     }
 
     // add the viewer to the DOM
@@ -233,7 +232,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     // collect the object for manipulation and coordinates of where it should appear
     if (self.annotation_tool.viewer) {
       self.annotation_tool.viewer.remove();
-      delete self.annotation_tool.viewer
+      delete self.annotation_tool.viewer;
     }
     self.annotation_tool.viewer = jQuery('#annotation-viewer-' + self.instance_id.replace(/\W/g, '-'));
     var viewerContainer = Hxighlighter.getContainer(self.element);
@@ -245,7 +244,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     }
     var viewerScrollOffset = viewerContainer ? viewerContainer.scrollTop : jQuery(window).scrollTop();
     var newTop = viewerCoords.top - viewerScrollOffset + 20;
-    var newLeft = viewerCoords.left + 30
+    var newLeft = viewerCoords.left + 30;
     self.annotation_tool.viewer.css({
       'top': newTop,
       'left': newLeft
@@ -306,7 +305,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
       $.publishEvent('playAnnotation', self.instance_id, [filtered_annotation]);
     });
 
-    // console.log(annotations);        
+    // console.log(annotations);
     $.publishEvent('displayShown', self.instance_id, [self.annotation_tool.viewer, annotations]);
     self.checkOrientation(self.annotation_tool.viewer);
   };
@@ -332,7 +331,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         // jQuery('body').css('overflow-y', 'scroll');
       }
     }, 500);
-        
+
   };
 
   $.FloatingViewer.prototype.StorageAnnotationSave = function(annotations) {
@@ -358,7 +357,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     self.annotation_tool.isStatic = false;
     self.annotation_tool.updating = false;
     self.annotation_tool.editing = false;
-  }
+  };
 
   $.FloatingViewer.prototype.setUpPinAndMove = function() {
     var self = this;
@@ -373,21 +372,21 @@ import 'jquery-confirm/css/jquery-confirm.css'
     });
 
     // handles moving the editor by clicking and dragging
-    jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event){
+    jQuery('body').on('mousedown', '.annotation-editor-nav-bar', function (event) {
       self.prepareToMove(true, event);
     });
 
     // handles moving the viewer by clicking and dragging
-    jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event){
+    jQuery('body').on('mousedown', '.annotation-viewer-nav-bar', function (event) {
       self.prepareToMove(false, event);
     });
 
 
-    jQuery('body').on('mousemove', function (event){
+    jQuery('body').on('mousemove', function (event) {
       self.moving(event);
     });
 
-    jQuery('body').on('mouseup', function (event){
+    jQuery('body').on('mouseup', function (event) {
       self.finishedMoving(event);
     });
 
@@ -409,7 +408,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     jQuery('body').on('mouseleave', function(event) {
       self.finishedMoving(event);
-    })
+    });
 
   };
 
@@ -441,7 +440,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
       var move = annotator.util.mousePosition(event);
       var newTop = move.top - self.itemMoving.offsetTopBy;
       var newLeft = move.left - self.itemMoving.offsetLeftBy;
-            
+
 
       // var borderBox = self.element[0].getBoundingClientRect();
       if (newTop < 0) {
@@ -468,7 +467,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         left: newLeft
       });
 
-    } else if(self.buttonDown && self.annotation_tool.viewer && !self.annotation_tool.viewer.hasClass('static')) {
+    } else if (self.buttonDown && self.annotation_tool.viewer && !self.annotation_tool.viewer.hasClass('static')) {
       self.annotation_tool.viewer.remove();
       delete self.annotation_tool.viewer;
     }
@@ -508,9 +507,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
     var containerWidth = container ? container.clientWidth : window.innerWidth;
     if (newTop + elHeight > containerHeight) {
       if (interactionPoint && interactionPoint.top < containerHeight) {
-        newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off 
+        newTop = interactionPoint.top - elHeight - 75; // 34 is the height of the save/cancel buttons that get cut off
       } else {
-        newTop = containerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off 
+        newTop = containerHeight - elHeight - 34 - 75; // 34 is the height of the save/cancel buttons that get cut off
       }
     }
     if (newLeft + elWidth > containerWidth) {

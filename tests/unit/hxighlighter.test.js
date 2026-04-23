@@ -66,7 +66,7 @@ describe('Hxighlighter', function() {
     expect(Hxighlighter._instanceIDs.length).to.equal(2);
   });
 
-  it
+  it;
 
   it('will give object a unique id if not provided information relevant', function() {
     expect(Hxighlighter._instanceIDs[1]).to.not.have.string('the-raven-id');

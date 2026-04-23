@@ -1,13 +1,13 @@
 /**
  *  HxStyleMine Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 // require('./filaname.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -33,8 +33,8 @@
     jQuery(self.options.slot).prepend('<button class="hx-style-mine btn btn-secondary" style="margin-right: 10px; width: 150px;">Underline Mine</button>');
     jQuery('.hx-style-mine').click(function() {
       if (jQuery(this).text().trim() === "Underline Mine") {
-        jQuery('body').append('<style id="style-mine-underline">.annotation-mine { text-decoration: underline; text-decoration: underline dashed; }</style>')
-        jQuery(this).html('Remove Underlines')
+        jQuery('body').append('<style id="style-mine-underline">.annotation-mine { text-decoration: underline; text-decoration: underline dashed; }</style>');
+        jQuery(this).html('Remove Underlines');
       } else {
         jQuery('#style-mine-underline').remove();
         jQuery(this).html('Underline Mine');

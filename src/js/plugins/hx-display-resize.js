@@ -1,13 +1,13 @@
 /**
  *  DisplayResize Annotations Plugin
- *  
+ *
  *
  */
 var annotator = annotator ? annotator : require('annotator');
 // uncomment to add css file
 require('./hx-display-resize.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -32,7 +32,7 @@ require('./hx-display-resize.css');
   $.DisplayResize.prototype.setUpListeners = function() {
     var self = this;
     Hxighlighter.subscribeEvent('DrawnSelectionClicked', self.instance_id, function(_, event1, annotations) {
-      self.currentViewer.append('<div class="hx-resize resize-bar"></div>')
+      self.currentViewer.append('<div class="hx-resize resize-bar"></div>');
       self.currentViewer.find('.hx-resize.resize-bar').on('mousedown', function(event) {
         self.prepareToStretch(event);
       });

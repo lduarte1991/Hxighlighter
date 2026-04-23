@@ -1,13 +1,13 @@
 /**
  *  Websockets Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 // require('./filaname.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -20,7 +20,7 @@
     this.socket = null;
     this.maxConnections = 10;
     this.currentConnections = 0;
-    this.currentObjectId = this.options.object_id
+    this.currentObjectId = this.options.object_id;
     this.init();
     return this;
   };
@@ -33,7 +33,7 @@
     if (!self.options.Websockets || !self.options.Websockets.wsUrl) {
       return;
     }
-    var valid_object_id = self.options.ws_object_id || self.options.object_id
+    var valid_object_id = self.options.ws_object_id || self.options.object_id;
     self.slot_id = self.options.context_id.replace(/[^a-zA-Z0-9-.]/g, '-') + '--' + self.options.collection_id + '--' + valid_object_id.replace(/[^a-zA-Z0-9-]/g, '');
     self.setUpListeners();
     self.setUpConnection();
@@ -46,7 +46,7 @@
   $.Websockets.prototype.setUpListeners = function() {
     var self = this;
     $.subscribeEvent('objectIdUpdated', self.instanceID, function(_, objectID) {
-      self.currentObjectId = objectID
+      self.currentObjectId = objectID;
     });
   };
 
@@ -78,7 +78,7 @@
     var message = response['message'];
     var annotation = JSON.parse(message);
     if (annotation.platform.target_source_id !== self.currentObjectId) {
-      return
+      return;
     }
     self.convertAnnotation(annotation, function(wa) {
       if (response['type'] === 'annotation_deleted') {
@@ -109,7 +109,7 @@
           }
         }, response['type'] === 'annotation_updated']);
         // console.log("HERE:", wa)
-                
+
       }
     });
   };
@@ -138,7 +138,7 @@
       self.timerRetryInterval = setInterval(function() {
         // console.log('intervalrunning');
         self.setUpConnection();
-      }, 30000)
+      }, 30000);
     }
   };
 
@@ -173,7 +173,7 @@
           exact: annotation.quote,
           suffix: ''
         }
-      })
+      });
     });
     annotation = {
       annotationText: [annotation.text],
@@ -187,8 +187,8 @@
       totalReplies: annotation.totalComments,
       permissions: annotation.permissions
 
-    }
-    callBack(annotation)
+    };
+    callBack(annotation);
   };
 
   $.plugins.push($.Websockets);

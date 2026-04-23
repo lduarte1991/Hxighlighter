@@ -7,7 +7,7 @@
     this.tagDict = {};
     tags.forEach(function(tagval) {
       var pair = tagval.split(':');
-      self.tagDict[pair[0]] = pair[1]
+      self.tagDict[pair[0]] = pair[1];
     });
     this.mediatype = document.querySelector('#media-type').innerHTML;
     this.commonname = document.querySelector('#common-inst-display-name').innerHTML;
@@ -133,7 +133,7 @@
             inline_mode: self.inlineMode,
           },
           token: '',
-          pagination: 100, 
+          pagination: 100,
           database_params: {
             resource_link_id: '',
             utm_source: '',

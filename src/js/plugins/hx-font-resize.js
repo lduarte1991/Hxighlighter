@@ -1,12 +1,12 @@
 /**
  *  FontResize Annotations Plugin
- *  
+ *
  *
  */
 
 require('./hx-font-resize.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -53,40 +53,40 @@ require('./hx-font-resize.css');
     var minsize = 8;
     var sizediff;
 
-    if(typeof this.defaultFontSize === "undefined") {
+    if (typeof this.defaultFontSize === "undefined") {
       this.defaultFontSize = 14;
     }
-    if(typeof this.targetFontSize === "undefined") {
+    if (typeof this.targetFontSize === "undefined") {
       this.targetFontSize = this.defaultFontSize;
     }
 
     this.targetFontSize += step;
-    if(this.targetFontSize < minsize) {
+    if (this.targetFontSize < minsize) {
       this.targetFontSize = minsize;
     }
 
     sizediff = this.targetFontSize - this.defaultFontSize;
-    if(sizediff === 0) {
+    if (sizediff === 0) {
       $label.html("(+0)");
       $content.css('fontSize', '');
     } else {
-      $label.html("(" + (sizediff > 0 ? "+"+sizediff : sizediff) + ")");
+      $label.html("(" + (sizediff > 0 ? "+" + sizediff : sizediff) + ")");
       $content.css('fontSize', String(this.targetFontSize) + "px");
       nodes.push($content[0]);
     }
 
     // walk the dom and find custom fontStyle declarations and adust as necessary
     // console.log("updating font size to: ", this.targetFontSize, "step:", step);
-    while(nodes.length > 0) {
+    while (nodes.length > 0) {
       curnode = nodes.pop();
       // handle case where a <font> is embedded (deprecated tag... but still out there in the wild)
-      if(curnode.tagName.toLowerCase() === 'font') {
+      if (curnode.tagName.toLowerCase() === 'font') {
         computed = window.getComputedStyle(curnode);
         curnode.style.fontSize = computed['font-size'];
         curnode.size = "";
       }
       // handle case where a class like "msoNormal" from an embedded stylesheet has applied a font size
-      if(curnode !== $content[0] && curnode.className !== "") {
+      if (curnode !== $content[0] && curnode.className !== "") {
         curnode.style.fontSize = "inherit";
       }
 
@@ -101,8 +101,8 @@ require('./hx-font-resize.css');
         }
       }
 
-      for(var i = curnode.children.length; i > 0; i--) {
-        nodes.push(curnode.children[i-1]);
+      for (var i = curnode.children.length; i > 0; i--) {
+        nodes.push(curnode.children[i - 1]);
       }
     }
   };

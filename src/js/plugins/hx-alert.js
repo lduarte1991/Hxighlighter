@@ -1,13 +1,13 @@
 /**
  *  HxAlert Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 require('./hx-alert.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -30,11 +30,11 @@ require('./hx-alert.css');
       buttons: [{title: 'OK', action: function() {self.current_alert.remove();}}, {title: 'Cancel', action: function() {self.current_alert.remove();}}],
       time: 0, // 0 = unlimited, 1 = 1 second, 2 = 2 seconds, ... etc.
       modal: false
-    }
+    };
     jQuery('body').on('click', '.hx-notify .hx-notify-button.hx-close', function() {
       self.current_alert.removeClass('opened');
-      setTimeout(function() {self.current_alert.remove()}, 1000);
-    })
+      setTimeout(function() {self.current_alert.remove();}, 1000);
+    });
     $.subscribeEvent('HxAlert', self.instanceID, function(_, message, options) {
       var theseOptions = jQuery.extend({}, self.defaultOptions, options);
       var constructedAlert = self.createNotification(message, theseOptions.modal, theseOptions.buttons);
@@ -49,7 +49,7 @@ require('./hx-alert.css');
           return;
         }
         var currTitle = jQuery(but).html().trim();
-        var onclick = theseOptions.buttons.find(function(b) { if (b.title === currTitle) {return b}}).action;
+        var onclick = theseOptions.buttons.find(function(b) { if (b.title === currTitle) {return b;}}).action;
         jQuery(but).on('click', onclick);
       });
       setTimeout(function() { self.current_alert.addClass('opened'); }, 500);
@@ -67,10 +67,10 @@ require('./hx-alert.css');
     if (buttons.length > 0) {
       buttonsHTML = "";
       buttons.forEach(function(b) {
-        buttonsHTML += "<button class='hx-notify-button'>" + b.title + "</button>"
+        buttonsHTML += "<button class='hx-notify-button'>" + b.title + "</button>";
       });
     }
-    var notificationHTML = "<div class='hx-notify'>"+message+"<div class='hx-notify-button-group'>"+buttonsHTML+"</div></div>";
+    var notificationHTML = "<div class='hx-notify'>" + message + "<div class='hx-notify-button-group'>" + buttonsHTML + "</div></div>";
     jQuery('.sr-real-alert').html(message);
     // if (isModal) {
     //     notificationHTML = "<div class='hx-modal'>" + notificationHTML + "</div>";

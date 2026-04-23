@@ -1,6 +1,6 @@
 /**
  *  Badges Annotations Plugin
- *  
+ *
  *
  */
 
@@ -8,7 +8,7 @@
 require('./hx-badges.css');
 
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -35,7 +35,7 @@ require('./hx-badges.css');
       'hideDuration': '1000',
       timeOut: '7000',
       'positionClass': 'toast-top-left'
-    }
+    };
   };
 
   $.Badges.prototype.setUpListeners = function() {
@@ -52,7 +52,7 @@ require('./hx-badges.css');
       if (count) {
         self.updateBadge(elem, count - 1, content_id);
       }
-    })
+    });
 
     $.subscribeEvent('increaseBadgeCount', self.instanceID, function(_, elem, content_id) {
       // toastr.info("Annotation was created and can be seen when 'Mine' filter is turned on.")
@@ -76,29 +76,29 @@ require('./hx-badges.css');
   $.Badges.prototype.addBadge = function(elem, counter, content_id) {
     var self = this;
     // create a badge to go in the top-right corner
-    jQuery(elem).append('<span class="hx-badge" aria-label="'+counter+' new unread">' + counter + "</span>");
+    jQuery(elem).append('<span class="hx-badge" aria-label="' + counter + ' new unread">' + counter + "</span>");
     // add counter to data('hxbadge')
     jQuery(elem).data('hxbadge', counter);
     var content = [];
     if (typeof(content_id) != "undefined") {
       content = Array.isArray(content_id) ? content_id : [content_id];
     }
-    jQuery(elem).data('hxbadge-content', content)
+    jQuery(elem).data('hxbadge-content', content);
     // add click event listener that will automatically clear badge when clicked
     jQuery(elem).click(function() {
       self.clearBadge(elem);
-    })
+    });
   };
 
   $.Badges.prototype.updateBadge = function(elem, counter, content_id) {
     var self = this;
-    jQuery(elem).find('.hx-badge').html(counter);  
+    jQuery(elem).find('.hx-badge').html(counter);
     var content = jQuery(elem).data('hxbadge-content');
     if (typeof(content_id) !== "undefined") {
       if (content.indexOf(content_id) > -1) {
-        content.splice(content.indexOf(content_id))
+        content.splice(content.indexOf(content_id));
         if (content.length === 0) {
-          self.clearBadge(elem)
+          self.clearBadge(elem);
         } else {
           jQuery(elem).data('hxbadge', counter);
         }
@@ -106,7 +106,7 @@ require('./hx-badges.css');
         content.push(content_id);
         jQuery(elem).data('hxbadge', counter);
       }
-      jQuery(elem).data('hxbadge-content', content)
+      jQuery(elem).data('hxbadge-content', content);
     }
   };
 

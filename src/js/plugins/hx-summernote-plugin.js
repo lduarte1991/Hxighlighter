@@ -1,14 +1,14 @@
 /**
  *  Summernote RichText Plugin
- *  
+ *
  *  Should be generic, but its main purpose is to be used in tandem with annotations.
  *
  */
-require('summernote/dist/summernote-lite.css')
+require('summernote/dist/summernote-lite.css');
 require('summernote/dist/summernote-lite.js');
 require('./hx-summernote-plugin.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -30,7 +30,7 @@ require('./hx-summernote-plugin.css');
         ['para', ['ul', 'ol', 'paragraph']],
         ['insert', ['link', 'hr', 'picture', 'video']],
         ['view', ['codeview']]
-      ]
+      ];
     }
 
     this.summernoteOpts = jQuery.extend({
@@ -46,9 +46,9 @@ require('./hx-summernote-plugin.css');
       disableResizeEditor: true,
       disableDragAndDrop: true,
       onCreateLink: function(link) {
-        var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/
+        var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/;
         if (link.match(linkValidator)) {
-          var linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
+          var linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link) ? link : 'http://' + link;
           return linkUrl;
         } else {
           alert("You did not enter a valid URL, it has been removed.");
@@ -56,7 +56,7 @@ require('./hx-summernote-plugin.css');
         }
       },
       callbacks: {
-        onKeydown:  function (e) {
+        onKeydown: function (e) {
           var t = e.currentTarget.innerText;
           if ('Escape' === (e.key)) {
             $.publishEvent('ViewerEditorClose', self.instanceID, [self.currentAnnotation, true, true]);
@@ -64,13 +64,13 @@ require('./hx-summernote-plugin.css');
           } else if (t.trim().length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) === -1)) {
             // prevents everything that could add a new character
             var allowedKeys = 'ArrowLeftArrowRightArrowDownDeleteArrowUpMetaControlAltBackspace';
-            if (allowedKeys.indexOf(e.key) === -1 ||  (e.key === 'a' && !(e.ctrlKey || e.metaKey)) || (e.key === 'c' && !(e.ctrlKey || e.metaKey)) || (e.key === 'v' && !(e.ctrlKey || e.metaKey))){
+            if (allowedKeys.indexOf(e.key) === -1 ||  (e.key === 'a' && !(e.ctrlKey || e.metaKey)) || (e.key === 'c' && !(e.ctrlKey || e.metaKey)) || (e.key === 'v' && !(e.ctrlKey || e.metaKey))) {
               e.preventDefault();
-              alert('You have reached the character limit for this annotation (max 1000 characters).')
+              alert('You have reached the character limit for this annotation (max 1000 characters).');
             }
           }
 
-                    
+
         },
         onKeyup: function(e) {
           var t = e.currentTarget.innerText;
@@ -82,28 +82,28 @@ require('./hx-summernote-plugin.css');
           var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
 
           if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) === -1) ) {
-            var regex = new RegExp(/<img([\w\W ]+?)\/?>/g)
+            var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
             var inside = bufferHTML.match(regex);
             jQuery.each(inside, function(_, image_tags) {
               var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
-              bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href="' + new_img_url + "\">[External Image Link]</a>");
+              bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href="' + new_img_url + "\">[External Image Link]</a>");
             });
             // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
             setTimeout(function() { // wrap in a timer to prevent issues in Firefox
               self.elementObj.summernote('code', bufferHTML);
               jQuery('#maxContentPost').text(maxLength);
               alert('You may have pasted an image. It will be converted to a link.');
-            }, 100)
+            }, 100);
           }
-                            
+
           if (t.length + bufferText.length >= maxLength && (self.options.instructors.indexOf(self.options.user_id) === -1)) {
             e.preventDefault();
             var bufferTextAllowed = bufferText.trim().substring(0, maxLength - t.length);
             setTimeout(function() { // wrap in a timer to prevent issues in Firefox
               document.execCommand('insertText', false, bufferTextAllowed);
               jQuery('#maxContentPost').text(maxLength - t.length);
-              alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.')
-            }, 10)
+              alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.');
+            }, 10);
           }
         },
         onChange: function(contents, $editable) {
@@ -128,7 +128,7 @@ require('./hx-summernote-plugin.css');
      * Initializes instance
      */
   $.SummernoteRichText.prototype.init = function() {
-        
+
     // warns dev that they forgot to include summernote.js
     if (typeof jQuery.summernote !== "object") {
       // console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
@@ -137,7 +137,7 @@ require('./hx-summernote-plugin.css');
   };
 
   /**
-     * 
+     *
      * @param element {HTMLElement} - where the annotation will be added
      * @param selector {String} - selector to find input it is replacing
      */
@@ -146,7 +146,7 @@ require('./hx-summernote-plugin.css');
 
     // adds the summernote WYSIWIG to the editor to the selector's location
     self.elementObj = element.find(selector);
-    if(self.elementObj.closest('.side').length > 0) {
+    if (self.elementObj.closest('.side').length > 0) {
       self.summernoteOpts.width = self.elementObj.parent().width();
     } else {
       self.summernoteOpts.width = 435;
@@ -196,7 +196,7 @@ require('./hx-summernote-plugin.css');
   };
 
   /**
-     * Returns the HTML value of the WYSIWYG. 
+     * Returns the HTML value of the WYSIWYG.
      *
      * @return     {String}  HTML value found in the WYSIWYG
      */
@@ -231,10 +231,10 @@ require('./hx-summernote-plugin.css');
   $.SummernoteRichText.prototype.annotationListeners = function() {
     var self = this;
 
-    $.subscribeEvent('editorToBeHidden', self.instanceID, function(){
+    $.subscribeEvent('editorToBeHidden', self.instanceID, function() {
       self.destroy();
     }.bind(self));
-    $.subscribeEvent('editorHidden', self.instanceID, function(){
+    $.subscribeEvent('editorHidden', self.instanceID, function() {
       self.destroy();
     }.bind(self));
 
@@ -269,7 +269,7 @@ require('./hx-summernote-plugin.css');
       }
 
       annotation['annotationText'] = [annotationText];
-    } catch(e) {
+    } catch (e) {
       // console.log('plugin was never started');
     }
     self.destroy();
@@ -295,9 +295,9 @@ require('./hx-summernote-plugin.css');
         self.elementObj.summernote('code', annotation.annotationText);
       }
       if (typeof(annotationText) === "string" ? annotationText.length > 0 : annotationText.join('').length > 0) {
-        editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.")
+        editor.find('.note-editable').attr('aria-label', 'Your current annotation text: <em>' + annotationText + "</em>. You are now in a text box. Edit your annotation.");
       }
-    }, 250)
+    }, 250);
   };
 
   $.SummernoteRichText.prototype.setUpEditor = function(type) {
@@ -312,7 +312,7 @@ require('./hx-summernote-plugin.css');
     if (type === "simple") {
       return [
         ['font', ['bold', 'italic', 'underline', 'clear']]
-      ]
+      ];
     }
 
     var fullsetup = [
@@ -332,7 +332,7 @@ require('./hx-summernote-plugin.css');
     if (type.indexOf('no-style')) {
       // no-style type requires no additional setup
     }
-  }
+  };
 
   Object.defineProperty($.SummernoteRichText, 'name', {
     value: "SummernoteRichText"

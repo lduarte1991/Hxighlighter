@@ -1,13 +1,13 @@
 /**
  *  AdminButton Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 require('./hx-adminbutton.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -39,7 +39,7 @@ require('./hx-adminbutton.css');
 
   $.AdminButton.prototype.setUpButtons = function() {
     var self = this;
-    jQuery(self.options.slot).before('<div class="sidebar-navbar"><a href="'+self.url+'" title="Admin Hub" aria-label="Admin Hub" id="homebutton" role="button"><span class="fas fa-users-cog"></span></button></div>');
+    jQuery(self.options.slot).before('<div class="sidebar-navbar"><a href="' + self.url + '" title="Admin Hub" aria-label="Admin Hub" id="homebutton" role="button"><span class="fas fa-users-cog"></span></button></div>');
   };
 
   $.AdminButton.prototype.saving = function(annotation) {

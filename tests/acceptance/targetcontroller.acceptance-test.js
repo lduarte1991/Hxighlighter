@@ -12,7 +12,7 @@ describe('Text Annotation Target Area', function() {
 
   beforeEach(async function() {
     page = await browser.newPage();
-    await page.goto('http://localhost:9000')
+    await page.goto('http://localhost:9000');
   });
 
   afterEach(async function() {
@@ -29,7 +29,7 @@ describe('Text Annotation Target Area', function() {
     });
     expect(wrapper).to.exist;
   });
-    
+
   it('should have an id associated with it', async function() {
     const text = await page.evaluate(async() => {
       return document.getElementsByClassName('annotation-slot')[0].getAttribute('id');

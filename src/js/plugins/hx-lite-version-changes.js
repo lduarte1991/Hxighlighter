@@ -1,13 +1,13 @@
 /**
  *  LiteVersionChanges Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 // require('./filaname.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -32,7 +32,7 @@
     });
     jQuery('.hxighlighter-container').css('overflow-y', 'initial');
     if (self.options.authoring_mode) {
-      jQuery('.annotationSection.side nav').append('<button id="hx-print-annotations" class="sidebar-button" role="button" tabindex="0" aria-label="Download Annotations JSON" style="left:34px; background: transparent; color: #595959; font-size: 17px;"><span class="fas fa-download"></span></button>')
+      jQuery('.annotationSection.side nav').append('<button id="hx-print-annotations" class="sidebar-button" role="button" tabindex="0" aria-label="Download Annotations JSON" style="left:34px; background: transparent; color: #595959; font-size: 17px;"><span class="fas fa-download"></span></button>');
       jQuery('.hxighlighter-container').on('click', '#hx-print-annotations', function() {
         var downloadFun = function(list) {
           var annotationList = {
@@ -45,7 +45,7 @@
           document.body.appendChild(downloadAnchorNode); // required for firefox
           downloadAnchorNode.click();
           downloadAnchorNode.remove();
-        }
+        };
         $.publishEvent('downloadAnnotations', self.instanceID, [downloadFun]);
       });
     } else {

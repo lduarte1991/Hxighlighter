@@ -91,12 +91,12 @@ require('videojs-transcript');
     this.guid = $.getUniqueId();
     var selector = jQuery('#viewer');
     var origWidth = selector[0].clientWidth;
-    var html = '<div class="annotator-wrapper"><video id="vid1" class="video-js" type="*"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source></video></div>'
+    var html = '<div class="annotator-wrapper"><video id="vid1" class="video-js" type="*"><source src="' + this.options.object_id + '" type="' + this.options.source_type + '"></source></video></div>';
     if (this.options.transcript_url && this.options.transcript_url.length > 0) {
-      html = '<div class="annotator-wrapper"><video id="vid1" class="video-js" type="*"><source src="'+this.options.object_id+'" type="'+this.options.source_type+'"></source><track kind="captions" src="' + this.options.transcript_url +'" srclang="en" label="English" default></video><div id="transcript1"></div></div>'
+      html = '<div class="annotator-wrapper"><video id="vid1" class="video-js" type="*"><source src="' + this.options.object_id + '" type="' + this.options.source_type + '"></source><track kind="captions" src="' + this.options.transcript_url + '" srclang="en" label="English" default></video><div id="transcript1"></div></div>';
     }
-    selector.append(html)
-        
+    selector.append(html);
+
     this.vid_player = videojs('vid1', {
       "width": origWidth + 'px',
       "controls": true,
@@ -140,16 +140,16 @@ require('videojs-transcript');
             showTitle: false,
             showTrackSelector: false,
             autoscroll: true,
-          }
+          };
           var transcript = self.vid_player.transcript(options);
           var transcriptContainer = document.querySelector('#transcript1');
           transcriptContainer.appendChild(transcript.el());
           // future-use : establishing PIP
-        }, 500)
+        }, 500);
       } else {
         jQuery('.vjs-toggle-transcript').hide();
       }
-            
+
       // self.vid_player.transcript(options);
       // var transcriptContainer = document.querySelector('#transcript');
       // transcriptContainer.appendChild(transcript.el());
@@ -178,7 +178,7 @@ require('videojs-transcript');
     var self = this;
 
     jQuery('.toggle-alerts').click(function() {
-      if(jQuery(this).hasClass('on')) {
+      if (jQuery(this).hasClass('on')) {
         jQuery(this).html('Turn Alerts On');
         jQuery(this).removeClass('on');
         jQuery('.sr-alert').attr('aria-live', 'off');
@@ -196,7 +196,7 @@ require('videojs-transcript');
       self.element = element;
       // console.log("Target loaded");
       // finish setting up selectors
-            
+
       // self.setUpSelectors(self.element[0]);
       // self.setUpDrawers(self.element[0]);
 
@@ -247,7 +247,6 @@ require('videojs-transcript');
     });
 
 
-
     $.subscribeEvent('GetSpecificAnnotationData', self.windowId, function(_, id, callBack) {
       // console.log(self.mir.viewer.workspace.slots[0].window.endpoint);
       // callBack(self.mir.viewer.workspace.slots[0].window.endpoint.annotationsListCatch.find(function(ann) {
@@ -288,7 +287,7 @@ require('videojs-transcript');
     jQuery.each($.drawers, function(_, drawer) {
       self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
     });
-  }
+  };
 
   $.VideoTarget.prototype.setUpPlugins = function(element) {
     var self = this;
@@ -319,16 +318,16 @@ require('videojs-transcript');
       if (self.options.viewerOptions.defaultTab === "mine") {
         options = {
           'username': self.options.username
-        }
+        };
       } else if (self.options.viewerOptions.defaultTab === "instructor") {
         options = {
           'userid': self.options.instructors
-        }
+        };
       } else {
-        var exclusion = [self.options.user_id].concat(self.options.instructors)
+        var exclusion = [self.options.user_id].concat(self.options.instructors);
         options = {
           'exclude_userid': exclusion
-        }
+        };
       }
 
       self.storage[idx].onLoad(element, options);
@@ -344,8 +343,8 @@ require('videojs-transcript');
       setTimeout(function() {
         jQuery('#vjs-start-range-text-input').focus();
       }, 500);
-    }
-    jQuery(document).on('keydown', function(event){
+    };
+    jQuery(document).on('keydown', function(event) {
       if ((event.key === '1' && (event.altKey || event.ctrlKey)) || (event.key === '\'' && (event.altKey || event.ctrlKey))) {
         event.preventDefault();
         snapshot();
@@ -384,7 +383,7 @@ require('videojs-transcript');
           jQuery('.sr-real-alert').html(newAlert);
 
         }
-                
+
         event.preventDefault();
       }
     });
@@ -441,7 +440,7 @@ require('videojs-transcript');
       if (is_new_annotation) {
         self.TargetAnnotationUndraw(annotation);
       }
-            
+
       // else, the annotation was already drawn, so don't touch it.
     } else if (is_new_annotation) {
       annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
@@ -520,8 +519,8 @@ require('videojs-transcript');
     annotations.forEach(function(ann) {
       var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
       self.TargetAnnotationDraw(converted_ann, true);
-      $.publishEvent('annotationLoaded', self.instance_id, [converted_ann])
-            
+      $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
+
     });
   };
 
@@ -567,23 +566,23 @@ require('videojs-transcript');
     if (self.options.viewerOptions.defaultTab === "mine") {
       options = {
         'userid': self.options.user_id
-      }
+      };
     } else if (self.options.viewerOptions.defaultTab === "instructor") {
       options = {
         'userid': self.options.instructors
-      }
+      };
     } else {
-      var exclusion = [self.options.user_id].concat(self.options.instructors)
+      var exclusion = [self.options.user_id].concat(self.options.instructors);
       options = {
         'exclude_userid': exclusion
-      }
+      };
     }
-    jQuery.each(self.storage, function(idx, store){
+    jQuery.each(self.storage, function(idx, store) {
       store.onLoad(element, options, function(anns, converter) {
         // console.log('hello hhello hello', anns);
         $.publishEvent('drawFromSearch', self.instance_id, [anns, converter]);
       });
     });
-  }
+  };
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

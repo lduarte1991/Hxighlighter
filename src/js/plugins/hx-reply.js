@@ -1,15 +1,15 @@
 /**
  *  Reply Plugin
- *  
+ *
  *
  */
-require('summernote/dist/summernote-lite.css')
+require('summernote/dist/summernote-lite.css');
 require('summernote/dist/summernote-lite.js');
 require('./hx-reply.css');
 import 'jquery-confirm';
-import 'jquery-confirm/css/jquery-confirm.css'
+import 'jquery-confirm/css/jquery-confirm.css';
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -30,9 +30,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
         ['font', ['bold', 'italic', 'underline', 'link']],
       ],
       onCreateLink: function(link) {
-        var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/
+        var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/;
         if (link.match(linkValidator)) {
-          var linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
+          var linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link) ? link : 'http://' + link;
           return linkUrl;
         } else {
           alert("You did not enter a valid URL, it has been removed.");
@@ -46,15 +46,15 @@ import 'jquery-confirm/css/jquery-confirm.css'
           var bufferHTML = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('text/html');
 
           if (bufferHTML.indexOf('<img') > -1 && (self.options.instructors.indexOf(self.options.user_id) === -1) ) {
-            var regex = new RegExp(/<img([\w\W ]+?)\/?>/g)
+            var regex = new RegExp(/<img([\w\W ]+?)\/?>/g);
             var inside = bufferHTML.match(regex);
             jQuery.each(inside, function(_, image_tags) {
               var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
               if (new_img_url.indexOf('data:image') > -1) {
-                alert('You are not allowed to paste images in annotations. Add a descriptive link instead.')
+                alert('You are not allowed to paste images in annotations. Add a descriptive link instead.');
                 bufferHTML = bufferHTML.replace(image_tags, '');
               } else {
-                bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href="' + new_img_url + "\">[External Image Link]</a>");
+                bufferHTML = bufferHTML.replace(image_tags, '<a title="' + new_img_url + '" href="' + new_img_url + "\">[External Image Link]</a>");
               }
             });
             // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
@@ -63,17 +63,17 @@ import 'jquery-confirm/css/jquery-confirm.css'
               self.elementObj.summernote('code', bufferHTML);
               jQuery('#maxContentPost').text(1000);
               alert('You may have pasted an image. It will be converted to a link.');
-            }, 100)
+            }, 100);
           }
-                            
+
           if (t.length + bufferText.length >= 1000) {
             e.preventDefault();
             var bufferTextAllowed = bufferText.trim().substring(0, 1000 - t.length);
             setTimeout(function() { // wrap in a timer to prevent issues in Firefox
               document.execCommand('insertText', false, bufferTextAllowed);
               jQuery('#maxContentPost').text(1000 - t.length);
-              alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.')
-            }, 10)
+              alert('You have reached the character limit for this annotation (max 1000 characters). Your pasted text was trimmed to meet the 1000 character limit.');
+            }, 10);
           }
 
         },
@@ -95,7 +95,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
      * Initializes instance
      */
   $.Reply.prototype.init = function() {
-        
+
     // warns dev that they forgot to include summernote.js
     if (typeof jQuery.summernote !== "object") {
       console.log("You must include summernote.js and summernote.css on this page in order to use this plugin");
@@ -104,7 +104,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
   };
 
   /**
-     * 
+     *
      * @param element {HTMLElement} - where the annotation will be added
      * @param selector {String} - selector to find input it is replacing
      */
@@ -115,7 +115,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     }
     // adds the summernote WYSIWIG to the editor to the selector's location
     self.elementObj = self.jq_backup(element).find(selector);
-    var newOptions = jQuery.extend({}, self.options, {'width': element.outerWidth()-24});
+    var newOptions = jQuery.extend({}, self.options, {'width': element.outerWidth() - 24});
     self.elementObj.summernote(newOptions);
 
     // removes summernote's ability to tab within the editor so users can tab through items
@@ -157,7 +157,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
   };
 
   /**
-     * Returns the HTML value of the WYSIWYG. 
+     * Returns the HTML value of the WYSIWYG.
      *
      * @return     {String}  HTML value found in the WYSIWYG
      */
@@ -216,7 +216,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
           annotation_data._local.highlights.forEach(function(high) {
             jQuery(high).data('annotation', annotation_data);
           });
-          jQuery('.reply-area-'+annotation_data.id+' .view-replies').html('View ' + annotation_data.totalReplies + ' Replies');
+          jQuery('.reply-area-' + annotation_data.id + ' .view-replies').html('View ' + annotation_data.totalReplies + ' Replies');
         }]);
       }
     });
@@ -244,33 +244,33 @@ import 'jquery-confirm/css/jquery-confirm.css'
       jQuery.each(annotations, function(_, annotation) {
         if (typeof(annotation.id) === "undefined") {
           $.publishEvent('convertToEndpoint', self.instanceID, [annotation, function(ann) {
-            self.annotationShown(viewer.find('.item-'+ann.id), ann, false);
+            self.annotationShown(viewer.find('.item-' + ann.id), ann, false);
           }.bind(self)]);
         } else {
-          self.annotationShown(viewer.find('.item-'+annotation.id), annotation, false);
+          self.annotationShown(viewer.find('.item-' + annotation.id), annotation, false);
         }
-                
+
       });
     } else {
       self.annotationShown(viewer, annotations, true);
     }
   };
 
-  $.Reply.prototype.annotationShown = function(viewer, annotation,isSidebar) {
+  $.Reply.prototype.annotationShown = function(viewer, annotation, isSidebar) {
     var self = this;
     var prefix = isSidebar ? "sidebar-" : "other-";
-        
-    jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button aria-label="Close Reply List" title="Close Reply List" class="close-list-reply"><span class="fa fa-times-circle"></span></button><button aria-label="Toggle Visual Order of Replies" title="Reverse Replies Order" class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-'+annotation.id+'"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-'+annotation.id+'">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="'+prefix+'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-'+annotation.id+'" style="display:none;"><textarea id="' + prefix + 'reply-textarea-'+annotation.id+'"></textarea><button id="' + prefix + 'save-reply-'+annotation.id+'">Save</button><button id="' + prefix + 'cancel-reply-'+annotation.id+'">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-'+annotation.id+'">Reply to Annotation</button></div>');
+
+    jQuery(viewer).find('.plugin-area-bottom').append('<div style="display: none;" class="reply-menu reply-menu-' + annotation.id + '"><button aria-label="Close Reply List" title="Close Reply List" class="close-list-reply"><span class="fa fa-times-circle"></span></button><button aria-label="Toggle Visual Order of Replies" title="Reverse Replies Order" class="sort-list-reply"><span class="fa fa-sort"></span></button></div><div class="reply-area-' + annotation.id + '"><button class="view-replies" style="display:none;" id="' + prefix + 'replies-' + annotation.id + '">View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies') + '</button><div class="' + prefix + 'reply-list" style="display:none;"></div><div class="create-reply-area" id="' + prefix + 'create-reply-area-' + annotation.id + '" style="display:none;"><textarea id="' + prefix + 'reply-textarea-' + annotation.id + '"></textarea><button id="' + prefix + 'save-reply-' + annotation.id + '">Save</button><button id="' + prefix + 'cancel-reply-' + annotation.id + '">Cancel</button></div><button class="create-reply" id="' + prefix + 'reply-' + annotation.id + '">Reply to Annotation</button></div>');
     if (('totalReplies' in annotation) && annotation.totalReplies > 0) {
       jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
       jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
     }
-    jQuery(viewer).find('.plugin-area-bottom #'+prefix+'reply-' + annotation.id).click(function() {
+    jQuery(viewer).find('.plugin-area-bottom #' + prefix + 'reply-' + annotation.id).click(function() {
       if (jQuery('.note-editor.card').length > 0) {
         return;
       }
-      jQuery('#'+prefix+'create-reply-area-' + annotation.id).show();
-      self.addWYSIWYG(viewer, '#'+prefix+'reply-textarea-' + annotation.id);
+      jQuery('#' + prefix + 'create-reply-area-' + annotation.id).show();
+      self.addWYSIWYG(viewer, '#' + prefix + 'reply-textarea-' + annotation.id);
       jQuery(this).hide();
     });
 
@@ -287,7 +287,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
     jQuery(viewer).find('.plugin-area-bottom .reply-menu-' + annotation.id + ' .close-list-reply').click(function() {
       jQuery(viewer).find('.reply-area-' + annotation.id + " .view-replies").show();
       jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
-      jQuery(viewer).find('.'+prefix+'reply-list').hide();
+      jQuery(viewer).find('.' + prefix + 'reply-list').hide();
       jQuery(viewer).find('.reply-menu').hide();
     });
 
@@ -297,8 +297,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
 
     jQuery('#' + prefix + 'cancel-reply-' + annotation.id).click(function() {
       self.destroy();
-      jQuery('#'+prefix+'create-reply-area-' + annotation.id).hide();
-      jQuery('#'+prefix+'reply-' + annotation.id).show();
+      jQuery('#' + prefix + 'create-reply-area-' + annotation.id).hide();
+      jQuery('#' + prefix + 'reply-' + annotation.id).show();
     });
     jQuery('#' + prefix + 'save-reply-' + annotation.id).click(function() {
       var result = self.elementObj.summernote('code');
@@ -306,7 +306,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         alert('content contains javascript code that will be removed.');
         result = result.replace('<script', '&lt;script').replace('</script>', '&lt;/script&gt;');
       }
-      if (jQuery(result).text().length === 0){
+      if (jQuery(result).text().length === 0) {
         alert('replies must contain text');
         return;
       }
@@ -326,7 +326,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
           name: self.options.username,
           id: self.options.user_id
         }
-      }
+      };
       // console.log("Reaching here", reply)
       $.publishEvent('StorageAnnotationSave', self.instanceID, [reply, false]);
       annotation.totalReplies++;
@@ -340,26 +340,26 @@ import 'jquery-confirm/css/jquery-confirm.css'
       self.addReplyToViewer(viewer, reply, prefix, annotation);
       self.destroy();
       if (prefix === "other-") {
-        if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
-          jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
-          jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').hide();
-          jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').show();
-          jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
-          jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
+        if (jQuery('.ann-item.item-' + annotation.id + ' .create-reply').length === 2) {
+          jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+          jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').hide();
+          jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').show();
+          jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+          jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
         }
-        jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+        jQuery('.floating.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
       } else {
-        if (jQuery('.ann-item.item-'+annotation.id+' .create-reply').length === 2) {
-          jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
-          jQuery('.floating.ann-item.item-'+annotation.id+' .create-reply').hide();
-          jQuery('.floating.ann-item.item-'+annotation.id+' .view-replies').show();
-          jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
-          jQuery('.floating.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
+        if (jQuery('.ann-item.item-' + annotation.id + ' .create-reply').length === 2) {
+          jQuery('.floating.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+          jQuery('.floating.ann-item.item-' + annotation.id + ' .create-reply').hide();
+          jQuery('.floating.ann-item.item-' + annotation.id + ' .view-replies').show();
+          jQuery('.floating.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+          jQuery('.floating.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
         }
-        jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+        jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
 
       }
-      jQuery('#'+prefix+'create-reply-area-' + annotation.id).hide();
+      jQuery('#' + prefix + 'create-reply-area-' + annotation.id).hide();
       jQuery(viewer).find('.create-reply').show();
       jQuery(viewer).find('.plugin-area-bottom div[class*=reply-list]').show();
       jQuery(viewer).find('.plugin-area-bottom .reply-menu').show();
@@ -393,7 +393,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
       results.rows.reverse().forEach(function(reply) {
         var rep = converter(reply);
         self.addReplyToViewer(viewer, rep, prefix, annotation);
-        annotation.replies ? (annotation.replies.push(rep)) : (annotation.replies = [rep])
+        annotation.replies ? (annotation.replies.push(rep)) : (annotation.replies = [rep]);
       });
       if (annotation.totalReplies !== results.rows.length) {
         annotation.totalReplies = results.rows.length;
@@ -405,7 +405,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
       }
     }, function() {
       // console.log("Didn't work exactly");
-    }])
+    }]);
   };
 
   $.Reply.prototype.addReplyToViewer = function(viewer, reply, prefix, annotation) {
@@ -430,8 +430,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
           reply_list.find('.reply-item-' + reply.id + ' .reply-body').html(reply.annotationText.join('<br>'));
         } else {
           // console.log("List is empty");
-          jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
-          reply_list.append("<div class='reply reply-item-" + reply.id + "'>"+delete_option+"<strong>" + display_name + "</strong> ("+jQuery.timeago(reply.created)+"):" + reply.annotationText.join('<br><br>') + "</div>");
+          jQuery('.reply-area-' + annotation.id + ' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
+          reply_list.append("<div class='reply reply-item-" + reply.id + "'>" + delete_option + "<strong>" + display_name + "</strong> (" + jQuery.timeago(reply.created) + "):" + reply.annotationText.join('<br><br>') + "</div>");
           jQuery('.reply.reply-item-' + reply.id + ' .delete-reply').confirm({
             'title': 'Delete Reply?',
             'content': 'Would you like to delete your reply? This is permanent.',
@@ -449,16 +449,16 @@ import 'jquery-confirm/css/jquery-confirm.css'
                   jQuery(high).data('annotation', annotation);
                 });
                 jQuery('.reply.reply-item-' + reply.id).remove();
-                jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').html('View '+self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
+                jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').html('View ' + self.pluralize(annotation.totalReplies, 'Reply', 'Replies'));
                 if (annotation.totalReplies === 0) {
-                  jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').show();
-                  jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').hide();
+                  jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').show();
+                  jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').hide();
                 } else {
-                  jQuery('.side.ann-item.item-'+annotation.id+' .create-reply').hide();
-                  jQuery('.side.ann-item.item-'+annotation.id+' .view-replies').show();
+                  jQuery('.side.ann-item.item-' + annotation.id + ' .create-reply').hide();
+                  jQuery('.side.ann-item.item-' + annotation.id + ' .view-replies').show();
                 }
-                jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
-                jQuery('.side.ann-item.item-'+annotation.id).find('.plugin-area-bottom .reply-menu').hide();
+                jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom div[class*=reply-list]').hide();
+                jQuery('.side.ann-item.item-' + annotation.id).find('.plugin-area-bottom .reply-menu').hide();
               },
               cancel: function() {
               }
@@ -467,7 +467,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
         }
       } else {
         // console.log("not visible");
-        jQuery('.reply-area-'+annotation.id+' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
+        jQuery('.reply-area-' + annotation.id + ' .view-replies').html('View ' + annotation.totalReplies + ' Replies');
         setTimeout(function () {
           if (!reply_list.is(':visible')) {
             if (('totalReplies' in annotation) && annotation.totalReplies > 0) {
@@ -475,8 +475,8 @@ import 'jquery-confirm/css/jquery-confirm.css'
               jQuery(viewer).find('.reply-area-' + annotation.id + " .create-reply").hide();
             }
           }
-        }, 500)
-                
+        }, 500);
+
       }
     }, 500);
   };

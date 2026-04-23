@@ -1,6 +1,6 @@
 /**
  *  Dropdown (Predetermined) Tags Plugin
- *  
+ *
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
@@ -11,7 +11,7 @@ require('jquery-tokeninput/styles/token-input-facebook.css');
 require('jquery-tokeninput/build/jquery.tokeninput.min.js');
 require('./hx-dropdowntags-plugin.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -49,7 +49,7 @@ require('./hx-dropdowntags-plugin.css');
 
 
   /**
-     * Returns the HTML value of the WYSIWYG. 
+     * Returns the HTML value of the WYSIWYG.
      *
      * @return     {String}  HTML value found in the WYSIWYG
      */
@@ -145,7 +145,7 @@ require('./hx-dropdowntags-plugin.css');
      */
   $.DropdownTags.prototype.annotationListeners = function() {
     var self = this;
-    $.subscribeEvent('editorHidden', self.instanceID, function(){
+    $.subscribeEvent('editorHidden', self.instanceID, function() {
       self.destroy();
     }.bind(this));
   };
@@ -175,13 +175,13 @@ require('./hx-dropdowntags-plugin.css');
     self.field = editor.find('.token-tag-field');
 
     var tags = ('tags' in self.options) ? self.options.tags : [];
-    var hintText = tags.length > 0 ? '(e.g., ' + tags.join(', ') + ')' : '' 
+    var hintText = tags.length > 0 ? '(e.g., ' + tags.join(', ') + ')' : '';
     var preDTags = [];
     tags.forEach(function(tag) {
       preDTags.push({
         name: tag,
         id: tag
-      })
+      });
     });
     self.field.tokenInput(preDTags, {
       theme: 'facebook',

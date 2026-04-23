@@ -47,13 +47,13 @@
     } catch (e) {
       return $$.mouseFixedPositionFromRange(event);
     }
-  }
+  };
 
   $$.mouseFixedPositionFromRange = function(boundingBox) {
     return {
       top: boundingBox.top,
       left: boundingBox.left
-    }
+    };
   };
 
   $$.getQuoteFromHighlights = function(ranges) {
@@ -62,10 +62,10 @@
     for (var i = 0, len = ranges.length; i < len; i++) {
       text = [];
       var r = ranges[i];
-      try{
+      try {
         text.push(Hxighlighter.trim(r.text()));
-      } catch(e) {
-        text.push(Hxighlighter.trim(r.toString()))
+      } catch (e) {
+        text.push(Hxighlighter.trim(r.toString()));
         if (r.toString === "[object Object]") {
           text.pop();
           text.push(r.exact);
@@ -79,7 +79,7 @@
       'exact': exactText,
       'exactNoHtml': text
     };
-  }
+  };
 
   /**
      * Gets the unique identifier.
@@ -131,7 +131,7 @@
     // console.log(eventName, list);
     if (!$$.exists(instanceID) || instanceID === "") {
       // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
-      jQuery.each($$._instanceIDs, function(_, inst_id) {  
+      jQuery.each($$._instanceIDs, function(_, inst_id) {
         // some of the events require the core to handle calling the components in a certain order
         if ($$.requiredEvents.indexOf(eventName) >= 0) {
           $$._instances[inst_id].core[eventName](list);
@@ -144,7 +144,7 @@
       if ($$.requiredEvents.indexOf(eventName) >= 0) {
         $$._instances[instanceID].core[eventName](list);
       }
-      jQuery.publish(eventName+ '.' + instanceID, list);
+      jQuery.publish(eventName + '.' + instanceID, list);
     }
   };
 
@@ -168,12 +168,12 @@
     }
   };
 
-  $$.pauseEvent = function(e){
-    if(e.stopPropagation) e.stopPropagation();
-    if(e.preventDefault) e.preventDefault();
-    e.cancelBubble=true;
-    e.returnValue=false;
+  $$.pauseEvent = function(e) {
+    if (e.stopPropagation) e.stopPropagation();
+    if (e.preventDefault) e.preventDefault();
+    e.cancelBubble = true;
+    e.returnValue = false;
     return false;
-  }
+  };
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

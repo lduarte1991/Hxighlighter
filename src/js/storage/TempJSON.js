@@ -10,14 +10,14 @@ var hrange = require('../h-range.js');
   $.TempJSON.prototype.setUpListeners = function() {
     var self = this;
     $.subscribeEvent('downloadAnnotations', self.instance_id, function(_, callBack) {
-      callBack(self.store.reverse())
+      callBack(self.store.reverse());
     });
 
     $.subscribeEvent('dumpStore', self.instance_id, function(_, callBack) {
       var annotations = [];
       self.store.forEach(function(ann) {
         annotations.push(self.convertFromWebAnnotation(ann));
-      })
+      });
       callBack(annotations);
     });
 
@@ -52,7 +52,7 @@ var hrange = require('../h-range.js');
               $.totalAnnotations = data.rows.length;
               callB(data, true);
               return true;
-            } catch(parseErr) {
+            } catch (parseErr) {
               console.error('[TempJSON] Failed to parse inline data-annotations:', parseErr);
               return false;
             }
@@ -77,7 +77,7 @@ var hrange = require('../h-range.js');
             observer.observe(inlineEl, { attributes: true, attributeFilter: ['data-annotations'] });
           }
         }
-      } else if(self.options.storageOptions.external_url.json_url !== '') {
+      } else if (self.options.storageOptions.external_url.json_url !== '') {
         jQuery.ajax({
           url: self.options.storageOptions.external_url.json_url,
           success: function(data) {
@@ -86,17 +86,17 @@ var hrange = require('../h-range.js');
           }
         });
       }
-    } catch(e) {
+    } catch (e) {
       console.error('[TempJSON] Error in setUpListeners:', e);
     }
-  }
+  };
 
 
   $.TempJSON.prototype.onLoad = function(element, opts) {
   };
 
   $.TempJSON.prototype.search = function(options, callBack, errfun) {
-  }
+  };
 
   $.TempJSON.prototype.StorageAnnotationSave = function(ann_to_save, elem, updating) {
     var self = this;
@@ -120,7 +120,7 @@ var hrange = require('../h-range.js');
       if (ann.id === save_ann.id) {
         return save_ann;
       }
-      return ann
+      return ann;
     });
 
     // console.log(self.store);
@@ -129,7 +129,7 @@ var hrange = require('../h-range.js');
   $.TempJSON.prototype.convertToWebAnnotation = function(annotation, elem) {
     var self = this;
 
-    var tags = []
+    var tags = [];
     jQuery.each(annotation.tags, function(_, t) {
       var t_el = {
         'type': 'TextualBody',
@@ -137,9 +137,9 @@ var hrange = require('../h-range.js');
         'purpose': 'tagging'
       };
       tags.push(t_el);
-    })
+    });
 
-       
+
     var targetList = [];
     var source_id = this.options.object_id;
     var purpose = 'commenting';
@@ -156,7 +156,7 @@ var hrange = require('../h-range.js');
       // console.log('convert2wa', annotation.ranges, elem);
       var serializedRanges = annotation.ranges;// self.serializeRanges(annotation.ranges, elem);
       var mediatype = this.options.mediaType.charAt(0).toUpperCase() + this.options.mediaType.slice(1);
-      jQuery.each(serializedRanges, function(index, range){
+      jQuery.each(serializedRanges, function(index, range) {
         targetList.push({
           'source': 'http://sample.com/fake_content/preview',
           'type': mediatype,
@@ -191,7 +191,7 @@ var hrange = require('../h-range.js');
         });
       });
     }
-    var bodyItems = []
+    var bodyItems = [];
     if (!Array.isArray(annotation.annotationText)) {
       annotation.annotationText = [annotation.annotationText];
     }
@@ -210,7 +210,7 @@ var hrange = require('../h-range.js');
       'type': 'Annotation',
       'schema_version': '1.1.0',
       'id': annotation['id'],
-      'creator':  {
+      'creator': {
         'id': self.options.user_id,
         'name': this.options.username,
       },
@@ -252,7 +252,7 @@ var hrange = require('../h-range.js');
       ranges: self.getAnnotationTarget(webAnn, jQuery(element)),
       totalReplies: webAnn.totalReplies,
       permissions: webAnn.permissions,
-    }
+    };
     return annotation;
   };
 
@@ -265,11 +265,11 @@ var hrange = require('../h-range.js');
       // console.log("reached getAnnotationTargetItems", webAnn);
       if (webAnn['target']['items'][0]['type'] === "Annotation") {
         // console.log([{'parent':webAnn['target']['items'][0]['source']}]);
-        return [{'parent':webAnn['target']['items'][0]['source']}]
+        return [{'parent': webAnn['target']['items'][0]['source']}];
       }
       // console.log("nope, something went wrong");
       return webAnn['target']['items'][0]['selector']['items'];
-    } catch(e) {
+    } catch (e) {
       // console.log(e);
       return [];
     }
@@ -292,17 +292,17 @@ var hrange = require('../h-range.js');
         } else if (targetItem['type'] === "TextPositionSelector") {
           positionRanges.push({
             globalStartOffset: targetItem['start'],
-            globalEndOffset: targetItem['end'] 
+            globalEndOffset: targetItem['end']
           });
         } else if (targetItem['type'] === "TextQuoteSelector") {
           textRanges.push({
             prefix: targetItem['prefix'],
             exact: targetItem['exact'],
             suffix: targetItem['suffix']
-          })
+          });
         }
       } else {
-        return ranges.push(targetItem)
+        return ranges.push(targetItem);
       }
     });
     if ((xpathRanges.length === positionRanges.length && xpathRanges.length === textRanges.length)) {
@@ -313,7 +313,7 @@ var hrange = require('../h-range.js');
           'text': textRanges[i]
         });
       }
-    } else if(xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
+    } else if (xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
       var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
       var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
 
@@ -341,24 +341,24 @@ var hrange = require('../h-range.js');
         }
       });
       return found;
-    } catch(e) {
+    } catch (e) {
       return "";
     }
-  }
+  };
 
   $.TempJSON.prototype.getAnnotationCreated = function(webAnn) {
     try {
       return new Date(webAnn['created']);
-    } catch(e) {
+    } catch (e) {
       return new Date();
     }
-  }
+  };
 
   $.TempJSON.prototype.getAnnotationCreator = function(webAnn) {
     try {
       return webAnn['creator'];
-    } catch(e) {
-      return {name:'Unknown', id:'error'};
+    } catch (e) {
+      return {name: 'Unknown', id: 'error'};
     }
   };
 
@@ -366,7 +366,7 @@ var hrange = require('../h-range.js');
     try {
       var quote = '';
       jQuery.each(this.getAnnotationTargetItems(webAnn), function(_, targetItem) {
-                
+
         if (targetItem['type'] === "TextQuoteSelector") {
           quote += targetItem['exact'];
         } else {
@@ -374,7 +374,7 @@ var hrange = require('../h-range.js');
         }
       });
       return quote;
-    } catch(e) {
+    } catch (e) {
       return "";
     }
   };
@@ -382,7 +382,7 @@ var hrange = require('../h-range.js');
   $.TempJSON.prototype.getAnnotationId = function(webAnn) {
     try {
       return webAnn['id'];
-    } catch(e) {
+    } catch (e) {
       return "";
     }
   };
@@ -397,13 +397,13 @@ var hrange = require('../h-range.js');
         }
       });
       return tags;
-    } catch(e) {
+    } catch (e) {
       return [];
     }
   };
 
   $.TempJSON.prototype.storeCurrent = function() {
-        
+
   };
 
   $.TempJSON.prototype.serializeRanges = function(ranges, elem) {
@@ -430,10 +430,10 @@ var hrange = require('../h-range.js');
       }
       try {
         previous = ranges[i]['start']['previousSibling'] ? ranges[i]['start']['previousSibling'].textContent : '';
-        next = ranges[i]['end']['nextSibling'] ? ranges[i]['end']['nextSibling'].textContent: '';
-      } catch(e) {
+        next = ranges[i]['end']['nextSibling'] ? ranges[i]['end']['nextSibling'].textContent : '';
+      } catch (e) {
         previous = ranges[i]['startContainer']['previousSibling'] ? ranges[i]['startContainer']['previousSibling'].textContent : '';
-        next = ranges[i]['endContainer']['nextSibling'] ? ranges[i]['endContainer']['nextSibling'].textContent: '';
+        next = ranges[i]['endContainer']['nextSibling'] ? ranges[i]['endContainer']['nextSibling'].textContent : '';
       }
 
       var exact = text.join(' / ');
@@ -441,17 +441,17 @@ var hrange = require('../h-range.js');
       var fullTextRange = {
         startOffset: exactFullStart,
         endOffset: exactFullStart + exact.length,
-        exact: exact.replace('*',''),
-        prefix: previous.substring(previous.length-20, previous.length).replace('*', ''),
+        exact: exact.replace('*', ''),
+        prefix: previous.substring(previous.length - 20, previous.length).replace('*', ''),
         suffix: next.substring(0, 20).replace('*', '')
       };
 
-            
+
       try {
         // This is the annotatorjs way to serialize");
         serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
         extraRanges.push(fullTextRange);
-      } catch(e) {
+      } catch (e) {
         // For the keyboard made annotations
         // we are borrowing the xpath range library from annotatorjs
         // to keep them consistent
@@ -464,14 +464,14 @@ var hrange = require('../h-range.js');
           prefix: serializedRange.text.prefix,
           exact: serializedRange.text.exact,
           suffix: serializedRange.text.suffix
-        })
+        });
       }
       // console.log("SERIALIZED", serializedRanges, contextEl);
     }
     return {
       serial: serializedRanges,
       extra: extraRanges
-    }
+    };
   };
 
   $.TempJSON.prototype.normalizeRanges = function(ranges, elem) {
@@ -487,7 +487,7 @@ var hrange = require('../h-range.js');
       var foundRange = hrange.normalizeRange(range, elem, 'annotator-hl');
       // }
       // console.log(elem);
-           
+
       // console.log(foundRange);
       normalizedRanges.push(foundRange);
     });
@@ -565,7 +565,7 @@ var hrange = require('../h-range.js');
       }
       return _results;
     }).call(this)).join('');
-  }
+  };
   $.storage.push($.TempJSON);
 
 }(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

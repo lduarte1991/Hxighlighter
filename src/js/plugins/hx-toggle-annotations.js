@@ -1,12 +1,12 @@
 /**
  *  Toggle Annotations Plugin
- *  
+ *
  *
  */
 
 require('./hx-toggle-annotations.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -28,7 +28,7 @@ require('./hx-toggle-annotations.css');
     self.setUpButton();
   };
 
-  $.ToggleAnnotations.prototype.setUpButton= function() {
+  $.ToggleAnnotations.prototype.setUpButton = function() {
     var self = this;
     jQuery(self.options.slot).prepend('<button class="hx-toggle-annotations btn btn-secondary"></button>');
     jQuery(self.options.slot).find('.hx-toggle-annotations').click(function() {

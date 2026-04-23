@@ -5,12 +5,12 @@
   var Component = videojs.getComponent('Component');
 
   // Allows the triggering of the creation annotations
-  class TranscriptToggle extends Component{
+  class TranscriptToggle extends Component {
 
     // The constructor of a component receives two arguments: the
     // player it will be associated with and an object of options.
     constructor(player, options) {
-      // It is important to invoke the superclass before anything else, 
+      // It is important to invoke the superclass before anything else,
       // to get all the features of components out of the box!
       super(player, options);
       this.player = player;
@@ -42,7 +42,7 @@
         this.el().style.color = 'rgb(255, 255, 255)';
         jQuery('.video-js.vjs-fill').css('height', '100%');
       }
-      this.player.trigger('playerresize')
+      this.player.trigger('playerresize');
     }
   };
   /** *************************** Installing Components *****************************/
@@ -53,7 +53,7 @@
     $.globals['vjs'] = {};
   }
   if (!Object.prototype.hasOwnProperty.call($.globals.vjs, 'components')) {
-    $.globals.vjs['components'] = []
+    $.globals.vjs['components'] = [];
   }
 
   $.globals.vjs.components.push(function(player) {

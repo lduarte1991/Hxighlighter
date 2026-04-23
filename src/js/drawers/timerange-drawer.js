@@ -1,4 +1,4 @@
-(function($){
+(function($) {
   $.TimeRangeDrawer = function(element, inst_id, hClass, options) {
     this.element = element;
     this.instance_id = inst_id;
@@ -41,7 +41,7 @@
       callback(self.getAnnotationsData());
     });
 
-    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback){
+    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback) {
       callback(self.getSpecificAnnotationData(annotation_id));
     });
 
@@ -59,16 +59,16 @@
     var anns = self.drawnAnnotations.slice();
     anns.forEach(function(ann) {
       self.undraw(ann, player);
-      self.draw(ann, player)
+      self.draw(ann, player);
     });
-  }
+  };
 
   $.TimeRangeDrawer.prototype.draw = function(annotation, player, toEnd) {
     var self = this;
 
     var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
     if (existing_drawn_annotation) {
-      self.undraw(existing_drawn_annotation)
+      self.undraw(existing_drawn_annotation);
     }
     var otherLabel = '';
     if (self.options.user_id === annotation.creator.id) {
@@ -133,7 +133,7 @@
       .filter(e => arr[e]).map(e => arr[e]);
 
     return unique;
-  }
+  };
 
   $.TimeRangeDrawer.prototype.getAnnotationsData = function() {
     var self = this;
@@ -142,7 +142,7 @@
     }).toArray(), 'id');
     all.sort(function(a, b) {
       return b - a;
-    })
+    });
     // console.log(all);
     return all;
   };
@@ -156,7 +156,7 @@
         return ann;
       }
     });
-    return foundAnnotation
+    return foundAnnotation;
   };
 
   $.drawers.push($.TimeRangeDrawer);

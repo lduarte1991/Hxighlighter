@@ -4,12 +4,12 @@
 
 var jQuery = require('jquery');
 
-(function($){
-  $.TimeSelector = function(element, inst_id, defaultOpts={}) {
+(function($) {
+  $.TimeSelector = function(element, inst_id, defaultOpts = {}) {
     this.element = element;
     this.instance_id = inst_id;
     this.adder = null;
-    this.wrapperSelector = '.annotator-wrapper'
+    this.wrapperSelector = '.annotator-wrapper';
     this.mustConfirm = !!defaultOpts.confirm;
     this.init();
   };
@@ -28,7 +28,7 @@ var jQuery = require('jquery');
     $.subscribeEvent('videoRangeSelected', self.instance_id, function(_, el, timeRange) {
       self.onSelection(el, timeRange);
     });
-  }
+  };
 
   $.TimeSelector.prototype.onSelection = function(anchor, range, event) {
     var self = this;
@@ -38,7 +38,7 @@ var jQuery = require('jquery');
     // console.log(anchor);
     if (self.mustConfirm) {
       // console.log("Confirming...")
-      setTimeout(function() {self.confirm(range, anchor)}, 150);
+      setTimeout(function() {self.confirm(range, anchor);}, 150);
     } else {
       // console.log("Sending TargetSelection to Hxighlighter");
       // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
@@ -55,13 +55,13 @@ var jQuery = require('jquery');
       self.interactionPoint = {
         top: rect1.top,
         left: rect1.left + (rect1.width / 2.0)
-      }
+      };
       // console.log(self.interactionPoint);
       // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
       self.loadButton(range, self.interactionPoint, anchor);
       // console.log("Should have loaded button to confirm annotation");
     } else {
-      $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {buttons:[], time:5}])
+      $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {buttons: [], time: 5}]);
     }
   };
 
@@ -74,7 +74,7 @@ var jQuery = require('jquery');
     if (iP.top <= 48) {
       iP.top = 49;
     }
-    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+(iP.top- 10)+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
+    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
     // console.log(confirmButtonTemplate, iP);
     var tsContainer = Hxighlighter.getContainer(self.element);
     if (tsContainer) {

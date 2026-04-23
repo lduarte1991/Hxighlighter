@@ -30,7 +30,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
           }
         });
       } catch (e) {
-        if (e !== BreakException) { throw e};
+        if (e !== BreakException) { throw e;};
       }
       if (found) {
         xpath = "/" + actualNode.nodeName.toLowerCase() + '[' + likeNodesCounter + ']' + xpath;
@@ -38,7 +38,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
       }
     }
   } else {
-    while(currentNode !== null && currentNode !== root) {
+    while (currentNode !== null && currentNode !== root) {
       if (currentNode.nodeType === Node.TEXT_NODE) {
         var traverseNode = currentNode;
         // //console.log(traverseNode.parentNode.childNodes);
@@ -69,7 +69,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
       currentNode = currentNode.parentNode;
     }
   }
-    
+
   if (currentNode != null) {
     if (xpath === "" && totalOffset >= 0) {
       xpath = '/';
@@ -81,7 +81,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
   } else {
     return undefined;
   }
-    
+
 }
 
 function getPrefixAndSuffix(range, root, ignoreSelector) {
@@ -97,21 +97,21 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
     suffixCounterNode = root.childNodes[suffixOffset];
     suffixOffset = 0;
   }
-  var prefix = prefixCounterNode.textContent.slice(0,prefixOffset);
+  var prefix = prefixCounterNode.textContent.slice(0, prefixOffset);
   var suffix = suffixCounterNode.textContent.slice(suffixOffset);
-    
+
   // console.log(suffixCounterNode, range.endOffset);
-    
-  while(prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
+
+  while (prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
     prefix = prefixCounterNode.textContent + prefix;
   }
 
-  while(suffix.length <= 35 && (suffixCounterNode = suffixCounterNode.nextSibling)){
+  while (suffix.length <= 35 && (suffixCounterNode = suffixCounterNode.nextSibling)) {
     suffix = suffix + suffixCounterNode.textContent;
   }
 
   if (prefix.length >= 36) {
-    prefix = prefix.slice(prefix.length-35);
+    prefix = prefix.slice(prefix.length - 35);
   }
   if (suffix.length >= 36) {
     suffix = suffix.slice(0, 35);
@@ -120,7 +120,7 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
   return {
     prefix: prefix,
     suffix: suffix
-  }
+  };
 };
 
 // general idea came from responses to this question
@@ -129,14 +129,14 @@ function getGlobalOffset(range, root, ignoreSelector) {
   var preRangeRange = document.createRange(); // range.cloneRange();
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
-    root = root.querySelector('.annotator-wrapper')
+    root = root.querySelector('.annotator-wrapper');
   }
   preRangeRange.selectNodeContents(jQuery(root)[0]);
   preRangeRange.setEnd(range.startContainer, range.startOffset);
   return {
     startOffset: preRangeRange.toString().length,
     endOffset: preRangeRange.toString().length + range.toString().length
-  }
+  };
 }
 
 function getExactText(range) {
@@ -205,12 +205,12 @@ function getExactText(range) {
       }
       // https://tc39.github.io/ecma262/#sec-array.prototype.findindex
       var indexOfImage = [].slice.call(rangeContents.childNodes).findIndex(function(el) {
-        return el ===im
+        return el === im;
       });
       if (indexOfImage === 0) {
-        exact = '[Image: ' +im.alt+ ']' + exact; 
-      } else if(indexOfImage === rangeContents.childNodes.length - 1) {
-        exact += '[Image: ' +im.alt+ ']';
+        exact = '[Image: ' + im.alt + ']' + exact;
+      } else if (indexOfImage === rangeContents.childNodes.length - 1) {
+        exact += '[Image: ' + im.alt + ']';
       } else {
         var prefix = '';
         var prefixCounter = indexOfImage - 1;
@@ -222,7 +222,7 @@ function getExactText(range) {
 
         var suffix = '';
         var suffixCounter = indexOfImage + 1;
-        while(suffixCounter < rangeContents.childNodes.length) {
+        while (suffixCounter < rangeContents.childNodes.length) {
           suffix += rangeContents.childNodes[suffixCounter].textContent;
           suffixCounter++;
         }
@@ -234,8 +234,8 @@ function getExactText(range) {
 }
 
 function compareExactText(text1, text2) {
-  function getDiff(string, diffBy){
-    return string.split(diffBy).join('')
+  function getDiff(string, diffBy) {
+    return string.split(diffBy).join('');
   }
   const res1 = getDiff(text1, text2);
   const res2 = getDiff(text2, text1);
@@ -245,7 +245,7 @@ function compareExactText(text1, text2) {
 function serializeRange(range, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
-    root = root.querySelector('.annotator-wrapper')
+    root = root.querySelector('.annotator-wrapper');
   }
   // console.log(root);
   var _start = range.startContainer;
@@ -288,7 +288,7 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
     found = {
       node: root_node,
       offset: 0
-    }
+    };
   }
   // console.log(root_node, node_list, goal);
 
@@ -298,14 +298,14 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
     if (node.textContent.length + currOffset >= goal) {
       if (node.nodeType !== Node.TEXT_NODE) {
         // console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
-        found = recurseGetNodeFromOffset(node, goal - currOffset)
+        found = recurseGetNodeFromOffset(node, goal - currOffset);
         break;
       } else {
         // console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
         found = {
           node: node,
           offset: goal - currOffset
-        }
+        };
         break;
       }
     } else {
@@ -347,31 +347,31 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
 
 function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   var tree = xpath.replace(/\/text\(\)\[(.*)\]/g, '').split('/');
-  tree = tree.filter(function(it) { return it.length > 0 });
+  tree = tree.filter(function(it) { return it.length > 0; });
   var traversingDown = root;
   tree.forEach(function(it) {
     var selector = it.replace(/\[.*\]/g, '');
     var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
-        
+
     var foundNodes = Array.prototype.filter.call(traversingDown.children, function(el1) {
       return el1.matches(selector);
     });
     foundNodes = [].slice.call(foundNodes).filter(function(node) {
       return node.className.indexOf(ignoreSelector) === -1;
-    })
+    });
     // //console.log(foundNodes, counter);
     if (isNaN(counter) || counter < 0) {
       counter = 0;
       traversingDown = foundNodes[counter];
-      while(traversingDown.className.indexOf(ignoreSelector) > -1) {
+      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
       }
       // console.log('1', traversingDown, traversingDown.className);
-    } else if(!foundNodes || foundNodes.length === 0){
+    } else if (!foundNodes || foundNodes.length === 0) {
       // should account for missing html elements without affecting text
     } else {
       traversingDown = foundNodes[counter];
-      while(traversingDown.className.indexOf(ignoreSelector) > -1) {
+      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
       }
       // console.log('2', traversingDown, traversingDown.className);
@@ -380,7 +380,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   // console.log("TRAVERSINGDOWN", traversingDown, offset);
   var found = recurseGetNodeFromOffset(traversingDown, offset);
   // //console.log(found);
-  return found
+  return found;
 };
 
 // https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
@@ -405,7 +405,7 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 function normalizeRange(serializedRange, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
-    root = root.querySelector('.annotator-wrapper')
+    root = root.querySelector('.annotator-wrapper');
   }
   var sR = serializedRange.xpath ? serializedRange.xpath : serializedRange;
   var _start = sR.start;
@@ -413,7 +413,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   var _startOffset = sR.startOffset;
   var _endOffset = sR.endOffset;
   // three ways of getting text:
-    
+
   // Way #1: Given an xpath, find the way to the node
   var startResult = getNodeFromXpath(root, _start, _startOffset, ignoreSelector);
   var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
@@ -432,7 +432,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   if (!(startResult && endResult) || (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact))) {
     startResult = recurseGetNodeFromOffset(root, serializedRange.position.globalStartOffset); // getNodeFromXpath(root, '/', serializedRange.position.globalStartOffset, ignoreSelector);
     endResult = recurseGetNodeFromOffset(root, serializedRange.position.globalEndOffset); // getNodeFromXpath(root, '/', serializedRange.position.globalEndOffset, ignoreSelector);
-        
+
     normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
     normalizedRange.setEnd(endResult.node, endResult.offset);
@@ -443,7 +443,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   // This is for the usecase where someone has added text/html before this
   if (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
     var possibleCases = getIndicesOf(serializedRange.text.exact, root.textContent, true);
-        
+
     for (var i = 0; i < possibleCases.length; i++) {
       var poss = possibleCases[i];
       var s = recurseGetNodeFromOffset(root, poss);
@@ -472,7 +472,7 @@ function checkNode(currentNode, range) {
   if (currentNode) {
     if (currentNode.nodeType === Node.TEXT_NODE) {
       if (currentNode === range.startContainer) {
-        currentNode = currentNode.splitText(range.startOffset)
+        currentNode = currentNode.splitText(range.startOffset);
         // console.log('Beginning', currentNode);
       }
       if (currentNode === range.endContainer) {
@@ -486,7 +486,7 @@ function checkNode(currentNode, range) {
       }
       // console.log('Node', currentNode, foundEnd, range.startContainer === range.endContainer);
       nodeList.push(currentNode);
-    } else if(currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG"){
+    } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG") {
       // console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
       if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startContainer.childNodes.length < range.startOffset) {
         var possibleStartNode = range.startContainer.childNodes[range.startOffset];
@@ -496,9 +496,9 @@ function checkNode(currentNode, range) {
             foundEnd = true;
           }
         }
-      } else if(!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
+      } else if (!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
         // console.log("second")
-        var possibleEndNode = range.endContainer.childNodes[range.endOffset]
+        var possibleEndNode = range.endContainer.childNodes[range.endOffset];
         if (possibleEndNode === currentNode) {
           foundEnd = true;
           nodeList.push(currentNode);
@@ -522,7 +522,7 @@ function checkNode(currentNode, range) {
     foundEnd: foundEnd,
     nodes: nodeList,
     currentNode: currentNode
-  }
+  };
 }
 
 function recurseFromNodeToNode(currentNode, range) {
@@ -551,7 +551,7 @@ function recurseFromNodeToNode(currentNode, range) {
     currentNode = originalNode;
     // console.log("Parent:", originalNode.parentNode);
     // console.log("ParentSibling:", originalNode.parentNode.nextSibling)
-    while(!currentNode.parentNode.nextSibling) {
+    while (!currentNode.parentNode.nextSibling) {
       currentNode = currentNode.parentNode;
       // console.log("New parent:", currentNode);
     }
@@ -567,20 +567,20 @@ function recurseFromNodeToNode(currentNode, range) {
   return {
     foundEnd: foundEnd,
     nodes: nodeList
-  }
+  };
 };
 
 function getTextNodesFromAnnotationRanges(ranges, root) {
   var textNodesList = [];
 
   ranges.forEach(function(range) {
-    var normRanged = normalizeRange(range, root, 'annotator-hl')// recurseFromNodeToNode(range.startContainer, range);
+    var normRanged = normalizeRange(range, root, 'annotator-hl');// recurseFromNodeToNode(range.startContainer, range);
     var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged);
     // console.log(normRanged, ranges, nodes, normRanged.cloneContents());
     textNodesList = textNodesList.concat(nodes.nodes);
   });
 
-  return textNodesList
+  return textNodesList;
 }
 
 exports.serializeRange = serializeRange;

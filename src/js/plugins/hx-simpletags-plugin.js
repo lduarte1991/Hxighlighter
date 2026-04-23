@@ -1,13 +1,13 @@
 /**
  *  Simple Tags Plugin
- *  
+ *
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
 
 require('./hx-simpletags-plugin.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -28,13 +28,13 @@ require('./hx-simpletags-plugin.css');
     self.name = 'SimpleTags';
 
     var ed = "<input type='text' name='tags' id='tag-list' class='hx-text-field' placeholder='Add tags...' />";
-        
+
     self.editorElement = ('editorElement' in self.options) ? self.options.editorElement : ed;
   };
 
 
   /**
-     * Returns the HTML value of the WYSIWYG. 
+     * Returns the HTML value of the WYSIWYG.
      *
      * @return     {String}  HTML value found in the WYSIWYG
      */

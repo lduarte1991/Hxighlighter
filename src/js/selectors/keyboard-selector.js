@@ -56,11 +56,11 @@ var hrange = require('../h-range.js');
 
   $.KeyboardSelector.prototype.setUpButton = function() {
     var self = this;
-    jQuery(document).on('keydown', function(event){
+    jQuery(document).on('keydown', function(event) {
       if ((event.key === '1' && (event.altKey || event.ctrlKey)) || (event.key === '\'' && (event.altKey || event.ctrlKey))) {
         event.preventDefault();
         // move this to external button
-        if(!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')){
+        if (!event.target.isContentEditable && !jQuery(event.target).hasClass('form-control')) {
           self.turnSelectionModeOn();
         }
         return false;
@@ -102,7 +102,7 @@ var hrange = require('../h-range.js');
           jQuery('.sr-real-alert').html(newAlert);
 
         }
-                
+
         event.preventDefault();
       }
     });
@@ -125,7 +125,7 @@ var hrange = require('../h-range.js');
       jQuery(this).toggleClass('selected');
       jQuery(self.element).closest('main').animate({
         scrollTop: jQuery(self.element).closest('main').scrollTop() + jQuery('#key-help').offset().top - 50
-      })
+      });
       // if (jQuery(this).hasClass('selection-mode-on')) {
       // self.turnSelectionModeOff();
       // jQuery(this).removeClass('selection-mode-on');
@@ -175,7 +175,7 @@ var hrange = require('../h-range.js');
     jQuery('.hx-selector-img').remove();
     jQuery(this.element).on('keydown', jQuery.proxy(this.filterKeys, this));
     jQuery(this.element).on('keyup', jQuery.proxy(this.setSelection, this));
-        
+
     this.start = undefined;
     this.currentSelection = undefined;
     this.element.innerHTML = this.saveHTML;
@@ -264,18 +264,18 @@ var hrange = require('../h-range.js');
     var newRange = range.cloneRange();
     try {
       newRange.setStart(range.startContainer, range.startOffset);
-      newRange.setEnd(range.startContainer, range.startOffset+1);
+      newRange.setEnd(range.startContainer, range.startOffset + 1);
       return {
         top: newRange.getBoundingClientRect().top,
         left: newRange.getBoundingClientRect().left,
-      }
-    } catch(e) {
-      newRange.setStart(range.startContainer, range.startOffset-1);
+      };
+    } catch (e) {
+      newRange.setStart(range.startContainer, range.startOffset - 1);
       newRange.setEnd(range.startContainer, range.startOffset);
       return {
         top: newRange.getBoundingClientRect().top,
         left: newRange.getBoundingClientRect().right,
-      }
+      };
     }
   };
 
@@ -304,21 +304,21 @@ var hrange = require('../h-range.js');
             });
           }
           jQuery('.sr-alert').html();
-          jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.')
+          jQuery('.sr-alert').html('Move to end of text to be annotated and press "*" again.');
         } else {
           var end;
           jQuery('.hx-selector-img').remove();
           // console.log("Found end", end);
           if (self.currentSelection) {
             // console.log(hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl'), self.currentSelection.toString());
-                        
+
           } else {
-            end = self.copySelection(getSelection())
+            end = self.copySelection(getSelection());
             var posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
             var posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
             var boundingBox;
             self.currentSelection = document.createRange();
-            if(posStart.startOffset < posEnd.startOffset) {
+            if (posStart.startOffset < posEnd.startOffset) {
               self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
               self.currentSelection.setEnd(end.startContainer, end.startOffset);
             } else {
@@ -333,7 +333,7 @@ var hrange = require('../h-range.js');
           boundingBox = {
             top: rect.top - containerRect.top + scrollOffset - 5,
             left: rect.left - containerRect.left - 5
-          }
+          };
           var ser = hrange.serializeRange(self.currentSelection, self.element, 'annotator-hl');
           jQuery('.sr-alert').html('');
           // jQuery('.sr-alert').html('You are now in a text box. Add your annotation. The quote you have selected is: <em>' + ser.text.exact + "</em>");
@@ -368,11 +368,11 @@ var hrange = require('../h-range.js');
       case 39:
       case 40:
         if (self.start) {
-          end = self.copySelection(getSelection())
+          end = self.copySelection(getSelection());
           posStart = hrange.getGlobalOffset(self.start, self.element, 'annotator-hl');
-          posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl')
+          posEnd = hrange.getGlobalOffset(end, self.element, 'annotator-hl');
           self.currentSelection = document.createRange();
-          if(posStart.startOffset < posEnd.startOffset) {
+          if (posStart.startOffset < posEnd.startOffset) {
             self.currentSelection.setStart(self.start.startContainer, self.start.startOffset);
             self.currentSelection.setEnd(end.startContainer, end.startOffset);
           } else {
@@ -408,7 +408,7 @@ var hrange = require('../h-range.js');
 
     try {
       var boundingBox = r.end.parentElement.getBoundingClientRect();
-    } catch(e) {
+    } catch (e) {
       boundingBox = r.endContainer.parentElement.getBoundingClientRect();
     }
     // console.log(boundingBox);
@@ -437,7 +437,7 @@ var hrange = require('../h-range.js');
     var children = jQuery(commonAncestor).children();
     var startCounter = 0;
     jQuery.each(children, function(_, el) {
-      if (el === start.parentElement) {  
+      if (el === start.parentElement) {
         startCounter += start.anchorOffset;
         return false;
       } else {
@@ -446,7 +446,7 @@ var hrange = require('../h-range.js');
     });
     var endCounter = 0;
     jQuery.each(children, function(_, el) {
-      if (el === end.parentElement) {  
+      if (el === end.parentElement) {
         endCounter += end.anchorOffset;
         return false;
       } else {
@@ -512,8 +512,8 @@ var hrange = require('../h-range.js');
       startContainer: _start,
       startOffset: _startOffset,
       endContainer: _end,
-    }
-        
+    };
+
     if (start.anchorNode === end.anchorNode) {
       realRange['endOffset'] = _endOffset - 1;
       r.setEnd(_start, _endOffset - 1);
@@ -541,10 +541,10 @@ var hrange = require('../h-range.js');
   $.KeyboardSelector.prototype.removeCharacter = function(s, offset) {
     if (offset === 0) {
       s = s.slice(1);
-    } else if (offset === s.length-1) { 
+    } else if (offset === s.length - 1) {
       s = s.slice(0, -1);
     } else {
-      s = s.slice(0, offset) + s.slice(offset+1);
+      s = s.slice(0, offset) + s.slice(offset + 1);
     }
     return s;
   };
@@ -561,6 +561,6 @@ var hrange = require('../h-range.js');
 
     return r.toString() === this.delimiter;
   };
-    
+
   $.selectors.push($.KeyboardSelector);
 }(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

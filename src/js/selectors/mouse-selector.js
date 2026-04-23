@@ -1,17 +1,17 @@
 /**
- * Should be listening for ways to select a text and then return an xpath 
+ * Should be listening for ways to select a text and then return an xpath
  * object with the range that was selected.
  */
 
 var jQuery = require('jquery');
 var hrange = require('../h-range.js');
 
-(function($){
-  $.MouseSelector = function(element, inst_id, defaultOpts={}) {
+(function($) {
+  $.MouseSelector = function(element, inst_id, defaultOpts = {}) {
     this.element = element;
     this.instance_id = inst_id;
     this.adder = null;
-    this.wrapperSelector = '.annotator-wrapper'
+    this.wrapperSelector = '.annotator-wrapper';
     this.mustConfirm = !!defaultOpts.confirm;
     this.init();
   };
@@ -32,7 +32,7 @@ var hrange = require('../h-range.js');
 
     });
 
-    document.addEventListener('keyup', function(e) { 
+    document.addEventListener('keyup', function(e) {
       var allowedKeys = "ArrowUpArrowDownArrowLeftArrowRight";
       if (allowedKeys.indexOf(e.key) > -1 && e.shiftKey) {
         var selection = window.getSelection();
@@ -42,7 +42,7 @@ var hrange = require('../h-range.js');
         self.onSelection(selectionRange, event);
       }
     });
-  }
+  };
 
   $.MouseSelector.prototype.onSelection = function(range, event) {
     var self = this;
@@ -53,7 +53,7 @@ var hrange = require('../h-range.js');
       if (result && (range.toString().length > 0 || range.cloneContents().querySelectorAll('img').length > 0)) {
         if (self.mustConfirm) {
           // console.log("Confirming...")
-          self.confirm(range, event)
+          self.confirm(range, event);
         } else {
           // console.log("Sending TargetSelection to Hxighlighter");
           // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
@@ -81,13 +81,13 @@ var hrange = require('../h-range.js');
     var self = this;
     self.hideConfirm();
     if (self.element.querySelectorAll('.annotation-editor-nav-bar').length === 0 && self.element.querySelectorAll('.annotation-viewer-nav-bar').length === 0) {
-            
+
       self.interactionPoint = $.mouseFixedPosition(event);
       // console.log(hrange.serializeRange(range, self.element, 'annotator-hl'));
       self.loadButton(hrange.serializeRange(range, self.element, 'annotator-hl'), self.interactionPoint, event);
       // console.log("Should have loaded button to confirm annotation");
     } else {
-      $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {buttons:[], time:5}])
+      $.publishEvent('HxAlert', self.instance_id, ["You have a pinned annotation window. Close it to make a new annotation.", {buttons: [], time: 5}]);
     }
   };
 
@@ -100,7 +100,7 @@ var hrange = require('../h-range.js');
     if (iP.top <= 48) {
       iP.top = 49;
     }
-    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:"+(iP.top- 10)+"px; left: "+iP.left+"px;'><button><span class='fas fa-highlighter'></span></button></div>"
+    var confirmButtonTemplate = "<div class='hx-confirm-button' style='top:" + (iP.top - 10) + "px; left: " + iP.left + "px;'><button><span class='fas fa-highlighter'></span></button></div>";
     var container = Hxighlighter.getContainer(self.element);
     if (container) {
       jQuery(container).append(confirmButtonTemplate);
@@ -108,7 +108,7 @@ var hrange = require('../h-range.js');
       jQuery('body').append(confirmButtonTemplate);
     }
     jQuery('.hx-confirm-button button').click(function() {
-      $.publishEvent('drawTemp', self.instance_id, [[range]])
+      $.publishEvent('drawTemp', self.instance_id, [[range]]);
       $.publishEvent('TargetSelectionMade', self.instance_id, [self.element, [range], event]);
       jQuery('.hx-confirm-button').remove();
     });

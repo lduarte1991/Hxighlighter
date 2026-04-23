@@ -1,6 +1,6 @@
 var hrange = require('../h-range.js');
 
-(function($){
+(function($) {
   $.XPathDrawer = function(element, inst_id, hClass, options) {
     this.element = element;
     this.instance_id = inst_id;
@@ -42,7 +42,7 @@ var hrange = require('../h-range.js');
       callback(self.getAnnotationsData());
     });
 
-    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback){
+    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback) {
       callback(self.getSpecificAnnotationData(annotation_id));
     });
 
@@ -75,7 +75,7 @@ var hrange = require('../h-range.js');
       var spans = [];
       textNodes.forEach(function(node) {
         // console.log(node, jQuery(node));
-        jQuery(node).wrap('<span class="temp-ann '+self.h_class+'"></span>');
+        jQuery(node).wrap('<span class="temp-ann ' + self.h_class + '"></span>');
         spans.push(jQuery(node).parent()[0]);
       });
       self.tempHighlights = self.tempHighlights.concat(spans);
@@ -87,13 +87,13 @@ var hrange = require('../h-range.js');
     // checks to see if annotation has already been drawn, if so it undraws it
     var existing_drawn_annotation = self.getSpecificAnnotationData(annotation.id);
     if (existing_drawn_annotation) {
-      self.undraw(existing_drawn_annotation)
+      self.undraw(existing_drawn_annotation);
     }
     if (annotation.media.toLowerCase() === "text") {
 
       // console.log(self.options, annotation);
       // console.log("Annotation Being Drawn", annotation);
-            
+
       self.tempHighlights.forEach(function(hl) {
         jQuery(hl).contents().unwrap();
       });
@@ -117,7 +117,7 @@ var hrange = require('../h-range.js');
           labelIt = false;
           node_id = ' id="first-node-' + annotation.id + '" ';
         }
-        jQuery(node).wrap('<span' + node_id + ' class="'+self.h_class+otherLabel+'"></span>');
+        jQuery(node).wrap('<span' + node_id + ' class="' + self.h_class + otherLabel + '"></span>');
         spans.push(jQuery(node).parent()[0]);
       });
       // 3. In a _local.highlights value, we store the list of span tags generated for the annotation.
@@ -131,7 +131,7 @@ var hrange = require('../h-range.js');
     }
     // console.log(annotation);
     $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
-        
+
 
     // the annotation is then saved to the current list
     self.drawnAnnotations.push(annotation);
@@ -195,7 +195,7 @@ var hrange = require('../h-range.js');
       .filter(e => arr[e]).map(e => arr[e]);
 
     return unique;
-  }
+  };
 
   $.XPathDrawer.prototype.getAnnotationsData = function() {
     var self = this;
@@ -204,7 +204,7 @@ var hrange = require('../h-range.js');
     }).toArray(), 'id');
     all.sort(function(a, b) {
       return b - a;
-    })
+    });
     // console.log(all);
     return all;
   };
@@ -217,8 +217,8 @@ var hrange = require('../h-range.js');
         return ann;
       }
     });
-    return foundAnnotation
-  }
+    return foundAnnotation;
+  };
 
   $.drawers.push($.XPathDrawer);
 

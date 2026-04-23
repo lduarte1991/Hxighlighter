@@ -1,14 +1,14 @@
 (function($) {
   $.HxighlighterEndpoint = function(options) {
     jQuery.extend(this, {
-      token:     null,
-      prefix:    null,
-      params:    "",
-      dfd:       null,
+      token: null,
+      prefix: null,
+      params: "",
+      dfd: null,
       context_id: "None",
       collection_id: "None",
-      userid:    "test@mirador.org",
-      username:  "mirador-test",
+      userid: "test@mirador.org",
+      username: "mirador-test",
       annotationsList: [],        // OA list for Mirador use
       annotationsListCatch: [],  // internal list for module use
       windowID: null,
@@ -40,7 +40,7 @@
       Hxighlighter.subscribeEvent('convertToEndpoint', '', function(_, oAnnotation, callBack) {
         var found = self.annotationsListCatch.find(function(ann) {
           return oAnnotation['@id'] === ann.id;
-        })
+        });
         if (found) {
           return callBack(found);
         } else {
@@ -67,14 +67,14 @@
         }]);
       });
     },
-    set: function(prop, value, options){
+    set: function(prop, value, options) {
       if (options) {
         this[options.parent][prop] = value;
       } else {
-        this[prop] = value
+        this[prop] = value;
       }
     },
-    search: function(searchOptions, successCallback, errorCallback){
+    search: function(searchOptions, successCallback, errorCallback) {
       var self = this;
       if (self.first) {
         self.first = false;
@@ -91,7 +91,7 @@
         } else {
           self.drawFromSearch(result.rows, converter, true);
         }
-                
+
       }, function() {
         if (typeof errorCallback === "function") {
           errorCallback();
@@ -124,7 +124,7 @@
         error: errorCallback
       });
     },
-    update: function(oaAnnotation, successCallback, errorCallback){
+    update: function(oaAnnotation, successCallback, errorCallback) {
       // console.log("Calls Update in m2-hxighlighter-endpoint")
       var self = this;
       // console.log('1. Mirador creates OA: ', oaAnnotation);
@@ -144,7 +144,7 @@
         }
       }]);
     },
-    create: function(oaAnnotation, successCallback, errorCallback){
+    create: function(oaAnnotation, successCallback, errorCallback) {
       var self = this;
       // console.log('1. Mirador creates OA: ', oaAnnotation);
       var endpointAnnotation = self.getAnnotationInEndpoint(oaAnnotation);
@@ -162,20 +162,20 @@
             windowId: self.windowID,
             annotationsList: self.annotationsList,
           });
-                    
+
         }
       }, function() {
         // console.log("Something went terribly wrong");
         if (typeof errorCallback === "function") {
           errorCallback();
         }
-                
+
       }]);
     },
-    createCatchpyAnnotation: function(catchAnnotation, successCallback, errorCallback){},
+    createCatchpyAnnotation: function(catchAnnotation, successCallback, errorCallback) {},
     userAuthorize: function(action, annotation) {
       return true;
-            
+
     },
     getAnnotationInOA: function(annotation) {
       var id,
@@ -207,14 +207,14 @@
         if (item.type === "Image") {
           return item;
         }
-      })
+      });
       if (tagItems.length > 0) {
         motivation.push("oa:tagging");
         jQuery.each(tagItems, function(index, item) {
           resource.push({
             "@type": "oa:Tag",
             "chars": item.value
-          })
+          });
         });
       }
       if (parentItem.length > 0) {
@@ -251,8 +251,8 @@
               });
             }
           });
-        })
-                
+        });
+
         on = [{
           "@type": "oa:SpecificResource",
           "full": targetItem[0].source,
@@ -269,15 +269,15 @@
             "item": {
               "@type": "oa:SvgSelector",
               "value": item_value
-            } 
+            }
           }
-        }]
+        }];
       }
 
       resource.push({
         "@type": "dctypes:Text",
         "format": "text/html",
-        "chars": annotationTextItems.map(function(item) { return item.value; }).join("<p></p>") 
+        "chars": annotationTextItems.map(function(item) { return item.value; }).join("<p></p>")
       });
 
       annotatedBy = {
@@ -286,16 +286,16 @@
       };
 
       var oaAnnotation = {
-        "@context" : "http://iiif.io/api/presentation/2/context.json",
-        "@id" : String(id),
-        "@type" : "oa:Annotation",
-        "motivation" : motivation,
-        "resource" : resource,
-        "on" : on,
-        "annotatedBy" : annotatedBy,
-        "annotatedAt" : annotation.created,
-        "permissions" : annotation.permissions,
-        "endpoint" : this
+        "@context": "http://iiif.io/api/presentation/2/context.json",
+        "@id": String(id),
+        "@type": "oa:Annotation",
+        "motivation": motivation,
+        "resource": resource,
+        "on": on,
+        "annotatedBy": annotatedBy,
+        "annotatedAt": annotation.created,
+        "permissions": annotation.permissions,
+        "endpoint": this
       };
       return oaAnnotation;
     },
@@ -304,7 +304,7 @@
       var nums = fragmentSelector.replace('xywh=', '');
       var split_nums = nums.split(',');
       var canvas = self.imagesList[$.getImageIndexById(self.imagesList, uri)];
-      var scale = '/300,/'
+      var scale = '/300,/';
       var fragmentwidth = parseInt(split_nums[2], 10);
       var fragmentHeight = parseInt(split_nums[3], 10);
       if (fragmentwidth > fragmentHeight) {
@@ -312,22 +312,22 @@
           scale = '/' + fragmentwidth + ',/';
         }
       } else {
-        scale = '/,150/'
+        scale = '/,150/';
         if (fragmentHeight < 150) {
           scale = '/,' + fragmentHeight + '/';
         }
       }
       var imageUrl = $.getThumbnailForCanvas(canvas, 300);
-      imageUrl = imageUrl.replace('full', split_nums[0] +','+ split_nums[1] +','+ split_nums[2] +','+ split_nums[3]);
+      imageUrl = imageUrl.replace('full', split_nums[0] + ',' + split_nums[1] + ',' + split_nums[2] + ',' + split_nums[3]);
       imageUrl = imageUrl.replace('/,150/', scale).replace('/300,/', scale);
       return imageUrl;
     },
-    getAnnotationInEndpoint: function(oaAnnotation){
+    getAnnotationInEndpoint: function(oaAnnotation) {
       var self = this;
       var target = {
         type: "Choice",
         items: []
-      }
+      };
       var thumbnail_url = "";
       var uri = "";
       var svgVal = "";
@@ -343,13 +343,13 @@
           }
         });
 
-        thumbnail_url = self.getThumbnailFromFragmentSelector(targetItem.selector.default.value, uri)
-        svgVal = targetItem.selector.item.value
-        svgVal = svgVal.replace('svg xmlns', 'svg class="thumbnail-svg-' + annotation_id + '" viewBox="' + targetItem.selector.default.value.replace('xywh=', '').split(',').join(' ') + '"')
+        thumbnail_url = self.getThumbnailFromFragmentSelector(targetItem.selector.default.value, uri);
+        svgVal = targetItem.selector.item.value;
+        svgVal = svgVal.replace('svg xmlns', 'svg class="thumbnail-svg-' + annotation_id + '" viewBox="' + targetItem.selector.default.value.replace('xywh=', '').split(',').join(' ') + '"');
         var re = /\/([0-9-]+,[0-9-]+,[0-9-]+,[0-9-]+)\//;
-        var matches = thumbnail_url.match(re)
+        var matches = thumbnail_url.match(re);
         var coords = matches[1].split(',');
-        coords = coords.map(function(x){
+        coords = coords.map(function(x) {
           return parseInt(x, 10) <= 0 ? 1 : x;
         });
         thumbnail_url = thumbnail_url.replace(matches[0], "/" + coords.join(',') + "/");
@@ -367,7 +367,7 @@
         if (bodyItem['@type'] === "dctypes:Text") {
           text.push(bodyItem.chars);
         } else if (bodyItem['@type'] === "oa:Tag") {
-          tags.push(bodyItem.chars)
+          tags.push(bodyItem.chars);
         }
       });
 
@@ -393,7 +393,7 @@
         tags: tags,
         svg: svgVal,
         totalReplies: 0
-      }
+      };
       // console.log("Should return following:", annotation);
       return annotation;
     },
@@ -416,5 +416,5 @@
         annotationsList: self.annotationsList,
       });
     }
-  }
+  };
 }(Mirador));

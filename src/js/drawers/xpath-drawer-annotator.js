@@ -1,6 +1,6 @@
 var annotator = annotator ? annotator : require('annotator');
 
-(function($){
+(function($) {
   $.XPathDrawer = function(element, inst_id, hClass) {
     this.element = element;
     this.instance_id = inst_id;
@@ -38,7 +38,7 @@ var annotator = annotator ? annotator : require('annotator');
       callback(self.getAnnotationsData());
     });
 
-    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback){
+    Hxighlighter.subscribeEvent('GetSpecificAnnotationData', self.instance_id, function(_, annotation_id, callback) {
       callback(self.getSpecificAnnotationData(annotation_id));
     });
 
@@ -63,14 +63,14 @@ var annotator = annotator ? annotator : require('annotator');
         self.highlighter.draw(ann);
       });
       callBack(annotations);
-    })
+    });
   };
 
   $.XPathDrawer.prototype.draw = function(annotation) {
     var self = this;
     this.highlighter.draw(annotation);
     $.publishEvent('annotationDrawn', self.instance_id, [annotation]);
-        
+
     // code below allows you to undraw annotations by clicking on them, should this ever be needed in the future
     // jQuery.each(annotation._local.highlights, function(_, high) {
     //     jQuery(high).on('mouseover', function() {
@@ -107,7 +107,7 @@ var annotator = annotator ? annotator : require('annotator');
       .filter(e => arr[e]).map(e => arr[e]);
 
     return unique;
-  }
+  };
 
   $.XPathDrawer.prototype.getAnnotationsData = function() {
     var self = this;
@@ -126,8 +126,8 @@ var annotator = annotator ? annotator : require('annotator');
         return ann;
       }
     });
-    return foundAnnotation
-  }
+    return foundAnnotation;
+  };
 
   $.drawers.push($.XPathDrawer);
 

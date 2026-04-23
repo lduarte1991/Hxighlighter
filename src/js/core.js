@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 (function($) {
@@ -127,14 +127,14 @@
     var self = this;
     // console.log('Received here');
     self.callFuncInList(this.targets, 'StorageAnnotationSearch', message);
-  }
+  };
 
   // Util functions
 
   $.Core.prototype.callFuncInList = function(objectList, funcName, params) {
     jQuery.each(objectList, function(_, component) {
       if (typeof component[funcName] === "function") {
-        component[funcName].apply(component, params)
+        component[funcName].apply(component, params);
       }
     });
   };
@@ -143,6 +143,6 @@
     var editedMedia = Hxighlighter.trim(media);
     editedMedia = editedMedia.toLowerCase();
     return editedMedia.charAt(0).toUpperCase() + editedMedia.slice(1);
-  }
+  };
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));

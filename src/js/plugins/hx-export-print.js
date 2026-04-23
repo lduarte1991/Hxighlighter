@@ -159,7 +159,7 @@
           html += "</td>";
           html = html.replace('<th>Excerpt</th>', '<th>Annotated Time Range</th>');
         } else if (annotation.media && annotation.media.toLowerCase() === "image" && annotation.thumbnail) {
-          html += "<td><img src=\""+annotation.thumbnail+"\" style=\"max-width: 150px; max-height: 150px;\"/></td>";
+          html += "<td><img src=\"" + annotation.thumbnail + "\" style=\"max-width: 150px; max-height: 150px;\"/></td>";
         } else {
           html += "<td>" + (annotation.exact ? self.truncate(annotation.exact, 100, ' [ ... ] ') : '') + "</td>";
         }
@@ -211,13 +211,13 @@
 
     var sepLen = separator.length,
       charsToShow = strLen - sepLen,
-      frontChars = Math.ceil(charsToShow/2),
-      backChars = Math.floor(charsToShow/2);
+      frontChars = Math.ceil(charsToShow / 2),
+      backChars = Math.floor(charsToShow / 2);
 
-    return fullStr.substr(0, frontChars) + 
-               separator + 
+    return fullStr.substr(0, frontChars) +
+               separator +
                fullStr.substr(fullStr.length - backChars);
   };
 
-  $.plugins.push($.ExportPlugin)
+  $.plugins.push($.ExportPlugin);
 }(Hxighlighter ? Hxighlighter : require('../hxighlighter.js')));

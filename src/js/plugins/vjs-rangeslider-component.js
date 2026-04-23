@@ -10,7 +10,7 @@
     // The constructor of a component receives two arguments: the
     // player it will be associated with and an object of options.
     constructor(player, options) {
-      // It is important to invoke the superclass before anything else, 
+      // It is important to invoke the superclass before anything else,
       // to get all the features of components out of the box!
       super(player, options);
       this.player = player;
@@ -24,7 +24,7 @@
         });
         self.player.trigger('toggleAnnotations', {
           'isAnnotating': true
-        })
+        });
       });
       return this;
     }
@@ -95,13 +95,13 @@
     }
 
     handleMouseMove() {
-      if(this.heldDown){
+      if (this.heldDown) {
         const prog = this.getProgress();
-        if ( prog < this.limit-1) {
+        if ( prog < this.limit - 1) {
           this.el().style.left = prog + '%';
           this.player.trigger('setLeftRangeLimit', prog);
         }
-        
+
       }
     }
 
@@ -115,7 +115,7 @@
       } else {
         this.el().style.display = 'none';
       }
-      
+
     }
 
     setLimit(event, percent) {
@@ -169,15 +169,15 @@
     }
 
     handleMouseMove(event) {
-      if(this.heldDown){
+      if (this.heldDown) {
         const prog = this.getProgress();
-        if (prog > this.limit+1) {
+        if (prog > this.limit + 1) {
           this.el().style.left = prog + '%';
           this.player.trigger('setRightRangeLimit', prog);
         }
-        
+
       }
-      
+
     }
 
     toggleSlider(event, params) {
@@ -190,7 +190,7 @@
       } else {
         this.el().style.display = 'none';
       }
-      
+
     }
 
     setLimit(event, percent) {
@@ -248,7 +248,7 @@
       var duration = this.player.duration();
       var secondLeft = percentLeft * duration;
       var secondRight = percentRight * duration;
-      Hxighlighter.publishEvent('videoRangeSelected', this.app_instance_id, [this.el(), {start: secondLeft, startLabel: this.humanReadable(secondLeft), end: secondRight, endLabel: this.humanReadable(secondRight)}])
+      Hxighlighter.publishEvent('videoRangeSelected', this.app_instance_id, [this.el(), {start: secondLeft, startLabel: this.humanReadable(secondLeft), end: secondRight, endLabel: this.humanReadable(secondRight)}]);
       this.player.pause();
     }
 
@@ -259,7 +259,7 @@
       } else {
         this.el().style.display = 'none';
       }
-      
+
     }
 
     humanReadable(seconds_float) {
@@ -275,12 +275,12 @@
         var leftovers = seconds_float % 3600;
         mins = parseInt(leftovers / 60, 10);
         secs = parseInt(leftovers % 60, 10);
-        return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
+        return this.pad(hours, 2) + ":" + this.pad(mins, 2) + ":" + this.pad(secs, 2);
       }
     }
 
     pad(num, size) {
-      var s = num+"";
+      var s = num + "";
       while (s.length < size) s = "0" + s;
       return s;
     }
@@ -319,18 +319,18 @@
         this.el().style.display = 'none';
         this.closeUpListeners();
       }
-      
+
     }
 
     updateTime() {
-      var startTimes = jQuery('#vjs-start-range-text-input').val()
-      var endTimes = jQuery('#vjs-end-range-text-input').val()
+      var startTimes = jQuery('#vjs-start-range-text-input').val();
+      var endTimes = jQuery('#vjs-end-range-text-input').val();
 
-      var startSeconds = this.parseTime(startTimes)
-      var endSeconds = this.parseTime(endTimes)
-      var duration = this.player.duration()
+      var startSeconds = this.parseTime(startTimes);
+      var endSeconds = this.parseTime(endTimes);
+      var duration = this.player.duration();
 
-      var startPercent = this.getPercent(startSeconds, duration)
+      var startPercent = this.getPercent(startSeconds, duration);
       var endPercent = this.getPercent(endSeconds, duration);
       if (startPercent > endPercent) {
         endPercent = startPercent;
@@ -348,25 +348,25 @@
     }
 
     parseTime(timeString) {
-      var timeRange = timeString.split(':')
-      var timeDivisor = Math.pow(60, (timeRange.length - 1))
-      var timeCounter = parseInt(timeRange.pop().replace(/\D/g,''), 10)
+      var timeRange = timeString.split(':');
+      var timeDivisor = Math.pow(60, (timeRange.length - 1));
+      var timeCounter = parseInt(timeRange.pop().replace(/\D/g, ''), 10);
       timeRange.forEach(function(el) {
         timeCounter += timeDivisor * parseInt(el, 10);
         timeDivisor = timeDivisor / 60;
       });
-      return timeCounter
+      return timeCounter;
     }
 
     previewClip() {
       this.updateTime();
-      var startTimes = jQuery('#vjs-start-range-text-input').val()
-      var endTimes = jQuery('#vjs-end-range-text-input').val()
+      var startTimes = jQuery('#vjs-start-range-text-input').val();
+      var endTimes = jQuery('#vjs-end-range-text-input').val();
 
-      var startSeconds = this.parseTime(startTimes)
-      var endSeconds = this.parseTime(endTimes)
+      var startSeconds = this.parseTime(startTimes);
+      var endSeconds = this.parseTime(endTimes);
       if (startSeconds > endSeconds) {
-        jQuery('#vjs-end-range-text-input').val(startTimes)
+        jQuery('#vjs-end-range-text-input').val(startTimes);
         endSeconds = startSeconds;
       }
       var fakeAnn = {
@@ -374,7 +374,7 @@
           'start': startSeconds,
           'end': endSeconds
         }]
-      }
+      };
       this.player.trigger('playAnnotation', fakeAnn);
     }
 
@@ -396,13 +396,13 @@
 
     setStart(event, percent) {
       var dur = this.player.duration();
-      var humanReadableVal = this.humanReadable((percent/100.0) * dur);
+      var humanReadableVal = this.humanReadable((percent / 100.0) * dur);
       jQuery('#vjs-start-range-text-input').val(humanReadableVal);
     }
 
     setEnd(event, percent) {
       var dur = this.player.duration();
-      var humanReadableVal = this.humanReadable((percent/100.0) * dur);
+      var humanReadableVal = this.humanReadable((percent / 100.0) * dur);
       jQuery('#vjs-end-range-text-input').val(humanReadableVal);
     }
 
@@ -419,17 +419,16 @@
         var leftovers = seconds_float % 3600;
         mins = parseInt(leftovers / 60, 10);
         secs = parseInt(leftovers % 60, 10);
-        return this.pad(hours, 2) + ":" + this.pad(mins,2) + ":" + this.pad(secs, 2);
+        return this.pad(hours, 2) + ":" + this.pad(mins, 2) + ":" + this.pad(secs, 2);
       }
     }
 
     pad(num, size) {
-      var s = num+"";
+      var s = num + "";
       while (s.length < size) s = "0" + s;
       return s;
     }
   };
-
 
 
   /** *************************** Installing Components *****************************/
@@ -444,7 +443,7 @@
     $.globals['vjs'] = {};
   }
   if (!Object.prototype.hasOwnProperty.call($.globals.vjs, 'components')) {
-    $.globals.vjs['components'] = []
+    $.globals.vjs['components'] = [];
   }
 
   $.globals.vjs.components.push(function(player) {

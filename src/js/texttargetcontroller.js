@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 // during deployment, this is what decides what gets instantiated, should be moved elsewhere
@@ -54,7 +54,7 @@ require('./plugins/hx-websockets.js');
     // sets up listeners from core and other places
     if (this.options.method === "url") {
       // if the text exists externally, this will load it into the DOM
-      this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector)
+      this.makeQuery(this.options.object_source, this.createTextSlotFromURL.bind(this), this.target_selector);
     } else if (this.options.method === "inline") {
       // if the text is already in the DOM, this sets up what is left
       // console.log('Loading Target via Inline');
@@ -100,13 +100,13 @@ require('./plugins/hx-websockets.js');
 
     // each annotation target will be enclosed in a "slot"
     // var slot = "<div class='annotation-slot' id='" + this.guid + "'>" + content + "</div>";
-        
+
     // adds it to the page and turns on the wrapper
     jQuery(selector + ' .annotations-section').append(content);
     jQuery(selector).prop('id', this.guid);
     jQuery(selector).addClass('annotation-slot');
-    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');        
-        
+    jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
+
     // lets Core know that the target has finished loading on screen
     $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
   };
@@ -118,14 +118,14 @@ require('./plugins/hx-websockets.js');
      * @param      {<type>}  instance_id  The instance identifier
      */
   $.TextTarget.prototype.createTextSlotFromSelector = function(selector, instance_id) {
-        
+
     // each annotation target will be enclosed in a "slot" with a temporary unique id
     this.guid = $.getUniqueId();
     var slot = jQuery(selector);
     slot.addClass('annotation-slot');
-    slot.prop('id', this.guid); 
+    slot.prop('id', this.guid);
     jQuery('.annotations-section').addClass('annotator-wrapper').removeClass('annotations-section');
-        
+
     // lets core know that the target has finished loading on screen
     // console.log("Publishing TargetLoaded");
     $.publishEvent('targetLoaded', instance_id, [jQuery('#' + this.guid)]);
@@ -140,8 +140,8 @@ require('./plugins/hx-websockets.js');
      * @return     {<type>}    { description_of_the_return_value }
      */
   $.TextTarget.prototype.makeQuery = function(url, callback, selector) {
-    var self= this;
-        
+    var self = this;
+
     // retrieves the text to be loaded onto the page and passes it to callback function
     var defer = jQuery.ajax({
       url: url,
@@ -162,7 +162,7 @@ require('./plugins/hx-websockets.js');
     var self = this;
 
     jQuery('.toggle-alerts').click(function() {
-      if(jQuery(this).hasClass('on')) {
+      if (jQuery(this).hasClass('on')) {
         jQuery(this).html('Turn Alerts On');
         jQuery(this).removeClass('on');
         jQuery('.sr-alert').attr('aria-live', 'off');
@@ -171,8 +171,8 @@ require('./plugins/hx-websockets.js');
         jQuery(this).addClass('on');
         jQuery('.sr-alert').attr('aria-live', 'polite');
       }
-    })
-        
+    });
+
     // once the target has been loaded, the selector can be instantiated
     $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
       // console.log("LOADING TARGET");
@@ -226,7 +226,7 @@ require('./plugins/hx-websockets.js');
     jQuery.each($.selectors, function(_, selector) {
       self.selectors.push(new selector(element, self.instance_id, {'confirm': true}));
     });
-  }
+  };
 
   /**
      * { function_description }
@@ -239,7 +239,7 @@ require('./plugins/hx-websockets.js');
     jQuery.each($.drawers, function(_, drawer) {
       self.drawers.push(new drawer(element, self.instance_id, self.annotation_selector, self.options));
     });
-  }
+  };
 
   $.TextTarget.prototype.setUpViewers = function(element) {
     var self = this;
@@ -287,16 +287,16 @@ require('./plugins/hx-websockets.js');
       if (self.options.viewerOptions.defaultTab === "mine") {
         options = {
           'username': self.options.username
-        }
+        };
       } else if (self.options.viewerOptions.defaultTab === "instructor") {
         options = {
           'userid': self.options.instructors
-        }
+        };
       } else {
-        var exclusion = [self.options.user_id].concat(self.options.instructors)
+        var exclusion = [self.options.user_id].concat(self.options.instructors);
         options = {
           'exclude_userid': exclusion
-        }
+        };
       }
 
       self.storage[idx].onLoad(element, options);
@@ -309,10 +309,10 @@ require('./plugins/hx-websockets.js');
      * @class      ComponentEnable (name)
      */
   $.TextTarget.prototype.ComponentEnable = function() {
-    // Targets cannot technically be enabled/disabled, but 
+    // Targets cannot technically be enabled/disabled, but
     // there might be cases in which the target needs to be hidden/shown
-      
-    jQuery('#' + this.guid).show();  
+
+    jQuery('#' + this.guid).show();
 
   };
 
@@ -337,7 +337,7 @@ require('./plugins/hx-websockets.js');
       annotationText: [""],
       ranges: range,
       id: $.getUniqueId(),
-      exact: range.map(function(r) { return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/ {4}/g, '&nbsp;') }),
+      exact: range.map(function(r) { return r.text.exact.replace(/[\n\r]/g, '<br>').replace(/ {4}/g, '&nbsp;'); }),
       media: "text",
       totalReplies: 0,
       creator: {
@@ -415,7 +415,7 @@ require('./plugins/hx-websockets.js');
       if (is_new_annotation) {
         self.TargetAnnotationUndraw(annotation);
       }
-            
+
       // else, the annotation was already drawn, so don't touch it.
     } else if (is_new_annotation) {
       annotation = self.plugins.reduce(function(ann, plugin) { return plugin.saving(ann); }, annotation);
@@ -468,7 +468,7 @@ require('./plugins/hx-websockets.js');
     });
     return annotations;
   };
-    
+
   /**
      * { function_description }
      *
@@ -508,8 +508,8 @@ require('./plugins/hx-websockets.js');
     annotations.forEach(function(ann) {
       var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
       self.TargetAnnotationDraw(converted_ann);
-      $.publishEvent('annotationLoaded', self.instance_id, [converted_ann])
-            
+      $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
+
     });
   };
 

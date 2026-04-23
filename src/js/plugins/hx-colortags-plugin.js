@@ -1,13 +1,13 @@
 /**
  *  Color (Predetermined) Tags Plugin
- *  
+ *
  *  Will create an area for inputting tags, just a textfield, no color
  *
  */
 
 require('./hx-colortags-plugin.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -27,12 +27,12 @@ require('./hx-colortags-plugin.css');
   $.ColorTags.prototype.init = function() {
     var self = this;
     self.name = 'ColorTags';
-    self.annotationListeners()
+    self.annotationListeners();
   };
 
 
   /**
-     * Returns the HTML value of the WYSIWYG. 
+     * Returns the HTML value of the WYSIWYG.
      *
      * @return     {String}  HTML value found in the WYSIWYG
      */
@@ -118,7 +118,7 @@ require('./hx-colortags-plugin.css');
      * Following function taken from
      * https://css-tricks.com/converting-color-spaces-in-javascript/
      */
-  $.ColorTags.prototype.RGBaToHex = function(rgb){
+  $.ColorTags.prototype.RGBaToHex = function(rgb) {
     // Choose correct separator
     const sep = rgb.indexOf(",") > -1 ? "," : " ";
     // Turn "rgb(r,g,b)" into [r,g,b]
@@ -136,7 +136,7 @@ require('./hx-colortags-plugin.css');
       b = "0" + b;
 
     return "#" + r + g + b;
-  }
+  };
 
   /**
      * Code to run just before the annotation is saved to storage

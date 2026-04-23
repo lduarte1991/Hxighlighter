@@ -1,12 +1,12 @@
 /**
  *  Summernote Annotation Body Editor Mirador Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 
-(function($){
+(function($) {
   $.SummernoteAnnotationBodyEditor = function(options) {
 
     jQuery.extend(this, {
@@ -27,7 +27,7 @@
 
       this.editorMarkup = this.editorTemplate({
         annotation: _this.annotation,
-        windowId : _this.windowId
+        windowId: _this.windowId
       });
     },
 
@@ -37,7 +37,7 @@
       var tags = [];
       this.editorContainer = jQuery(selector)
         .prepend(this.editorMarkup);
-      
+
       window.jQuery(selector).closest('.ui-draggable').draggable({'handle': '.annotation-editor-nav-bar', 'containment': '.mirador-viewer'});
 
       this.selector = jQuery(selector);
@@ -55,7 +55,7 @@
         }
       }
       this.annotation.annotationText = annoText;
-      window.jQuery('.annotation-editor-nav-bar .cancel').click(function() { setTimeout(function() { window.jQuery('.annotation-editor .button-container .cancel').click(); }, 250)});
+      window.jQuery('.annotation-editor-nav-bar .cancel').click(function() { setTimeout(function() { window.jQuery('.annotation-editor .button-container .cancel').click(); }, 250);});
       if (this.annotation.endpoint) {
         var hx_annotation = this.annotation.endpoint.getAnnotationInEndpoint(this.annotation);
         Hxighlighter.publishEvent('editorShown', '', [jQuery(selector), hx_annotation]);
@@ -63,12 +63,12 @@
         Hxighlighter.publishEvent('editorShown', '', [jQuery(selector), this.annotation]);
       }
       jQuery('.button-container a').attr('tabindex', '0');
-      setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('You have selected a region of the image. You are now in an editor to input in your annotation.')}, 500);
+      setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('You have selected a region of the image. You are now in an editor to input in your annotation.');}, 500);
       window.jQuery('.annotation-editor .cancel').click(function(e) {
         setTimeout(function() {
           Hxighlighter.publishEvent('editorToBeHidden', '', []);
         }, 500);
-      })
+      });
     },
 
     isDirty: function() {
@@ -206,7 +206,7 @@
       var tags = jQuery('.token-input-token-facebook p').map(function(_, token) {
         return jQuery(token).html();
       });
-      
+
       // Thanks to https://stackoverflow.com/questions/36810940/array-from-on-the-internet-explorer
       if (!Array.from) {
         Array.from = (function () {

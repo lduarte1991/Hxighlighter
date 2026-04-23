@@ -15,7 +15,7 @@
     // The constructor of a component receives two arguments: the
     // player it will be associated with and an object of options.
     constructor(player, options) {
-      // It is important to invoke the superclass before anything else, 
+      // It is important to invoke the superclass before anything else,
       // to get all the features of components out of the box!
       super(player, options);
       this.player = player;
@@ -51,7 +51,7 @@
       }
     }
   };
-    
+
   class BackAnDisplay extends Component {
     constructor(player, options) {
       super(player, options);
@@ -77,7 +77,7 @@
       return videojs.dom.createEl('div', {
         className: 'vjs-back-anpanel-annotation',
         innerHTML: '<div class="vjs-hx-buttons annotation-view-togglers"><span class="fas fa-comments vjs-stats-annotations"></span><button class="vjs-stats-toggle fas fa-toggle-on fa-flip-horizontal" tabindex="0" title="Toggle Stats View"></button><span class="fas fa-chart-bar vjs-stats-chart"></span></div><div class="vjs-back-anpanel-scroll"></div><div class="vjs-back-stats-panel"><div class="vjs-stats-selection-display"></div><canvas class="vjs-char-anstat-annotation">Your browser does not support the HTML5 canvas tag.</canvas></div>'
-      })
+      });
     }
 
     toggleAnnotationsDisplay(event, params) {
@@ -86,12 +86,12 @@
         this.el().style.display = 'block';
         this.setUpListeners();
         if (this.inStatsView) {
-          jQuery('.video-js .vjs-progress-control').addClass('stats-view')
+          jQuery('.video-js .vjs-progress-control').addClass('stats-view');
         }
       } else {
         this.el().style.display = 'none';
         this.shutDownListeners();
-        jQuery('.video-js .vjs-progress-control').removeClass('stats-view')
+        jQuery('.video-js .vjs-progress-control').removeClass('stats-view');
       }
     }
 
@@ -135,47 +135,47 @@
       var startPerc = start + "%";
       var widthPerc = (end - start) + "%";
       if (data['toEnd']) {
-        jQuery(annotationPanel).append("<div class='hx-annotation-hl annotator-hl "+data['otherLabel']+"' id='hx-ann-"+ann.id+"' style='width: "+widthPerc+"; left: "+startPerc+"; '></div>");
+        jQuery(annotationPanel).append("<div class='hx-annotation-hl annotator-hl " + data['otherLabel'] + "' id='hx-ann-" + ann.id + "' style='width: " + widthPerc + "; left: " + startPerc + "; '></div>");
       } else {
-        jQuery(annotationPanel).prepend("<div class='hx-annotation-hl annotator-hl "+data['otherLabel']+"' id='hx-ann-"+ann.id+"' style='width: "+widthPerc+"; left: "+startPerc+"; '></div>");
+        jQuery(annotationPanel).prepend("<div class='hx-annotation-hl annotator-hl " + data['otherLabel'] + "' id='hx-ann-" + ann.id + "' style='width: " + widthPerc + "; left: " + startPerc + "; '></div>");
       }
       var node = jQuery('#hx-ann-' + ann.id);
       ann['_local'] = {
         'highlights': [node]
-      }
+      };
       node.data('annotation', ann);
     }
 
     playAnnotation(event, ann) {
       var self = this;
-            
+
       // get start/end values pass it to playBetween
       jQuery('.annotation-viewer.static .cancel').click();
       if (typeof(ann.id) !== "undefined") {
         const annotationPanel = this.el().querySelector('.vjs-back-anpanel-scroll');
-        const orig = jQuery('#hx-ann-' + ann.id)
+        const orig = jQuery('#hx-ann-' + ann.id);
         const animated = orig.clone(true);
-        jQuery('div[id$="animated"]').remove()
-        this.selectedAnimatedElement = "hx-ann-" + ann.id + '-animated'
-        animated.attr('id', this.selectedAnimatedElement)
+        jQuery('div[id$="animated"]').remove();
+        this.selectedAnimatedElement = "hx-ann-" + ann.id + '-animated';
+        animated.attr('id', this.selectedAnimatedElement);
         animated.css({
           'position': 'absolute',
           'background': '#2e75af',
           'bakcground': 'var(--pop-color)'
-        })
-        animated.appendTo(annotationPanel)
+        });
+        animated.appendTo(annotationPanel);
         animated.css({
           'margin-top': orig.offset().top - animated.offset().top,
-        })
+        });
         animated.animate({
           top: "100%",
           'margin-top': "-20px"
-        }, 1000)
+        }, 1000);
       }
       this.suspendPlay(function() {
         self._playBetween(ann.ranges[0].start, ann.ranges[0].end);
       });
-            
+
     }
 
     _playBetween(start, end) {
@@ -202,20 +202,20 @@
     _processPlay () {
       var self = this;
       // Check if current time is between start and end
-      if(this.player_.currentTime() >= Math.floor(this.startTime) && (this.endTime < 0 || this.player_.currentTime() < this.endTime)){
-        if(this.fired){ // Do nothing if start has already been called
+      if (this.player_.currentTime() >= Math.floor(this.startTime) && (this.endTime < 0 || this.player_.currentTime() < this.endTime)) {
+        if (this.fired) { // Do nothing if start has already been called
           return;
         }
         this.fired = true; // Set fired flag to true
-      }else{
-        if(!this.fired){ // Do nothing if end has already been called
+      } else {
+        if (!this.fired) { // Do nothing if end has already been called
           this.suspendPlay();
-          setTimeout(function() { self.player_.pause()}, 250);
+          setTimeout(function() { self.player_.pause();}, 250);
           return;
         }
         this.fired = false; // Set fired flat to false
-                
-        setTimeout(function() { self.player_.pause()}, 250); // Call end function
+
+        setTimeout(function() { self.player_.pause();}, 250); // Call end function
         this.player_.currentTime(this.endTime);
         this.suspendPlay();
       }
@@ -224,10 +224,10 @@
     _getNumberAnnotations(time1, end, allannotations) {
       var num = (typeof end !== 'undefined' && end) ? -1 : 0;
       // console.log(num, end, time1)
-      var time = parseInt(time1)
+      var time = parseInt(time1);
       for (var index in allannotations) {
         var ann = allannotations[index];
-        if(Math.floor(ann.ranges[0].start) <= time && Math.ceil(ann.ranges[0].end) >= time)
+        if (Math.floor(ann.ranges[0].start) <= time && Math.ceil(ann.ranges[0].end) >= time)
           num++;
       }
       return num;
@@ -242,10 +242,10 @@
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       Hxighlighter.publishEvent('GetSelectedFilterTypes', this.app_instance_id, function(filters) {
         if (filters.length === 0) {
-          filters = ['none']
+          filters = ['none'];
         }
-        jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '))
-      })
+        jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '));
+      });
       this._getPoints(function(points) {
         var maxEn = this._getMaxArray(points, 'entries');
         var w = this._getWeights(points);
@@ -295,17 +295,17 @@
           // new rectangle under the curve
           ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
           ctx.fillRect(x1, y1, (x2 - x1), (maxEn * w.Y - y1));
-                    
+
           // store the last point
           lastSe = p.second;
           lastEn = p.entries;
         }
         // set the graphic to the end of the video
-        ctx.lineTo(lastSe * w.X, maxEn * w.Y); 
-        ctx.moveTo(lastSe * w.X, maxEn * w.Y); 
+        ctx.lineTo(lastSe * w.X, maxEn * w.Y);
+        ctx.moveTo(lastSe * w.X, maxEn * w.Y);
         ctx.lineTo(duration * w.X, maxEn * w.Y);
         ctx.stroke();
-                
+
         // dashed line down
         ctx.beginPath();
         ctx.dashedLine(0, maxEn * w.Y, duration * w.X, maxEn * w.Y, 8);
@@ -327,7 +327,7 @@
       return highest;
     }
 
-    _getWeights(points){
+    _getWeights(points) {
       var weight = {};
       var panel = jQuery('.vjs-char-anstat-annotation');
       var maxSe = this.player.duration();
@@ -352,11 +352,11 @@
           if (!(startIndex in points_prep)) {
             points_prep[startIndex] = self._getNumberAnnotations(startIndex, false, anns);
             if (startIndex === endIndex) { // is a point
-              points_prep[endIndex] = self._getNumberAnnotations(endIndex, true, anns)
+              points_prep[endIndex] = self._getNumberAnnotations(endIndex, true, anns);
             }
           }
           if (!(endIndex in points_prep)) {
-            points_prep[endIndex] = self._getNumberAnnotations(endIndex, true, anns)
+            points_prep[endIndex] = self._getNumberAnnotations(endIndex, true, anns);
           }
         });
         var points = [];
@@ -370,28 +370,28 @@
           return parseFloat(a.second) - parseFloat(b.second);
         });
         // console.log('POINTS', points);
-        callback(points)
+        callback(points);
       }]);
     }
 
     toggleStatsView(event, params) {
       if (params.statsView) {
-        jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'none')
-        jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'block')
+        jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'none');
+        jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'block');
         // jQuery('.vjs-stats-toggle').css('color', 'rgb(255,255,0)')
-        jQuery('.vjs-stats-toggle').removeClass('fa-flip-horizontal')
-        jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 0)')
-        jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 255)')
-        jQuery('.video-js .vjs-progress-control').addClass('stats-view')
+        jQuery('.vjs-stats-toggle').removeClass('fa-flip-horizontal');
+        jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 0)');
+        jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 255)');
+        jQuery('.video-js .vjs-progress-control').addClass('stats-view');
         this._drawCanvas();
       } else {
-        jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'block')
-        jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'none')
+        jQuery(this.el()).find('.vjs-back-anpanel-scroll').css('display', 'block');
+        jQuery(this.el()).find('.vjs-back-stats-panel').css('display', 'none');
         // jQuery('.vjs-stats-toggle').css('color', 'rgb(255, 255, 255)')
-        jQuery('.vjs-stats-toggle').addClass('fa-flip-horizontal')
-        jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 255)')
-        jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 0)')
-        jQuery('.video-js .vjs-progress-control').removeClass('stats-view')
+        jQuery('.vjs-stats-toggle').addClass('fa-flip-horizontal');
+        jQuery('.vjs-stats-chart').css('color', 'rgb(255, 255, 255)');
+        jQuery('.vjs-stats-annotations').css('color', 'rgb(255, 255, 0)');
+        jQuery('.video-js .vjs-progress-control').removeClass('stats-view');
       }
     }
 
@@ -408,13 +408,13 @@
       Hxighlighter.subscribeEvent('StorageAnnotationLoad', this.app_instance_id, this._drawCanvas.bind(this));
       Hxighlighter.subscribeEvent('SelectedFilterTypesChanged', this.app_instance_id, function(_, filters) {
         if (filters.length === 0) {
-          filters = ['none']
+          filters = ['none'];
         }
         if (typeof(self.selectedAnimatedElement) !== "undefined" ) {
           jQuery('#' + self.selectedAnimatedElement).remove();
           self.selectedAnimatedElement = undefined;
         }
-        jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '))
+        jQuery('.vjs-stats-selection-display').html("Currently displaying the following annotations: " + filters.join(', '));
       });
     }
 
@@ -433,7 +433,7 @@
     $.globals['vjs'] = {};
   }
   if (!Object.prototype.hasOwnProperty.call($.globals.vjs, 'components')) {
-    $.globals.vjs['components'] = []
+    $.globals.vjs['components'] = [];
   }
 
   $.globals.vjs.components.push(function(player) {

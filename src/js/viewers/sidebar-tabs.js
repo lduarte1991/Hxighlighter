@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 var annotator = annotator ? annotator : require('annotator'); // eslint-disable-line no-useless-assignment
 
 import './css/sidebar-tabs.css';
 import 'jquery-confirm';
-import 'jquery-confirm/css/jquery-confirm.css'
+import 'jquery-confirm/css/jquery-confirm.css';
 import 'timeago';
 
 (function($) {
@@ -50,14 +50,14 @@ import 'timeago';
 
   $.Sidebar.prototype.setUpTemplates = function(suffix) {
     var self = this;
-    var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName){
+    var deferreds = jQuery.map(self.options.TEMPLATENAMES, function (templateName) {
       if (templateName in self.options.TEMPLATES) {
         return;
       }
       var options = {
         url: self.options.template_urls + templateName + '-' + suffix + '.html',
         type: "GET",
-        contentType:"charset=utf-8",
+        contentType: "charset=utf-8",
         success: function (data) {
           var template = _.template(data);
           self.options.TEMPLATES[templateName] = template;
@@ -67,7 +67,7 @@ import 'timeago';
       return jQuery.ajax(options);
     });
 
-    jQuery.when.apply(jQuery, deferreds).done(function(){
+    jQuery.when.apply(jQuery, deferreds).done(function() {
       self.annotation_tool.editorTemplate = self.options.TEMPLATES.editor({
         editorid: self.instance_id.replace(/\W/g, '-')
       });
@@ -108,7 +108,7 @@ import 'timeago';
         $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter, true]);
       }, function() {
 
-      }])
+      }]);
     });
 
     jQuery('#search-submit').click(function() {
@@ -125,17 +125,17 @@ import 'timeago';
       jQuery('.search-bar.search-toggle').hide();
       var search_options = {
         type: self.media
-      }
+      };
       if (this.id === "search") {
         jQuery('.annotationsHolder').addClass('search-opened');
         jQuery('.search-bar.search-toggle').show();
         return;
-      } else if(this.id === 'mynotes') {
+      } else if (this.id === 'mynotes') {
         search_options['username'] = self.options.username;
       } else if (this.id === "instructor") {
         search_options['user_id'] = self.options.instructors;
       }
-      self.search(search_options)
+      self.search(search_options);
     });
 
     jQuery('.sidebar-button#hide_label').click(function() {
@@ -145,7 +145,7 @@ import 'timeago';
       self.showSidebarTab(self.options.viewer_options.sidebarversion);
     });
     jQuery('.side.annotationsHolder').on('scroll', function() {
-      if(jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight) {
+      if (jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight) {
         var total_left = $.totalAnnotations - jQuery('.side.ann-item').length;
         if (total_left > 0 && jQuery('.load-more').length === 0) {
           jQuery('.side.annotationsHolder').css('padding-bottom', '40px');
@@ -155,12 +155,12 @@ import 'timeago';
             var options = {
               type: self.options.mediaType,
               limit: -1,
-            }
+            };
             var selectedTab = jQuery('.btn.user-filter.active').html().trim();
             if (selectedTab === "Mine") {
               options['username'] = self.options.username;
             } else if (selectedTab === "instructor") {
-              options['user_id'] = self.options.instructors
+              options['user_id'] = self.options.instructors;
             }
             jQuery(this).html('<span class="fa fa-spinner make-spin"></span>');
             // console.log(options);
@@ -169,12 +169,12 @@ import 'timeago';
               jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
               $.publishEvent('StorageAnnotationLoad', self.instance_id, [results.rows.reverse(), converter, false]);
             }, function() {
-                            
+
             }]);
 
           });
         }
-      } else if(self.load_more_open && jQuery(this).scrollTop() + jQuery(this).innerHeight() <= jQuery(this)[0].scrollHeight - 50) {
+      } else if (self.load_more_open && jQuery(this).scrollTop() + jQuery(this).innerHeight() <= jQuery(this)[0].scrollHeight - 50) {
         // console.log('should remove it');
         self.load_more_open = false;
         jQuery('.side.load-more').remove();
@@ -186,7 +186,7 @@ import 'timeago';
   $.Sidebar.prototype.showSidebarTab = function(type) {
     // if (type === "smalltab") {
     jQuery(':root').css('--sidebar-width', '55px');
-    jQuery('.resize-handle.side').append('<div class="'+type+' open-sidebar" tabindex="0" role="button"><i class="fa fa-arrow-right"></i></div>');
+    jQuery('.resize-handle.side').append('<div class="' + type + ' open-sidebar" tabindex="0" role="button"><i class="fa fa-arrow-right"></i></div>');
     // }
 
     jQuery('.open-sidebar').click(function() {
@@ -207,7 +207,7 @@ import 'timeago';
       jQuery('.item-' + annotation.id).remove();
       if (jQuery('.annotationItem').length === 0) {
         jQuery('#empty-alert').css('display', 'block');
-      } 
+      }
     });
 
     $.subscribeEvent('searchTag', self.instance_id, function(_, tag) {
@@ -230,7 +230,7 @@ import 'timeago';
       ann.index = 0;
       ann.instructor_ids = self.options.instructors;
       ann.common_name = (self.options.common_instructor_name && self.options.common_instructor_name !== "") ? self.options.common_instructor_name : ann.creator.name;
-      var annHTML = self.options.TEMPLATES.annotationItem(ann)
+      var annHTML = self.options.TEMPLATES.annotationItem(ann);
       if (jQuery('.side.item-' + ann.id).length > 0) {
         jQuery('.item-' + ann.id).html(jQuery(annHTML).html());
       }  else {
@@ -270,12 +270,12 @@ import 'timeago';
     }
   };
 
-  $.Sidebar.prototype.filterByType= function(searchValue, type) {
+  $.Sidebar.prototype.filterByType = function(searchValue, type) {
     var self = this;
     searchValue = searchValue.trim();
     var options = {
       'type': self.options.mediaType
-    }
+    };
     if (searchValue === "") {
       jQuery('.annotationsHolder .annotationItem').show();
       return;
@@ -300,12 +300,12 @@ import 'timeago';
       jQuery('.side.load-more').remove();
       jQuery('.side.annotationsHolder').css('padding-bottom', '0px');
       if (results.rows.length === 0) {
-        jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>')
+        jQuery('.side.annotationsHolder').append('<div id="empty-alert" style="padding:20px;text-align:center;">No annotations match your search!</div>');
       }
     }, function(err) {
       jQuery('.loading-obj').remove();
     }]);
-  }
+  };
 
   $.Sidebar.prototype.TargetSelectionMade = function(annotation, event) {
     var self = this;
@@ -351,7 +351,7 @@ import 'timeago';
   };
 
   $.Sidebar.prototype.ViewerDisplayOpen = function(event, annotations) {
-        
+
   };
 
   $.Sidebar.prototype.ViewerDisplayClose = function(annotations) {
@@ -361,7 +361,7 @@ import 'timeago';
   $.Sidebar.prototype.StorageAnnotationSave = function(annotations) {
 
   };
-    
+
   $.Sidebar.prototype.StorageAnnotationDelete = function(annotations) {
 
   };

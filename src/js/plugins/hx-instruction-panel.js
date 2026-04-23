@@ -1,13 +1,13 @@
 /**
  *  InstructionPanel Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 require('./hx-instruction-panel.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -26,7 +26,7 @@ require('./hx-instruction-panel.css');
      */
   $.InstructionPanel.prototype.init = function() {
     var self = this;
-        
+
     self.setUpInstructions();
   };
 
@@ -36,11 +36,11 @@ require('./hx-instruction-panel.css');
       return;
     }
     // console.log(self.options.instructions, typeof(self.options.instructions));
-    var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span class="toggle-instructions" role="button" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse show" aria-expanded="true" aria-live="polite" id="annotation-instructions">'+self.options.instructions+'</section></div>'
+    var container = '<div class="instructions-container" style="display:block;"><div class="instructions-title">Instructions<span class="toggle-instructions" role="button" id="toggle-instructions" aria-controls="annotation-instructions" tabindex="0" role="button">Collapse Instructions</span></div><section class="instructions-body collapse show" aria-expanded="true" aria-live="polite" id="annotation-instructions">' + self.options.instructions + '</section></div>';
     jQuery(self.options.slot).prepend(container);
     // toggles the label for toggling instructions
     var inst_area = jQuery(self.options.slot).find('.toggle-instructions');
-    inst_area.click(function (){
+    inst_area.click(function () {
       var body = jQuery(self.options.slot).find('.instructions-body');
       body.toggleClass('show');
       if (inst_area.html() === "Collapse Instructions") {

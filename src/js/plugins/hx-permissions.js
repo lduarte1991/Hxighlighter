@@ -1,13 +1,13 @@
 /**
  *  HxPermissions Annotations Plugin
- *  
+ *
  *
  */
 
 // uncomment to add css file
 // require('./filaname.css');
 
-(function($){
+(function($) {
 
   /**
      * @constructor
@@ -54,13 +54,13 @@
     }
     // hide edit if the person does not have can_update permissions
     if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) === -1 && ann.permissions.can_update.indexOf(self.options.user_id) === -1) {
-      loc.find('#edit-' + ann.id).remove();  
+      loc.find('#edit-' + ann.id).remove();
     }
     // hide delete if the person does not have can_delete permissions
     if (!self.options.has_staff_permissions && self.options.instructors.indexOf(self.options.user_id) === -1 && ann.permissions.can_delete.indexOf(self.options.user_id) === -1) {
-      loc.find('#delete-' + ann.id).remove();  
+      loc.find('#delete-' + ann.id).remove();
     }
-  }
+  };
 
   Object.defineProperty($.HxPermissions, 'name', {
     value: "HxPermissions"

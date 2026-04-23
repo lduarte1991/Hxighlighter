@@ -1,11 +1,11 @@
 /**
- * Should be listening for ways to select a text and then return an xpath 
+ * Should be listening for ways to select a text and then return an xpath
  * object with the range that was selected.
  */
 var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : annotator;
 
-(function($){
-  $.MouseSelector = function(element, inst_id, defaultOpts={}) {
+(function($) {
+  $.MouseSelector = function(element, inst_id, defaultOpts = {}) {
     this.element = element;
     this.instance_id = inst_id;
     this.adder = null;
@@ -21,7 +21,7 @@ var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : anno
     if (!Hxighlighter.exists(annotator) && Hxighlighter.exists(require)) {
       annotator = require('annotator');
     }
-        
+
     // once it detects a mouse selection, it calculates the range and
     // sends it via an event to core
     self.selector = new annotator.ui.textselector.TextSelector(self.element, {
@@ -29,7 +29,7 @@ var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : anno
         // checks to make sure correct element is picked depending on mouse vs keyboard usage
         var commonAncestor = event.type === "mouseup" || ranges.length === 0 ? jQuery(event.target) : jQuery(ranges[0].commonAncestor);
         // checks to make sure event comes from the correct target object being selected
-        if(commonAncestor.closest('.annotator-wrapper').parent().attr('id') === self.element.id) {
+        if (commonAncestor.closest('.annotator-wrapper').parent().attr('id') === self.element.id) {
           if (ranges.length > 0) {
             if (self.mustConfirm) {
               self.confirm(ranges, event);
@@ -37,7 +37,7 @@ var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : anno
               Hxighlighter.publishEvent('TargetSelectionMade', self.instance_id, [self.element, ranges, event]);
             }
           } else {
-            // must send this in order to detect when the user just clicks off 
+            // must send this in order to detect when the user just clicks off
             // usually denoting they don't want to actually select something
             // Hxighlighter.publishEvent('rangesEmpty', self.instance_id, []);
             self.adder.hide();
@@ -77,7 +77,7 @@ var annotator = (typeof(annotator) == 'undefined') ? require('annotator') : anno
     this.interactionPoint = $.mouseFixedPosition(event);
     this.adder.load(range, this.interactionPoint);
     this.adder.checkOrientation();
-  }
+  };
 
   $.selectors.push($.MouseSelector);
 }(Hxighlighter ?  Hxighlighter : require('../hxighlighter.js')));

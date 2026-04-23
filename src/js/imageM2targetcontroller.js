@@ -81,9 +81,9 @@ require('./storage/catchpy.js');
     var self = this;
     self.mir = Mirador({
       "id": "viewer",
-      'windowSettings' : {
-        "availableViews" : ['ImageView'], // any subset removes others
-        "viewType" : 'ImageView', // one of [_'ThumbnailsView'_, 'ImageView', 'ScrollView', 'BookView'] - if using availableViews, must be in subset
+      'windowSettings': {
+        "availableViews": ['ImageView'], // any subset removes others
+        "viewType": 'ImageView', // one of [_'ThumbnailsView'_, 'ImageView', 'ScrollView', 'BookView'] - if using availableViews, must be in subset
         "canvasControls": {
           "annotations": {
             "annotationLayer": true,
@@ -92,12 +92,12 @@ require('./storage/catchpy.js');
           }
         },
       },
-      "mainMenuSettings" : {
-        'show' : false
+      "mainMenuSettings": {
+        'show': false
       },
       buildPath: self.options.mirador_build_path,
-      "layout" : "1x1",
-      "saveSession" : false,
+      "layout": "1x1",
+      "saveSession": false,
       "data": [{'manifestUri': self.options.manifest_url, 'location': "Harvard University"}],
       "availableAnnotationStylePickers": [],
       "availableAnnotationDrawingTools": [
@@ -105,12 +105,12 @@ require('./storage/catchpy.js');
       ],
       "windowObjects": [{
         "loadedManifest": self.options.manifest_url,
-        "viewType" : "ImageView",
-        "annotationLayer" : true,
-        "annotationCreation" : true,
-        "sidePanel" : false,
+        "viewType": "ImageView",
+        "annotationLayer": true,
+        "annotationCreation": true,
+        "sidePanel": false,
         "bottomPanel": false,
-        "fullScreen" : false,
+        "fullScreen": false,
         "displayLayout": false,
         "annotationEditorVisible": false,
       }],
@@ -162,7 +162,7 @@ require('./storage/catchpy.js');
       self.windowId = windowId.id;
       self.mir.eventEmitter.subscribe('currentCanvasIDUpdated.' + self.windowId, function(e, canvasID, element) {
         Hxighlighter.publishEvent('objectIdUpdated', self.instance_id, [canvasID]);
-      })
+      });
       self.mir.eventEmitter.subscribe('annotationsRendered.' + self.windowId, function(e) {
         var overlay = window.paper.projects[0].getItem();
         if (!overlay) {
@@ -182,12 +182,12 @@ require('./storage/catchpy.js');
                 if (color) {
                   path.strokeColor = color;
                 }
-              }])
+              }]);
             }
           });
         });
       });
-      self.mir.eventEmitter.subscribe('catchAnnotationsLoaded.' + self.windowId , function (event) {
+      self.mir.eventEmitter.subscribe('catchAnnotationsLoaded.' + self.windowId, function (event) {
         var miradorAnnotations = Array.from(arguments);
         miradorAnnotations.shift();
         jQuery.each(self.viewers, function(_, viewer) {
@@ -201,7 +201,7 @@ require('./storage/catchpy.js');
       // self.mir.eventEmitter.subscribe('annotationEditSave.' + self.windowId, function(event, miradorAnnotation) {
       //     console.log("what");
       //     var endpointAnnotation = miradorAnnotation.endpoint.getAnnotationInEndpoint(miradorAnnotation)[0];
-      //     endpointAnnotation = endpointAnnotation || miradorAnnotation; 
+      //     endpointAnnotation = endpointAnnotation || miradorAnnotation;
       //     console.log('~', endpointAnnotation, miradorAnnotation);
       //     var annotation = self.convertFromOA(endpointAnnotation);
       //     jQuery.each(self.viewers, function(_, viewer) {
@@ -222,7 +222,7 @@ require('./storage/catchpy.js');
       });
       self.mir.eventEmitter.subscribe('catchAnnotationUpdated.' + self.windowId, function(event, catchAnnotation) {
         // console.log("annotation Updated", catchAnnotation);
-                
+
         jQuery.each(self.viewers, function(_, viewer) {
           viewer.addAnnotation(catchAnnotation, true, false);
         });
@@ -239,14 +239,14 @@ require('./storage/catchpy.js');
         });
       });
 
-      self.mir.eventEmitter.subscribe('imageRectangleUpdated', function(event, options){
-        self.imageLimits = {}
+      self.mir.eventEmitter.subscribe('imageRectangleUpdated', function(event, options) {
+        self.imageLimits = {};
         jQuery.each(self.mir.saveController.slots[0].window.imagesList, function(index, value) {
           if (value["@id"] === self.mir.saveController.slots[0].window.canvasID) {
             self.imageLimits = {
               'height': value.height,
               'width': value.width
-            }
+            };
           }
         });
         var xChecked = options.osdBounds.x;
@@ -256,13 +256,13 @@ require('./storage/catchpy.js');
         if (xChecked < 0) {
           xChecked = 0;
         }
-        if(heightChecked > self.imageLimits.height){
+        if (heightChecked > self.imageLimits.height) {
           heightChecked = self.imageLimits.height;
         }
         if (yChecked < 0) {
           yChecked = 0;
         }
-        if(widthChecked > self.imageLimits.width){
+        if (widthChecked > self.imageLimits.width) {
           widthChecked = self.imageLimits.width;
         }
 
@@ -274,7 +274,7 @@ require('./storage/catchpy.js');
         };
       });
 
-      self.mir.eventEmitter.subscribe('deleteShape.' + self.windowId, function(event, shape){
+      self.mir.eventEmitter.subscribe('deleteShape.' + self.windowId, function(event, shape) {
         jQuery('.modal-dialog .modal-footer button.btn.btn-primary').click(function() {
           jQuery('.annotation-editor .button-container a.cancel')[0].click();
         });
@@ -284,7 +284,7 @@ require('./storage/catchpy.js');
         if (toggler === ".mirador-manipulation-toggle") {
           jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '338px'}, 150);
         } else if (toggler === ".mirador-osd-annotations-layer") {
-          if (jQuery('.mirador-manipulation-toggle').hasClass('selected')){
+          if (jQuery('.mirador-manipulation-toggle').hasClass('selected')) {
             jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '338px'}, 150);
           } else {
             jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '198px'}, 150);
@@ -294,13 +294,13 @@ require('./storage/catchpy.js');
 
       self.mir.eventEmitter.subscribe('HUD_REMOVE_CLASS.' + self.windowId, function(event, toggler, toggledClass) {
         if (toggler === ".mirador-manipulation-toggle") {
-          if (jQuery('.mirador-osd-pointer-mode').is(':visible')){
+          if (jQuery('.mirador-osd-pointer-mode').is(':visible')) {
             jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '198px'}, 500);
           } else {
             jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '36px'}, 500);
           }
         } else if (toggler === ".mirador-osd-annotations-layer") {
-          if (jQuery('.mirador-manipulation-toggle').hasClass('selected')){
+          if (jQuery('.mirador-manipulation-toggle').hasClass('selected')) {
             jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '338px'}, 500);
           } else {
             jQuery('.mirador-osd-context-controls.hud-container').animate({'width': '36px'}, 500);
@@ -316,7 +316,7 @@ require('./storage/catchpy.js');
       //         window.paper.
       //     };
       // });
-      self.populateStorage(self.element[0])
+      self.populateStorage(self.element[0]);
 
     });
   };
@@ -331,15 +331,15 @@ require('./storage/catchpy.js');
       var w = parseInt(self.currentImageBounds.width, 10);
       var h = parseInt(self.currentImageBounds.height, 10);
 
-      segs.push(new window.paper.Point(x,y));
-      segs.push(new window.paper.Point(x + 0.5*w, y));
-      segs.push(new window.paper.Point(x + 0.5*w, y));
+      segs.push(new window.paper.Point(x, y));
+      segs.push(new window.paper.Point(x + 0.5 * w, y));
+      segs.push(new window.paper.Point(x + 0.5 * w, y));
       segs.push(new window.paper.Point(x + w, y));
       segs.push(new window.paper.Point(x + w, y + 0.5 * h));
       segs.push(new window.paper.Point(x + w, y + h));
-      segs.push(new window.paper.Point(x + 0.5*w, y + h));
+      segs.push(new window.paper.Point(x + 0.5 * w, y + h));
       segs.push(new window.paper.Point(x, y + h));
-      segs.push(new window.paper.Point(x, y + 0.5*h));
+      segs.push(new window.paper.Point(x, y + 0.5 * h));
 
       var shape = new window.paper.Path({
         segments: segs,
@@ -362,8 +362,8 @@ require('./storage/catchpy.js');
       overlay.eventEmitter.publish('toggleDrawingTool.' + self.windowId, "check_box_outline_blank");
       overlay.path = shape;
       overlay.onDrawFinish();
-    }
-    jQuery(document).on('keydown', function(event){
+    };
+    jQuery(document).on('keydown', function(event) {
       if ((event.key === '1' && (event.altKey || event.ctrlKey)) || (event.key === '\'' && (event.altKey || event.ctrlKey))) {
         event.preventDefault();
         snapshot();
@@ -402,7 +402,7 @@ require('./storage/catchpy.js');
           jQuery('.sr-real-alert').html(newAlert);
 
         }
-                
+
         event.preventDefault();
       }
     });
@@ -429,7 +429,7 @@ require('./storage/catchpy.js');
         jQuery('.note-editable')[0].focus();
       }, 500);
     });
-  }
+  };
 
   $.ImageTarget.prototype.convertFromOA = function(miradorAnnotation) {
     var annotation = {
@@ -454,13 +454,13 @@ require('./storage/catchpy.js');
 
     var leftmargin = "-150px";
     var widthHeight = 'width="150"';
-        
+
 
     var width = parseFloat(item.bounds.width);
     var height = parseFloat(item.bounds.height);
-    var strokewidth = (width * 0.00995) + "px"// '20px';
+    var strokewidth = (width * 0.00995) + "px";// '20px';
     if (height > width) {
-      var recalc = 150.0*(width/height);
+      var recalc = 150.0 * (width / height);
       leftmargin = "-" + recalc.toString() + 'px';
       widthHeight = 'height="150"';
     }
@@ -469,12 +469,12 @@ require('./storage/catchpy.js');
       leftmargin = "-" + item.bounds.width + "px";
       strokewidth = '2px';
     }
-        
+
     var finalSvg = "";
-    finalSvg += svgVal.replace('<svg xmlns', '<svg class="thumbnail-'+ item.id +'" id="thumbnail-' + item.id +'" ' + widthHeight + ' style="left: -9999px; position: absolute; margin-left: ' + leftmargin + '" viewBox="' + item.bounds.x + ' ' + item.bounds.y + ' ' + item.bounds.width + ' ' + item.bounds.height + '" xmlns').replace(/stroke-width=".+?"/g, 'stroke-width="' + strokewidth + '"');
+    finalSvg += svgVal.replace('<svg xmlns', '<svg class="thumbnail-' + item.id + '" id="thumbnail-' + item.id + '" ' + widthHeight + ' style="left: -9999px; position: absolute; margin-left: ' + leftmargin + '" viewBox="' + item.bounds.x + ' ' + item.bounds.y + ' ' + item.bounds.width + ' ' + item.bounds.height + '" xmlns').replace(/stroke-width=".+?"/g, 'stroke-width="' + strokewidth + '"');
 
     return finalSvg;
-  }
+  };
 
   /**
      * { function_description }
@@ -483,7 +483,7 @@ require('./storage/catchpy.js');
     var self = this;
 
     jQuery('.toggle-alerts').click(function() {
-      if(jQuery(this).hasClass('on')) {
+      if (jQuery(this).hasClass('on')) {
         jQuery(this).html('Turn Alerts On');
         jQuery(this).removeClass('on');
         jQuery('.sr-alert').attr('aria-live', 'off');
@@ -504,7 +504,7 @@ require('./storage/catchpy.js');
       jQuery(location).attr('tabindex', '0');
       jQuery(location)[0].focus();
     });
-        
+
     // once the target has been loaded, the selector can be instantiated
     $.subscribeEvent('targetLoaded', self.instance_id, function(_, element) {
       // console.log("LOADING TARGET");
@@ -556,7 +556,7 @@ require('./storage/catchpy.js');
           setTimeout(function() {
             jQuery(path).animate({
               strokeWidth: "10px"
-            }, 600)
+            }, 600);
           }, 750);
         }
       });
@@ -625,11 +625,11 @@ require('./storage/catchpy.js');
     var self = this;
     jQuery.each(self.storage, function(_, store) {
       // console.log("3. Sending it to store to save", store, ann);
-      store.StorageAnnotationSave(ann, self.element, false, function(x, y){
-        setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('Annotation was created and added to top of Annotation List')}, 500);
+      store.StorageAnnotationSave(ann, self.element, false, function(x, y) {
+        setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('Annotation was created and added to top of Annotation List');}, 500);
         $.totalAnnotations++;
         if (typeof(callBack) === "function") {
-          callBack(x, y)
+          callBack(x, y);
         }
       }, errorCallback);
     });
@@ -701,7 +701,7 @@ require('./storage/catchpy.js');
 
       jQuery.each(self.viewers, function(_, viewer) {
         viewer.addAnnotation(ann, true, false);
-      })
+      });
     }
   };
 
@@ -718,7 +718,7 @@ require('./storage/catchpy.js');
         annotationsList: []
       });
     }
-        
+
     jQuery.each(self.storage, function(_, store) {
       store.search(search_options, callback, errfun);
     });
@@ -737,7 +737,7 @@ require('./storage/catchpy.js');
       var converted_ann = converter(ann, jQuery(self.element).find('.annotator-wrapper'));
       $.publishEvent('annotationLoaded', self.instance_id, [converted_ann]);
     });
-        
+
     endpoint.drawFromSearch(annotations, converter, undrawOld);
   };
 
@@ -761,22 +761,22 @@ require('./storage/catchpy.js');
     if (self.options.viewerOptions.defaultTab === "mine") {
       options = {
         'userid': self.options.user_id
-      }
+      };
     } else if (self.options.viewerOptions.defaultTab === "instructor") {
       options = {
         'userid': self.options.instructors
-      }
+      };
     } else {
-      var exclusion = [self.options.user_id].concat(self.options.instructors)
+      var exclusion = [self.options.user_id].concat(self.options.instructors);
       options = {
         'exclude_userid': exclusion
-      }
+      };
     }
-    jQuery.each(self.storage, function(idx, store){
+    jQuery.each(self.storage, function(idx, store) {
       store.onLoad(element, options, function(anns, converter) {
         $.publishEvent('drawFromSearch', self.instance_id, [anns, converter]);
       });
     });
-  }
+  };
 
 }(Hxighlighter ?  Hxighlighter : require('./hxighlighter.js')));
