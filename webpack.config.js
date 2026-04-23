@@ -3,146 +3,146 @@ const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 const { version } = require('./package.json');
 
 const PATHS = {
-    vendor: path.join(__dirname, 'src/js/vendors/'),
-    modules: path.join(__dirname, 'node_modules/')
-}
+  vendor: path.join(__dirname, 'src/js/vendors/'),
+  modules: path.join(__dirname, 'node_modules/')
+};
 
 module.exports = {
-    entry: {
-        text: ['./src/text-index.js'],
-        text_lite: ['./src/author-index.js'],
-        image_m2: ['./src/image-index-m2.js'],
-        video_vjs: ['./src/video-index-vjs.js']
-    },
-    plugins: [
-        new webpack.ProvidePlugin({
-            "jquery": require.resolve('jquery'),
-            "$": require.resolve('jquery'),
-            'jQuery': require.resolve('jquery'),
-            'toastr': require.resolve('toastr'),
-            "videojs": require.resolve('video.js')
-        }),
-        new MiniCssExtractPlugin({
-            filename: 'dist/hxighlighter_[name].css',
-            chunkFilename: "[id].css"
-        }),
-        new webpack.DefinePlugin({
-          'require.specified': 'require.resolve'
-        }),
-        new webpack.IgnorePlugin({
-            resourceRegExp: /^codemirror$/
-        }),
-        new webpack.BannerPlugin({
-            banner: `Version: ${version} - ${new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' })}`,
-        }),
+  entry: {
+    text: ['./src/text-index.js'],
+    text_lite: ['./src/author-index.js'],
+    image_m2: ['./src/image-index-m2.js'],
+    video_vjs: ['./src/video-index-vjs.js']
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      "jquery": require.resolve('jquery'),
+      "$": require.resolve('jquery'),
+      'jQuery': require.resolve('jquery'),
+      'toastr': require.resolve('toastr'),
+      "videojs": require.resolve('video.js')
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'dist/hxighlighter_[name].css',
+      chunkFilename: "[id].css"
+    }),
+    new webpack.DefinePlugin({
+      'require.specified': 'require.resolve'
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^codemirror$/
+    }),
+    new webpack.BannerPlugin({
+      banner: `Version: ${version} - ${new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' })}`,
+    }),
+  ],
+  output: {
+    path: __dirname,
+    filename: 'dist/hxighlighter_[name].js',
+    assetModuleFilename: '[hash][ext][query]'
+  },
+  resolve: {
+    extensions: ['.js'],
+    // Note: mainFields prioritizes the "main" entrypoint to deal with a video.js conflict
+    //       between video.es.js and video.cjs.js
+    mainFields: ['main', 'module'],
+    alias: {
+      'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery.js'),
+      'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
+      'jQuery': 'jquery',
+      'CodeMirror': 'codemirror',
+      'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
+      'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
+      'videojs': PATHS.modules + 'video.js',
+      'videojs-transcript': PATHS.modules + 'videojs-transcript-ac/dist/videojs-transcript.js',
+      'videojs-youtube': PATHS.modules + 'videojs-youtube/dist/Youtube.js'
+    }
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({ extractComments: false }),
+      new CssMinimizerPlugin(),
     ],
-    output: {
-        path: __dirname,
-        filename: 'dist/hxighlighter_[name].js',
-        assetModuleFilename: '[hash][ext][query]'
-    },
-    resolve: {
-        extensions: ['.js'],
-        // Note: mainFields prioritizes the "main" entrypoint to deal with a video.js conflict 
-        //       between video.es.js and video.cjs.js
-        mainFields: ['main', 'module'], 
-        alias: {
-            'jquery': path.resolve(__dirname, 'node_modules/jquery/dist/jquery.js'),
-            'annotator': PATHS.vendor + 'Annotator/annotator.ui.js',
-            'jQuery': 'jquery',
-            'CodeMirror': 'codemirror',
-            'jquery-tokeninput': PATHS.modules + 'jquery.tokeninput/',
-            'handlebars': PATHS.modules + 'handlebars/dist/handlebars.min.js',
-            'videojs': PATHS.modules + 'video.js',
-            'videojs-transcript': PATHS.modules + 'videojs-transcript-ac/dist/videojs-transcript.js',
-            'videojs-youtube': PATHS.modules + 'videojs-youtube/dist/Youtube.js'
-        }
-    },
-    optimization: {
-        minimize: true,
-        minimizer: [
-            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-            `...`,
-            new CssMinimizerPlugin(),
-          ],
-    },
-    externals: {
-        'Mirador': 'Mirador'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: '../',
-                        }
-                    },
-                    "css-loader"
-                ]
-            },
-            {
-                test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-                type: 'asset/inline'
-            }, 
-            {
-                test: /\.(gif|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?/,
-                type: 'asset/inline'
-            },
-            {
-                test: /annotator\.ui\.js/,
-                use: [{
-                    loader: "imports-loader",
-                    options: {
-                        imports: [
-                            "defaults jquery $",
-                            "defaults jquery window.jQuery",
-                            "defaults jquery jQuery"
-                        ]
-                    }
-                }]
-            },
-            // {
-            //     test: /mirador\.js/,
-            //     use: 'script-loader'
-            // },
-            {
-                test: /videojs-transcript.js/,
-                use: [{
-                    loader: "imports-loader",
-                    options: {
-                        imports: [
-                            "defaults videojs videojs"
-                        ]
-                    }
-                }]
-            },
-            {
-                test: /(floating|sidebar)\.html$/,
-                use: ['underscore-template-loader']
-            },
-            { test: /\.handlebars$/, loader: "handlebars-loader" },
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
+  },
+  externals: {
+    'Mirador': 'Mirador'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
             }
+          },
+          "css-loader"
         ]
-    },
-    performance: {
-        'hints': false
-    },
-    ignoreWarnings: [
-        /Failed to parse source map.*summernote/,
+      },
+      {
+        test: /\.(eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+        type: 'asset/inline'
+      },
+      {
+        test: /\.(gif|svg|png|jpg)(\?v=\d+\.\d+\.\d+)?/,
+        type: 'asset/inline'
+      },
+      {
+        test: /annotator\.ui\.js/,
+        use: [{
+          loader: "imports-loader",
+          options: {
+            imports: [
+              "defaults jquery $",
+              "defaults jquery window.jQuery",
+              "defaults jquery jQuery"
+            ]
+          }
+        }]
+      },
+      // {
+      //     test: /mirador\.js/,
+      //     use: 'script-loader'
+      // },
+      {
+        test: /videojs-transcript.js/,
+        use: [{
+          loader: "imports-loader",
+          options: {
+            imports: [
+              "defaults videojs videojs"
+            ]
+          }
+        }]
+      },
+      {
+        test: /(floating|sidebar)\.html$/,
+        use: ['underscore-template-loader']
+      },
+      { test: /\.handlebars$/, loader: "handlebars-loader" },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
     ]
-}
+  },
+  performance: {
+    'hints': false
+  },
+  ignoreWarnings: [
+    /Failed to parse source map.*summernote/,
+  ]
+};
