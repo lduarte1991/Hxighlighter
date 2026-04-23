@@ -470,7 +470,7 @@ require('./storage/catchpy.js');
         }
         
         var finalSvg = "";
-        finalSvg += svgVal.replace('<svg xmlns', '<svg class="thumbnail-'+ item.id +'" id="thumbnail-' + item.id +'" ' + widthHeight + ' style="left: -9999px; position: absolute; margin-left: ' + leftmargin + '" viewBox="' + item.bounds.x + ' ' + item.bounds.y + ' ' + item.bounds.width + ' ' + item.bounds.height + '" xmlns').replace(/stroke-width=\".+?\"/g, 'stroke-width="' + strokewidth + '"');
+        finalSvg += svgVal.replace('<svg xmlns', '<svg class="thumbnail-'+ item.id +'" id="thumbnail-' + item.id +'" ' + widthHeight + ' style="left: -9999px; position: absolute; margin-left: ' + leftmargin + '" viewBox="' + item.bounds.x + ' ' + item.bounds.y + ' ' + item.bounds.width + ' ' + item.bounds.height + '" xmlns').replace(/stroke-width=".+?"/g, 'stroke-width="' + strokewidth + '"');
 
         return finalSvg;
     }

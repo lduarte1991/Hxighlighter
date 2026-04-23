@@ -46,9 +46,9 @@ require('./hx-summernote-plugin.css');
             disableResizeEditor: true,
             disableDragAndDrop: true,
             onCreateLink: function(link) {
-                var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/
+                var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/
                 if (link.match(linkValidator)) {
-                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link)? link : 'http://' + link;
+                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
                     return linkUrl;
                 } else {
                     alert("You did not enter a valid URL, it has been removed.");
@@ -86,7 +86,7 @@ require('./hx-summernote-plugin.css');
                         var inside = bufferHTML.match(regex);
                         jQuery.each(inside, function(_, image_tags) {
                             var new_img_url = image_tags.match(/src\s*=\s*["'](.+?)["']/)[1];
-                            bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href=\"' + new_img_url + "\">[External Image Link]</a>");
+                            bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href="' + new_img_url + "\">[External Image Link]</a>");
                         });
                         // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
                         setTimeout(function() { // wrap in a timer to prevent issues in Firefox

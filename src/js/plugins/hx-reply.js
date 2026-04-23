@@ -30,9 +30,9 @@ import 'jquery-confirm/css/jquery-confirm.css'
                 ['font', ['bold', 'italic', 'underline', 'link']],
             ],
             onCreateLink: function(link) {
-                var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+/
+                var linkValidator = /(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+/
                 if (link.match(linkValidator)) {
-                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:|#|\/)/.test(link)? link : 'http://' + link;
+                    linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*:|#|\/)/.test(link)? link : 'http://' + link;
                     return linkUrl;
                 } else {
                     alert("You did not enter a valid URL, it has been removed.");
@@ -54,7 +54,7 @@ import 'jquery-confirm/css/jquery-confirm.css'
                                 alert('You are not allowed to paste images in annotations. Add a descriptive link instead.')
                                 bufferHTML = bufferHTML.replace(image_tags, '');
                             } else {
-                                bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href=\"' + new_img_url + "\">[External Image Link]</a>");
+                                bufferHTML = bufferHTML.replace(image_tags, '<a title="'+ new_img_url +'" href="' + new_img_url + "\">[External Image Link]</a>");
                             }
                         });
                         // bufferHTML = bufferHTML.replace(/img([\w\W]+?)\/?>/, "<a href=\"#\">[Link to external image]</a>");
