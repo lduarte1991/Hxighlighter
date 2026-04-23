@@ -11,70 +11,70 @@
 var root = global || window;
 root.Hxighlighter = root.Hxighlighter || function(options) {
 
-    if (!options) {
-        return;
-    }
+  if (!options) {
+    return;
+  }
     
-    // if no current instances, set up the dictionary
-    if (!Hxighlighter.exists(Hxighlighter._instances)) {
-        Hxighlighter._instances = {};
-        Hxighlighter._instanceIDs = [];
-    }
+  // if no current instances, set up the dictionary
+  if (!Hxighlighter.exists(Hxighlighter._instances)) {
+    Hxighlighter._instances = {};
+    Hxighlighter._instanceIDs = [];
+  }
 
-    // create a unique id for this instance
-    var inst_id = options.inst_id;
-    if (!Hxighlighter.exists(inst_id)) {
-        if (Hxighlighter.exists(options.commonInfo.context_id) &&
+  // create a unique id for this instance
+  var inst_id = options.inst_id;
+  if (!Hxighlighter.exists(inst_id)) {
+    if (Hxighlighter.exists(options.commonInfo.context_id) &&
             Hxighlighter.exists(options.commonInfo.collection_id) &&
             Hxighlighter.exists(options.commonInfo.object_id)) {
-            // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
-            inst_id = options.commonInfo.context_id.replace(/\+/g, '_') + ':' + options.commonInfo.collection_id + ':' + btoa(options.commonInfo.object_id)
-        } else {
-            inst_id = Hxighlighter.getUniqueId();
-        }
+      // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
+      inst_id = options.commonInfo.context_id.replace(/\+/g, '_') + ':' + options.commonInfo.collection_id + ':' + btoa(options.commonInfo.object_id)
+    } else {
+      inst_id = Hxighlighter.getUniqueId();
     }
+  }
 
-    // save the new instance by its id
-    Hxighlighter._instances[inst_id] = {
-        'id': inst_id
-    };
+  // save the new instance by its id
+  Hxighlighter._instances[inst_id] = {
+    'id': inst_id
+  };
 
-    // id gets pushed to list as well
-    Hxighlighter._instanceIDs.push(inst_id);
+  // id gets pushed to list as well
+  Hxighlighter._instanceIDs.push(inst_id);
 
-    // set up the actual instance of Hxighlighter
-    Hxighlighter._instances[inst_id].core = new Hxighlighter.Core(options, inst_id);
+  // set up the actual instance of Hxighlighter
+  Hxighlighter._instances[inst_id].core = new Hxighlighter.Core(options, inst_id);
 };
 
 /**
  * List of Required Sequential Events (RSEs)
  */
 Hxighlighter.requiredEvents = [
-    // all components should deal with being enabled/disabled
-    "ComponentEnable",
-    "ComponentDisable",
+  // all components should deal with being enabled/disabled
+  "ComponentEnable",
+  "ComponentDisable",
 
-    // targets should be sure that they have a way to make selection and show/hide annotations
-    "TargetSelectionMade",
-    "TargetAnnotationDraw",
-    "TargetAnnotationUndraw",
+  // targets should be sure that they have a way to make selection and show/hide annotations
+  "TargetSelectionMade",
+  "TargetAnnotationDraw",
+  "TargetAnnotationUndraw",
 
-    // viewers should handle a way to 1) make annotations and 2) display the text
-    "ViewerEditorOpen",
-    "ViewerEditorClose",
-    "ViewerDisplayOpen",
-    "ViewerDisplayClose",
+  // viewers should handle a way to 1) make annotations and 2) display the text
+  "ViewerEditorOpen",
+  "ViewerEditorClose",
+  "ViewerDisplayOpen",
+  "ViewerDisplayClose",
 
-    // storage should handle keeping track of the annotations made
-    "StorageAnnotationSave",
-    "StorageAnnotationLoad",
-    "StorageAnnotationEdit",
-    "StorageAnnotationDelete",
-    "StorageAnnotationUpdate",
+  // storage should handle keeping track of the annotations made
+  "StorageAnnotationSave",
+  "StorageAnnotationLoad",
+  "StorageAnnotationEdit",
+  "StorageAnnotationDelete",
+  "StorageAnnotationUpdate",
 
-    // though replies are not mandatory, they are annotations and should be treated similarly
-    // the line below can be commented out should it not be relevant to your usecase.
-    "StorageAnnotationSearch",
+  // though replies are not mandatory, they are annotations and should be treated similarly
+  // the line below can be commented out should it not be relevant to your usecase.
+  "StorageAnnotationSearch",
 ];
 
 /**
@@ -98,21 +98,21 @@ Hxighlighter.globals = {};
  * @return     {Element|null}    The container DOM element, or null
  */
 Hxighlighter.getContainer = function(fromElement) {
-    var container;
-    if (fromElement) {
-        var el = fromElement instanceof jQuery ? fromElement[0] : fromElement;
-        container = el.closest('.hxighlighter-container');
-    } else {
-        container = document.querySelector('.hxighlighter-container');
-    }
-    // Only return the container when it is a positioning context.
-    // The lite CSS sets position:relative on .hxighlighter-container;
-    // the full-page CSS leaves it static. This ensures the full/iframe
-    // version continues to use viewport-relative coordinates.
-    if (container && getComputedStyle(container).position !== 'static') {
-        return container;
-    }
-    return null;
+  var container;
+  if (fromElement) {
+    var el = fromElement instanceof jQuery ? fromElement[0] : fromElement;
+    container = el.closest('.hxighlighter-container');
+  } else {
+    container = document.querySelector('.hxighlighter-container');
+  }
+  // Only return the container when it is a positioning context.
+  // The lite CSS sets position:relative on .hxighlighter-container;
+  // the full-page CSS leaves it static. This ensures the full/iframe
+  // version continues to use viewport-relative coordinates.
+  if (container && getComputedStyle(container).position !== 'static') {
+    return container;
+  }
+  return null;
 };
 
 // comment out following line when not webpacking

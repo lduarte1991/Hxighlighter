@@ -4,7 +4,7 @@
  *
  */
 
-//uncomment to add css file
+// uncomment to add css file
 
 (function($){
   $.SummernoteAnnotationBodyEditor = function(options) {
@@ -66,7 +66,7 @@
       setTimeout(function() {jQuery('#hx-sr-notifications .sr-alert').html('You have selected a region of the image. You are now in an editor to input in your annotation.')}, 500);
       window.jQuery('.annotation-editor .cancel').click(function(e) {
         setTimeout(function() {
-            Hxighlighter.publishEvent('editorToBeHidden', '', []);
+          Hxighlighter.publishEvent('editorToBeHidden', '', []);
         }, 500);
       })
     },
@@ -83,7 +83,7 @@
         return;
       }
       var tags = jQuery('.token-input-token-facebook p').map(function(_, token) {
-          return jQuery(token).html();
+        return jQuery(token).html();
       });
       // Thanks to https://stackoverflow.com/questions/36810940/array-from-on-the-internet-explorer
       if (!Array.from) {
@@ -105,7 +105,7 @@
           };
 
           // The length property of the from method is 1.
-          return function from(arrayLike/*, mapFn, thisArg */) {
+          return function from(arrayLike/* , mapFn, thisArg */) {
             // 1. Let C be the this value.
             var C = this;
 
@@ -183,7 +183,7 @@
         "chars": resourceText
       });
       setTimeout(function() {
-          Hxighlighter.publishEvent('editorToBeHidden', '', []);
+        Hxighlighter.publishEvent('editorToBeHidden', '', []);
       }, 500);
       return {
         "@context": "http://iiif.io/api/presentation/2/context.json",
@@ -195,7 +195,7 @@
 
     updateAnnotation: function(oaAnno) {
       setTimeout(function() {
-          Hxighlighter.publishEvent('editorToBeHidden', '', []);
+        Hxighlighter.publishEvent('editorToBeHidden', '', []);
       }, 500);
       var resourceText = this.selector.find('#annotation-text-field').summernote('code');
       var plainText = resourceText.replace(/<\/?[^>]+(>|$)/g, "");
@@ -204,7 +204,7 @@
         return;
       }
       var tags = jQuery('.token-input-token-facebook p').map(function(_, token) {
-          return jQuery(token).html();
+        return jQuery(token).html();
       });
       
       // Thanks to https://stackoverflow.com/questions/36810940/array-from-on-the-internet-explorer
@@ -227,7 +227,7 @@
           };
 
           // The length property of the from method is 1.
-          return function from(arrayLike/*, mapFn, thisArg */) {
+          return function from(arrayLike/* , mapFn, thisArg */) {
             // 1. Let C be the this value.
             var C = this;
 
@@ -286,14 +286,14 @@
       }
       tags = Array.from(tags);
 
-      //remove all tag-related content in annotation
+      // remove all tag-related content in annotation
       oaAnno.motivation = jQuery.grep(oaAnno.motivation, function(value) {
         return value !== "oa:tagging";
       });
       oaAnno.resource = jQuery.grep(oaAnno.resource, function(value) {
         return value["@type"] !== "oa:Tag";
       });
-      //re-add tagging if we have them
+      // re-add tagging if we have them
       if (tags.length > 0) {
         oaAnno.motivation.push("oa:tagging");
         jQuery.each(tags, function(index, value) {

@@ -34,18 +34,18 @@
     }
 
     toggleTranscriptDisplay(event, params) {
-        if (params.transcript) {
-            // console.log(jQuery('.video-js.vjs-fill'))
-            this.el().style.color = 'rgb(255, 255, 0)';
-            jQuery('.video-js.vjs-fill').css('height', '75%');
-        } else {
-            this.el().style.color = 'rgb(255, 255, 255)';
-            jQuery('.video-js.vjs-fill').css('height', '100%');
-        }
-        this.player.trigger('playerresize')
+      if (params.transcript) {
+        // console.log(jQuery('.video-js.vjs-fill'))
+        this.el().style.color = 'rgb(255, 255, 0)';
+        jQuery('.video-js.vjs-fill').css('height', '75%');
+      } else {
+        this.el().style.color = 'rgb(255, 255, 255)';
+        jQuery('.video-js.vjs-fill').css('height', '100%');
+      }
+      this.player.trigger('playerresize')
     }
   };
-/***************************** Installing Components *****************************/
+  /** *************************** Installing Components *****************************/
   // Register the component with Video.js, so it can be used in players.
   videojs.registerComponent('TranscriptToggle', TranscriptToggle);
 

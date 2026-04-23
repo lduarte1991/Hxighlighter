@@ -30,6 +30,8 @@ export default [
       "no-new-func": "error",
       "no-var": "off",
       "prefer-const": "warn",
+      "indent": ["warn", 2, { SwitchCase: 1 }],
+      "spaced-comment": ["warn", "always"],
     },
   },
   {

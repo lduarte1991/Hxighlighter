@@ -44,15 +44,15 @@
     }
 
     toggleAnnotationsDisplay(event, params) {
-        if (params.isAnnotating) {
-            this.el().style.color = 'rgb(255, 255, 0)';
-            this.player.trigger('toggleAnnotations', {
-              'isAnnotating': false
-            });
-        } else {
-            this.el().style.color = null;
-            jQuery('.hx-confirm-button').remove();
-        }
+      if (params.isAnnotating) {
+        this.el().style.color = 'rgb(255, 255, 0)';
+        this.player.trigger('toggleAnnotations', {
+          'isAnnotating': false
+        });
+      } else {
+        this.el().style.color = null;
+        jQuery('.hx-confirm-button').remove();
+      }
     }
   };
 
@@ -108,13 +108,13 @@
     toggleSlider(event, params) {
 
       if (params.isAnnotating) {
-          this.el().style.display = 'block';
-          const prog = this.getProgress();
-          this.el().style.left = prog + '%';
-          this.player.trigger('setLeftRangeLimit', prog);
-        } else {
-          this.el().style.display = 'none';
-        }
+        this.el().style.display = 'block';
+        const prog = this.getProgress();
+        this.el().style.left = prog + '%';
+        this.player.trigger('setLeftRangeLimit', prog);
+      } else {
+        this.el().style.display = 'none';
+      }
       
     }
 
@@ -133,7 +133,7 @@
       super(player, options);
       this.player = player;
       this.seekBar = player.controlBar.progressControl.seekBar;
-      //this.on('mousedown', this.handleMouseMove.bind(this));
+      // this.on('mousedown', this.handleMouseMove.bind(this));
       this.player.on('seeking', this.handleMouseMove.bind(this));
       this.player.on('toggleCreateAnnotation', this.toggleSlider.bind(this));
       this.player.on('setLeftRangeLimit', this.setLimit.bind(this));
@@ -183,13 +183,13 @@
     toggleSlider(event, params) {
 
       if (params.isAnnotating) {
-          this.el().style.display = 'block';
-          const prog = this.getProgress(5.0);
-          this.player.trigger('setRightRangeLimit', prog);
-          this.el().style.left = prog + '%';
-        } else {
-          this.el().style.display = 'none';
-        }
+        this.el().style.display = 'block';
+        const prog = this.getProgress(5.0);
+        this.player.trigger('setRightRangeLimit', prog);
+        this.el().style.left = prog + '%';
+      } else {
+        this.el().style.display = 'none';
+      }
       
     }
 
@@ -255,10 +255,10 @@
     toggleSlider(event, params) {
 
       if (params.isAnnotating) {
-          this.el().style.display = 'block';
-        } else {
-          this.el().style.display = 'none';
-        }
+        this.el().style.display = 'block';
+      } else {
+        this.el().style.display = 'none';
+      }
       
     }
 
@@ -313,12 +313,12 @@
     toggleSlider(event, params) {
 
       if (params.isAnnotating) {
-          this.el().style.display = 'block';
-          this.setUpListeners();
-        } else {
-          this.el().style.display = 'none';
-          this.closeUpListeners();
-        }
+        this.el().style.display = 'block';
+        this.setUpListeners();
+      } else {
+        this.el().style.display = 'none';
+        this.closeUpListeners();
+      }
       
     }
 
@@ -432,7 +432,7 @@
 
 
 
-  /***************************** Installing Components *****************************/
+  /** *************************** Installing Components *****************************/
   // Register the component with Video.js, so it can be used in players.
   videojs.registerComponent('AnnotateButton', AnnotateButton);
   videojs.registerComponent('LeftRangeSlider', LeftRangeSlider);
