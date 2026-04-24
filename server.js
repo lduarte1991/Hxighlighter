@@ -1,7 +1,7 @@
 const { execSync } = require('child_process');
 const { spawn } = require('child_process');
 
-const server = spawn('npx', ['http-server', 'dist/', '-p', '9000', '-s'], {
+const server = spawn('pnpm', ['exec', 'http-server', 'dist/', '-p', '9000', '-s'], {
     stdio: 'inherit'
 });
 
