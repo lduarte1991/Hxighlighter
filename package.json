@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./test_server.sh",
+    "test:unit": "c8 mocha --require global-jsdom/register --require ./tests/setup.js --require @babel/register --require ignore-styles --recursive tests/unit",
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint --fix src/ tests/",
     "prebuild": "rm -rf dist/hxighlighter/fonts/",
