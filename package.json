@@ -1,6 +1,6 @@
 {
   "name": "hxighlighter",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "description": "JavaScript annotation tool suite",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "annotations"
   ],
   "private": true,
+  "packageManager": "pnpm@10.23.0",
   "engines": {
     "node": ">=22.13.0"
   },
@@ -77,10 +78,16 @@
     "webpack": "^5.105.4",
     "webpack-cli": "^7.0.2"
   },
-  "overrides": {
-    "mocha": {
+  "pnpm": {
+    "overrides": {
       "diff": ">=8.0.3",
       "serialize-javascript": ">=7.0.5"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "core-js"
+    ],
+    "onlyBuiltDependencies": [
+      "puppeteer"
+    ]
   }
 }
