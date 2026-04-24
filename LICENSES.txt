@@ -1,47 +1,91 @@
-Module: bootstrap
-License: MIT
+================================================================================
+Vendored Files (src/js/vendors/)
+================================================================================
 
 Filename: annotator.ui.js
-Original Project: annotator
+Original Project: Annotator
 Version: 2.0.0
 License: MIT
 Github: https://github.com/openannotation/annotator
 Description: Contains just the basic UI elements from annotator. Within it, this means it contains their xpath-range part of the project as well as triggers to detect a user "highlighting" on a piece of text. Likewise it will take a given xpath/range and draw it on screen.
 
-Filename: colored-token-tags-plugin.js
-Original Project: tags-annotator.js
-Version: 0.0.1
-License: MIT
-Github: https://github.com/lduarte1991/tags-annotator
-Description: Allows instantiation of tags to be prepoulated and live-searched during annotation creation. Likewise it may contain data of how the tags should be colored.
-
-Filename: summernote-richtext-plugin.js
-Description: This was created for the HxAT v1 project.
-
-Filename: ba-tiny-pubsub.js
+Filename: jquery-tiny-pubsub.js
 Original Project: jQuery Tiny PubSub
 Version: 0.7.0
 License: MIT
 Github: https://github.com/cowboy/jquery-tiny-pubsub
-Description: Allows using functions to be event-triggered and allows events to be triggered.
+Description: Allows using functions to be event-triggered and allows events to be triggered. Vendored because the npm package is unmaintained (last published 2014).
 
-Filename: jquery.tokeninput.js
-Original Project: jQuery TokenInput
-Version: 1.6.0
-License: MIT
-Github: https://github.com/loopj/jquery-tokeninput
-Description: Allows input into text field to be turned into "tokenized" HTML elements that can be clicked on to be deleted. 
+================================================================================
+npm Dependencies
+================================================================================
 
-Filename: summernote.js
-Original Project: Summernote
-Version: 0.6.7
+Module: codemirror
+Version: 6.0.2
 License: MIT
-Github:
-Description: Pretty and simple[r than TinyMCE] WYSIWYG.
+Github: https://github.com/codemirror/basic-setup
+Description: Extensible code editor component.
 
-Filename: underscore.js
-Original Project: Underscore
-Version: 1.8.3
+Module: handlebars
+Version: 4.7.9
 License: MIT
-Github:
-Description: Easy templating Library 
+Github: https://github.com/handlebars-lang/handlebars.js
+Description: Semantic templating engine.
+
+Module: jquery
+Version: 4.0.0
+License: MIT
+Github: https://github.com/jquery/jquery
+Description: DOM manipulation and event handling library.
+
+Module: jquery-confirm
+Version: 3.3.4
+License: MIT
+Github: https://github.com/craftpip/jquery-confirm
+Description: Multipurpose alert, confirm, and dialog plugin for jQuery.
+
+Module: jquery.tokeninput
+Version: 2.0.0
+License: MIT
+Github: https://github.com/lduarte1991/jquery-tokeninput
+Description: Allows input into text field to be turned into "tokenized" HTML elements that can be clicked on to be deleted. Uses a project fork with Hxighlighter-specific fixes.
+
+Module: summernote
+Version: 0.9.1
+License: MIT
+Github: https://github.com/summernote/summernote
+Description: WYSIWYG rich-text editor (lite build).
+
+Module: timeago
+Version: 1.6.7
+License: MIT
+Description: Formats datetime values into human-readable relative time strings.
+
+Module: toastr
+Version: 2.1.4
+License: MIT
+Github: https://github.com/CodeSeven/toastr
+Description: Non-blocking notification library.
+
+Module: video.js
+Version: 8.23.8
+License: Apache-2.0
+Github: https://github.com/videojs/video.js
+Description: HTML5 video player framework.
+
+Module: videojs-transcript-ac
+Version: 0.8.8
+License: MIT
+Description: Video.js transcript/captions plugin.
+
+Module: videojs-youtube
+Version: 3.0.1
+License: MIT
+Github: https://github.com/videojs/videojs-youtube
+Description: YouTube playback technology for Video.js.
+
+Module: @fortawesome/fontawesome-free
+Version: 7.2.0
+License: CC-BY-4.0 (icons), OFL-1.1 (fonts), MIT (code)
+Github: https://github.com/FortAwesome/Font-Awesome
+Description: Icon toolkit. Fonts are bundled at build time.
