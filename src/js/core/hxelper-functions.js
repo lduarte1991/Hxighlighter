@@ -1,11 +1,13 @@
 (function($$) {
   /**
-     * Gets the current top/left position for an event (in particular your mouse pointer)
+     * Gets the current top/left position for an event relative to the
+     * Hxighlighter container (or the document body in full-page mode).
+     * Handles both mouse and keyboard selection events.
      *
-     * @param      {Object}  event   The event
-     * @return     {Object}  { description_of_the_return_value }
+     * @param      {Event}   event   The DOM event (mouse or keyboard)
+     * @return     {Object}  {top: number, left: number}
      */
-  $$.mouseFixedPosition = function(event, annotation) {
+  $$.mouseFixedPosition = function(event) {
     var container = Hxighlighter.getContainer(event.target);
     var offset = {top: 0, left: 0};
 
@@ -49,35 +51,49 @@
     }
   };
 
+  /**
+     * Extracts top/left coordinates from a bounding box or similar object.
+     * Returns {top: 0, left: 0} when properties are missing or falsy.
+     *
+     * @param      {Object}  boundingBox  Object with top and left properties
+     * @return     {Object}  {top: number, left: number}
+     */
   $$.mouseFixedPositionFromRange = function(boundingBox) {
     return {
-      top: boundingBox.top,
-      left: boundingBox.left
+      top: boundingBox.top || 0,
+      left: boundingBox.left || 0
     };
   };
 
+  /**
+     * Extracts quoted text from an array of range/highlight objects.
+     *
+     * @param      {Array}   ranges  Array of range objects (with .text(), .toString(), or .exact)
+     * @return     {Object}  {exact: string[], exactNoHtml: string[]}
+     */
   $$.getQuoteFromHighlights = function(ranges) {
-    var text = [];
+    var allText = [];
     var exactText = [];
     for (var i = 0, len = ranges.length; i < len; i++) {
-      text = [];
+      var text = [];
       var r = ranges[i];
       try {
         text.push(Hxighlighter.trim(r.text()));
       } catch (e) {
         text.push(Hxighlighter.trim(r.toString()));
-        if (r.toString === "[object Object]") {
+        if (r.toString() === "[object Object]") {
           text.pop();
           text.push(r.exact);
         }
       }
 
-      var exact = text.join(' / ').replace(/[\n\r]/g, '<br>') ;
+      var exact = text.join(' / ').replace(/[\n\r]/g, '<br>');
       exactText.push(exact);
+      allText = allText.concat(text);
     }
     return {
       'exact': exactText,
-      'exactNoHtml': text
+      'exactNoHtml': allText
     };
   };
 
@@ -106,12 +122,14 @@
   };
 
   /**
-     * trims whitespace from strings
+     * Trims whitespace from strings. Returns empty string for null/undefined.
      *
-     * @param      {string}  s       original string
+     * @param      {*}       s       value to trim (coerced to string)
      * @return     {string}  trimmed string
      */
   $$.trim = function(s) {
+    if (s == null) return '';
+    s = String(s);
     if (typeof String.prototype.trim === 'function') {
       return String.prototype.trim.call(s);
     } else {
@@ -128,7 +146,6 @@
      * @param      {array}  list        The list
      */
   $$.publishEvent = function(eventName, instanceID, list) {
-    // console.log(eventName, list);
     if (!$$.exists(instanceID) || instanceID === "") {
       // WARNING: If events aren't properly sent/received, check pub/sub functions are encoding object id in base64
       jQuery.each($$._instanceIDs, function(_, inst_id) {
@@ -136,7 +153,6 @@
         if ($$.requiredEvents.indexOf(eventName) >= 0) {
           $$._instances[inst_id].core[eventName](list);
         }
-        // console.log("publish: ", eventName + '.' + inst_id)
         jQuery.publish(eventName + '.' + inst_id, list);
       });
     } else {
@@ -154,20 +170,24 @@
      *
      * @param      {string}  eventName   The event name
      * @param      {string}  instanceID  The instance id
-     * @param      {<type>}  callBack    The call back
+     * @param      {Function}  callBack    The callback function
      */
   $$.subscribeEvent = function(eventName, instanceID, callBack) {
     if (!$$.exists(instanceID) || instanceID === "") {
       jQuery.each($$._instanceIDs, function(_, inst_id) {
-        // console.log("subscribe:", eventName + '.' + inst_id)
         jQuery.subscribe(eventName + '.' + inst_id, callBack);
       });
     } else {
-      // console.log("subscribe:", eventName + '.' + instanceID)
       jQuery.subscribe(eventName + '.' + instanceID, callBack);
     }
   };
 
+  /**
+     * Stops event propagation and prevents default behavior.
+     *
+     * @param      {Event}   e   The DOM event to cancel
+     * @return     {boolean} Always returns false
+     */
   $$.pauseEvent = function(e) {
     if (e.stopPropagation) e.stopPropagation();
     if (e.preventDefault) e.preventDefault();
