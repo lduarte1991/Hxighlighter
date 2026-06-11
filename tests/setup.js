@@ -1,6 +1,10 @@
-// Test setup: make jQuery available globally before any modules that need it
-// (e.g. jquery-tiny-pubsub.js reads jQuery at module scope)
+const { JSDOM } = require('jsdom');
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
+
+global.window = dom.window;
+global.document = dom.window.document;
+global.navigator = dom.window.navigator;
+
 var jQuery = require('jquery');
-var root = global || window;
-root.jQuery = jQuery;
-root.$ = jQuery;
+global.jQuery = jQuery;
+global.$ = jQuery;
