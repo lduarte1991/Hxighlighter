@@ -18,9 +18,9 @@ To use the tool, make sure the HTML and JS are set up as [detailed below](#setup
 
 ## Setup
 ### Installing
-`npm` is used to manage the packaging of the tool, though the final code is not actually distributed. Run `npm install` to set up the modules needed for the code to be packaged properly.
+`pnpm` is used to manage the packaging of the tool, though the final code is not actually distributed. Run `pnpm install` to set up the modules needed for the code to be packaged properly.
 
-To customize what components and plugins are included with the final compilation of code, modify the `require` calls (removing or commenting out what is not needed) and finally running `npx webpack`.
+To customize what components and plugins are included with the final compilation of code, modify the `require` calls (removing or commenting out what is not needed) and finally running `pnpm exec webpack`.
 
 The final compiled code should appear in the `dist` folder. Webpacking happens for **all** media types and their lite version counterparts. Each file is timestamped at the top for versioning purposes.
 

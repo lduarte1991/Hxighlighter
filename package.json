@@ -1,11 +1,11 @@
 {
   "name": "hxighlighter",
-  "version": "1.9.3",
+  "version": "1.10.0",
   "description": "JavaScript annotation tool suite",
   "main": "index.js",
   "scripts": {
     "test": "./test_server.sh",
-    "test:unit": "c8 mocha --require global-jsdom/register --require ./tests/setup.js --require @babel/register --require ignore-styles --recursive tests/unit",
+    "test:unit": "c8 mocha --require ./tests/setup.js --require @babel/register --require ignore-styles --recursive tests/unit",
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint --fix src/ tests/",
     "prebuild": "rm -rf dist/hxighlighter/fonts/",
@@ -21,8 +21,9 @@
     "annotations"
   ],
   "private": true,
+  "packageManager": "pnpm@10.23.0",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=24.0.0"
   },
   "browserslist": [
     "> 0.5%",
@@ -62,14 +63,14 @@
     "css-minimizer-webpack-plugin": "^8.0.0",
     "eslint": "^10.2.1",
     "exports-loader": "^5.0.0",
-    "global-jsdom": "^29.0.0",
     "globals": "^17.5.0",
     "handlebars-loader": "^1.7.3",
     "http-server": "^14.1.1",
     "ignore-styles": "^5.0.1",
     "imports-loader": "^5.0.0",
     "jquery": "^4.0.0",
-    "jsdom": "^29.0.2",
+    "jsdom": "^29.1.1",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.10.2",
     "mocha": "^11.7.5",
     "npm-check-updates": "^20.0.0",
@@ -80,10 +81,16 @@
     "webpack": "^5.105.4",
     "webpack-cli": "^7.0.2"
   },
-  "overrides": {
-    "mocha": {
+  "pnpm": {
+    "overrides": {
       "diff": ">=8.0.3",
       "serialize-javascript": ">=7.0.5"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "core-js"
+    ],
+    "onlyBuiltDependencies": [
+      "puppeteer"
+    ]
   }
 }
