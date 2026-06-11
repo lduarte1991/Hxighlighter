@@ -17,8 +17,8 @@ describe('Hxighlighter', function() {
 
   it('instantiates required events list', function () {
     expect(Hxighlighter.requiredEvents).to.exist;
-    expect(Hxighlighter.requiredEvents.length).to.equal(14);
-    expect(Hxighlighter.requiredEvents).to.include.members(['TargetAnnotationDraw', 'StorageAnnotationGetReplies']);
+    expect(Hxighlighter.requiredEvents.length).to.equal(15);
+    expect(Hxighlighter.requiredEvents).to.include.members(['TargetAnnotationDraw', 'StorageAnnotationSearch']);
   });
 
   it('is not created if no options passed in', function() {
