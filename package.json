@@ -75,7 +75,7 @@
     "mocha": "^11.7.5",
     "npm-check-updates": "^22.2.3",
     "npm-run-all2": "^8.0.4",
-    "puppeteer": "^24.40.0",
+    "puppeteer": "^25.1.0",
     "style-loader": "^4.0.0",
     "underscore-template-loader": "^1.2.0",
     "webpack": "^5.105.4",
