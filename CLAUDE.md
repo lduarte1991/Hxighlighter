@@ -105,3 +105,6 @@ Uses ESLint 10 flat config (`eslint.config.mjs`). Key rules:
 GitHub Actions:
 - **ci.yml**: Runs `lint` + `test:unit` on PRs and pushes to main
 - **release.yml**: Triggered by `v*` tags; builds bundles and publishes a GitHub release with zipped dist artifacts
+
+## Comments
+Inline // comments should be short and to the point — only when the why is non-obvious. Function-level documentation uses JSDoc block style (/** */) and can be thorough: explaining parameters, return values, approach, or known limitations. Use JSDoc on exported functions and any internal helper that is complex or non-obvious; skip it when the name and signature speak for themselves.
