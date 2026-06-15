@@ -1,5 +1,9 @@
 'use strict';
 
+// Converts browser Range objects to/from a serializable format so annotations
+// can be stored and later re-highlighted even if the DOM has changed.
+// serializeRange -> store in DB; normalizeRange -> restore from DB.
+
 function xpathFromRootToNode(root, node, offset, ignoreSelector) {
   var currentNode = node;
   var xpath = '';
@@ -125,6 +129,9 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
 
 // general idea came from responses to this question
 // https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
+// Computes start/end positions of a selection as raw character counts from the
+// beginning of the .annotator-wrapper container. Stored as the "Way 2" fallback
+// in serializeRange alongside the XPath data.
 function getGlobalOffset(range, root, ignoreSelector) {
   var preRangeRange = document.createRange(); // range.cloneRange();
   root = jQuery(root)[0];
@@ -242,6 +249,12 @@ function compareExactText(text1, text2) {
   return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
 };
 
+// Takes a live browser Range (a user's text selection) and converts it to a
+// plain JSON-serializable object with three parts: xpath (path + char offsets
+// to the start/end nodes), text (exact selected text plus up to 35 chars of
+// surrounding prefix/suffix context), and position (global char offset from
+// the top of the annotatable container as a fallback). This is what gets
+// stored in the database when someone makes an annotation.
 function serializeRange(range, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
@@ -345,6 +358,10 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
 //     }
 // }
 
+// Walks a stored XPath string back down the DOM tree to find the specific
+// element node, then uses character counting (recurseGetNodeFromOffset) to
+// find the exact text node and offset within it. This is how "Way 1" in
+// normalizeRange resolves a stored annotation back to a live DOM position.
 function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   var tree = xpath.replace(/\/text\(\)\[(.*)\]/g, '').split('/');
   tree = tree.filter(function(it) { return it.length > 0; });
@@ -402,6 +419,15 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 }
 
 
+// Inverse of serializeRange — takes a stored annotation and reconstructs a
+// live browser Range so the annotation can be highlighted on screen. Tries
+// three strategies in order, falling back if the previous one fails:
+//   Way 1: follow the XPath to find the exact node
+//   Way 2: if the XPath text doesn't match (e.g. tags renamed), fall back to
+//           the global character offset
+//   Way 3: if that also fails (e.g. text inserted before the annotation),
+//           search the whole document for the exact quote and match by
+//           prefix/suffix context
 function normalizeRange(serializedRange, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
@@ -570,6 +596,10 @@ function recurseFromNodeToNode(currentNode, range) {
   };
 };
 
+// Given a list of stored annotation range objects, normalizes each one back to
+// a live Range then walks the DOM to collect all individual text nodes that
+// fall within that range. Used by drawers to know which text nodes to wrap in
+// highlight <span> elements when rendering annotations on screen.
 function getTextNodesFromAnnotationRanges(ranges, root) {
   var textNodesList = [];
 
