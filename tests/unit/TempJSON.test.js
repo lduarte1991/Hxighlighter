@@ -337,3 +337,111 @@ describe('TempJSON#getElementViaXpath', function() {
     document.body.removeChild(container);
   });
 });
+
+// ---------------------------------------------------------------------------
+// flatten
+// ---------------------------------------------------------------------------
+describe('TempJSON#flatten', function() {
+  let tj;
+  beforeEach(function() { tj = makeTempJSON(); });
+
+  it('returns a flat array from a nested array', function() {
+    expect(tj.flatten([[1, 2], [3, [4, 5]]])).to.deep.equal([1, 2, 3, 4, 5]);
+  });
+
+  it('returns the same array when already flat', function() {
+    expect(tj.flatten([1, 2, 3])).to.deep.equal([1, 2, 3]);
+  });
+
+  it('handles an empty array', function() {
+    expect(tj.flatten([])).to.deep.equal([]);
+  });
+
+  it('handles mixed falsy values without throwing', function() {
+    expect(tj.flatten([0, null, false, 1])).to.deep.equal([0, null, false, 1]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// contains
+// ---------------------------------------------------------------------------
+describe('TempJSON#contains', function() {
+  let tj;
+  beforeEach(function() { tj = makeTempJSON(); });
+
+  it('returns truthy when elem2 is contained within elem1', function() {
+    const parent = document.createElement('div');
+    const child = document.createElement('span');
+    parent.appendChild(child);
+    document.body.appendChild(parent);
+
+    expect(tj.contains(parent, child)).to.be.ok;
+
+    document.body.removeChild(parent);
+  });
+
+  it('returns falsy when elem2 is not contained within elem1', function() {
+    const a = document.createElement('div');
+    const b = document.createElement('div');
+    document.body.appendChild(a);
+    document.body.appendChild(b);
+
+    expect(tj.contains(a, b)).to.not.be.ok;
+
+    document.body.removeChild(a);
+    document.body.removeChild(b);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// StorageAnnotationUpdate (direct)
+// ---------------------------------------------------------------------------
+describe('TempJSON#StorageAnnotationUpdate', function() {
+  let tj;
+  beforeEach(function() { tj = makeTempJSON(); });
+
+  it('does not grow the store when updating an existing entry', function() {
+    const elem = jQuery('<div><div class="annotator-wrapper"/></div>');
+    tj.StorageAnnotationSave(Object.assign({}, INTERNAL_ANN), elem, false);
+    expect(tj.store).to.have.lengthOf(1);
+
+    tj.StorageAnnotationUpdate(Object.assign({}, INTERNAL_ANN, { annotationText: ['Updated text'] }), elem);
+    expect(tj.store).to.have.lengthOf(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// convertToWebAnnotation — comment/reply branch (media === 'comment')
+// ---------------------------------------------------------------------------
+describe('TempJSON#convertToWebAnnotation (comment/reply)', function() {
+  let tj;
+  beforeEach(function() { tj = makeTempJSON(); });
+
+  it('sets purpose to replying for comment-media annotations', function() {
+    const commentAnn = {
+      id: 'reply-001',
+      created: new Date('2024-01-01T00:00:00Z'),
+      annotationText: ['A reply'],
+      tags: [],
+      media: 'comment',
+      ranges: { source: 'parent-ann-id' },
+    };
+    const wa = tj.convertToWebAnnotation(commentAnn, jQuery('<div class="annotator-wrapper"/>'));
+    const bodyItem = wa.body.items.find(item => item.purpose === 'replying');
+    expect(bodyItem).to.exist;
+    expect(bodyItem.value).to.equal('A reply');
+  });
+
+  it('uses ranges.source as the target source id for replies', function() {
+    const commentAnn = {
+      id: 'reply-002',
+      created: new Date(),
+      annotationText: ['Reply text'],
+      tags: [],
+      media: 'comment',
+      ranges: { source: 'parent-ann-id' },
+    };
+    const wa = tj.convertToWebAnnotation(commentAnn, jQuery('<div class="annotator-wrapper"/>'));
+    expect(wa.platform.target_source_id).to.equal('parent-ann-id');
+  });
+});
