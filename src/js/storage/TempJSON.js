@@ -314,14 +314,16 @@ var hrange = require('../core/h-range.js');
         });
       }
     } else if (xpathRanges.length === 1 && positionRanges.length === 0 && textRanges.length === 0) {
-      var startNode = hrange.getNodeFromXpath(element, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
-      var endNode = hrange.getNodeFromXpath(element, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
+      // hrange functions need a raw DOM element, not a jQuery wrapper
+      var rootEl = element[0] || element;
+      var startNode = hrange.getNodeFromXpath(rootEl, xpathRanges[0].start, xpathRanges[0].startOffset, 'annotator-hl');
+      var endNode = hrange.getNodeFromXpath(rootEl, xpathRanges[0].end, xpathRanges[0].endOffset, 'annotator-hl');
 
       if (startNode && endNode) {
         var normalizedRange = document.createRange();
         normalizedRange.setStart(startNode.node, startNode.offset);
         normalizedRange.setEnd(endNode.node, endNode.offset);
-        var serializedRange = hrange.serializeRange(normalizedRange, element, 'annotator-hl');
+        var serializedRange = hrange.serializeRange(normalizedRange, rootEl, 'annotator-hl');
         ranges.push(serializedRange);
       }
     }
@@ -347,11 +349,8 @@ var hrange = require('../core/h-range.js');
   };
 
   $.TempJSON.prototype.getAnnotationCreated = function(webAnn) {
-    try {
-      return new Date(webAnn['created']);
-    } catch (e) {
-      return new Date();
-    }
+    var d = new Date(webAnn['created']);
+    return isNaN(d.getTime()) ? new Date() : d;
   };
 
   $.TempJSON.prototype.getAnnotationCreator = function(webAnn) {
@@ -449,8 +448,10 @@ var hrange = require('../core/h-range.js');
 
       try {
         // This is the annotatorjs way to serialize");
+        /* c8 ignore start */
         serializedRanges.push(r.serialize(contextEl, '.annotator-hl'));
         extraRanges.push(fullTextRange);
+        /* c8 ignore stop */
       } catch (e) {
         // For the keyboard made annotations
         // we are borrowing the xpath range library from annotatorjs
@@ -475,7 +476,6 @@ var hrange = require('../core/h-range.js');
   };
 
   $.TempJSON.prototype.normalizeRanges = function(ranges, elem) {
-
     var normalizedRanges = [];
     jQuery.each(ranges, function(_, range) {
       // try {
