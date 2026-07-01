@@ -73,7 +73,7 @@
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.10.2",
     "mocha": "^11.7.5",
-    "npm-check-updates": "^22.2.3",
+    "npm-check-updates": "^22.2.9",
     "npm-run-all2": "^9.0.2",
     "puppeteer": "^25.1.0",
     "sinon": "^22.0.0",
