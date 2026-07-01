@@ -102,7 +102,7 @@ describe('h-range', function () {
 
   describe('getNodeFromXpath()', function () {
     it('resolves a simple xpath back to the correct element', function () {
-      const { root, wrapper, doc } = makeDOM('<p>first</p><p>second</p>');
+      const { wrapper } = makeDOM('<p>first</p><p>second</p>');
       // xpath for the second <p> would be "/p[2]", offset 0
       const result = getNodeFromXpath(wrapper, '/p[2]', 0, 'annotator-hl');
       expect(result).to.exist;
@@ -110,7 +110,7 @@ describe('h-range', function () {
     });
 
     it('resolves offset within a text node', function () {
-      const { root, wrapper, doc } = makeDOM('<p>hello</p>');
+      const { wrapper } = makeDOM('<p>hello</p>');
       // xpath "/" means the text is directly under wrapper; offset 3 = after "hel"
       const result = getNodeFromXpath(wrapper, '/p[1]', 3, 'annotator-hl');
       expect(result).to.exist;
@@ -118,7 +118,7 @@ describe('h-range', function () {
     });
 
     it('skips nodes matching ignoreSelector', function () {
-      const { root, wrapper, doc } = makeDOM(
+      const { wrapper } = makeDOM(
         '<p class="annotator-hl">skip</p><p>real</p>'
       );
       // Without ignoring, p[1] would be the annotator-hl paragraph.

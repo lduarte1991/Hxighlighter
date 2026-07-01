@@ -76,6 +76,7 @@
     "npm-check-updates": "^22.2.3",
     "npm-run-all2": "^9.0.2",
     "puppeteer": "^25.1.0",
+    "sinon": "^22.0.0",
     "style-loader": "^4.0.0",
     "underscore-template-loader": "^1.2.0",
     "webpack": "^5.105.4",
