@@ -79,7 +79,7 @@
     "sinon": "^22.0.0",
     "style-loader": "^4.0.0",
     "underscore-template-loader": "^1.2.0",
-    "webpack": "^5.105.4",
+    "webpack": "^5.108.4",
     "webpack-cli": "^7.0.2"
   },
   "pnpm": {
