@@ -7,6 +7,8 @@ import {
   getGlobalOffset,
   getNodeFromXpath,
   getTextNodesFromAnnotationRanges,
+  compareExactText,
+  getIndicesOf,
 } from '../../src/js/core/h-range.js';
 
 // Builds a fresh JSDOM document with an .annotator-wrapper inside a root div.
@@ -173,6 +175,51 @@ describe('h-range', function () {
       serialized.position.globalEndOffset = 999;
       const restored = normalizeRange(serialized, root, 'annotator-hl');
       expect(restored.toString()).to.equal('raven');
+    });
+  });
+
+  describe('compareExactText()', function () {
+    it('returns true for identical strings', function () {
+      expect(compareExactText('hello', 'hello')).to.be.true;
+    });
+
+    it('returns true when one string contains the other with only whitespace remaining after removal', function () {
+      // 'hello world '.split('hello world').join('') → ' ' → trims to '' → length 0
+      expect(compareExactText('hello world ', 'hello world')).to.be.true;
+    });
+
+    it('returns false for strings with meaningfully different content', function () {
+      expect(compareExactText('hello', 'goodbye')).to.be.false;
+    });
+
+    it('returns true for empty strings', function () {
+      expect(compareExactText('', '')).to.be.true;
+    });
+  });
+
+  describe('getIndicesOf()', function () {
+    it('returns all start indices of a substring', function () {
+      expect(getIndicesOf('an', 'banana', true)).to.deep.equal([1, 3]);
+    });
+
+    it('returns empty array when substring is not found', function () {
+      expect(getIndicesOf('xyz', 'banana', true)).to.deep.equal([]);
+    });
+
+    it('returns empty array for empty search string', function () {
+      expect(getIndicesOf('', 'banana', true)).to.deep.equal([]);
+    });
+
+    it('is case-insensitive when caseSensitive is false', function () {
+      expect(getIndicesOf('A', 'banana', false)).to.deep.equal([1, 3, 5]);
+    });
+
+    it('is case-sensitive when caseSensitive is true', function () {
+      expect(getIndicesOf('A', 'banana', true)).to.deep.equal([]);
+    });
+
+    it('handles non-overlapping matches only', function () {
+      expect(getIndicesOf('aa', 'aaaa', true)).to.deep.equal([0, 2]);
     });
   });
 
