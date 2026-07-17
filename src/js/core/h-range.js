@@ -20,7 +20,7 @@ var CONTEXT_WINDOW_LENGTH = 35;
  * @param {Node} node - The DOM node where the selection starts or ends.
  * @param {number} offset - Character offset within node, or child index if node is an element.
  * @param {string} ignoreSelector - CSS class name of highlight spans to skip when counting siblings, see note below for more info.
- * @returns {{xpath: string, offset: number}|undefined} XPath and character offset, or undefined if node is outside root.
+ * @returns {{xpath: string, offset: number}|undefined} XPath and character offset, or undefined if node is outside root or offset is out of bounds.
  *
  * Note: nodes carrying ignoreSelector are invisible to the XPath — their text content
  * is folded into the character offset instead, so existing highlights do not shift stored positions.
@@ -31,10 +31,13 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
   var totalOffset = offset;
 
   // Image elements have no text node children, so the selection container is the parent element.
-  if (currentNode === root && root.childNodes[offset].nodeType === Node.TEXT_NODE) {
+  if (currentNode === root && offset < root.childNodes.length && root.childNodes[offset].nodeType === Node.TEXT_NODE) {
     currentNode = root.childNodes[offset];
   }
   if (currentNode === root) {
+    if (offset >= root.childNodes.length) {
+      return undefined;
+    }
     var actualNode = root.childNodes[offset];
     if (actualNode.nodeType === Node.TEXT_NODE) {
       xpath = "/";
@@ -75,7 +78,8 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
           var currentName = currentNode.nodeName;
           var counterNode = currentNode;
           while ((counterNode = counterNode.previousSibling)) {
-            if (counterNode.nodeName === currentName) {
+            if (counterNode.nodeName === currentName &&
+                counterNode.className.indexOf(ignoreSelector) === -1) {
               nodeCount += 1;
             }
           }
@@ -133,11 +137,15 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
   var prefix = prefixCounterNode.textContent.slice(0, prefixOffset);
   var suffix = suffixCounterNode.textContent.slice(suffixOffset);
 
-  while (prefix.length <= CONTEXT_WINDOW_LENGTH && (prefixCounterNode = prefixCounterNode.previousSibling)) {
+  while (prefix.length <= CONTEXT_WINDOW_LENGTH &&
+         (prefixCounterNode = prefixCounterNode.previousSibling) &&
+         root.contains(prefixCounterNode)) {
     prefix = prefixCounterNode.textContent + prefix;
   }
 
-  while (suffix.length <= CONTEXT_WINDOW_LENGTH && (suffixCounterNode = suffixCounterNode.nextSibling)) {
+  while (suffix.length <= CONTEXT_WINDOW_LENGTH &&
+         (suffixCounterNode = suffixCounterNode.nextSibling) &&
+         root.contains(suffixCounterNode)) {
     suffix = suffix + suffixCounterNode.textContent;
   }
 
@@ -164,7 +172,11 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
  */
 function getExactText(range) {
   // range.toString() returns "[object Object]" when called on a plain object rather than a live Range.
-  var exact = (range.toString() === "[object Object]") ? range.exact : range.toString();
+  var isPlainObject = (range.toString() === "[object Object]");
+  var exact = isPlainObject ? range.exact : range.toString();
+  if (isPlainObject) {
+    return exact ? exact.trim() : '';
+  }
   var rangeContents = range.cloneContents();
   var possibleImageList = rangeContents.querySelectorAll('img');
   var rangeContainsImage = possibleImageList.length;
@@ -220,7 +232,7 @@ function getExactText(range) {
  * @param {string} ignoreSelector - Accepted for API consistency; not used by this function.
  * @returns {{startOffset: number, endOffset: number}} Character counts from the start of annotator-wrapper.
  *
- * Note: requires annotator-wrapper to be present in the DOM as an ancestor of root.
+ * Note: if annotator-wrapper is not found, returns {startOffset: 0, endOffset: 0} as a safe fallback.
  * Approach from: https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
  */
 function getGlobalOffset(range, root, ignoreSelector) {
@@ -228,8 +240,11 @@ function getGlobalOffset(range, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
     root = root.querySelector('.annotator-wrapper');
+    if (!root) {
+      return { startOffset: 0, endOffset: 0 };
+    }
   }
-  preRangeRange.selectNodeContents(jQuery(root)[0]);
+  preRangeRange.selectNodeContents(root);
   preRangeRange.setEnd(range.startContainer, range.startOffset);
   return {
     startOffset: preRangeRange.toString().length,
@@ -249,7 +264,7 @@ function getGlobalOffset(range, root, ignoreSelector) {
  *   the function resolves the nearest annotator-wrapper ancestor automatically.
  * @param {string} ignoreSelector - CSS class of highlight spans; excluded from
  *   position calculations so existing highlights do not corrupt stored offsets.
- * @returns {{xpath: Object, text: Object, position: Object}} Serialized range ready to store.
+ * @returns {{xpath: Object, text: Object, position: Object}|undefined} Serialized range ready to store, or undefined if the selection endpoints cannot be mapped to an XPath within root.
  */
 function serializeRange(range, root, ignoreSelector) {
   root = jQuery(root)[0];
@@ -263,6 +278,9 @@ function serializeRange(range, root, ignoreSelector) {
 
   var startResult = xpathFromRootToNode(root, _start, _startOffset, ignoreSelector);
   var endResult = xpathFromRootToNode(root, _end, _endOffset, ignoreSelector);
+  if (!startResult || !endResult) {
+    return undefined;
+  }
   var prepost = getPrefixAndSuffix(range, root, ignoreSelector);
   var glob = getGlobalOffset(range, root, ignoreSelector);
 
@@ -302,7 +320,7 @@ function findTextNodeAtOffset(root_node, goal_offset) {
   var node_list = root_node.childNodes;
   var goal = goal_offset;
   var currOffset = 0;
-  var found = undefined;
+  var found;
   if (goal === 0 && node_list.length === 0) {
     found = {
       node: root_node,
@@ -393,8 +411,8 @@ function getIndicesOf(searchStr, str, caseSensitive) {
  * @param {string} ignoreSelector - CSS class of highlight spans; skipped when matching siblings.
  * @returns {{node: Text, offset: number}|undefined} Text node and offset, or undefined if the path cannot be resolved.
  *
- * Note: silently skips XPath steps that match no element, so a partial DOM change
- * may produce an incorrect position rather than an error.
+ * Note: if any XPath step matches no element in the current DOM, returns undefined rather than
+ * continuing on a wrong ancestor. Callers should treat undefined as a miss and fall back to another strategy.
  */
 function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   // Strip /text()[n] steps — the walk uses element nodes only and resolves text positions via character offset.
@@ -402,6 +420,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   tree = tree.filter(function(it) { return it.length > 0; });
   var traversingDown = root;
   tree.forEach(function(it) {
+    if (traversingDown === null) { return; }
     var selector = it.replace(/\[.*\]/g, '');                          // "div[2]" → "div": element name without sibling index.
     var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1; // "div[2]" → 1: 1-based XPath index to 0-based array index.
 
@@ -414,18 +433,21 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
     if (isNaN(counter) || counter < 0) {
       counter = 0;
       traversingDown = foundNodes[counter];
-      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
+      while (counter < foundNodes.length - 1 && traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
       }
     } else if (!foundNodes || foundNodes.length === 0) {
-      // No-op: element is absent from the current DOM; skip without affecting the character offset.
+      traversingDown = null;
     } else {
       traversingDown = foundNodes[counter];
-      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
+      while (counter < foundNodes.length - 1 && traversingDown.className.indexOf(ignoreSelector) > -1) {
         traversingDown = foundNodes[++counter];
       }
     }
   });
+  if (traversingDown === null) {
+    return undefined;
+  }
   var found = findTextNodeAtOffset(traversingDown, offset);
   return found;
 }
@@ -442,10 +464,10 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
  * @param {Object} serializedRange - The stored annotation range as returned by serializeRange.
  * @param {Element} root - The annotatable container or a descendant; annotator-wrapper is resolved automatically.
  * @param {string} ignoreSelector - CSS class of highlight spans to exclude from position matching.
- * @returns {Range} A live browser Range. If no strategy produces an exact match, the best available result is returned.
+ * @returns {Range|undefined} A live browser Range, or undefined if no strategy could locate the annotation.
  *
- * Note: does not throw if the annotation cannot be precisely located — callers receive
- * whatever Range the last attempted strategy produced.
+ * Note: does not throw if the annotation cannot be precisely located. If the stored range predates
+ * the text or position fields, the affected strategy is skipped and the next one is tried.
  */
 function normalizeRange(serializedRange, root, ignoreSelector) {
   root = jQuery(root)[0];
@@ -467,25 +489,34 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     normalizedRange.setEnd(endResult.node, endResult.offset);
   }
 
+  var textExact = serializedRange.text && serializedRange.text.exact;
+  var hasPosition = !!(serializedRange.position);
+
   // Way 2: XPath node missing or text mismatch — fall back to global character offset.
   // Trigger Way 2 if XPath resolved nothing, or if the text it found doesn't match the stored quote.
-  if (!(startResult && endResult) || (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact))) {
-    startResult = findTextNodeAtOffset(root, serializedRange.position.globalStartOffset);
-    endResult = findTextNodeAtOffset(root, serializedRange.position.globalEndOffset);
+  if (!(startResult && endResult) || (textExact && !compareExactText(getExactText(normalizedRange), textExact))) {
+    if (hasPosition) {
+      startResult = findTextNodeAtOffset(root, serializedRange.position.globalStartOffset);
+      endResult = findTextNodeAtOffset(root, serializedRange.position.globalEndOffset);
 
-    normalizedRange = document.createRange();
-    normalizedRange.setStart(startResult.node, startResult.offset);
-    normalizedRange.setEnd(endResult.node, endResult.offset);
+      if (startResult && endResult) {
+        normalizedRange = document.createRange();
+        normalizedRange.setStart(startResult.node, startResult.offset);
+        normalizedRange.setEnd(endResult.node, endResult.offset);
+      }
+    }
   }
 
   // Way 3: global offset still wrong (text added before annotation) — search the full document for the exact quote.
-  if (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
-    var possibleCases = getIndicesOf(serializedRange.text.exact, root.textContent, true);
+  if (textExact && (!normalizedRange || !compareExactText(getExactText(normalizedRange), textExact))) {
+    var possibleCases = getIndicesOf(textExact, root.textContent, true);
 
     for (var i = 0; i < possibleCases.length; i++) {
       var poss = possibleCases[i];
       var s = findTextNodeAtOffset(root, poss);
-      var e = findTextNodeAtOffset(root, poss + serializedRange.text.exact.length);
+      var e = findTextNodeAtOffset(root, poss + textExact.length);
+
+      if (!s || !e) { continue; }
 
       normalizedRange = document.createRange();
       normalizedRange.setStart(s.node, s.offset);
@@ -598,8 +629,11 @@ function collectTextNodesInRange(currentNode, range) {
   if (!foundEnd && originalNode) {
     currentNode = originalNode;
     // Ascend until finding an ancestor that has a next sibling, then continue traversal from that sibling.
-    while (!currentNode.parentNode.nextSibling) {
+    while (currentNode.parentNode && !currentNode.parentNode.nextSibling) {
       currentNode = currentNode.parentNode;
+    }
+    if (!currentNode.parentNode) {
+      return { foundEnd: foundEnd, nodes: nodeList };
     }
     currentNode = currentNode.parentNode.nextSibling;
     res = collectTextNodesInRange(currentNode, range);
