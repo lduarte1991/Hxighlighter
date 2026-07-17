@@ -11,12 +11,26 @@ var CONTEXT_WINDOW_LENGTH = 35;
 
 // ─── Serialization helpers ───────────────────────────────────────────────────
 
+/**
+ * Builds an XPath string and character offset that together uniquely identify
+ * a position within the annotatable content area. Called for both the start
+ * and end of a selection when saving an annotation.
+ *
+ * @param {Element} root - The annotatable container element (annotator-wrapper).
+ * @param {Node} node - The DOM node where the selection starts or ends.
+ * @param {number} offset - Character offset within node, or child index if node is an element.
+ * @param {string} ignoreSelector - CSS class name of highlight spans to skip when counting siblings, see note below for more info.
+ * @returns {{xpath: string, offset: number}|undefined} XPath and character offset, or undefined if node is outside root.
+ *
+ * Note: nodes carrying ignoreSelector are invisible to the XPath — their text content
+ * is folded into the character offset instead, so existing highlights do not shift stored positions.
+ */
 function xpathFromRootToNode(root, node, offset, ignoreSelector) {
   var currentNode = node;
   var xpath = '';
   var totalOffset = offset;
 
-  // this is often the case when highlighting images as <img> nodes do not have a text node child
+  // Image elements have no text node children, so the selection container is the parent element.
   if (currentNode === root && root.childNodes[offset].nodeType === Node.TEXT_NODE) {
     currentNode = root.childNodes[offset];
   }
@@ -31,6 +45,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
       var found = false;
       var BreakException = {};
       try {
+        // forEach has no early-exit mechanism; this throw/catch exits the loop once the target node is found.
         likeNodesList.forEach(function(node) {
           if (node !== actualNode && node.className.indexOf(ignoreSelector) === -1) {
             likeNodesCounter += 1;
@@ -66,7 +81,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
           }
           xpath = "/" + currentName.toLowerCase() + '[' + nodeCount + ']' + xpath;
         } else if (currentNode.nodeName === "IMG") {
-          // IMG nodes handled by xpath above
+          // IMG inside a highlight span: the outer branch already built an XPath segment for the enclosing element; skip offset accumulation.
         } else {
           traverseNode = currentNode;
           while ((traverseNode = traverseNode.previousSibling)) {
@@ -92,6 +107,16 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
 
 }
 
+/**
+ * Captures a short window of plain text immediately before and after a selection.
+ * This surrounding context is saved with each annotation so it can be used to
+ * re-anchor the annotation if the page content shifts after saving.
+ *
+ * @param {Range} range - The live browser selection.
+ * @param {Element} root - The annotatable container element.
+ * @param {string} ignoreSelector - CSS class name of highlight spans to skip when walking siblings.
+ * @returns {{prefix: string, suffix: string}} Up to CONTEXT_WINDOW_LENGTH characters on each side of the selection.
+ */
 function getPrefixAndSuffix(range, root, ignoreSelector) {
   var prefixCounterNode = range.startContainer;
   var suffixCounterNode = range.endContainer;
@@ -129,12 +154,22 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
   };
 }
 
+/**
+ * Returns the plain-text representation of a selection. Any images within the
+ * selection are represented as "[Image: alt-text]" so the stored quote remains
+ * readable without embedding image data.
+ *
+ * @param {Range|Object} range - A live browser Range, or a serialized range object with an "exact" property.
+ * @returns {string} The selected text, trimmed, with any images described inline.
+ */
 function getExactText(range) {
+  // range.toString() returns "[object Object]" when called on a plain object rather than a live Range.
   var exact = (range.toString() === "[object Object]") ? range.exact : range.toString();
   var rangeContents = range.cloneContents();
   var possibleImageList = rangeContents.querySelectorAll('img');
   var rangeContainsImage = possibleImageList.length;
   if (rangeContainsImage) {
+    // NodeList.forEach is absent in some older environments; convert to array to guarantee iteration.
     if (typeof(possibleImageList.forEach) !== "function") {
       var convertToArray = [];
       for (var i = possibleImageList.length - 1; i >= 0; i--) {
@@ -174,11 +209,20 @@ function getExactText(range) {
 
 // ─── Serialization — exported ────────────────────────────────────────────────
 
-// general idea came from responses to this question
-// https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
-// Computes start/end positions of a selection as raw character counts from the
-// beginning of the .annotator-wrapper container. Stored as the "Way 2" fallback
-// in serializeRange alongside the XPath data.
+/**
+ * Calculates where a selection starts and ends as raw character counts from
+ * the beginning of the annotatable content area. Stored alongside XPath data
+ * as a fallback so annotations can be recovered if element tags are renamed.
+ *
+ * @param {Range} range - The live browser selection.
+ * @param {Element} root - Any element within the annotatable area; the function
+ *   walks up to find the nearest annotator-wrapper ancestor if needed.
+ * @param {string} ignoreSelector - Accepted for API consistency; not used by this function.
+ * @returns {{startOffset: number, endOffset: number}} Character counts from the start of annotator-wrapper.
+ *
+ * Note: requires annotator-wrapper to be present in the DOM as an ancestor of root.
+ * Approach from: https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
+ */
 function getGlobalOffset(range, root, ignoreSelector) {
   var preRangeRange = document.createRange();
   root = jQuery(root)[0];
@@ -193,12 +237,20 @@ function getGlobalOffset(range, root, ignoreSelector) {
   };
 }
 
-// Takes a live browser Range (a user's text selection) and converts it to a
-// plain JSON-serializable object with three parts: xpath (path + char offsets
-// to the start/end nodes), text (exact selected text plus up to 35 chars of
-// surrounding prefix/suffix context), and position (global char offset from
-// the top of the annotatable container as a fallback). This is what gets
-// stored in the database when someone makes an annotation.
+/**
+ * Converts a live browser text selection into a JSON object that can be saved
+ * to the database. The result contains three parallel representations of the
+ * selection position — XPath with character offsets, surrounding text context,
+ * and a global character offset — so the annotation can be restored even if
+ * the page's HTML structure changes between saving and loading.
+ *
+ * @param {Range} range - The live browser selection to serialize.
+ * @param {Element} root - The annotatable container element or a descendant;
+ *   the function resolves the nearest annotator-wrapper ancestor automatically.
+ * @param {string} ignoreSelector - CSS class of highlight spans; excluded from
+ *   position calculations so existing highlights do not corrupt stored offsets.
+ * @returns {{xpath: Object, text: Object, position: Object}} Serialized range ready to store.
+ */
 function serializeRange(range, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
@@ -237,6 +289,15 @@ function serializeRange(range, root, ignoreSelector) {
 
 // ─── Normalization helpers ────────────────────────────────────────────────────
 
+/**
+ * Walks the subtree below root_node to find the text node and character position
+ * that correspond to a given character count from the start of root_node's content.
+ * Used to convert a stored global character offset back into a live DOM position.
+ *
+ * @param {Node} root_node - The element to search within.
+ * @param {number} goal_offset - Number of characters to count from the start of root_node's text content.
+ * @returns {{node: Text, offset: number}|undefined} The text node and offset within it, or undefined if not found.
+ */
 function findTextNodeAtOffset(root_node, goal_offset) {
   var node_list = root_node.childNodes;
   var goal = goal_offset;
@@ -269,8 +330,19 @@ function findTextNodeAtOffset(root_node, goal_offset) {
   return found;
 }
 
+/**
+ * Checks whether two strings represent the same annotated text, using a fuzzy
+ * comparison that accepts one string being a repeated subset of the other.
+ * Used when verifying that a restored annotation points to the right passage.
+ *
+ * @param {string} text1 - First string.
+ * @param {string} text2 - Second string.
+ * @returns {boolean} True if the strings are equal, or if one is a repeated subset of the other.
+ */
 function compareExactText(text1, text2) {
   function getDiff(string, diffBy) {
+    // Removes all occurrences of diffBy from string by splitting on it and rejoining.
+    // If the remainder trims to empty, string consists entirely of repetitions of diffBy.
     return string.split(diffBy).join('');
   }
   const res1 = getDiff(text1, text2);
@@ -278,7 +350,18 @@ function compareExactText(text1, text2) {
   return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
 }
 
-// https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
+/**
+ * Returns the starting position of every occurrence of searchStr within str.
+ * Used during fallback annotation matching to find all candidate locations
+ * where a stored quote might appear in the current document text.
+ *
+ * @param {string} searchStr - The substring to search for.
+ * @param {string} str - The string to search within.
+ * @param {boolean} caseSensitive - When false, both strings are lowercased before searching.
+ * @returns {number[]} Zero-based start positions of each match; empty array if searchStr is empty.
+ *
+ * Note: adapted from https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
+ */
 function getIndicesOf(searchStr, str, caseSensitive) {
   var searchStrLen = searchStr.length;
   if (searchStrLen === 0) {
@@ -298,17 +381,29 @@ function getIndicesOf(searchStr, str, caseSensitive) {
 
 // ─── Normalization — exported ─────────────────────────────────────────────────
 
-// Walks a stored XPath string back down the DOM tree to find the specific
-// element node, then uses character counting (findTextNodeAtOffset) to
-// find the exact text node and offset within it. This is how "Way 1" in
-// normalizeRange resolves a stored annotation back to a live DOM position.
+/**
+ * Follows a stored XPath string down the DOM tree to find the element it describes,
+ * then uses character counting to locate the exact text node and offset within that
+ * element. This is the primary strategy for restoring a saved annotation position
+ * (Way 1 in normalizeRange).
+ *
+ * @param {Element} root - The annotatable container element.
+ * @param {string} xpath - XPath string relative to root, as produced by xpathFromRootToNode.
+ * @param {number} offset - Character offset within the resolved element.
+ * @param {string} ignoreSelector - CSS class of highlight spans; skipped when matching siblings.
+ * @returns {{node: Text, offset: number}|undefined} Text node and offset, or undefined if the path cannot be resolved.
+ *
+ * Note: silently skips XPath steps that match no element, so a partial DOM change
+ * may produce an incorrect position rather than an error.
+ */
 function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
+  // Strip /text()[n] steps — the walk uses element nodes only and resolves text positions via character offset.
   var tree = xpath.replace(/\/text\(\)\[(.*)\]/g, '').split('/');
   tree = tree.filter(function(it) { return it.length > 0; });
   var traversingDown = root;
   tree.forEach(function(it) {
-    var selector = it.replace(/\[.*\]/g, '');
-    var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
+    var selector = it.replace(/\[.*\]/g, '');                          // "div[2]" → "div": element name without sibling index.
+    var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1; // "div[2]" → 1: 1-based XPath index to 0-based array index.
 
     var foundNodes = Array.prototype.filter.call(traversingDown.children, function(el1) {
       return el1.matches(selector);
@@ -323,7 +418,7 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
         traversingDown = foundNodes[++counter];
       }
     } else if (!foundNodes || foundNodes.length === 0) {
-      // should account for missing html elements without affecting text
+      // No-op: element is absent from the current DOM; skip without affecting the character offset.
     } else {
       traversingDown = foundNodes[counter];
       while (traversingDown.className.indexOf(ignoreSelector) > -1) {
@@ -335,15 +430,23 @@ function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
   return found;
 }
 
-// Inverse of serializeRange — takes a stored annotation and reconstructs a
-// live browser Range so the annotation can be highlighted on screen. Tries
-// three strategies in order, falling back if the previous one fails:
-//   Way 1: follow the XPath to find the exact node
-//   Way 2: if the XPath text doesn't match (e.g. tags renamed), fall back to
-//           the global character offset
-//   Way 3: if that also fails (e.g. text inserted before the annotation),
-//           search the whole document for the exact quote and match by
-//           prefix/suffix context
+/**
+ * Converts a stored annotation object back into a live browser Range so the
+ * annotated text can be highlighted on screen. Tries three strategies in order,
+ * falling back if the previous one fails or resolves the wrong text:
+ *   Way 1 — follow the stored XPath to find the exact node
+ *   Way 2 — use the global character offset (survives element tag renames)
+ *   Way 3 — search the document for the exact quote, matched by prefix/suffix context
+ *            (survives text inserted before the annotation)
+ *
+ * @param {Object} serializedRange - The stored annotation range as returned by serializeRange.
+ * @param {Element} root - The annotatable container or a descendant; annotator-wrapper is resolved automatically.
+ * @param {string} ignoreSelector - CSS class of highlight spans to exclude from position matching.
+ * @returns {Range} A live browser Range. If no strategy produces an exact match, the best available result is returned.
+ *
+ * Note: does not throw if the annotation cannot be precisely located — callers receive
+ * whatever Range the last attempted strategy produced.
+ */
 function normalizeRange(serializedRange, root, ignoreSelector) {
   root = jQuery(root)[0];
   if (root.className.indexOf('annotator-wrapper') === -1) {
@@ -355,7 +458,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   var _startOffset = xpathData.startOffset;
   var _endOffset = xpathData.endOffset;
 
-  // Way #1: Given an xpath, find the way to the node
+  // Way 1: resolve position via XPath.
   var startResult = getNodeFromXpath(root, _start, _startOffset, ignoreSelector);
   var endResult = getNodeFromXpath(root, _end, _endOffset, ignoreSelector);
   if (startResult && endResult) {
@@ -364,8 +467,8 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     normalizedRange.setEnd(endResult.node, endResult.offset);
   }
 
-  // Way #2: if that doesn't match what we have stored as the quote, try global positioning from root
-  // This is for the usecase where someone has changed tagnames so xpath cannot be found
+  // Way 2: XPath node missing or text mismatch — fall back to global character offset.
+  // Trigger Way 2 if XPath resolved nothing, or if the text it found doesn't match the stored quote.
   if (!(startResult && endResult) || (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact))) {
     startResult = findTextNodeAtOffset(root, serializedRange.position.globalStartOffset);
     endResult = findTextNodeAtOffset(root, serializedRange.position.globalEndOffset);
@@ -375,8 +478,7 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     normalizedRange.setEnd(endResult.node, endResult.offset);
   }
 
-  // Way #3: looks for an exact match of prefix, suffix, and exact
-  // This is for the usecase where someone has added text/html before this
+  // Way 3: global offset still wrong (text added before annotation) — search the full document for the exact quote.
   if (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact)) {
     var possibleCases = getIndicesOf(serializedRange.text.exact, root.textContent, true);
 
@@ -401,6 +503,19 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
 // ─── Text node extraction helpers ────────────────────────────────────────────
 
+/**
+ * Examines a single DOM node to determine whether it falls within the given Range,
+ * splitting text nodes at range boundaries as needed. Returns the collected nodes
+ * and whether the range end has been reached. Called by collectTextNodesInRange
+ * to process one node at a time during the DOM walk.
+ *
+ * @param {Node} currentNode - The node to examine.
+ * @param {Range} range - The Range being walked.
+ * @returns {{foundEnd: boolean, nodes: Node[], currentNode: Node}}
+ *
+ * Note: mutates the DOM by calling splitText on text nodes at the range boundaries.
+ * The browser updates the Range's start/end container references automatically after each split.
+ */
 function extractRangeNodes(currentNode, range) {
   var foundEnd = false;
   var nodeList = [];
@@ -452,6 +567,17 @@ function extractRangeNodes(currentNode, range) {
   };
 }
 
+/**
+ * Walks the DOM starting from currentNode and collects every text node and inline
+ * image that falls within the given Range, including nodes that span sibling
+ * elements, nested elements, and parent boundaries.
+ *
+ * @param {Node} currentNode - The node to start walking from.
+ * @param {Range} range - The Range being walked.
+ * @returns {{foundEnd: boolean, nodes: Node[]}} All nodes inside the Range.
+ *
+ * Note: triggers DOM mutations (text node splits) via extractRangeNodes.
+ */
 function collectTextNodesInRange(currentNode, range) {
   var nodeList = [];
   var foundEnd = false;
@@ -471,6 +597,7 @@ function collectTextNodesInRange(currentNode, range) {
   }
   if (!foundEnd && originalNode) {
     currentNode = originalNode;
+    // Ascend until finding an ancestor that has a next sibling, then continue traversal from that sibling.
     while (!currentNode.parentNode.nextSibling) {
       currentNode = currentNode.parentNode;
     }
@@ -489,10 +616,16 @@ function collectTextNodesInRange(currentNode, range) {
 
 // ─── Text node extraction — exported ─────────────────────────────────────────
 
-// Given a list of stored annotation range objects, normalizes each one back to
-// a live Range then walks the DOM to collect all individual text nodes that
-// fall within that range. Used by drawers to know which text nodes to wrap in
-// highlight <span> elements when rendering annotations on screen.
+/**
+ * Takes a list of stored annotation range objects, restores each one to a live
+ * browser Range, and collects all the individual text and image nodes that fall
+ * within those ranges. The calling drawer uses this list to wrap each node in a
+ * highlight span when rendering annotations on screen.
+ *
+ * @param {Object[]} ranges - Array of serialized range objects as returned by serializeRange.
+ * @param {Element} root - The annotatable container element.
+ * @returns {Node[]} Flat list of all text and image nodes across all provided ranges.
+ */
 function getTextNodesFromAnnotationRanges(ranges, root) {
   var textNodesList = [];
 
