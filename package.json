@@ -44,7 +44,7 @@
     "summernote": "^0.9.1",
     "timeago": "^1.6.7",
     "toastr": "^2.1.4",
-    "video.js": "^8.23.8",
+    "video.js": "^8.23.9",
     "videojs-transcript-ac": "^0.8.8",
     "videojs-youtube": "^3.0.1"
   },
