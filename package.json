@@ -80,7 +80,7 @@
     "style-loader": "^4.0.0",
     "underscore-template-loader": "^1.2.0",
     "webpack": "^5.108.4",
-    "webpack-cli": "^7.0.2"
+    "webpack-cli": "^7.2.1"
   },
   "pnpm": {
     "overrides": {
