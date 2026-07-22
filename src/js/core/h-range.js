@@ -4,6 +4,13 @@
 // can be stored and later re-highlighted even if the DOM has changed.
 // serializeRange -> store in DB; normalizeRange -> restore from DB.
 
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+/** Maximum characters of surrounding text captured as annotation context. */
+var CONTEXT_WINDOW_LENGTH = 35;
+
+// ─── Serialization helpers ───────────────────────────────────────────────────
+
 function xpathFromRootToNode(root, node, offset, ignoreSelector) {
   var currentNode = node;
   var xpath = '';
@@ -14,7 +21,6 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
     currentNode = root.childNodes[offset];
   }
   if (currentNode === root) {
-    // console.log('totally root');
     var actualNode = root.childNodes[offset];
     if (actualNode.nodeType === Node.TEXT_NODE) {
       xpath = "/";
@@ -45,9 +51,7 @@ function xpathFromRootToNode(root, node, offset, ignoreSelector) {
     while (currentNode !== null && currentNode !== root) {
       if (currentNode.nodeType === Node.TEXT_NODE) {
         var traverseNode = currentNode;
-        // //console.log(traverseNode.parentNode.childNodes);
         while ((traverseNode = traverseNode.previousSibling)) {
-          // console.log(traverseNode);
           totalOffset += traverseNode.textContent.length;
         }
       } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
@@ -104,45 +108,24 @@ function getPrefixAndSuffix(range, root, ignoreSelector) {
   var prefix = prefixCounterNode.textContent.slice(0, prefixOffset);
   var suffix = suffixCounterNode.textContent.slice(suffixOffset);
 
-  // console.log(suffixCounterNode, range.endOffset);
-
-  while (prefix.length <= 35 && (prefixCounterNode = prefixCounterNode.previousSibling)) {
+  while (prefix.length <= CONTEXT_WINDOW_LENGTH && (prefixCounterNode = prefixCounterNode.previousSibling)) {
     prefix = prefixCounterNode.textContent + prefix;
   }
 
-  while (suffix.length <= 35 && (suffixCounterNode = suffixCounterNode.nextSibling)) {
+  while (suffix.length <= CONTEXT_WINDOW_LENGTH && (suffixCounterNode = suffixCounterNode.nextSibling)) {
     suffix = suffix + suffixCounterNode.textContent;
   }
 
-  if (prefix.length >= 36) {
-    prefix = prefix.slice(prefix.length - 35);
+  if (prefix.length >= CONTEXT_WINDOW_LENGTH + 1) {
+    prefix = prefix.slice(prefix.length - CONTEXT_WINDOW_LENGTH);
   }
-  if (suffix.length >= 36) {
-    suffix = suffix.slice(0, 35);
+  if (suffix.length >= CONTEXT_WINDOW_LENGTH + 1) {
+    suffix = suffix.slice(0, CONTEXT_WINDOW_LENGTH);
   }
 
   return {
     prefix: prefix,
     suffix: suffix
-  };
-};
-
-// general idea came from responses to this question
-// https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
-// Computes start/end positions of a selection as raw character counts from the
-// beginning of the .annotator-wrapper container. Stored as the "Way 2" fallback
-// in serializeRange alongside the XPath data.
-function getGlobalOffset(range, root, ignoreSelector) {
-  var preRangeRange = document.createRange(); // range.cloneRange();
-  root = jQuery(root)[0];
-  if (root.className.indexOf('annotator-wrapper') === -1) {
-    root = root.querySelector('.annotator-wrapper');
-  }
-  preRangeRange.selectNodeContents(jQuery(root)[0]);
-  preRangeRange.setEnd(range.startContainer, range.startOffset);
-  return {
-    startOffset: preRangeRange.toString().length,
-    endOffset: preRangeRange.toString().length + range.toString().length
   };
 }
 
@@ -151,7 +134,6 @@ function getExactText(range) {
   var rangeContents = range.cloneContents();
   var possibleImageList = rangeContents.querySelectorAll('img');
   var rangeContainsImage = possibleImageList.length;
-  // console.log(exact, rangeContents, possibleImageList, rangeContainsImage);
   if (rangeContainsImage) {
     if (typeof(possibleImageList.forEach) !== "function") {
       var convertToArray = [];
@@ -162,55 +144,6 @@ function getExactText(range) {
     }
 
     possibleImageList.forEach(function(im) {
-      // console.log(rangeContents);
-      // ie support
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
-      if (!Array.prototype.findIndex) {
-        Object.defineProperty(Array.prototype, 'findIndex', {
-          value: function(predicate) {
-            // 1. Let O be ? ToObject(this value).
-            if (this == null) {
-              throw new TypeError('"this" is null or not defined');
-            }
-
-            var o = Object(this);
-
-            // 2. Let len be ? ToLength(? Get(O, "length")).
-            var len = o.length >>> 0;
-
-            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-            if (typeof predicate !== 'function') {
-              throw new TypeError('predicate must be a function');
-            }
-
-            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-            var thisArg = arguments[1];
-
-            // 5. Let k be 0.
-            var k = 0;
-
-            // 6. Repeat, while k < len
-            while (k < len) {
-              // a. Let Pk be ! ToString(k).
-              // b. Let kValue be ? Get(O, Pk).
-              // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-              // d. If testResult is true, return k.
-              var kValue = o[k];
-              if (predicate.call(thisArg, kValue, k, o)) {
-                return k;
-              }
-              // e. Increase k by 1.
-              k++;
-            }
-
-            // 7. Return -1.
-            return -1;
-          },
-          configurable: true,
-          writable: true
-        });
-      }
-      // https://tc39.github.io/ecma262/#sec-array.prototype.findindex
       var indexOfImage = [].slice.call(rangeContents.childNodes).findIndex(function(el) {
         return el === im;
       });
@@ -223,7 +156,6 @@ function getExactText(range) {
         var prefixCounter = indexOfImage - 1;
         while (prefixCounter >= 0) {
           prefix = rangeContents.childNodes[prefixCounter].textContent + prefix;
-          // console.log(prefix)
           prefixCounter--;
         }
 
@@ -240,14 +172,26 @@ function getExactText(range) {
   return exact.trim();
 }
 
-function compareExactText(text1, text2) {
-  function getDiff(string, diffBy) {
-    return string.split(diffBy).join('');
+// ─── Serialization — exported ────────────────────────────────────────────────
+
+// general idea came from responses to this question
+// https://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container
+// Computes start/end positions of a selection as raw character counts from the
+// beginning of the .annotator-wrapper container. Stored as the "Way 2" fallback
+// in serializeRange alongside the XPath data.
+function getGlobalOffset(range, root, ignoreSelector) {
+  var preRangeRange = document.createRange();
+  root = jQuery(root)[0];
+  if (root.className.indexOf('annotator-wrapper') === -1) {
+    root = root.querySelector('.annotator-wrapper');
   }
-  const res1 = getDiff(text1, text2);
-  const res2 = getDiff(text2, text1);
-  return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
-};
+  preRangeRange.selectNodeContents(jQuery(root)[0]);
+  preRangeRange.setEnd(range.startContainer, range.startOffset);
+  return {
+    startOffset: preRangeRange.toString().length,
+    endOffset: preRangeRange.toString().length + range.toString().length
+  };
+}
 
 // Takes a live browser Range (a user's text selection) and converts it to a
 // plain JSON-serializable object with three parts: xpath (path + char offsets
@@ -260,7 +204,6 @@ function serializeRange(range, root, ignoreSelector) {
   if (root.className.indexOf('annotator-wrapper') === -1) {
     root = root.querySelector('.annotator-wrapper');
   }
-  // console.log(root);
   var _start = range.startContainer;
   var _startOffset = range.startOffset;
   var _end = range.endContainer;
@@ -290,9 +233,11 @@ function serializeRange(range, root, ignoreSelector) {
       globalEndOffset: glob.endOffset
     }
   };
-};
+}
 
-function recurseGetNodeFromOffset(root_node, goal_offset) {
+// ─── Normalization helpers ────────────────────────────────────────────────────
+
+function findTextNodeAtOffset(root_node, goal_offset) {
   var node_list = root_node.childNodes;
   var goal = goal_offset;
   var currOffset = 0;
@@ -303,18 +248,14 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
       offset: 0
     };
   }
-  // console.log(root_node, node_list, goal);
 
   for (var i = 0; i < node_list.length; i++) {
-    // console.log(i, currOffset);
     var node = node_list[i];
     if (node.textContent.length + currOffset >= goal) {
       if (node.nodeType !== Node.TEXT_NODE) {
-        // console.log("NOT TEXT NODE: ", node, node.nodeName, goal, currOffset);
-        found = recurseGetNodeFromOffset(node, goal - currOffset);
+        found = findTextNodeAtOffset(node, goal - currOffset);
         break;
       } else {
-        // console.log("REACHED END:", node, node.textContent, node.textContent.length, goal, currOffset)
         found = {
           node: node,
           offset: goal - currOffset
@@ -326,79 +267,16 @@ function recurseGetNodeFromOffset(root_node, goal_offset) {
     }
   };
   return found;
-};
+}
 
-// function getActualNodeFromOffset(elementNode, offset) {
-//     var foundNode = elementNode;
-//     var currentNode = elementNode.firstChild;
-//     var offsetLimit = currentNode.textContent.length;
-//     var finalOffset = offset;
-//     // //console.log(currentNode, offsetLimit, offset);
-//     while (foundNode === elementNode && offsetLimit < offset) {
-//         currentNode = currentNode.nextSibling;
-//         if (offsetLimit + currentNode.textContent.length >= offset) {
-//             //console.log(currentNode, currentNode.nodeType, Node.ELEMENT_NODE);
-//             if (currentNode.nodeType == Node.ELEMENT_NODE) {
-//                 currentNode = currentNode.firstChild;
-//                 if (offsetLimit + currentNode.textContent.length >= offset) {
-//                     foundNode = currentNode;
-//                     finalOffset = offset - offsetLimit;
-//                 }
-//             } else {
-//                 foundNode = currentNode;
-//                 finalOffset = offset - offsetLimit;
-//             }
-//         }
-//         offsetLimit += currentNode.textContent.length;
-//     }
-
-//     return {
-//         node: foundNode,
-//         offset: finalOffset
-//     }
-// }
-
-// Walks a stored XPath string back down the DOM tree to find the specific
-// element node, then uses character counting (recurseGetNodeFromOffset) to
-// find the exact text node and offset within it. This is how "Way 1" in
-// normalizeRange resolves a stored annotation back to a live DOM position.
-function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
-  var tree = xpath.replace(/\/text\(\)\[(.*)\]/g, '').split('/');
-  tree = tree.filter(function(it) { return it.length > 0; });
-  var traversingDown = root;
-  tree.forEach(function(it) {
-    var selector = it.replace(/\[.*\]/g, '');
-    var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
-
-    var foundNodes = Array.prototype.filter.call(traversingDown.children, function(el1) {
-      return el1.matches(selector);
-    });
-    foundNodes = [].slice.call(foundNodes).filter(function(node) {
-      return node.className.indexOf(ignoreSelector) === -1;
-    });
-    // //console.log(foundNodes, counter);
-    if (isNaN(counter) || counter < 0) {
-      counter = 0;
-      traversingDown = foundNodes[counter];
-      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
-        traversingDown = foundNodes[++counter];
-      }
-      // console.log('1', traversingDown, traversingDown.className);
-    } else if (!foundNodes || foundNodes.length === 0) {
-      // should account for missing html elements without affecting text
-    } else {
-      traversingDown = foundNodes[counter];
-      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
-        traversingDown = foundNodes[++counter];
-      }
-      // console.log('2', traversingDown, traversingDown.className);
-    }
-  });
-  // console.log("TRAVERSINGDOWN", traversingDown, offset);
-  var found = recurseGetNodeFromOffset(traversingDown, offset);
-  // //console.log(found);
-  return found;
-};
+function compareExactText(text1, text2) {
+  function getDiff(string, diffBy) {
+    return string.split(diffBy).join('');
+  }
+  const res1 = getDiff(text1, text2);
+  const res2 = getDiff(text2, text1);
+  return text1 === text2 || res1.trim().length === 0 || res2.trim().length === 0;
+}
 
 // https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
 function getIndicesOf(searchStr, str, caseSensitive) {
@@ -418,6 +296,44 @@ function getIndicesOf(searchStr, str, caseSensitive) {
   return indices;
 }
 
+// ─── Normalization — exported ─────────────────────────────────────────────────
+
+// Walks a stored XPath string back down the DOM tree to find the specific
+// element node, then uses character counting (findTextNodeAtOffset) to
+// find the exact text node and offset within it. This is how "Way 1" in
+// normalizeRange resolves a stored annotation back to a live DOM position.
+function getNodeFromXpath(root, xpath, offset, ignoreSelector) {
+  var tree = xpath.replace(/\/text\(\)\[(.*)\]/g, '').split('/');
+  tree = tree.filter(function(it) { return it.length > 0; });
+  var traversingDown = root;
+  tree.forEach(function(it) {
+    var selector = it.replace(/\[.*\]/g, '');
+    var counter = parseInt(it.replace(/.*?\[(.*)\]/g, '$1'), 10) - 1;
+
+    var foundNodes = Array.prototype.filter.call(traversingDown.children, function(el1) {
+      return el1.matches(selector);
+    });
+    foundNodes = [].slice.call(foundNodes).filter(function(node) {
+      return node.className.indexOf(ignoreSelector) === -1;
+    });
+    if (isNaN(counter) || counter < 0) {
+      counter = 0;
+      traversingDown = foundNodes[counter];
+      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
+        traversingDown = foundNodes[++counter];
+      }
+    } else if (!foundNodes || foundNodes.length === 0) {
+      // should account for missing html elements without affecting text
+    } else {
+      traversingDown = foundNodes[counter];
+      while (traversingDown.className.indexOf(ignoreSelector) > -1) {
+        traversingDown = foundNodes[++counter];
+      }
+    }
+  });
+  var found = findTextNodeAtOffset(traversingDown, offset);
+  return found;
+}
 
 // Inverse of serializeRange — takes a stored annotation and reconstructs a
 // live browser Range so the annotation can be highlighted on screen. Tries
@@ -433,12 +349,11 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
   if (root.className.indexOf('annotator-wrapper') === -1) {
     root = root.querySelector('.annotator-wrapper');
   }
-  var sR = serializedRange.xpath ? serializedRange.xpath : serializedRange;
-  var _start = sR.start;
-  var _end = sR.end;
-  var _startOffset = sR.startOffset;
-  var _endOffset = sR.endOffset;
-  // three ways of getting text:
+  var xpathData = serializedRange.xpath ? serializedRange.xpath : serializedRange;
+  var _start = xpathData.start;
+  var _end = xpathData.end;
+  var _startOffset = xpathData.startOffset;
+  var _endOffset = xpathData.endOffset;
 
   // Way #1: Given an xpath, find the way to the node
   var startResult = getNodeFromXpath(root, _start, _startOffset, ignoreSelector);
@@ -447,22 +362,17 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
     var normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
     normalizedRange.setEnd(endResult.node, endResult.offset);
-    // console.log('HERE', _start, _startOffset, _end, _endOffset, startResult, endResult, getExactText(normalizedRange), serializedRange.text.exact);
-    // console.log("Xpath Test: ", compareExactText(getExactText(normalizedRange), serializedRange.text.exact) ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
-
   }
-  // console.log(_start, _startOffset, startResult, endResult);
-  // console.log(getPrefixAndSuffix(normalizedRange, root, ignoreSelector))
+
   // Way #2: if that doesn't match what we have stored as the quote, try global positioning from root
   // This is for the usecase where someone has changed tagnames so xpath cannot be found
   if (!(startResult && endResult) || (serializedRange.text.exact && !compareExactText(getExactText(normalizedRange), serializedRange.text.exact))) {
-    startResult = recurseGetNodeFromOffset(root, serializedRange.position.globalStartOffset); // getNodeFromXpath(root, '/', serializedRange.position.globalStartOffset, ignoreSelector);
-    endResult = recurseGetNodeFromOffset(root, serializedRange.position.globalEndOffset); // getNodeFromXpath(root, '/', serializedRange.position.globalEndOffset, ignoreSelector);
+    startResult = findTextNodeAtOffset(root, serializedRange.position.globalStartOffset);
+    endResult = findTextNodeAtOffset(root, serializedRange.position.globalEndOffset);
 
     normalizedRange = document.createRange();
     normalizedRange.setStart(startResult.node, startResult.offset);
     normalizedRange.setEnd(endResult.node, endResult.offset);
-    // console.log("Global offset Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
   }
 
   // Way #3: looks for an exact match of prefix, suffix, and exact
@@ -472,8 +382,8 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
     for (var i = 0; i < possibleCases.length; i++) {
       var poss = possibleCases[i];
-      var s = recurseGetNodeFromOffset(root, poss);
-      var e = recurseGetNodeFromOffset(root, poss + serializedRange.text.exact.length);
+      var s = findTextNodeAtOffset(root, poss);
+      var e = findTextNodeAtOffset(root, poss + serializedRange.text.exact.length);
 
       normalizedRange = document.createRange();
       normalizedRange.setStart(s.node, s.offset);
@@ -481,39 +391,34 @@ function normalizeRange(serializedRange, root, ignoreSelector) {
 
       var toCheck = getPrefixAndSuffix(normalizedRange, root, ignoreSelector);
       if (serializedRange.text.prefix === toCheck.prefix && serializedRange.text.suffix === toCheck.suffix) {
-        // console.log("Exact Wording Test: ", getExactText(normalizedRange) === serializedRange.text.exact ? "YES THEY MATCH" : "NO THEY DO NOT MATCH")
         break;
       }
     }
   }
 
-  // Possible Way #4: fuzzy search? TBD, no idea how to do this. fuzzy substrings are not as common as searching list of records
-
   return normalizedRange;
-};
+}
 
-function checkNode(currentNode, range) {
+// ─── Text node extraction helpers ────────────────────────────────────────────
+
+function extractRangeNodes(currentNode, range) {
   var foundEnd = false;
   var nodeList = [];
   if (currentNode) {
     if (currentNode.nodeType === Node.TEXT_NODE) {
       if (currentNode === range.startContainer) {
         currentNode = currentNode.splitText(range.startOffset);
-        // console.log('Beginning', currentNode);
       }
       if (currentNode === range.endContainer) {
         foundEnd = true;
         currentNode.splitText(range.endOffset);
-        // console.log('Ending', currentNode);
       }
 
       if ((range.startContainer === range.endContainer && range.startOffset === range.endOffset)) {
         foundEnd = true;
       }
-      // console.log('Node', currentNode, foundEnd, range.startContainer === range.endContainer);
       nodeList.push(currentNode);
     } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === "IMG") {
-      // console.log("GETS HERE", range.startContainer.nodeType, range.startContainer.childNodes.length, range.startOffset);
       if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startContainer.childNodes.length < range.startOffset) {
         var possibleStartNode = range.startContainer.childNodes[range.startOffset];
         if (possibleStartNode === currentNode) {
@@ -523,22 +428,18 @@ function checkNode(currentNode, range) {
           }
         }
       } else if (!foundEnd && range.endContainer.nodeType === Node.ELEMENT_NODE && range.endContainer.childNodes.length < range.endOffset) {
-        // console.log("second")
         var possibleEndNode = range.endContainer.childNodes[range.endOffset];
         if (possibleEndNode === currentNode) {
           foundEnd = true;
           nodeList.push(currentNode);
         }
       } else {
-        // console.log("third", nodeList, currentNode);
         foundEnd = false;
         nodeList.push(currentNode);
       }
-      // console.log("Node contains image! What do I do?", currentNode.src, foundEnd, nodeList);
     } else {
       if (currentNode.firstChild) {
-        var result = recurseFromNodeToNode(currentNode.firstChild, range);
-        // console.log("RETURN2:", result);
+        var result = collectTextNodesInRange(currentNode.firstChild, range);
         foundEnd = result.foundEnd;
         nodeList = nodeList.concat(result.nodes);
       }
@@ -551,50 +452,42 @@ function checkNode(currentNode, range) {
   };
 }
 
-function recurseFromNodeToNode(currentNode, range) {
+function collectTextNodesInRange(currentNode, range) {
   var nodeList = [];
   var foundEnd = false;
   var originalNode = currentNode;
-  // console.log("RECURS", currentNode);
-  var result = checkNode(currentNode, range);
+  var result = extractRangeNodes(currentNode, range);
   currentNode = result.currentNode;
   if (!foundEnd) {
     foundEnd = result.foundEnd;
   }
   nodeList = nodeList.concat(result.nodes);
-  // console.log('rFN2N: ', foundEnd);
   while (!foundEnd && originalNode && ((currentNode = currentNode.nextSibling) !== null)) {
-    // console.log("SIBS")
-    var res = checkNode(currentNode, range);
-    // console.log("RETURN", res);
+    var res = extractRangeNodes(currentNode, range);
     if (!foundEnd) {
       foundEnd = res.foundEnd;
     }
     nodeList = nodeList.concat(res.nodes);
   }
-  // console.log('aftersibs', foundEnd);
   if (!foundEnd && originalNode) {
     currentNode = originalNode;
-    // console.log("Parent:", originalNode.parentNode);
-    // console.log("ParentSibling:", originalNode.parentNode.nextSibling)
     while (!currentNode.parentNode.nextSibling) {
       currentNode = currentNode.parentNode;
-      // console.log("New parent:", currentNode);
     }
     currentNode = currentNode.parentNode.nextSibling;
-    // console.log("RENTS");
-    res = recurseFromNodeToNode(currentNode, range);
+    res = collectTextNodesInRange(currentNode, range);
     if (!foundEnd) {
       foundEnd = res.foundEnd;
     }
     nodeList = nodeList.concat(res.nodes);
   }
-  // console.log('afterrents', foundEnd);
   return {
     foundEnd: foundEnd,
     nodes: nodeList
   };
-};
+}
+
+// ─── Text node extraction — exported ─────────────────────────────────────────
 
 // Given a list of stored annotation range objects, normalizes each one back to
 // a live Range then walks the DOM to collect all individual text nodes that
@@ -604,17 +497,20 @@ function getTextNodesFromAnnotationRanges(ranges, root) {
   var textNodesList = [];
 
   ranges.forEach(function(range) {
-    var normRanged = normalizeRange(range, root, 'annotator-hl');// recurseFromNodeToNode(range.startContainer, range);
-    var nodes = recurseFromNodeToNode(normRanged.startContainer, normRanged);
-    // console.log(normRanged, ranges, nodes, normRanged.cloneContents());
+    var normRanged = normalizeRange(range, root, 'annotator-hl');
+    var nodes = collectTextNodesInRange(normRanged.startContainer, normRanged);
     textNodesList = textNodesList.concat(nodes.nodes);
   });
 
   return textNodesList;
 }
 
+// ─── Exports ──────────────────────────────────────────────────────────────────
+
 exports.serializeRange = serializeRange;
 exports.normalizeRange = normalizeRange;
 exports.getGlobalOffset = getGlobalOffset;
 exports.getTextNodesFromAnnotationRanges = getTextNodesFromAnnotationRanges;
 exports.getNodeFromXpath = getNodeFromXpath;
+exports.compareExactText = compareExactText;
+exports.getIndicesOf = getIndicesOf;
