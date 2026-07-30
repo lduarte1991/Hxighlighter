@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const { version } = require('./package.json');
 
@@ -65,8 +64,13 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin({ extractComments: false }),
-      new CssMinimizerPlugin(),
+      new TerserPlugin({
+        extractComments: false,
+        terserOptions: {
+          format: { max_line_len: 32000 },
+        },
+      }),
+      // CssMinimizerPlugin omitted — CSS stays unminified to pass WAF
     ],
   },
   externals: {

@@ -114,13 +114,16 @@
   };
 
   $.ExportPlugin.prototype.download = function(filename, text) {
+    var blob = new Blob([text], { type: 'text/plain' });
+    var objectUrl = URL.createObjectURL(blob);
     var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('href', objectUrl);
     element.setAttribute('download', filename);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+    URL.revokeObjectURL(objectUrl);
   };
 
   $.ExportPlugin.prototype.filterByWhose = function(annotations, whose) {
