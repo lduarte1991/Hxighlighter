@@ -38,13 +38,15 @@
           var annotationList = {
             rows: list
           };
-          var new_page = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(annotationList, null, 4));
+          var blob = new Blob([JSON.stringify(annotationList, null, 4)], { type: 'application/json' });
+          var objectUrl = URL.createObjectURL(blob);
           var downloadAnchorNode = document.createElement('a');
-          downloadAnchorNode.setAttribute("href",     new_page);
+          downloadAnchorNode.setAttribute("href", objectUrl);
           downloadAnchorNode.setAttribute("download", "annotations.json");
           document.body.appendChild(downloadAnchorNode); // required for firefox
           downloadAnchorNode.click();
           downloadAnchorNode.remove();
+          URL.revokeObjectURL(objectUrl);
         };
         $.publishEvent('downloadAnnotations', self.instanceID, [downloadFun]);
       });
