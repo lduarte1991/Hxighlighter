@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.3] - 2026-08-04
+
+### Fixed
+
+- Add missing `terser-webpack-plugin` devDependency that caused the v1.10.2 release build to fail
+
 ## [1.10.2] - 2026-07-30
 
 ### Fixed
