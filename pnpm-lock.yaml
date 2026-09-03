@@ -86,8 +86,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(webpack@5.108.4)
       globals:
-        specifier: ^17.7.0
-        version: 17.7.0
+        specifier: ^17.11.0
+        version: 17.11.0
       handlebars-loader:
         specifier: ^1.7.3
         version: 1.7.3(handlebars@4.7.9)
@@ -1002,6 +1002,7 @@ packages:
   '@xmldom/xmldom@0.8.13':
     resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -1786,8 +1787,8 @@ packages:
   global@4.4.0:
     resolution: {integrity: sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==}
 
-  globals@17.7.0:
-    resolution: {integrity: sha512-Czmyns5dUsq4seFBR/Kdydhmo8y9kC79hiSkPn0YcGtNnYWnrgt0vjrSjx9tspoDGWm2CMarffRuLjM4xUz8xg==}
+  globals@17.11.0:
+    resolution: {integrity: sha512-Z2I8hM+PbJDXQDq3Icgpzv+mPdwr68iZUU9d5WW4FuXfDUQfkZaZuvjMv42/5crNyw154+9+VWXbYrUgDXbxNw==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -5467,7 +5468,7 @@ snapshots:
       min-document: 2.19.2
       process: 0.11.10
 
-  globals@17.7.0: {}
+  globals@17.11.0: {}
 
   globalthis@1.0.4:
     dependencies:

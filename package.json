@@ -63,7 +63,7 @@
     "css-minimizer-webpack-plugin": "^8.0.0",
     "eslint": "^10.7.0",
     "exports-loader": "^5.0.0",
-    "globals": "^17.7.0",
+    "globals": "^17.11.0",
     "handlebars-loader": "^1.7.3",
     "http-server": "^14.1.1",
     "ignore-styles": "^5.0.1",
