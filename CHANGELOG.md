@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.4] - 2026-09-10
+
+### Changed
+
+- Bumped `jsdom` from `^29.1.1` to `^30.0.1` (major; test environment only)
+- Bumped `npm-check-updates` from `^22.2.9` to `^23.1.0` (major; CLI tool only)
+- Bumped `eslint` from `^10.7.0` to `^10.9.1`
+- Bumped `globals` from `^17.7.0` to `^17.11.0`
+- Bumped `webpack` from `^5.108.4` to `^5.110.2`
+
 ## [1.10.3] - 2026-08-04
 
 ### Fixed
