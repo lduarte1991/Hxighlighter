@@ -25,6 +25,7 @@
      */
   $.LiteVersionChanges.prototype.init = function() {
     var self = this;
+    jQuery('#print-annotations').remove();
     jQuery('button.user-filter').css('display', 'none');
     jQuery('.annotationsHolder.side').css({
       'height': "calc(100% - 27px)",

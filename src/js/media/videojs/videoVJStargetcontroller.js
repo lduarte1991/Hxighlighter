@@ -396,7 +396,7 @@ require('videojs-transcript');
     jQuery(document).on('click', 'button[class*="make-annotation-button"]', function(evt) {
       snapshot();
     });
-    jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+    jQuery(document).on('click', '[class*="keyboard-toggle"]', function(evt) {
       jQuery('#key-help').toggleClass('sr-only');
       jQuery('#key-help').toggleClass('video-scrollable-helper');
       jQuery('#viewer').toggleClass('video-viewer-keyboard-help');
