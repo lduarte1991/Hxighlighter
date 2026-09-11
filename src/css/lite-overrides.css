@@ -61,6 +61,22 @@ body {
 }
 
 
+/* --- Studio message: visible in CMS authoring views, hidden in student view --- */
+
+.hx-studio-message {
+    display: none;
+}
+
+.xblock-student_view .hx-studio-message {
+    display: none;
+}
+
+.xblock-author_view .hx-studio-message,
+.xblock-studio_view .hx-studio-message {
+    display: block !important;
+}
+
+
 /* --- Hide configuration divs (replaces inline style="display:none") --- */
 
 #text_url,
@@ -129,4 +145,212 @@ body {
 
 .hxighlighter-container .load-more {
     position: absolute;
+}
+
+
+/* --- Annotation slot: scroll wide content rather than overflowing host --- */
+
+/* In embedded mode the slot fills (container width − sidebar). Content wider
+   than that (tables, images, embeds) would overflow the host page without this. */
+.hxighlighter-container .annotation-slot {
+    overflow-x: auto;
+}
+
+
+/* ==========================================================================
+   LMS specificity overrides
+
+   The edX HtmlBlock stylesheet uses two-class selectors like
+   .xmodule_display.xmodule_HtmlBlock * (specificity 0,2,0) which beat our
+   single-class .hxighlighter-container * rules (0,1,0). The repeated-class
+   trick below raises our specificity to (0,2,x) so source order (our bundle
+   loads last) wins the tie. The Bootstrap 4 utility sheet uses single-class
+   rules (0,1,0) that our container-scoped component rules already beat, but
+   .btn-secondary requires an explicit re-declaration here since
+   hxighlighter-styling.css declares it as a bare unscoped class.
+   ========================================================================== */
+
+/* Universal reset — beats (0,2,0) from .xmodule_display.xmodule_HtmlBlock *
+   Only box-sizing and line-height belong here: color/font-size on * would
+   override our own component rules (e.g. .hx-confirm-button button { color: white }).
+   Those properties inherit naturally from the container; specific element resets
+   below handle the elements the LMS actually targets. */
+.hxighlighter-container.hxighlighter-container * {
+    box-sizing: border-box;
+    /* !important required: LMS has p { line-height: 1.6em !important } */
+    line-height: inherit !important;
+}
+
+/* Pseudo-elements: only reset box-sizing — never override font-family here
+   because icon fonts (Font Awesome) set their own font-family on ::before/::after. */
+.hxighlighter-container.hxighlighter-container *::before,
+.hxighlighter-container.hxighlighter-container *::after {
+    box-sizing: border-box;
+}
+
+/* Paragraphs — beats (0,2,1); reset LMS margin */
+.hxighlighter-container.hxighlighter-container p {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+}
+
+/* Headings — beats (0,2,1) */
+.hxighlighter-container.hxighlighter-container h1,
+.hxighlighter-container.hxighlighter-container h2,
+.hxighlighter-container.hxighlighter-container h3,
+.hxighlighter-container.hxighlighter-container h4,
+.hxighlighter-container.hxighlighter-container h5,
+.hxighlighter-container.hxighlighter-container h6 {
+    margin: 0;
+    font: inherit;
+    letter-spacing: normal;
+    color: inherit;
+}
+
+/* Lists — beats (0,2,1); prevents bullets on .annotationsHolder */
+.hxighlighter-container.hxighlighter-container ul,
+.hxighlighter-container.hxighlighter-container ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+}
+
+/* List items — compound selector reaches (0,2,2) to match LMS's ul li rule */
+.hxighlighter-container.hxighlighter-container ul li,
+.hxighlighter-container.hxighlighter-container ol li {
+    margin-bottom: 0;
+}
+
+/* Links — beats (0,3,1) for all pseudo-classes */
+.hxighlighter-container.hxighlighter-container a,
+.hxighlighter-container.hxighlighter-container a:link,
+.hxighlighter-container.hxighlighter-container a:visited,
+.hxighlighter-container.hxighlighter-container a:hover,
+.hxighlighter-container.hxighlighter-container a:active,
+.hxighlighter-container.hxighlighter-container a:focus {
+    color: inherit;
+}
+
+/* Images — preserve sensible constraints */
+.hxighlighter-container.hxighlighter-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Code / pre — beats (0,2,1) */
+.hxighlighter-container.hxighlighter-container code,
+.hxighlighter-container.hxighlighter-container pre {
+    font-family: inherit;
+    color: inherit;
+    background: none;
+}
+
+/* Tables — prevent LMS from forcing full-width + heavy borders on UI tables */
+.hxighlighter-container.hxighlighter-container table {
+    width: auto;
+    margin: 0;
+    border-collapse: collapse;
+    font-size: inherit;
+}
+.hxighlighter-container.hxighlighter-container table td,
+.hxighlighter-container.hxighlighter-container table th {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: inherit;
+}
+
+/* Buttons — hxighlighter-styling.css declares .btn-secondary without a
+   container prefix, so Bootstrap's same-specificity (0,1,0) rule can win
+   by source order. Scope them here at (0,2,1) to guarantee our values.
+
+   LMS global button hover: the host stylesheet has a bare
+   button:hover:not(:disabled) rule at (0,2,1) that sets a gray gradient and
+   box-shadow. The broad rule below at (0,3,1) clears the gradient/shadow for
+   every button in our container. Buttons at (0,3,0)+ already beat the LMS on
+   background-color; the two (0,1,1) selectors (sidebar-button, reply-menu
+   button) need their own explicit hover overrides below. */
+
+/* Broad gradient reset — LMS has bare global button and button:hover rules that
+   set background-image: gradient. Our component rules use background-color (not
+   the background shorthand), so the gradient sneaks through for any property our
+   rules don't explicitly declare. Kill it globally — none of our buttons use
+   intentional gradients. */
+.hxighlighter-container.hxighlighter-container button,
+.hxighlighter-container.hxighlighter-container input[type="button"],
+.hxighlighter-container.hxighlighter-container input[type="submit"],
+.hxighlighter-container.hxighlighter-container input[type="reset"] {
+    background-image: none;
+}
+.hxighlighter-container.hxighlighter-container button:hover:not(:disabled) {
+    background-image: none;
+    box-shadow: none;
+}
+
+/* Sidebar nav buttons — LMS global button rule adds border, padding, box-shadow
+   that conflict with these compact icon buttons. Base state fix at (0,3,1). */
+.hxighlighter-container.hxighlighter-container button.sidebar-button {
+    border: none;
+    padding: 0;
+    margin-top: 4px;
+    box-shadow: none;
+    text-shadow: none;
+}
+.hxighlighter-container.hxighlighter-container button.sidebar-button:hover:not(:disabled) {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Reply menu button — (0,1,1) base rule, background: none must survive hover */
+.hxighlighter-container.hxighlighter-container .reply-menu button:hover:not(:disabled) {
+    background-color: transparent;
+    color: white;
+}
+.hxighlighter-container.hxighlighter-container .btn {
+    font-size: 14px;
+    padding: 6px 12px;
+    line-height: 1.5;
+    border-radius: 4px;
+}
+.hxighlighter-container.hxighlighter-container .btn-secondary {
+    color: #333;
+    background-color: #ededed;
+    border-color: #ccc;
+}
+.hxighlighter-container.hxighlighter-container .btn-secondary:hover,
+.hxighlighter-container.hxighlighter-container .btn-secondary:focus {
+    color: #333;
+    background-color: #ddd;
+    border-color: #b8b8b8;
+}
+
+/* Floating editor/viewer nav bar cancel (X close button) — LMS global button
+   rule adds padding, border, box-shadow that conflict with this icon button. */
+.hxighlighter-container.hxighlighter-container .annotation-editor .annotation-editor-nav-bar button.cancel,
+.hxighlighter-container.hxighlighter-container .annotation-viewer .annotation-viewer-nav-bar button.cancel {
+    box-shadow: none;
+    background-image: none;
+    height: 1.4rem;
+    padding: 4px 20px;
+    line-height: 1rem !important;
+}
+
+/* annotation-editor action cancel button (.btn.btn-secondary) — only clear the
+   LMS border; padding/sizing come from the .btn scoped rule above. */
+.hxighlighter-container.hxighlighter-container .annotation-editor .action-button.cancel {
+    border: none;
+}
+
+/* Confirm button — LMS's global button rule adds 7px 18px padding; this button
+   should have none. Also preserve dark background on hover. */
+.hxighlighter-container.hxighlighter-container .hx-confirm-button button {
+    padding: 0;
+}
+.hxighlighter-container.hxighlighter-container .hx-confirm-button button:hover:not(:disabled) {
+    background-color: #595959;
+    background-image: none;
+    box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.39);
+    cursor: pointer;
 }

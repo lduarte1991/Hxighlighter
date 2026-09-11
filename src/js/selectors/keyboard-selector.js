@@ -120,7 +120,7 @@ var hrange = require('../core/h-range.js');
     //     slot = self.element.closest('.annotation-slot');
     // }
     // jQuery(slot).prepend('<button class="hx-keyboard-toggle btn btn-default" style="margin-right: 10px;">Toggle Keyboard Input</button>');
-    jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+    jQuery(document).on('click', '[class*="keyboard-toggle"]', function(evt) {
       jQuery('#key-help').toggleClass('sr-only');
       jQuery(this).toggleClass('selected');
       jQuery(self.element).closest('main').animate({

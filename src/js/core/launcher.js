@@ -106,7 +106,7 @@
         'template_urls': '',
         'DropdownTags': {
           'tags': Object.keys(self.tagDict),
-          'folksonomy': false,
+          'folksonomy': true,
         },
         "ColorTags": self.tagDict,
         "SidebarTagTokens": {

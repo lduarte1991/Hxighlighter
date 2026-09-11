@@ -157,7 +157,10 @@ import 'jquery-confirm/css/jquery-confirm.css';
     var intPt = interactionPoint;
     // situate it on its proper location
     var fvContainer = Hxighlighter.getContainer(self.element);
-    var editorScrollOffset = fvContainer ? fvContainer.scrollTop : jQuery(window).scrollTop();
+    // mouseFixedPosition already adds container.scrollTop into its result, so
+    // no subtraction needed in embedded mode. Full-page mode still needs
+    // window.scrollTop() to convert document coords to viewport for position:fixed.
+    var editorScrollOffset = fvContainer ? 0 : jQuery(window).scrollTop();
     self.annotation_tool.editor.css({
       'top': intPt.top - editorScrollOffset,
       'left': intPt.left
@@ -242,7 +245,10 @@ import 'jquery-confirm/css/jquery-confirm.css';
     } else {
       viewerCoords = annotator.util.mousePosition(event);
     }
-    var viewerScrollOffset = viewerContainer ? viewerContainer.scrollTop : jQuery(window).scrollTop();
+    // mouseFixedPosition already adds container.scrollTop into its result, so
+    // no subtraction needed in embedded mode. Full-page mode still needs
+    // window.scrollTop() to convert document coords to viewport for position:fixed.
+    var viewerScrollOffset = viewerContainer ? 0 : jQuery(window).scrollTop();
     var newTop = viewerCoords.top - viewerScrollOffset + 20;
     var newLeft = viewerCoords.left + 30;
     self.annotation_tool.viewer.css({

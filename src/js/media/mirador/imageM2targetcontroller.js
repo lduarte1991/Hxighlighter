@@ -416,7 +416,7 @@ require('../../storage/catchpy.js');
       snapshot();
     });
 
-    jQuery(document).on('click', 'a[class*="keyboard-toggle"]', function(evt) {
+    jQuery(document).on('click', '[class*="keyboard-toggle"]', function(evt) {
       jQuery('#key-help').toggleClass('sr-only');
       jQuery('#key-help').toggleClass('image-scrollable-helper');
       jQuery('#viewer').toggleClass('image-viewer-keyboard-help');
