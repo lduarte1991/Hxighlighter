@@ -38,7 +38,7 @@
   "homepage": "https://github.com/lduarte1991/Hxighlighter#readme",
   "dependencies": {
     "codemirror": "^6.0.2",
-    "handlebars": "^4.7.9",
+    "handlebars": "^4.7.10",
     "jquery-confirm": "^3.3.4",
     "jquery.tokeninput": "github:lduarte1991/jquery-tokeninput#hxighlighter-fix",
     "summernote": "^0.9.1",
